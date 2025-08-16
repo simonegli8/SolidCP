@@ -332,9 +332,15 @@ public class FilesController: ControllerBase
             OS.OperatingSystem os = GetOS(packageId);
             string fullPath = GetFullPackagePath(packageId, path);
 
+            // GetDirectoryName
+            var dir = Regex.Replace(fullPath, @"[\\/][^\\/]*$", "");
+
             // cannot create a file with the same name as a directory
             if (os.DirectoryExists(fullPath))
                 return BusinessErrorCodes.ERROR_FILE_CREATE_FILE_WITH_DIR_NAME;
+
+            // create directory
+            if (!os.DirectoryExists(dir)) os.CreateDirectory(dir);
 
             // create file
             os.CreateFile(fullPath);
