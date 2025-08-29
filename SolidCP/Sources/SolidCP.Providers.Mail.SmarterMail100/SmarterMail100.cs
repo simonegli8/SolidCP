@@ -30,21 +30,26 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE)  ARISING  IN  ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Net;
-using SolidCP.Providers.Common;
-using SolidCP.Server.Utils;
 using Microsoft.Win32;
-using FileUtils = SolidCP.Providers.Utils.FileUtils;
 using Newtonsoft.Json;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Globalization;
+using SolidCP.Providers.Common;
+using SolidCP.Providers.OS;
+using SolidCP.Server.Utils;
+using System;
 using System.Collections;
-using static System.Net.Mime.MediaTypeNames;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
+using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Reflection;
+using static System.Net.Mime.MediaTypeNames;
+using FileUtils = SolidCP.Providers.Utils.FileUtils;
 
 namespace SolidCP.Providers.Mail
 {
@@ -2422,7 +2427,7 @@ namespace SolidCP.Providers.Mail
 		#endregion
 
 		#region Install Settings
-		public override bool IsInstalled()
+		public virtual bool IsInstalledWindows()
         {
             string productName = null;
             string productVersion = null;
@@ -2507,9 +2512,50 @@ namespace SolidCP.Providers.Mail
 
             return false;
         }
-		#endregion
 
-		protected string GetDomainName(string email)
+		public bool IsInstalledUnix()
+        {
+            if (!OSInfo.IsWindows)
+            {
+                var processes = Process.GetProcessesByName("MailService")
+                    .Select(p => p.ExecutableFile())
+                    .Concat(new string[] { Shell.Default.Find("MailService") })
+                    .Where(exe => exe != null)
+                    .Distinct();
+                foreach (var exe in processes)
+                {
+                    if (File.Exists(exe))
+                    {
+						try
+						{
+							var dir = Path.GetDirectoryName(exe);
+							var dll = Path.ChangeExtension(exe, ".dll");
+							if (!File.Exists(dll)) continue;
+
+							var files = Directory.GetFiles(dir, "*.*", SearchOption.TopDirectoryOnly);
+							if (!files.Any(f => f.Contains("SmarterMail"))) continue;
+
+							var assembly = Assembly.ReflectionOnlyLoadFrom(dll);
+							var versionAttribute = assembly.GetCustomAttributes<AssemblyFileVersionAttribute>()
+								.FirstOrDefault();
+							if (versionAttribute != null && new Version(versionAttribute.Version).Major == 100) return true;
+							else return false;
+						}
+						catch { }
+                    }
+                }
+            }
+            return false;
+        }
+
+        public override bool IsInstalled()
+        {
+			if (OSInfo.IsWindows) return IsInstalledWindows();
+			else return IsInstalledUnix();
+        }
+        #endregion
+
+        protected string GetDomainName(string email)
 		{
 			return email.Substring(email.IndexOf('@') + 1);
 		}

@@ -2104,10 +2104,12 @@ namespace SolidCP.EnterpriseServer
 				{
 					var users = Users
 						.Join(tree, u => u.UserId, ut => ut, (user, ut) => user)
-						.Join(Packages, u => u.UserId, p => p.UserId, (user, package) => new { User = user, PackageId = package.PackageId })
-						.Join(Domains, up => up.PackageId, d => d.PackageId, (user, domain) => new
-						{
-							user.User.UserId,
+                        .GroupJoin(Packages, u => u.UserId, p => p.UserId, (user, packages) => new { User = user, Packages = packages })
+                        .SelectMany(up => up.Packages.DefaultIfEmpty(), (user, package) => new { User = user.User, PackageId = package != null ? package.PackageId : -1 })
+                        .GroupJoin(Domains, up => up.PackageId, d => d.PackageId, (user, domains) => new { User = user.User, Domains = domains })
+                        .SelectMany(ud => ud.Domains.DefaultIfEmpty(), (user, domain) => new
+                        {
+                            user.User.UserId,
 							user.User.RoleId,
 							user.User.StatusId,
 							user.User.SubscriberNumber,
@@ -2123,8 +2125,8 @@ namespace SolidCP.EnterpriseServer
 							user.User.FirstName,
 							user.User.LastName,
 							user.User.Email,
-							domain.DomainName
-						})
+                            DomainName = domain != null ? domain.DomainName : null
+                        })
 						.Where(u => u.UserId != userId && !u.IsPeer && hasRights);
 
 					if (!string.IsNullOrEmpty(filterColumn) && !string.IsNullOrEmpty(filterValue))
@@ -3185,30 +3187,6 @@ namespace SolidCP.EnterpriseServer
 						ServicesNumber = VirtualServices.Count(v => v.ServerId == s.ServerId),
 						s.Comments
 					});
-
-				//var serversTable = EntityDataTable(servers);
-
-				/*var services = Services
-					.Join(Providers, s => s.ProviderId, p => p.ProviderId, (srvc, p) => new { Service = srvc, ProviderGroupId = p.GroupId })
-					.Join(ResourceGroups, s => s.ProviderGroupId, rg => rg.GroupId, (srvc, rg) => new
-					{
-						Service = srvc.Service,
-						GroupOrder = rg.GroupOrder
-					})
-					.Where(s => isAdmin)
-					.OrderBy(s => s.GroupOrder)
-					.Select(s => new
-					{
-						s.Service.ServiceId,
-						s.Service.ServerId,
-						s.Service.ProviderId,
-						s.Service.ServiceName,
-						s.Service.Comments
-					});
-
-				var servicesTable = EntityDataTable(services);
-
-				return EntityDataSet(serversTable, servicesTable);*/
 				
 				return EntityDataSet(servers);
             }
@@ -4503,53 +4481,83 @@ namespace SolidCP.EnterpriseServer
 			{
 				var isAdmin = CheckIsUserAdmin(actorId);
 
-				var addresses = IpAddresses
-					.Where(ip => isAdmin &&
-						(poolId == 0 || (poolId != 0 && poolId == ip.PoolId)) &&
-						(serverId == 0 || (serverId != 0 && serverId == ip.ServerId)))
-					.Join(Servers, ip => ip.ServerId, s => s.ServerId, (ip, s) => new { Ip = ip, Server = s })
-					.Join(PackageIpAddresses, g => g.Ip.AddressId, p => p.AddressId, (g, p) => new
-					{
-						g.Ip,
-						g.Server,
-						PackageIp = p
-					})
-					.Join(ServiceItems, g => g.PackageIp.ItemId, s => s.ItemId, (g, s) => new
-					{
-						g.Ip,
-						g.Server,
-						g.PackageIp,
-						Item = s
-					})
-					.Join(Packages, g => g.PackageIp.PackageId, p => p.PackageId, (g, p) => new
-					{
-						g.Ip,
-						g.Server,
-						g.PackageIp,
-						g.Item,
-						Package = p
-					})
-					.Join(Users, g => g.Package.UserId, u => u.UserId, (g, u) => new
-					{
-						g.Ip.AddressId,
-						g.Ip.PoolId,
-						g.Ip.ExternalIp,
-						g.Ip.InternalIp,
-						g.Ip.SubnetMask,
-						g.Ip.DefaultGateway,
-						g.Ip.Comments,
-						g.Ip.Vlan,
-						g.Ip.ServerId,
-						g.Server.ServerName,
-						g.PackageIp.ItemId,
-						g.Item.ItemName,
-						g.PackageIp.PackageId,
-						g.Package.PackageName,
-						g.Package.UserId,
-						u.Username
-					});
+                var addresses = IpAddresses
+                    .Where(ip => isAdmin &&
+                        (poolId == 0 || (poolId != 0 && poolId == ip.PoolId)) &&
+                        (serverId == 0 || (serverId != 0 && serverId == ip.ServerId)))
+                    .GroupJoin(Servers, ip => ip.ServerId, s => s.ServerId, (ip, ss) => new { Ip = ip, Servers = ss })
+                    .SelectMany(ip => ip.Servers.DefaultIfEmpty(), (ip, ss) => new { ip.Ip, Server = ss })
+                    .GroupJoin(PackageIpAddresses, g => g.Ip.AddressId, p => p.AddressId, (g, ps) => new
+                    {
+                        g.Ip,
+                        g.Server,
+                        PackageIps = ps
+                    })
+                    .SelectMany(ip => ip.PackageIps.DefaultIfEmpty(), (ip, p) => new
+                    {
+                        ip.Ip,
+                        ip.Server,
+                        PackageIp = p
+                    })
+                    .GroupJoin(ServiceItems, g => g.PackageIp != null ? g.PackageIp.ItemId : null, s => (int?)s.ItemId, (g, ss) => new
+                    {
+                        g.Ip,
+                        g.Server,
+                        g.PackageIp,
+                        Items = ss
+                    })
+                    .SelectMany(ip => ip.Items.DefaultIfEmpty(), (ip, s) => new
+                    {
+                        ip.Ip,
+                        ip.Server,
+                        ip.PackageIp,
+                        Item = s
+                    })
+                    .GroupJoin(Packages, g => g.PackageIp != null ? (int?)g.PackageIp.PackageId : null, p => (int?)p.PackageId, (g, ps) => new
+                    {
+                        g.Ip,
+                        g.Server,
+                        g.PackageIp,
+                        g.Item,
+                        Packages = ps
+                    })
+                    .SelectMany(ip => ip.Packages.DefaultIfEmpty(), (ip, p) => new
+                    {
+                        ip.Ip,
+                        ip.Server,
+                        ip.PackageIp,
+                        ip.Item,
+                        Package = p
+                    })
+                    .GroupJoin(Users, g => g.Package.UserId, u => u.UserId, (g, us) => new
+                    {
+                        g.Ip,
+                        g.Server,
+                        g.PackageIp,
+                        g.Item,
+                        g.Package,
+                        Users = us
+                    })
+                    .SelectMany(g => g.Users.DefaultIfEmpty(), (g, u) => new
+                    {
+                        g.Ip.AddressId,
+                        g.Ip.PoolId,
+                        g.Ip.ExternalIp,
+                        g.Ip.InternalIp,
+                        g.Ip.SubnetMask,
+                        g.Ip.DefaultGateway,
+                        g.Ip.Comments,
+                        g.Ip.ServerId,
+                        ServerName = g.Server != null ? g.Server.ServerName : null,
+                        ItemId = g.PackageIp != null ? g.PackageIp.ItemId : null,
+                        ItemName = g.Item != null ? g.Item.ItemName : null,
+                        PackageId = g.PackageIp != null ? (int?)g.PackageIp.PackageId : null,
+                        PackageName = g.Package != null ? g.Package.PackageName : null,
+                        UserId = g.Package != null ? (int?)g.Package.UserId : null,
+                        Username = u != null ? u.Username : null
+                    });
 
-				return EntityDataReader(addresses);
+                return EntityDataReader(addresses);
 			}
 			else
 			{
@@ -4793,20 +4801,16 @@ namespace SolidCP.EnterpriseServer
                     .Select(e => (int)e.Attribute("id"))
                     .ToTempIdSet(this))
                 {
-                    var addresses = IpAddresses
+                    IpAddresses
                         .Join(addressIds, ip => ip.AddressId, id => id, (ip, id) => ip)
-                        .ToList();
-
-                    foreach (var ip in addresses)
-                    {
-                        ip.PoolId = poolId;
-                        ip.ServerId = serverId;
-                        ip.SubnetMask = subnetMask;
-                        ip.DefaultGateway = defaultGateway;
-                        ip.Comments = comments;
-                    }
-
-                    if (addresses.Any()) SaveChanges();
+                        .ExecuteUpdate(ip => new Data.Entities.IpAddress()
+                        {
+                            PoolId = poolId,
+                            ServerId = serverId,
+                            SubnetMask = subnetMask,
+                            DefaultGateway = defaultGateway,
+                            Comments = comments,
+                        });
                 }
             }
             else
@@ -17086,7 +17090,7 @@ namespace SolidCP.EnterpriseServer
 				using (var addressIdsIdSet = addressIds.ToTempIdSet(this))
 				{
 					PackageIpAddresses
-						.Join(addressIds, ip => ip.AddressId, id => id, (ip, id) => ip)
+						.Join(addressIdsIdSet, ip => ip.AddressId, id => id, (ip, id) => ip)
 						.ExecuteDelete();
 				}
 				var newIps = addressIds
