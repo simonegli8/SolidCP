@@ -40,30 +40,30 @@ namespace SolidCP.Web.Services
             var a = Assembly.GetEntryAssembly();
             var srvcAssemblies = AppDomain.CurrentDomain.GetAssemblies()
                 .Select(assembly => assembly.GetName().Name.Replace('.', ' '))
-                .Where(name => name == "HostPanelPro Server" || name == "HostPanelPro EnterpriseServer" ||
-                    name == "HostPanelPro WebApp");
+                .Where(name => name == "SolidCP Server" || name == "SolidCP EnterpriseServer" ||
+                    name == "SolidCP WebApp");
             var title = $"{string.Join(" & ", srvcAssemblies.ToArray())} API";
 
-			var hasServer = title.Contains("HostPanelPro Server");
-			var hasEnterprise = title.Contains("HostPanelPro EnterpriseServer");
+			var hasServer = title.Contains("SolidCP Server");
+			var hasEnterprise = title.Contains("SolidCP EnterpriseServer");
 
 			var openServices = $"{(hasServer || hasEnterprise ? "but the " : "")}{(hasEnterprise ? $"esAuthentication{(hasServer ? ", " : " & ")}esTest{(hasServer ? ", " : " ")}" : "")}{(hasServer ? "AutoDiscovery & Test " : "")}";
-			var clientAssembly = $"{(hasEnterprise ? "HostPanelPro.EnterpriseServer.Client " : "")}{(hasEnterprise && hasServer ? "& " : "")}{(hasServer ? "HostPanelPro.Server.Client " : "")}";
+			var clientAssembly = $"{(hasEnterprise ? "SolidCP.EnterpriseServer.Client " : "")}{(hasEnterprise && hasServer ? "& " : "")}{(hasServer ? "SolidCP.Server.Client " : "")}";
 			var info = new SwaggerWcf.Models.Info
 			{
 				Version = "1.0.0",
 				Title = title,
-				Description = $"This is the REST API of HostPanelPro. Note that all {openServices}services use Basic Http Authentication. If you use .NET, you might want to access the API over WCF/SOAP, in this case refer to the {clientAssembly}assembly.",
-				TermsOfService = "http://hostpanelpro.com/terms/",
+				Description = $"This is the REST API of SolidCP. Note that all {openServices}services use Basic Http Authentication. If you use .NET, you might want to access the API over WCF/SOAP, in this case refer to the {clientAssembly}assembly.",
+				TermsOfService = "http://solidcp.com/terms/",
 				Contact = new SwaggerWcf.Models.InfoContact
 				{
 					Name = "Support",
-					Email = "support@hostpanelpro.com"
+					Email = "support@solidcp.com"
 				},
 				License = new SwaggerWcf.Models.InfoLicense
 				{
-					Name = "HostPanelPro License",
-					Url = "http://hostpanelpro.com/license/"
+					Name = "SolidCP License",
+					Url = "http://solidcp.com/license/"
 				},
 			};
 
