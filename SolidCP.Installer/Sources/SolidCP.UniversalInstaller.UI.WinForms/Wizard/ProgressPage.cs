@@ -241,12 +241,12 @@ namespace SolidCP.UniversalInstaller.WinForms
 		/// Displays an error message box with the specified text.
 		/// </summary>
 		/// <param name="text">The text to display in the message box.</param>
-		protected void ShowError(string text)
+		protected override void ShowError(string text)
 		{
 			MessageBox.Show(this, text, FindForm().Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 
-		protected void ShowError()
+		protected override void ShowError()
 		{
 			ShowError("An unexpected error has occurred. We apologize for this inconvenience.\n" +
 				"Please contact Technical Support at support@solidcp.com.\n\n" +
