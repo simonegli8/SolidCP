@@ -86,8 +86,8 @@ public abstract partial class Installer
 			new XAttribute("type", "SwaggerWcf.Configuration.SwaggerWcfSection, SwaggerWcf")));
 		var swaggerwcf = XElement.Parse(@"<swaggerwcf>
 		<settings>
-			<setting name=""InfoDescription"" value=""SolidCP EnterpriseServer Service"" />
-			<setting name=""InfoVersion"" value=""2.0.0"" />
+			<setting name=""InfoDescription"" value=""This is the REST API of SolidCP. Note that all but the esAuthentication service use Basic Http Authentication. If you use .NET, you might want to access the API over WCF/SOAP, in this case refer to the SolidCP.EnterpriseServer.Client assembly.""/>
+			<setting name=""InfoVersion"" value=""2.0.0""/>
 			<setting name=""InfoTermsOfService"" value=""Terms of Service"" />
 			<setting name=""InfoTitle"" value=""SolidCP EnterpriseServer Service"" />
 			<setting name=""InfoContactName"" value=""SolidCP"" />

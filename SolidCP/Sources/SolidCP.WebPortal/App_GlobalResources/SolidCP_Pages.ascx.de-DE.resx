@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="PageName.Login" xml:space="preserve">
     <value>Anmeldung</value>
@@ -306,10 +306,10 @@
   <data name="PageTitle.SpaceMsSql2016" xml:space="preserve">
     <value>{user} - {space} - SQL Server 2016</value>
   </data>
-	<data name="PageName.SpaceMsSql2019" xml:space="preserve">
+  <data name="PageName.SpaceMsSql2019" xml:space="preserve">
     <value>SQL Server 2019</value>
   </data>
-	<data name="PageTitle.SpaceMsSql2019" xml:space="preserve">
+  <data name="PageTitle.SpaceMsSql2019" xml:space="preserve">
     <value>{user} - {space} - SQL Server 2019</value>
   </data>
   <data name="PageName.SpaceMsSql2022" xml:space="preserve">
@@ -492,17 +492,17 @@
   <data name="PageTitle.SpaceVPS" xml:space="preserve">
     <value>{user} - {space} - Virtuelle Private Server</value>
   </data>
-  <data name="PageName.SpaceProxmox" xml:space="preserve">
-    <value>Virtual Proxmox Servers</value>
-  </data>
-  <data name="PageTitle.SpaceProxmox" xml:space="preserve">
-    <value>{user} - {space} - Virtual Proxmox Servers</value>
-  </data>
   <data name="PageName.SpaceVPS2012" xml:space="preserve">
     <value>Hyper-V</value>
   </data>
   <data name="PageTitle.SpaceVPS2012" xml:space="preserve">
     <value>{user} - {space} - Virtuelle Private Server 2012</value>
+  </data>
+  <data name="PageName.SpaceProxmox" xml:space="preserve">
+    <value>Virtual Proxmox Servers</value>
+  </data>
+  <data name="PageTitle.SpaceProxmox" xml:space="preserve">
+    <value>{user} - {space} - Virtual Proxmox Servers</value>
   </data>
   <data name="PageName.SpaceWebIPAddresses" xml:space="preserve">
     <value>IP-Adressen</value>
@@ -569,5 +569,11 @@
   </data>
   <data name="PageTitle.PrivateNetworkVLANs" xml:space="preserve">
     <value>Privates Netzwerk VLANs</value>
+  </data>
+  <data name="PageName.APIDocumentation" xml:space="preserve">
+    <value>API Dokumentation</value>
+  </data>
+  <data name="PageTitle.APIDocumentation" xml:space="preserve">
+    <value>API Dokumentation</value>
   </data>
 </root>

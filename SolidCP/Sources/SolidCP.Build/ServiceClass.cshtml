@@ -15,7 +15,7 @@
 #endif
 public class @(Class.Identifier): @(OldNamespace).@Class.Identifier, I@(Class.Identifier) {
 
-	@if (WebServices.EmitOpenApiTypes)
+	@if (WebServices.EmitOpenApiTypes || WebServices.EmitSwaggerWcfSecurity)
 	{
 		@foreach (MethodDeclarationSyntax method in WebMethods)
 		{
@@ -29,7 +29,7 @@ public class @(Class.Identifier): @(OldNamespace).@Class.Identifier, I@(Class.Id
 					.Select(par =>
 					{
 						var arg = par.Argument;
-						return par.Parameter.Modifiers.Select(mod => arg = arg.WithRefKindKeyword(mod)).LastOrDefault() ?? arg;
+						return par.Parameter.Modifiers.Where(mod => mod.Text != "params").Select(mod => arg = arg.WithRefKindKeyword(mod)).LastOrDefault() ?? arg;
 					})));
 
 			var callStatement = method.Modifiers.Any(mod => mod.IsKind(SyntaxKind.AsyncKeyword)) ?
@@ -39,14 +39,30 @@ public class @(Class.Identifier): @(OldNamespace).@Class.Identifier, I@(Class.Id
 			var hasSwaggerReturnTypeAttribute = method.AttributeLists.Any(al => al.Attributes.Any(at => at.Name.ToString().EndsWith("SwaggerWcfReturnType")));
 			var hasOpenApiReturnTypeAttribute = method.AttributeLists.Any(al => al.Attributes.Any(at => at.Name.ToString().EndsWith("OpenApiResponse")));
 
-		<text>
-#if NETFRAMEWORK@(hasSwaggerReturnTypeAttribute ? "" : $"\n[SwaggerWcfReturnType(typeof({method.ReturnType}))]")
-#else@(hasOpenApiReturnTypeAttribute ? "" : $"\n[OpenApiResponse(Type=typeof({method.ReturnType}), StatusCode = System.Net.HttpStatusCode.OK)]")
-#endif	
-				@(method.AttributeLists)
+
+			@if (WebServices.EmitOpenApiTypes)
+			{
+				<text>
+					#if NETFRAMEWORK@(hasSwaggerReturnTypeAttribute ? "" : $"\n[SwaggerWcfReturnType(typeof({method.ReturnType}))]")
+					#else@(hasOpenApiReturnTypeAttribute ? "" : $"\n[OpenApiResponse(Type=typeof({method.ReturnType}), StatusCode = System.Net.HttpStatusCode.OK)]")
+					#endif
+				</text>
+			}
+
+			@(method.AttributeLists)
+			@if (IsAuthenticated && WebServices.EmitSwaggerWcfSecurity)
+			{
+				<text>
+					#if NETFRAMEWORK
+					[SwaggerWcfSecurity("basicAuth")]
+					#endif
+				</text>
+			}
+
+			<text>
 				@(method.Modifiers) new @(method.ReturnType) @(method.Identifier)@(method.ParameterList) {
 				@(callStatement)base.@(method.Identifier)@(argumentList)@(";")
-				}	
+				}
 			</text>
 		}
 	}
@@ -56,5 +72,16 @@ public class @(Class.Identifier): @(OldNamespace).@Class.Identifier, I@(Class.Id
 {
 	public string OldNamespace { get; set; }
 	public ClassDeclarationSyntax Class { get; set; }
+	public bool IsAuthenticated
+	{
+		get
+		{
+			return Class.AttributeLists
+				.SelectMany(at => at.Attributes)
+				.Any(at => at.Name.ToString() == "Policy" &&
+					(at.ArgumentList.Arguments.Count != 1 || at.ArgumentList.Arguments[0].Expression.ToString() != "\"CommonPolicy\""));
+		}
+	}
+
 	public IEnumerable<MethodDeclarationSyntax> WebMethods { get; set; }
 }

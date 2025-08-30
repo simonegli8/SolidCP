@@ -301,8 +301,13 @@ namespace SolidCP.Web.Services
 				.Select(assembly => assembly.GetName().Name.Replace('.', ' '))
 				.Where(name => name == "SolidCP Server" || name == "SolidCP EnterpriseServer");
 			var title = $"{string.Join(" & ", srvcAssemblies.ToArray())} API";
+            var hasServer = title.Contains("SolidCP Server");
+            var hasEnterprise = title.Contains("SolidCP EnterpriseServer");
 
-			var ver = a.GetCustomAttribute<AssemblyVersionAttribute>();
+            var openServices = $"{(hasServer || hasEnterprise ? "but the " : "")}{(hasEnterprise ? $"esAuthentication{(hasServer ? ", " : " & ")}esTest{(hasServer ? ", " : " ")}" : "")}{(hasServer ? "AutoDiscovery & Test " : "")}";
+            var clientAssembly = $"{(hasEnterprise ? "SolidCP.EnterpriseServer.Client " : "")}{(hasEnterprise && hasServer ? "& " : "")}{(hasServer ? "SolidCP.Server.Client " : "")}";
+
+            var ver = a.GetCustomAttribute<AssemblyVersionAttribute>();
 			services
 				.AddServiceModelServices()
 				.AddServiceModelMetadata()
@@ -310,8 +315,8 @@ namespace SolidCP.Web.Services
 				{
 					o.Title = title;
 					o.Version = ver?.Version ?? "1.0";
-					o.Description = title;
-					o.TermsOfService = new("http://solidcp.com/terms");
+                    o.Description = $"This is the REST API of SolidCP. Note that all {openServices}services use Basic Http Authentication. If you use .NET, you might want to access the API over WCF/SOAP, in this case refer to the {clientAssembly}assembly.";
+                    o.TermsOfService = new("http://solidcp.com/terms");
 					o.ContactName = "Contact";
 					o.ContactEmail = "support@solidcp.com";
 					o.ContactUrl = new("http://solidcp.com/contact");
@@ -381,9 +386,29 @@ namespace SolidCP.Web.Services
 		public static void ConfigureWCF(IApplicationBuilder app)
 		{
 			app.UseSwagger();
-			app.UseSwaggerUI();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SolidCP API V1");
 
-			app.UseServiceModel(builder =>
+                c.ConfigObject.AdditionalItems["securityDefinitions"] = new Dictionary<string, object>
+                {
+                    ["basicAuth"] = new Dictionary<string, object>
+                    {
+                        ["type"] = "basic",
+                        ["description"] = "Basic HTTP Authentication"
+                    }
+                };
+
+                c.ConfigObject.AdditionalItems["security"] = new[]
+                {
+					new Dictionary<string, object>
+					{
+						["basicAuth"] = Array.Empty<string>()
+					}
+				};
+			});
+
+            app.UseServiceModel(builder =>
 			{
 				var webServices = ServiceTypes.Types;
 
