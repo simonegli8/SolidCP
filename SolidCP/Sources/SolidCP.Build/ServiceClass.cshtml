@@ -60,8 +60,8 @@ public class @(Class.Identifier): @(OldNamespace).@Class.Identifier, I@(Class.Id
 			}
 
 			<text>
-				@(method.Modifiers) new @(method.ReturnType) @(method.Identifier)@(method.ParameterList) {
-				@(callStatement)base.@(method.Identifier)@(argumentList)@(";")
+			@(method.Modifiers) @(!method.Modifiers.Any(mod => mod.IsKeyword() && mod.Kind() == SyntaxKind.NewKeyword) ? "new " : "") @(method.ReturnType) @(method.Identifier)@(method.ParameterList) {
+			@(callStatement)base.@(method.Identifier)@(argumentList)@(";")
 				}
 			</text>
 		}
