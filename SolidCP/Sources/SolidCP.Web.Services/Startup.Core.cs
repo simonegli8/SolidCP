@@ -1,34 +1,33 @@
 ﻿#if !NETFRAMEWORK
-using System;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Net;
-using System.Linq;
-using System.Xml;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Razor;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using System.Diagnostics;
-using Swashbuckle.AspNetCore.Swagger;
 using CoreWCF;
-using CoreWCF.Description;
 using CoreWCF.Channels;
 using CoreWCF.Configuration;
-
-using System.Security.Cryptography.X509Certificates;
-using SolidCP.Web.Services;
-using System.Diagnostics.Eventing.Reader;
+using CoreWCF.Description;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Razor;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.Systemd;
-using System.Runtime.Intrinsics.X86;
-using System.IO;
+using Microsoft.OpenApi.Models;
 using SolidCP.Providers;
 using SolidCP.Providers.OS;
+using SolidCP.Web.Services;
+using Swashbuckle.AspNetCore.Swagger;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace SolidCP.Web.Services
 {
@@ -315,8 +314,8 @@ namespace SolidCP.Web.Services
 				{
 					o.Title = title;
 					o.Version = ver?.Version ?? "1.0";
-                    o.Description = $"This is the REST API of SolidCP. Note that all {openServices}services use Basic Http Authentication. If you use .NET, you might want to access the API over WCF/SOAP, in this case refer to the {clientAssembly}assembly.";
-                    o.TermsOfService = new("http://solidcp.com/terms");
+					o.Description = $"This is the REST API of SolidCP. Note that all {openServices}services use Basic Http Authentication. If you use .NET, you might want to access the API over WCF/SOAP, in this case refer to the {clientAssembly}assembly.";
+					o.TermsOfService = new("http://solidcp.com/terms");
 					o.ContactName = "Contact";
 					o.ContactEmail = "support@solidcp.com";
 					o.ContactUrl = new("http://solidcp.com/contact");
@@ -324,7 +323,7 @@ namespace SolidCP.Web.Services
 					o.ExternalDocumentDescription = "Documentation";
 				});
 
-			services.AddSingleton(new SwaggerOptions());
+            services.AddSingleton(new SwaggerOptions());
 			//.AddSingleton<IServiceBehavior, UseRequestHeadersForMetadataAddressBehavior>();
 		}
 
@@ -386,27 +385,7 @@ namespace SolidCP.Web.Services
 		public static void ConfigureWCF(IApplicationBuilder app)
 		{
 			app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SolidCP API V1");
-
-                c.ConfigObject.AdditionalItems["securityDefinitions"] = new Dictionary<string, object>
-                {
-                    ["basicAuth"] = new Dictionary<string, object>
-                    {
-                        ["type"] = "basic",
-                        ["description"] = "Basic HTTP Authentication"
-                    }
-                };
-
-                c.ConfigObject.AdditionalItems["security"] = new[]
-                {
-					new Dictionary<string, object>
-					{
-						["basicAuth"] = Array.Empty<string>()
-					}
-				};
-			});
+			app.UseSwaggerUI();
 
             app.UseServiceModel(builder =>
 			{
