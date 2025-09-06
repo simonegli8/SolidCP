@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="PageName.Login" xml:space="preserve">
     <value>تسجيل الدخول</value>
@@ -309,10 +309,10 @@
   <data name="PageName.SpaceMsSql2019" xml:space="preserve">
     <value>خادم SQL 2019</value>
   </data>
-	<data name="PageTitle.SpaceMsSql2019" xml:space="preserve">
+  <data name="PageTitle.SpaceMsSql2019" xml:space="preserve">
     <value>{user} - {space} - SQL Server 2019</value>
   </data>
-	<data name="PageName.SpaceMsSql2022" xml:space="preserve">
+  <data name="PageName.SpaceMsSql2022" xml:space="preserve">
     <value>خادم SQL 2022</value>
   </data>
   <data name="PageTitle.SpaceMsSql2022" xml:space="preserve">
@@ -569,5 +569,11 @@
   </data>
   <data name="PageTitle.PrivateNetworkVLANs" xml:space="preserve">
     <value>الشبكة الخاصة - شبكات VLAN</value>
+  </data>
+  <data name="PageName.APIDocumentation" xml:space="preserve">
+    <value>وثائق واجهة برمجة التطبيقات</value>
+  </data>
+  <data name="PageTitle.APIDocumentation" xml:space="preserve">
+    <value>وثائق واجهة برمجة التطبيقات</value>
   </data>
 </root>

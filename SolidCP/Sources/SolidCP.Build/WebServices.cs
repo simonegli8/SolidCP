@@ -114,8 +114,9 @@ namespace SolidCP.Build
 		public const string WebServiceAttributeName = "SolidCP.Web.Services.WebServiceAttribute";
 		public const bool Debug = false; // Set to true to debug SolidCP.Build
 		public const bool EmitOpenApiTypes = false;
+        public const bool EmitSwaggerWcfSecurity = true;
 
-		public static readonly string NewLine = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "\r\n" : "\n";
+        public static readonly string NewLine = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "\r\n" : "\n";
 
 		public static void Execute(Compilation compilation, ImmutableArray<ClassDeclarationSyntax> classes, SourceProductionContext context)
 		{

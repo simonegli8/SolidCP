@@ -74,7 +74,13 @@ namespace SolidCP.Portal.SkinControls
                 topMenu.Items.Remove(e.Item);
                 return;
             }
-            
+
+            // Remove API Documentation link if EnterpriseServer is not embedded
+            if (node.Key == "APIDocumentation" && !PortalConfiguration.SiteSettings["EnterpriseServer"].StartsWith("assembly://"))
+            {
+                e.Item.Parent.ChildItems.Remove(e.Item);
+            }
+
             //if (Align.Equals("left") && node.Title.ToLower().Equals("account home"))
             //{
             //    e.Item.Text = string.Empty;
