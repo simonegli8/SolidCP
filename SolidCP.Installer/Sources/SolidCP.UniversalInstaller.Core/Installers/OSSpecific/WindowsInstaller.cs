@@ -278,7 +278,7 @@ public class WindowsInstaller : Installer
         Info("Install Windows Features...");
 
         InstallWindowsFeature("IIS-WebServerRole", "IIS-WebServer", "IIS-CommonHttpFeatures", "IIS-HttpErrors",
-            "IIS-HttpRedirect", "IIS -ApplicationDevelopment", "IIS-Security", "IIS-NetFxExtensibility45",
+            "IIS-HttpRedirect", "IIS-Security", "IIS-NetFxExtensibility45",
             "IIS-HttpCompressionDynamic", "IIS-StaticContent", "IIS-DefaultDocument", "IIS-DirectoryBrowsing",
             "IIS-WebDAV", "IIS-WebSockets", "IIS-ApplicationInit", "IIS-ISAPIFilter", "IIS-ISAPIExtensions",
             "IIS-ASPNET45", "IIS-BasicAuthentication", "IIS-HttpCompressionStatic", "IIS-FTPSvc",
