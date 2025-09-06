@@ -19,7 +19,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using static Azure.Core.HttpHeader;
+using Microsoft.Dism;
 
 namespace SolidCP.UniversalInstaller;
 
@@ -231,14 +231,90 @@ public class WindowsInstaller : Installer
 		}
 	}
 
-	public override void InstallServerPrerequisites()
-	{
-		InstallNet8Runtime();
-		InstallNet48();
-		ConfigureAspNetTempFolderPermissions();
-	}
+    public virtual void InstallWindowsFeature(params IEnumerable<string> features)
+    {
+        try
+        {
+            DismApi.Initialize(DismLogLevel.LogErrorsWarnings);
+            using (var session = DismApi.OpenOnlineSession())
+            {
+                foreach (var feature in features)
+                {
+                    Log.WriteLine($"Enabling Windows feature {feature}...");
 
-	public override bool IsRunningAsAdmin
+                    try
+                    {
+                        DismApi.EnableFeature(session, feature, false, false);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.WriteError($"Error enabling Windows feature {feature}: {ex.Message}", ex);
+                    }
+
+                    Log.WriteLine($"{feature} enabled successfully.");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.WriteError($"Error: {ex.Message}", ex);
+        }
+        finally
+        {
+            // Always shutdown
+            DismApi.Shutdown();
+        }
+    }
+
+    public virtual void InstallWindowsFeatures()
+    {
+        InstallWindowsFeature("IIS-WebServerRole", "IIS-WebServer", "IIS-CommonHttpFeatures", "IIS-HttpErrors",
+            "IIS-HttpRedirect", "IIS -ApplicationDevelopment", "IIS-Security", "IIS-NetFxExtensibility45",
+            "IIS-HttpCompressionDynamic", "IIS-StaticContent", "IIS-DefaultDocument", "IIS-DirectoryBrowsing",
+            "IIS-WebDAV", "IIS-WebSockets", "IIS-ApplicationInit", "IIS-ISAPIFilter", "IIS-ISAPIExtensions",
+            "IIS-ASPNET45", "IIS-BasicAuthentication", "IIS-HttpCompressionStatic", "IIS-FTPSvc",
+            "NetFx4Extended-ASPNET45", "WCF-TCP-PortSharing45", "WCF-Pipe-Activation45",
+            "WCF-TCP-Activation45", "WCF-HTTP-Activation45", "WAS-ProcessModel", "WAS-ConfigurationAPI");
+    }
+
+    public override void InstallServerPrerequisites()
+    {
+        //InstallNet8Runtime();
+        InstallNet48();
+        ConfigureAspNetTempFolderPermissions();
+        InstallWindowsFeatures();
+    }
+
+    public override void InstallStandaloneServerPrerequisites()
+    {
+        if (Settings.EnterpriseServer.RunOnNetCore || Settings.WebPortal.RunOnNetCore) InstallNet8Runtime();
+        InstallNet48();
+        ConfigureAspNetTempFolderPermissions();
+        InstallWindowsFeatures();
+    }
+    public override void InstallEnterpriseServerPrerequisites()
+    {
+        if (Settings.EnterpriseServer.RunOnNetCore) InstallNet8Runtime();
+        InstallNet48();
+        ConfigureAspNetTempFolderPermissions();
+        InstallWindowsFeatures();
+
+    }
+    public override void InstallWebDavPortalPrerequisites()
+    {
+        InstallNet48();
+        ConfigureAspNetTempFolderPermissions();
+        InstallWindowsFeatures();
+
+    }
+    public override void InstallWebPortalPrerequisites()
+    {
+        if (Settings.WebPortal.RunOnNetCore) InstallNet8Runtime();
+        InstallNet48();
+        ConfigureAspNetTempFolderPermissions();
+        InstallWindowsFeatures();
+    }
+    public override bool IsRunningAsAdmin
 		=> new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
 
 	public override void ShowLogFile()
