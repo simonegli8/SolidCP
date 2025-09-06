@@ -760,7 +760,6 @@ public abstract partial class Installer
 
 		Info($"Delete website {siteId}");
 		WebServer.DeleteSite(siteId);
-		RemoveUser(setting.Username);
 		InstallLog($"Removed website {siteId}");
 	}
 

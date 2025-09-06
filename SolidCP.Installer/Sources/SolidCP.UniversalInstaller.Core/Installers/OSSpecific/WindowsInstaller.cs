@@ -760,7 +760,6 @@ public class WindowsInstaller : Installer
 		InstallLog($"Removed website {siteId}");
 		Log.WriteEnd("Website deleted");
 		DeleteApplicationPool(setting);
-		RemoveUser(setting.Username);
 	}
 	public virtual void ConfigureSchedulerService()
 	{
