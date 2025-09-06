@@ -20,6 +20,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Microsoft.Dism;
+using System.Collections.Immutable;
 
 namespace SolidCP.UniversalInstaller;
 
@@ -238,6 +239,12 @@ public class WindowsInstaller : Installer
             DismApi.Initialize(DismLogLevel.LogErrorsWarnings);
             using (var session = DismApi.OpenOnlineSession())
             {
+				var installed = DismApi.GetFeatures(session)
+					.Where(feat => feat.State == DismPackageFeatureState.Installed)
+					.Select(feat => feat.FeatureName)
+					.ToList();
+				features = features.Except(installed);
+
                 foreach (var feature in features)
                 {
                     Log.WriteLine($"Enabling Windows feature {feature}...");
