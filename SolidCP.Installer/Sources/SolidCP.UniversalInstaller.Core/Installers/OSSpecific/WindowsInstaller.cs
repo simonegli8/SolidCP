@@ -268,6 +268,8 @@ public class WindowsInstaller : Installer
 
     public virtual void InstallWindowsFeatures()
     {
+        Info("Install Windows Features...");
+
         InstallWindowsFeature("IIS-WebServerRole", "IIS-WebServer", "IIS-CommonHttpFeatures", "IIS-HttpErrors",
             "IIS-HttpRedirect", "IIS -ApplicationDevelopment", "IIS-Security", "IIS-NetFxExtensibility45",
             "IIS-HttpCompressionDynamic", "IIS-StaticContent", "IIS-DefaultDocument", "IIS-DirectoryBrowsing",
