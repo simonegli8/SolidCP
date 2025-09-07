@@ -437,9 +437,9 @@ public abstract partial class Installer
 			// download installer
 			var tmpFolder = ComponentTempPath;
 
-			if (UI.Current.DownloadSetup(file, action == SetupActions.Uninstall))
-			{
-				UI.Current.ShowWaitCursor();
+            if (UI.Current.DownloadSetup(file, action == SetupActions.Uninstall || action == SetupActions.Setup))
+            {
+                UI.Current.ShowWaitCursor();
 				string path = Path.Combine(tmpFolder, installerPath);
 				string method;
 				switch (Settings.Installer.Action)
@@ -760,7 +760,6 @@ public abstract partial class Installer
 
 		Info($"Delete website {siteId}");
 		WebServer.DeleteSite(siteId);
-		RemoveUser(setting.Username);
 		InstallLog($"Removed website {siteId}");
 	}
 

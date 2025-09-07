@@ -20,6 +20,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Microsoft.Dism;
+using System.Collections.Immutable;
 
 namespace SolidCP.UniversalInstaller;
 
@@ -238,6 +239,12 @@ public class WindowsInstaller : Installer
             DismApi.Initialize(DismLogLevel.LogErrorsWarnings);
             using (var session = DismApi.OpenOnlineSession())
             {
+				var installed = DismApi.GetFeatures(session)
+					.Where(feat => feat.State == DismPackageFeatureState.Installed)
+					.Select(feat => feat.FeatureName)
+					.ToList();
+				features = features.Except(installed);
+
                 foreach (var feature in features)
                 {
                     Log.WriteLine($"Enabling Windows feature {feature}...");
@@ -268,8 +275,10 @@ public class WindowsInstaller : Installer
 
     public virtual void InstallWindowsFeatures()
     {
+        Info("Install Windows Features...");
+
         InstallWindowsFeature("IIS-WebServerRole", "IIS-WebServer", "IIS-CommonHttpFeatures", "IIS-HttpErrors",
-            "IIS-HttpRedirect", "IIS -ApplicationDevelopment", "IIS-Security", "IIS-NetFxExtensibility45",
+            "IIS-HttpRedirect", "IIS-Security", "IIS-NetFxExtensibility45",
             "IIS-HttpCompressionDynamic", "IIS-StaticContent", "IIS-DefaultDocument", "IIS-DirectoryBrowsing",
             "IIS-WebDAV", "IIS-WebSockets", "IIS-ApplicationInit", "IIS-ISAPIFilter", "IIS-ISAPIExtensions",
             "IIS-ASPNET45", "IIS-BasicAuthentication", "IIS-HttpCompressionStatic", "IIS-FTPSvc",
@@ -751,7 +760,6 @@ public class WindowsInstaller : Installer
 		InstallLog($"Removed website {siteId}");
 		Log.WriteEnd("Website deleted");
 		DeleteApplicationPool(setting);
-		RemoveUser(setting.Username);
 	}
 	public virtual void ConfigureSchedulerService()
 	{
