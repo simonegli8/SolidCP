@@ -19,9 +19,9 @@
 		<PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="9.0.4" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="9.0.4" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="9.0.4" />
-		<PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="9.0.8" />
-        <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="9.0.8" />
-        <PackageReference Include="System.ServiceProcess.ServiceController" Version="9.0.8" GeneratePathProperty="true" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="9.0.9" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="9.0.9" />
+        <PackageReference Include="System.ServiceProcess.ServiceController" Version="9.0.9" GeneratePathProperty="true" />
         <!--
 		<ProjectReference Include="..\..\Lib\CoreWCF\src\CoreWCF.Http\src\CoreWCF.Http.csproj" />
 		<ProjectReference Include="..\..\Lib\CoreWCF\src\CoreWCF.NetTcp\src\CoreWCF.NetTcp.csproj" />
