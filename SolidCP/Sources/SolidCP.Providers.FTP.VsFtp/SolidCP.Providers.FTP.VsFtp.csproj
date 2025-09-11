@@ -24,7 +24,7 @@
 	  <None Include="CryptSharp\Properties\AssemblyInfo.SCryptSubset.cs" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
+		<PackageReference Include="Mono.Posix" Version="7.1.0-final.1.21458.1" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\SolidCP.Providers.Base\SolidCP.Providers.Base.csproj" />
