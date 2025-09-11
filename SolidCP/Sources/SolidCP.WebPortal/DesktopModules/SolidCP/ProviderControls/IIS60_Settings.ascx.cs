@@ -54,54 +54,6 @@ namespace SolidCP.Portal.ProviderControls
         {
         }
 
-		public void WebAppGalleryList_DataBound(object sender, EventArgs e)
-		{
-			SetAppsCalatolgFilter(FilteredAppIds);
-		}
-
-		public void ResetButton_Click(object sender, EventArgs e)
-		{
-			WebAppGalleryList.ClearSelection();
-			//
-			FilterDialogButton.Text = GetLocalizedString("FilterDialogButton.Text");
-		}
-
-		protected void SetAppsCalatolgFilter(string appsIds)
-		{
-			if (String.IsNullOrEmpty(appsIds))
-				return;
-			//
-			string[] filteredApps = appsIds.Split(new string[] { "," },
-				StringSplitOptions.RemoveEmptyEntries);
-			//
-			foreach (ListItem li in WebAppGalleryList.Items)
-			{
-				li.Selected = Array.Exists<string>(filteredApps,
-					x => x.Equals(li.Value.Trim(),
-						StringComparison.InvariantCultureIgnoreCase));
-			}
-			//
-			FilterDialogButton.Text = GetLocalizedString("FilterDialogButton.AlternateText");
-		}
-
-		protected string GetAppsCatalogFilter()
-		{
-			var builder = new StringBuilder();
-			var formatStr = "{0}";
-			//
-			foreach (ListItem li in WebAppGalleryList.Items)
-			{
-				if (li.Selected)
-				{
-					builder.AppendFormat(formatStr, li.Value.Trim());
-					//
-					formatStr = ",{0}";
-				}
-			}
-			//
-			return builder.ToString();
-		}
-
         public void BindSettings(StringDictionary settings)
         {
             ipAddress.AddressId = (settings["SharedIP"] != null) ? Utils.ParseInt(settings["SharedIP"], 0) : 0;
@@ -135,11 +87,6 @@ namespace SolidCP.Portal.ProviderControls
             sharedSslSites.Value = settings[PackageSettings.SHARED_SSL_SITES];
             ActiveDirectoryIntegration.BindSettings(settings);
 			
-            //
-            wpiEditFeedsList.Value = settings["FeedUrls"];
-			FilteredAppIds = settings["GalleryAppsFilter"];
-            radioFilterAppsList.SelectedIndex = Utils.ParseInt(settings["GalleryAppsFilterMode"], 0);
-            chkGalleryAppsAlwaysIgnoreDependencies.Checked = Utils.ParseBool(settings["GalleryAppsAlwaysIgnoreDependencies"], true);
         }
 
         public void SaveSettings(StringDictionary settings)
@@ -172,11 +119,7 @@ namespace SolidCP.Portal.ProviderControls
 			settings["ProtectedFoldersFile"] = txtProtectedFoldersFile.Text.Trim();
             
             ActiveDirectoryIntegration.SaveSettings(settings);
-			//
-            settings["FeedUrls"] = wpiEditFeedsList.Value;
-			settings["GalleryAppsFilter"] = GetAppsCatalogFilter();
-            settings["GalleryAppsFilterMode"] = radioFilterAppsList.SelectedIndex.ToString();
-            settings["GalleryAppsAlwaysIgnoreDependencies"] = chkGalleryAppsAlwaysIgnoreDependencies.Checked.ToString();
+
         }
     }
 }

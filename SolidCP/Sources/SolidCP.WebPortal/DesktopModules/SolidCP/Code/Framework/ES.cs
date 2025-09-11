@@ -152,16 +152,6 @@ namespace SolidCP.WebPortal
 			get { return GetCachedProxy<esSystem>(); }
 		}
 
-		public esApplicationsInstaller ApplicationsInstaller
-		{
-			get { return GetCachedProxy<esApplicationsInstaller>(); }
-		}
-
-		public esWebApplicationGallery WebApplicationGallery
-		{
-			get { return GetCachedProxy<esWebApplicationGallery>(); }
-		}
-
 		public esAuditLog AuditLog
 		{
 			get { return GetCachedProxy<esAuditLog>(); }
@@ -266,13 +256,6 @@ namespace SolidCP.WebPortal
 		{
 			get { return GetCachedProxy<esExchangeServer>(); }
 		}
-
-
-		public esHeliconZoo HeliconZoo
-		{
-			get { return GetCachedProxy<esHeliconZoo>(); }
-		}
-
 
 		public esEnterpriseStorage EnterpriseStorage
 		{

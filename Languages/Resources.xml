@@ -2206,6 +2206,16 @@
     <DefaultValue>Private Network VLANs</DefaultValue>
   </Resource>
   <Resource>
+    <File>App_GlobalResources\SolidCP_Pages.ascx.resx</File>
+    <Key>PageName.APIDocumentation</Key>
+    <DefaultValue>API Documentation</DefaultValue>
+  </Resource>
+  <Resource>
+    <File>App_GlobalResources\SolidCP_Pages.ascx.resx</File>
+    <Key>PageTitle.APIDocumentation</Key>
+    <DefaultValue>API Documentation</DefaultValue>
+  </Resource>
+  <Resource>
     <File>App_GlobalResources\SolidCP_SharedResources.ascx.resx</File>
     <Key>YesNo.False</Key>
     <DefaultValue>No</DefaultValue>
@@ -11479,7 +11489,7 @@
   <Resource>
     <File>App_GlobalResources\SolidCP_SharedResources.ascx.resx</File>
     <Key>WebAppGallery.DatabaseUserCannotAccessDatabase</Key>
-    <DefaultValue>Database user '{1}' cannot access selected database</DefaultValue>
+    <DefaultValue>f</DefaultValue>
   </Resource>
   <Resource>
     <File>App_GlobalResources\SolidCP_SharedResources.ascx.resx</File>

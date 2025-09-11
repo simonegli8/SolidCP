@@ -28473,8 +28473,6 @@ INSERT [dbo].[Quotas] ([QuotaID], [GroupID], [QuotaOrder], [QuotaName], [QuotaDe
 GO
 INSERT [dbo].[Quotas] ([QuotaID], [GroupID], [QuotaOrder], [QuotaName], [QuotaDescription], [QuotaTypeID], [ServiceQuota], [ItemTypeID], [HideQuota]) VALUES (94, 2, 17, N'Web.ColdFusion', N'ColdFusion', 1, 0, NULL, NULL)
 GO
-INSERT [dbo].[Quotas] ([QuotaID], [GroupID], [QuotaOrder], [QuotaName], [QuotaDescription], [QuotaTypeID], [ServiceQuota], [ItemTypeID], [HideQuota]) VALUES (95, 2, 1, N'Web.WebAppGallery', N'Web Application Gallery', 1, 0, NULL, NULL)
-GO
 INSERT [dbo].[Quotas] ([QuotaID], [GroupID], [QuotaOrder], [QuotaName], [QuotaDescription], [QuotaTypeID], [ServiceQuota], [ItemTypeID], [HideQuota]) VALUES (96, 2, 18, N'Web.CFVirtualDirectories', N'ColdFusion Virtual Directories', 1, 0, NULL, NULL)
 GO
 INSERT [dbo].[Quotas] ([QuotaID], [GroupID], [QuotaOrder], [QuotaName], [QuotaDescription], [QuotaTypeID], [ServiceQuota], [ItemTypeID], [HideQuota]) VALUES (97, 2, 20, N'Web.RemoteManagement', N'Remote web management allowed', 1, 0, NULL, NULL)
@@ -30040,10 +30038,6 @@ and below is the summary information for its resources.
         <td class="Label">Maximum Number of Web Sites:</td>
         <td><ad:NumericQuota quota="Web.Sites" /></td>
     </tr>
-	<tr>
-        <td class="Label">Web Application Gallery:</td>
-        <td><ad:BooleanQuota quota="Web.WebAppGallery" /></td>
-    </tr>
     <tr>
         <td class="Label">Classic ASP:</td>
         <td><ad:BooleanQuota quota="Web.Asp" /></td>
@@ -30776,7 +30770,6 @@ Maximum Number of Sub-Domains: <ad:NumericQuota quota="OS.SubDomains" />
 Limits
 ------
 Maximum Number of Web Sites: <ad:NumericQuota quota="Web.Sites" />
-Web Application Gallery: <ad:BooleanQuota quota="Web.WebAppGallery" />
 Classic ASP: <ad:BooleanQuota quota="Web.Asp" />
 ASP.NET 1.1: <ad:BooleanQuota quota="Web.AspNet11" />
 ASP.NET 2.0: <ad:BooleanQuota quota="Web.AspNet20" />

@@ -58,54 +58,6 @@ namespace SolidCP.Portal.ProviderControls
 		{
 		}
 
-		public void WebAppGalleryList_DataBound(object sender, EventArgs e)
-		{
-			SetAppsCalatolgFilter(FilteredAppIds);
-		}
-
-		public void ResetButton_Click(object sender, EventArgs e)
-		{
-			WebAppGalleryList.ClearSelection();
-			//
-			FilterDialogButton.Text = GetLocalizedString("FilterDialogButton.Text");
-		}
-
-		protected void SetAppsCalatolgFilter(string appsIds)
-		{
-			if (String.IsNullOrEmpty(appsIds))
-				return;
-			//
-			string[] filteredApps = appsIds.Split(new string[] { "," }, 
-				StringSplitOptions.RemoveEmptyEntries);
-			//
-			foreach (ListItem li in WebAppGalleryList.Items)
-			{
-				li.Selected = Array.Exists<string>(filteredApps, 
-					x => x.Equals(li.Value.Trim(), 
-						StringComparison.InvariantCultureIgnoreCase));
-			}
-			//
-			FilterDialogButton.Text = GetLocalizedString("FilterDialogButton.AlternateText");
-		}
-
-		protected string GetAppsCatalogFilter()
-		{
-			var builder = new StringBuilder();
-			var formatStr = "{0}";
-			//
-			foreach (ListItem li in WebAppGalleryList.Items)
-			{
-				if (li.Selected)
-				{
-					builder.AppendFormat(formatStr, li.Value.Trim());
-					//
-					formatStr = ",{0}";
-				}
-			}
-			//
-			return builder.ToString();
-		}
-
 		public void BindSettings(StringDictionary settings)
 		{
 			//
@@ -217,14 +169,6 @@ namespace SolidCP.Portal.ProviderControls
 				}
 			}
 
-            // WPI
-            //wpiMicrosoftFeed.Checked = Utils.ParseBool(settings["FeedEnableMicrosoft"], true);
-            //wpiHeliconTechFeed.Checked = Utils.ParseBool(settings["FeedEnableHelicon"], true);
-            wpiEditFeedsList.Value = settings["FeedUrls"];
-            FilteredAppIds = settings["GalleryAppsFilter"];
-            radioFilterAppsList.SelectedIndex = Utils.ParseInt(settings["GalleryAppsFilterMode"], 0);
-            chkGalleryAppsAlwaysIgnoreDependencies.Checked = Utils.ParseBool(settings["GalleryAppsAlwaysIgnoreDependencies"], false);
-
             // If any of these exists, we assume we are running against the IIS80 provider
 		    if (settings["SSLCCSCommonPassword"] != null || settings["SSLCCSUNCPath"] != null || settings["SSLUseCCS"] != null || settings["SSLUseSNI"] != null)
 		    {
@@ -317,14 +261,6 @@ namespace SolidCP.Portal.ProviderControls
 			{
 				settings[WDeployEnabled] = Boolean.FalseString;
 			}
-
-            //settings["FeedEnableMicrosoft"] = wpiMicrosoftFeed.Checked.ToString();
-            //settings["FeedEnableHelicon"] = wpiHeliconTechFeed.Checked.ToString();
-            settings["FeedUrls"] = wpiEditFeedsList.Value;
-            settings["GalleryAppsFilter"] = GetAppsCatalogFilter();
-            settings["GalleryAppsFilterMode"] = radioFilterAppsList.SelectedIndex.ToString();
-            settings["GalleryAppsAlwaysIgnoreDependencies"] = chkGalleryAppsAlwaysIgnoreDependencies.Checked.ToString();
-
 
             if (IIS80SSLSettings.Visible)
 		    {

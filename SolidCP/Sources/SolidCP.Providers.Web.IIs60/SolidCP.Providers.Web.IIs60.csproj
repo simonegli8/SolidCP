@@ -51,7 +51,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\VersionInfo.cs" Link="VersionInfo.cs" />
-    <Compile Include="..\SolidCP.Server\Code\WPIHelper.cs" Link="WPIWebApplicationGallery\WPIHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SolidCP.Providers.Base\SolidCP.Providers.Base.csproj" />

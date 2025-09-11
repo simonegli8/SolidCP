@@ -49,7 +49,6 @@ namespace SolidCP.EnterpriseServer
 		public const string SMTP_SETTINGS = "SmtpSettings";
 		public const string BACKUP_SETTINGS = "BackupSettings";
 		public const string SETUP_SETTINGS = "SetupSettings";
-        public const string WPI_SETTINGS = "WpiSettings";
         public const string FILEMANAGER_SETTINGS = "FileManagerSettings";
         public const string PACKAGE_DISPLAY_SETTINGS = "PackageDisplaySettings";
         public const string RDS_SETTINGS = "RdsSettings";
@@ -69,10 +68,6 @@ namespace SolidCP.EnterpriseServer
         public const string WEBDAV_PASSWORD_RESET_LINK_LIFE_SPAN = "WebdavPswdResetLinkLifeSpan";
         public const string WEBDAV_OWA_ENABLED_KEY = "WebdavOwaEnabled";
         public const string WEBDAV_OWA_URL = "WebdavOwaUrl";
-
-        // key to access to wpi main & custom feed in wpi settings
-        public const string WPI_MAIN_FEED_KEY = "WpiMainFeedUrl";
-        public const string FEED_ULS_KEY = "FeedUrls";
 
 		//Mfa token app display name
 		public const string MFA_TOKEN_APP_DISPLAY_NAME = "MfaTokenAppDisplayName";

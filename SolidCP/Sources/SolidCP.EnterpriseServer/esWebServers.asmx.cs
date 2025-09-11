@@ -533,37 +533,6 @@ namespace SolidCP.EnterpriseServer
         }
         #endregion
 
-        #region Helicon Zoo
-
-        [WebMethod]
-        public List<WebAppVirtualDirectory> GetZooApplications(int siteItemId)
-        {
-            return WebServerController.GetZooApplications(siteItemId);
-        }
-
-        [WebMethod]
-        public StringResultObject SetZooEnvironmentVariable(int siteItemId, string appName, string envName, string envValue)
-        {
-            return WebServerController.SetZooEnvironmentVariable(siteItemId, appName, envName, envValue);
-        }
-
-
-        [WebMethod]
-        public StringResultObject SetZooConsoleEnabled(int siteItemId, string appName)
-        {
-            return WebServerController.SetZooConsoleEnabled(siteItemId, appName);
-        }
-
-        [WebMethod]
-        public StringResultObject SetZooConsoleDisabled(int siteItemId, string appName)
-        {
-            return WebServerController.SetZooConsoleDisabled(siteItemId, appName);
-        }
-
-
-
-        #endregion
-
         #region WebManagement Access
 
         [WebMethod]
