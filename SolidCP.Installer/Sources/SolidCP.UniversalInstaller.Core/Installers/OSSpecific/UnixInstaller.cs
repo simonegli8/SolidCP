@@ -26,11 +26,11 @@ public abstract class UnixInstaller : Installer
 	public override string SolidCPUnixGroup => SolidCPGroup;
 	public UnixInstaller() : base() { }
 	bool installedAspNetCoreSharedServer = false;
-	public void InstallAspNetCoreSharedServer()
+	public virtual void InstallAspNetCoreSharedServer()
 	{
 		Log.WriteStart("Install AspNetCoreSharedServer");
 
-		const string AspNetCoreSharedServerVersion = "1.1.11";
+		const string AspNetCoreSharedServerVersion = "1.1.12";
 
 		if (installedAspNetCoreSharedServer) return;
 		installedAspNetCoreSharedServer = true;
