@@ -24,7 +24,7 @@ public class MacInstaller : UnixInstaller
 
 		Shell.Exec($"installer -pkg \"{tmp}\" -target /");
 		Shell.Exec("brew update");
-		Shell.Exec("brew install mono-libgdiplus");
+		//Shell.Exec("brew install mono-libgdiplus");
 
 		Net8RuntimeInstalled = true;
 
