@@ -361,7 +361,8 @@ namespace SolidCP.Web.Clients
 
 		Binding GetNamedPipeBinding(bool secure)
 		{
-			NetNamedPipeBinding pipe;
+            if (!OSInfo.IsWindows) throw new PlatformNotSupportedException("net.pipe binding only supported on Windows.");
+            NetNamedPipeBinding pipe;
 			if (secure) pipe = new NetNamedPipeBinding(NetNamedPipeSecurityMode.Transport);
 			else pipe = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
 			pipe.MaxReceivedMessageSize = MaximumMessageSize;

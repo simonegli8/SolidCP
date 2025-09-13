@@ -50,8 +50,8 @@
         <ProjectReference Include="..\SolidCP.Tests\SolidCP.Tests.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-        <Reference Include="System.Net.Http" />
+	<ItemGroup Condition="$(TargetFramework) == 'net48'">
+		<Reference Include="System.Net.Http" />
     </ItemGroup>
 
     <ItemGroup>
