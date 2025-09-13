@@ -18,7 +18,8 @@
         <PackageReference Include="System.Security.Principal.Windows" Version="5.0.0" />
         <PackageReference Include="System.Text.Encoding.CodePages" Version="9.0.9" />
         <PackageReference Include="Mono.Posix" Version="7.1.0-final.1.21458.1" GeneratePathProperty="true" />
-    </ItemGroup>
+		<PackageReference Include="Mono.Unix" Version="7.1.0-final.1.21458.1" GeneratePathProperty="true" />
+	</ItemGroup>
     <ItemGroup>
         <Reference Include="System.DirectoryServices" />
         <Reference Include="System.Management" />
@@ -38,7 +39,8 @@
     <Target Name="CopyPackageReferences" AfterTargets="Build">
         <ItemGroup>
             <CopyToOutputFiles Include="$(PkgMono_Posix)\lib\netstandard2.0\Mono.Posix.*" />
-        </ItemGroup>
+			<CopyToOutputFiles Include="$(PkgMono_Unix)\lib\netstandard2.0\Mono.Unix.*" />
+		</ItemGroup>
         <Copy SourceFiles="@(CopyToOutputFiles)" DestinationFolder="$(ServerPath)\%(RecursiveDir)" />
     </Target>
 </Project>
