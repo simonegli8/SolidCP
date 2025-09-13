@@ -59,7 +59,7 @@
         <PackageReference Include="Octokit" Version="14.0.0" />
 		<PackageReference Include="Microsoft.Dism" Version="3.3.12" />
 		<PackageReference Include="Mono.Posix" Version="7.1.0-final.1.21458.1" />
-		<PackageReference Include="Mono.Unix" Version="7.1.0-final.1.21458.1" />
+		<PackageReference Include="Mono.Unix" Version="7.1.0-final.1.21458.1" GeneratePathProperty="true" />
 
 		<!--<PackageReference Include="System.ServiceModel.Duplex" Version="4.4.*" />
         <PackageReference Include="System.ServiceModel.Http" Version="4.4.*" />
@@ -69,4 +69,12 @@
         <PackageReference Include="System.Text.Encoding.CodePages" Version="9.0.9" />
     </ItemGroup>
     
+	<Target Name="CopyMonoUnixRuntimes" AfterTargets="Build">
+		<ItemGroup>
+			<RuntimeFiles Include="$(PkgMono_Unix)\runtimes\**\*.*" />
+		</ItemGroup>
+		<Message Importance="high" Text="Copying Mono.Posix native library from $(MonoUnixRuntimePath) to $(OutputDir)" />
+	    <Copy SourceFiles="@(RuntimeFiles)" DestinationFolder="$(OutputDir)\runtimes\%(RecursiveDir)" SkipUnchangedFiles="true" />
+	</Target>
+
 </Project>

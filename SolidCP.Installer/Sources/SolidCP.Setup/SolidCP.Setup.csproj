@@ -94,7 +94,7 @@
             <LogicalName>Dlls/Microsoft.Win32.Registry.dll</LogicalName>
             <Link>Dlls\Microsoft.Win32.Registry.dll</Link>
         </EmbeddedResource>
-        <EmbeddedResource Include="$(PkgMono_Posix_NETStandard)\runtimes\**\*.dll;$(PkgMono_Posix_NETStandard)\runtimes\**\*.so">
+        <EmbeddedResource Include="$(PkgMono_Unix)\runtimes\**\*.dll;$(PkgMono_Unix)\runtimes\**\*.so;$(PkgMono_Unix)\runtimes\**\*.dylib">
             <LogicalName>Dlls/runtimes/%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
             <Link>Dlls\runtimes\%(RecursiveDir)%(Filename)%(Extension)</Link>
         </EmbeddedResource>

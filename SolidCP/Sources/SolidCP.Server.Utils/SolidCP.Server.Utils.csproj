@@ -40,7 +40,9 @@
         <ItemGroup>
             <CopyToOutputFiles Include="$(PkgMono_Posix)\lib\netstandard2.0\Mono.Posix.*" />
 			<CopyToOutputFiles Include="$(PkgMono_Unix)\lib\netstandard2.0\Mono.Unix.*" />
+			<RuntimeFiles Include="$(PkgMono_Unix)\runtimes\**\*.*" />
 		</ItemGroup>
         <Copy SourceFiles="@(CopyToOutputFiles)" DestinationFolder="$(ServerPath)\%(RecursiveDir)" />
-    </Target>
+		<Copy SourceFiles="@(RuntimeFiles)" DestinationFolder="$(ServerPath)\runtimes\%(RecursiveDir)" SkipUnchangedFiles="true" />
+	</Target>
 </Project>
