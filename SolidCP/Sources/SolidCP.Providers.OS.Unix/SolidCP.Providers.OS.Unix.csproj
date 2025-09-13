@@ -15,7 +15,8 @@
     <Target Name="CopyMonoPosixNETStandard" AfterTargets="Build">
         <ItemGroup>
             <CopyFiles Include="$(PkgMono_Posix)lib\netstandard2.0\Mono.Posix.*" />
-            <CopyFiles Include="$(PkgSyslogNet_ClientStandard)\lib\netstandard2.0\SyslogNet.Client.*" />
+			<CopyFiles Include="$(PkgMono_Unix)lib\netstandard2.0\Mono.Unix.*" />
+			<CopyFiles Include="$(PkgSyslogNet_ClientStandard)\lib\netstandard2.0\SyslogNet.Client.*" />
         </ItemGroup>
         <Message Text="Copy Files: @(CopyFiles)" Importance="high" />
         <Copy SourceFiles="@(CopyFiles)" DestinationFolder="$(OutputPath)" />
@@ -23,7 +24,8 @@
     <ItemGroup>
         <PackageReference Include="SyslogNet.ClientStandard" Version="0.3.4" />
         <PackageReference Include="Mono.Posix" Version="7.1.0-final.1.21458.1" GeneratePathProperty="true" />
-        <PackageReference Include="plist-cil" Version="2.2.0" />
+		<PackageReference Include="Mono.Unix" Version="7.1.0-final.1.21458.1" GeneratePathProperty="true" />
+		<PackageReference Include="plist-cil" Version="2.2.0" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\SolidCP.Providers.Base\SolidCP.Providers.Base.csproj" />
