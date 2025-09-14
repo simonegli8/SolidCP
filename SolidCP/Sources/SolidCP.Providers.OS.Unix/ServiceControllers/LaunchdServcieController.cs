@@ -166,4 +166,13 @@ public class LaunchdServiceController : ServiceController
 
 		return new ServiceManager(this, serviceId);
 	}
+
+    public override void Enable(string serviceId)
+    {
+        Shell.Exec($"launchctl enable system {serviceId}");
+    }
+    public override void Disable(string serviceId)
+    {
+        Shell.Exec($"launchctl disable system {serviceId}");
+    }
 }

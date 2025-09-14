@@ -190,4 +190,12 @@ public class OpenRCServiceController: ServiceController
 	}
 	public override bool IsInstalled => OSInfo.IsOpenRC;
 	public Shell Shell => Shell.Default;
+    public override void Enable(string serviceId)
+    {
+        Shell.Exec($"rc-update add {serviceId} default");
+    }
+    public override void Disable(string serviceId)
+    {
+        Shell.Exec($"rc-update delete {serviceId} default");
+    }
 }
