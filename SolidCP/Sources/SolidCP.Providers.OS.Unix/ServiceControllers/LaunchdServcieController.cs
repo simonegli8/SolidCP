@@ -168,10 +168,10 @@ public class LaunchdServiceController : ServiceController
 
     public override void Enable(string serviceId)
     {
-        Shell.Exec($"launchctl enable system {serviceId}");
+        Shell.Exec($"launchctl enable system/{serviceId}");
     }
     public override void Disable(string serviceId)
     {
-        Shell.Exec($"launchctl disable system {serviceId}");
+        Shell.Exec($"launchctl disable system/{serviceId}");
     }
 }
