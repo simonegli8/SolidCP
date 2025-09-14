@@ -50,7 +50,7 @@ public class LaunchdServiceController : ServiceController
         if (output == null) return null;
         var exists = Regex.IsMatch(output, @"^\s*(?<id>[^\n]*?)[ \t]*=[ \t]*{[ \t]*\r?\n", RegexOptions.Singleline);
         if (!exists) return null;
-        var match = Regex.Match(output, @"^\s*state\s*=\s*(?<state>.+?)$", RegexOptions.Multiline);
+        var match = Regex.Match(output, @"^\s*state\s*=\s*(?<state>.+?)\s*?$", RegexOptions.Multiline);
         string status = null;
         if (match.Success)
         {
