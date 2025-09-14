@@ -145,9 +145,14 @@ public class LaunchdServiceController : ServiceController
 		if (srvc.SessionCreate != null) dict.Add("SessionCreate", srvc.SessionCreate);
 		if (srvc.KeepAlive != null) dict.Add("KeepAlive", srvc.KeepAlive);
 		if (srvc.ExitTimeout != null) dict.Add("ExitTimeout", srvc.ExitTimeout);
-		if (srvc.Environment != null && srvc.Environment.Count > 0) dict.Add("EnvironmentVariables", srvc.Environment);
+        if (srvc.Environment != null && srvc.Environment.Count > 0)
+        {
+            var env = new NSDictionary();
+            foreach (var kvp in srvc.Environment) env.Add(kvp.Key, kvp.Value);
+            dict.Add("EnvironmentVariables", env);
+        }
 
-		using (var file = File.Create(serviceFile))
+        using (var file = File.Create(serviceFile))
 		{
 			PropertyListParser.SaveAsXml(dict, file);
 		}
