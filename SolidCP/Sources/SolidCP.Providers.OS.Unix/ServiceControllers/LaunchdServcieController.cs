@@ -117,23 +117,28 @@ public class LaunchdServiceController : ServiceController
 						.Select(m => m.Value.Length > 2 && m.Value[0] == '"' && m.Value[m.Value.Length - 1] == '"' ?
 							m.Value.Substring(1, m.Value.Length - 2) : m.Value))
 						.ToArray();
-				dict.Add("ProgramArguments", args);
-			}
-		}
+                dict.Add("ProgramArguments", new NSArray(args
+                    .Select(arg => new NSString(arg))
+                    .ToArray()));
+            }
+        }
 
 		if (srvc.UserName != null) dict.Add("UserName", srvc.UserName);
 		if (srvc.OnDemand != null) dict.Add("OnDemand", srvc.OnDemand);
 		if (srvc.StartOnMount != null) dict.Add("StartOnMount", srvc.StartOnMount);
-		if (srvc.OnDemand != null) dict.Add("OnDemand", srvc.OnDemand);
 		if (srvc.QueueDirectories != null && srvc.QueueDirectories.Count > 0)
 		{
-			dict.Add("QueueDirectories", srvc.QueueDirectories);
-		}
-		if (srvc.WatchPaths != null && srvc.WatchPaths.Count > 0)
+            dict.Add("QueueDirectories", new NSArray(srvc.QueueDirectories
+                .Select(dir => new NSString(dir))
+                .ToArray()));
+        }
+        if (srvc.WatchPaths != null && srvc.WatchPaths.Count > 0)
 		{
-			dict.Add("WatchPaths", srvc.WatchPaths);
-		}
-		if (srvc.StartInterval != null) dict.Add("StartInterval", srvc.StartInterval);
+            dict.Add("WatchPaths", new NSArray(srvc.WatchPaths
+                .Select(dir => new NSString(dir))
+                .ToArray()));
+        }
+        if (srvc.StartInterval != null) dict.Add("StartInterval", srvc.StartInterval);
 		if (srvc.RunAtLoad != null) dict.Add("RunAtLoad", srvc.RunAtLoad);
 		if (srvc.RootDirectory != null) dict.Add("RootDirectory", srvc.RootDirectory);
 		if (srvc.WorkingDirectory != null) dict.Add("WorkingDirectory", srvc.WorkingDirectory);
