@@ -61,7 +61,7 @@ public class MacInstaller : UnixInstaller
     {
         base.InstallAspNetCoreSharedServer();
 
-        OpenAppFirewall("/Users/root/.dotnet/tools/AspNetCoreSharedServer");
+        OpenAppFirewall("/var/bin/AspNetCoreSharedServer");
     }
 
     public override void AddUnixGroup(string group)
