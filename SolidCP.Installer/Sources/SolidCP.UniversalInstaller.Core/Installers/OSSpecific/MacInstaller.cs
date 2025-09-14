@@ -68,6 +68,7 @@ public class MacInstaller : UnixInstaller
     {
         Shell.Exec($"dscl . create /Groups/{group}");
         Shell.Exec($"dscl . create /Groups/{group} RealName \"{group}\"");
+        Shell.Exec($"dscl . create /Groups/{group} Password \"*\"");
         // Get free PrimaryGroupID
         var output = Shell.Exec($"dscl . list /Groups PrimaryGroupID").Output().Result;
         var maxid = Regex.Matches(output, @"(?<=^\s*[^ \t]+\s+)[0-9]+", RegexOptions.Multiline)
