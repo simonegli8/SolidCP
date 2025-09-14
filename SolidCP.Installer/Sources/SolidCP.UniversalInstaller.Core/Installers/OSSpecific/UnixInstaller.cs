@@ -52,8 +52,9 @@ public abstract class UnixInstaller : Installer
 
 		const string ServiceId = "aspnetcore-shared-server";
 		const string Description = "ASP.NET Core Shared Server support for shared hosting of ASP.NET Core applications";
-		const string Command = "/root/.dotnet/tools/AspNetCoreSharedServer";
-		string Directory = Path.GetDirectoryName(Command);
+        string Command = "/root/.dotnet/tools/AspNetCoreSharedServer";
+        if (OSInfo.IsMac) Command = "/var" + Command;
+        string Directory = Path.GetDirectoryName(Command);
 
 		ServiceDescription service;
 		if (IsSystemd)
