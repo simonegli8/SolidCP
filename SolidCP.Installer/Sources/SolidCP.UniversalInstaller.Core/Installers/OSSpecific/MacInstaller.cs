@@ -1,8 +1,9 @@
 ﻿using SolidCP.Providers.OS;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace SolidCP.UniversalInstaller;
 
@@ -63,5 +64,29 @@ public class MacInstaller : UnixInstaller
         OpenAppFirewall("/Users/root/.dotnet/tools/AspNetCoreSharedServer");
     }
 
-
+    public override void AddUnixGroup(string group)
+    {
+        Shell.Exec($"dscl . create /Groups/{group}");
+        //Shell.Exec($"dscl . create /Groups/{group} RealName \"{group}\"");
+        // Get free PrimaryGroupID
+        var output = Shell.Exec($"dscl . list /Groups PrimaryGroupID").Output().Result;
+        var maxid = Regex.Matches(output, @"(?<=^\s*[^ \t]+\s+)[0-9]+", RegexOptions.Multiline)
+            .OfType<Match>()
+            .Select(m =>
+            {
+                if (int.TryParse(m.Value, out int v)) return v;
+                return -1;
+            })
+            .Max();
+        Shell.Exec($"dscl . create /Groups/{group} PrimaryGroupID {maxid + 100}");
+    }
+    public override void AddUnixUser(string user, string group, string password)
+    {
+        Shell.Exec($"sysadminctl -addUser {user} -fullName \"{user}\" -password \"{password}\"");
+        var groups = group.Split(',');
+        foreach (var g in groups)
+        {
+            Shell.Exec($"dscl . -append /Groups/{g.Trim()} GroupMembership {user}");
+        }
+    }
 }
