@@ -35,9 +35,14 @@ public abstract class UnixInstaller : Installer
 		if (installedAspNetCoreSharedServer) return;
 		installedAspNetCoreSharedServer = true;
 
-		Shell.Exec($"dotnet tool install AspNetCoreSharedServer -g --version {AspNetCoreSharedServerVersion}");
+        if (!OSInfo.IsMac) Shell.Exec($"dotnet tool install AspNetCoreSharedServer -g --version {AspNetCoreSharedServerVersion}");
+        else
+        {
+            if (!System.IO.Directory.Exists("/var/bin")) System.IO.Directory.CreateDirectory("/var/bin");
+            Shell.Exec($"dotnet tool install AspNetCoreSharedServer --tool-path /var/bin --version {AspNetCoreSharedServerVersion}");
+        }
 
-		AddUnixGroup("www-data");
+        AddUnixGroup("www-data");
 		AddUnixUser("www-data", "www-data", Utils.GetRandomString(16));
 
 		var conf = Configuration.Current;
@@ -52,8 +57,9 @@ public abstract class UnixInstaller : Installer
 
 		const string ServiceId = "aspnetcore-shared-server";
 		const string Description = "ASP.NET Core Shared Server support for shared hosting of ASP.NET Core applications";
-        string Command = "/root/.dotnet/tools/AspNetCoreSharedServer";
-        if (OSInfo.IsMac) Command = "/var" + Command;
+        string Command;
+        if (!OSInfo.IsMac) Command = "/root/.dotnet/tools/AspNetCoreSharedServer";
+        else Command = "/var/bin/AspNetCoreSharedServer";
         string Directory = Path.GetDirectoryName(Command);
 
 		ServiceDescription service;
