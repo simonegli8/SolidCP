@@ -67,7 +67,7 @@ public class MacInstaller : UnixInstaller
     public override void AddUnixGroup(string group)
     {
         Shell.Exec($"dscl . create /Groups/{group}");
-        //Shell.Exec($"dscl . create /Groups/{group} RealName \"{group}\"");
+        Shell.Exec($"dscl . create /Groups/{group} RealName \"{group}\"");
         // Get free PrimaryGroupID
         var output = Shell.Exec($"dscl . list /Groups PrimaryGroupID").Output().Result;
         var maxid = Regex.Matches(output, @"(?<=^\s*[^ \t]+\s+)[0-9]+", RegexOptions.Multiline)
