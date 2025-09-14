@@ -46,19 +46,18 @@ public class LaunchdServiceController : ServiceController
 
 	public override OSService Info(string serviceId)
 	{
-		var output = Shell.Exec($"launchctl list {serviceId}").Output().Result;
-		if (output == null) return null;
-		var match = Regex.Match(output, @"^\s*Loaded:\s*(?<loaded>[^\s$]+).*?$(^.*$\r?\n)*\s*Active:\s*(?<active>[^\s$]+)\s+\((?<status>[^\)]+)\)", RegexOptions.Multiline);
-		string loaded, active, status = null;
-		if (match.Success)
-		{
-			loaded = match.Groups["loaded"].Value;
-			active = match.Groups["active"].Value;
-			status = match.Groups["status"].Value;
-		}
-		else return null;
+        var output = Shell.Exec($"launchctl print system/{serviceId}").Output().Result;
+        if (output == null) return null;
+        var exists = Regex.IsMatch(output, @"^\s*(?<id>[^\n]*?)[ \t]*=[ \t]*{[ \t]*\r?\n", RegexOptions.Singleline);
+        if (!exists) return null;
+        var match = Regex.Match(output, @"^\s*state\s*=\s*(?<state>.+?)$", RegexOptions.Multiline);
+        string status = null;
+        if (match.Success)
+        {
+            status = match.Groups["state"].Value;
+        }
 
-		return new OSService()
+        return new OSService()
 		{
 			Id = serviceId,
 			Name = serviceId,
