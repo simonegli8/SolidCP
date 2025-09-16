@@ -1377,7 +1377,7 @@ public abstract partial class Installer
 					case OSFlavor.Alpine: current = new AlpineInstaller(); break;
 					default:
 						var assembly = Assembly.GetExecutingAssembly();
-						var type = assembly.GetType($"HostPanelPro.UniversalInstaller.{flavor}");
+						var type = assembly.GetType($"SolidCP.UniversalInstaller.{flavor}");
 						if (type != null) current = Activator.CreateInstance(type) as Installer;
 						else throw new PlatformNotSupportedException("This OS is not supported by the installer.");
 						break;

@@ -58,7 +58,8 @@ namespace SolidCP.UniversalInstaller
 			SetStandaloneServerFilePermissions();
 			SetStandaloneServerFileOwner();
 			InstallDatabase();
-			ConfigureStandaloneServer();
+			InstallSchedulerService();
+            ConfigureStandaloneServer();
 			InstallServerWebsite();
 			InstallWebPortalWebsite();
 			if (OSInfo.IsWindows) InstallWebDavPortalWebsite();
@@ -80,7 +81,8 @@ namespace SolidCP.UniversalInstaller
 			SetStandaloneServerFileOwner();
 			UpdateDatabase();
 			UpdateStandaloneServerConfig();
-			ConfigureStandaloneServer();
+            InstallSchedulerService();
+            ConfigureStandaloneServer();
 			InstallServerWebsite();
 			InstallWebPortalWebsite();
 			if (OSInfo.IsWindows) InstallWebDavPortalWebsite();
@@ -92,7 +94,8 @@ namespace SolidCP.UniversalInstaller
 			RemoveServerWebsite();
 			RemoveWebPortalWebsite();
 			if (OSInfo.IsWindows) RemoveWebDavPortalWebsite();
-			ConfigureStandaloneServer();
+            InstallSchedulerService();
+            ConfigureStandaloneServer();
 			InstallServerWebsite();
 			InstallWebPortalWebsite();
 			if (OSInfo.IsWindows) InstallWebDavPortalWebsite();
@@ -117,7 +120,8 @@ namespace SolidCP.UniversalInstaller
 			RemoveWebDavPortalWebsite();
 			RemoveWebPortalWebsite();
 			RemoveServerWebsite();
-			RemoveStandaloneServerFolder();
+            RemoveSchedulerService();
+            RemoveStandaloneServerFolder();
 			DeleteDatabase();
 		}
 		public virtual void ReadStandaloneServerConfiguration() { }

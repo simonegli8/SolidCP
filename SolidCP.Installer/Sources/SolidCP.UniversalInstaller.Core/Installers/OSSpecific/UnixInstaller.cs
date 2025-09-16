@@ -175,8 +175,99 @@ public abstract class UnixInstaller : Installer
 
 		Log.WriteEnd($"Created web site \"{name}\"");
 	}
+    public override void InstallSchedulerService()
+    {
+        var services = OSInfo.Current.ServiceController;
+        if (services.Info(SchedulerServiceId) != null) services.Remove(SchedulerServiceId);
 
-	public virtual void AddUnixGroup(string group) => Shell.Exec($"groupadd {group}");
+        ConfigureSchedulerService();
+
+        Transaction(() =>
+        {
+            var binFolder = (Settings.EnterpriseServer.RunOnNetCore ||
+                Settings.WebPortal.RunOnNetCore && Settings.WebPortal.EmbedEnterpriseServer) ?
+                    "bin_dotnet" : "bin\\Code";
+            var dll = Path.Combine(Settings.EnterpriseServer.InstallPath, binFolder, "SolidCP.SchedulerService.dll");
+            string Command = $"dotnet \"{dll}\"";
+            string Directory = Path.GetDirectoryName(dll);
+            string description = "SolidCP Scheduler Service";
+            ServiceDescription service;
+            if (IsSystemd)
+            {
+                service = new SystemdServiceDescription()
+                {
+                    ServiceId = SchedulerServiceId,
+                    Description = description,
+                    Executable = Command,
+                    Directory = Directory,
+                    DependsOn = new List<string>() { "network-online.target" },
+                    Environment = new Dictionary<string, string>()
+                {
+                    { "ASPNETCORE_ENVIRONMENT", "Production" }
+                },
+                    Restart = "on-failure",
+                    RestartSec = "1s",
+                    StartLimitBurst = "5",
+                    StartLimitIntervalSec = "500",
+                    User = "root",
+                    Group = "root",
+                    SyslogIdentifier = SchedulerServiceId
+                };
+            }
+            else if (IsOpenRC)
+            {
+                var rcservice = new OpenRCServiceDescription()
+                {
+                    ServiceId = SchedulerServiceId,
+                    Description = description,
+                    Environment = new Dictionary<string, string>()
+                {
+                    { "ASPNETCORE_ENVIRONMENT", "Production" }
+                },
+                    CommandUser = "root",
+                    Command = Command,
+                    WorkingDirectory = Directory,
+                    CommandBackground = true,
+                    PidFile = $"/run/{SchedulerServiceId}.pid",
+                    StopTimeout = 30
+                };
+                if (!OSInfo.IsWSL) rcservice.Need = "net";
+                service = rcservice;
+            }
+            else if (OSInfo.IsMac)
+            {
+                var log = Path.Combine(WebsiteLogsPath, $"{SchedulerServiceId}.log");
+                service = new LaunchdServiceDescription()
+                {
+                    Label = SchedulerServiceId,
+                    Executable = Command,
+                    WorkingDirectory = Directory,
+                    Environment = new Dictionary<string, string>()
+                {
+                    { "ASPNETCORE_ENVIRONMENT", "Production" }
+                },
+                    ExitTimeout = 30,
+                    KeepAlive = true,
+                    RunAtLoad = true,
+                    StandardOutPath = log,
+                    StandardErrorPath = log,
+                    StartOnMount = true
+                };
+            }
+            else throw new NotSupportedException("Only SystemD, OpenRC and Launchd are supported.");
+
+            InstallService(service);
+
+        }).WithRollback(() =>
+        {
+            try
+            {
+                RemoveSchedulerService();
+            }
+            catch { }
+        });
+    }
+    public virtual void AddUnixGroup(string group) => Shell.Exec($"groupadd {group}");
 	public virtual void AddUnixUser(string user, string group, string password)
 	{
 		if (string.IsNullOrEmpty(user) || string.IsNullOrEmpty(password)) return;

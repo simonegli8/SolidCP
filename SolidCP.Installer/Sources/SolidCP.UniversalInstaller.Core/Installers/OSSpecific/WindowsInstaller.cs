@@ -803,7 +803,6 @@ public class WindowsInstaller : Installer
 			File.WriteAllText(config, xml.ToString());
 		}
 	}
-	public virtual string SchedulerServiceId => "SolidCP.SchedulerService";
 	public override void InstallSchedulerService()
 	{
 		var services = OSInfo.Current.ServiceController;
