@@ -86,6 +86,8 @@
         </Compile>
         <Compile Include="ScheduleTaskControls\CheckWebsitesSslView.ascx.cs" />
         <Compile Include="ScheduleTaskControls\CheckWebsitesSslView.ascx.designer.cs" />
+        <Compile Include="SpaceServerUsage.ascx.cs" />
+        <Compile Include="SpaceServerUsage.ascx.designer.cs" />
         <Content Include="App_Code\APIMailCleanerHelper.cs" />
         <Compile Include="AuditLog.ascx.cs">
             <DependentUpon>AuditLog.ascx</DependentUpon>
@@ -6894,6 +6896,7 @@
         <Content Include="VPSForPC\VpsAlertsLog.ascx" />
         <Content Include="VPSForPC\VpsCheckPoints.ascx" />
         <None Include="ScheduleTaskControls\CheckWebsitesSslView.ascx" />
+        <None Include="SpaceServerUsage.ascx" />
         <None Include="VPSForPC\VpsMonitoring.ascx" />
         <Content Include="VPSForPC\RemoteDesktop\Connect.aspx" />
         <Content Include="VPSForPC\RemoteDesktop\msrdp.cab" />
