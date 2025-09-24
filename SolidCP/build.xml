@@ -25,7 +25,7 @@
 		<ZipCmd>"$(RootFolder)\tools\7-Zip\7z.exe"</ZipCmd>
 
 		<DataBaseName>SolidCP_build</DataBaseName>
-		<MSDeployConnectionString>server=(local);database=$(DataBaseName);Integrated Security=true;</MSDeployConnectionString>
+		<MSDeployConnectionString>server=(local);Initial Catalog=$(DataBaseName);Integrated Security=true;</MSDeployConnectionString>
 
 		<PortalSrc>$(TrunkFolder)\Sources\SolidCP.WebPortal</PortalSrc>
 		<WebDavPortalSrc>$(TrunkFolder)\Sources\SolidCP.WebDavPortal</WebDavPortalSrc>

@@ -4,7 +4,7 @@
         <TargetFrameworks>net8.0;net48;netstandard2.0</TargetFrameworks>
         <LangVersion>13</LangVersion>
         <ImplicitUsings>disable</ImplicitUsings>
-        <ScaffoldConnectionString>Server=(local);Database=SolidCPFresh;uid=sa;pwd=Password12;TrustServerCertificate=true;Connection Timeout=300;command timeout=300</ScaffoldConnectionString>
+        <ScaffoldConnectionString>Server=(local);Initial Catalog=SolidCPFresh;uid=sa;pwd=Password12;TrustServerCertificate=true;Connection Timeout=300;command timeout=300</ScaffoldConnectionString>
         <SupportOracle Condition="$(TargetFramework) != 'net48'">false</SupportOracle>
 		<UsePomelo>true</UsePomelo>
 		<UseMySql Condition="'$(TargetFramework)' == 'net9.0'">false</UseMySql>

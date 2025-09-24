@@ -10,7 +10,12 @@ namespace SolidCP.Portal
     public partial class SpaceServerUsage : SolidCPModuleBase
     {
         private const int SERVER_TIMEOUT = 10000; //10 sec
-        protected async void Page_Load(object sender, EventArgs e)
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            Page.Load += PageLoadAsync;
+        }
+
+        protected async void PageLoadAsync(object sender, EventArgs e)
         {
             this.ContainerControl.Visible = (PanelSecurity.SelectedUser.Role != UserRole.User);
             gaugeUsage.Visible = false;
