@@ -40,8 +40,18 @@ public class Program
 			Console.Write(txt);
 			Thread.Sleep(333);
 		};
-		write("|");
-		Task.Run(() =>
+
+		try
+		{
+			write("|");
+		}
+		catch
+		{
+			CancelWaitCursor = new CancellationTokenSource();
+			if (File.Exists(CancelFile)) File.Delete(CancelFile);
+		}
+
+        Task.Run(() =>
 		{
 			try
 			{
