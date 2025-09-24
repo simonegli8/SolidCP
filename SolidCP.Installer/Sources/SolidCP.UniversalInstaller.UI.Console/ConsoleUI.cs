@@ -1272,7 +1272,10 @@ If you proceed, the installer will completely uninstall {settings.ComponentName}
 
 	public override void RunMainUI()
 	{
-		var form = new ConsoleForm($@"
+		if (Installer.Settings.Installer.IsUnattended) Installer.RunUnattended().Wait();
+		else
+		{
+			var form = new ConsoleForm($@"
 SolidCP Installer
 =================
 
@@ -1280,11 +1283,12 @@ SolidCP Installer
 [ View Available Components ]
 [ View Installed Components ]
 [ Exit ]")
-			.ShowDialog();
-		if (form["Application Settings"].Clicked) ApplicationSettings();
-		else if (form["View Available Components"].Clicked) AvailableComponents();
-		else if (form["View Installed Components"].Clicked) InstalledComponents();
-		else Installer.Current.Exit();
+				.ShowDialog();
+			if (form["Application Settings"].Clicked) ApplicationSettings();
+			else if (form["View Available Components"].Clicked) AvailableComponents();
+			else if (form["View Installed Components"].Clicked) InstalledComponents();
+			else Installer.Current.Exit();
+		}
 	}
 
 	public void ApplicationSettings()

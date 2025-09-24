@@ -41,6 +41,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Linq;
 using Microsoft.Win32;
@@ -520,7 +521,7 @@ namespace SolidCP.UniversalInstaller
 			if (Installer.Current.Settings.Installer.IsUnattended)
 			{
 				Log.WriteStart("Starting unattended setup");
-				Installer.Current.RunUnattended();
+				Task.Run(Installer.Current.RunUnattended);
 			}
 		}
 		public override object InitializeLifetimeService()

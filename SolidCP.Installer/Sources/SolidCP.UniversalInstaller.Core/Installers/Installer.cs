@@ -494,25 +494,25 @@ public abstract partial class Installer
 		return a.Equals(b, StringComparison.OrdinalIgnoreCase) ||
 			a.Replace(" ", "").Equals(b.Replace(" ", ""), StringComparison.OrdinalIgnoreCase);
 	}
-	public void RunUnattended()
+	public async Task RunUnattended()
 	{
 		UI.ShowWaitCursor();
 
 		var releases = Installer.Current.Releases;
 
-		var components = releases.GetAvailableComponents();
+		var components = await releases.GetAvailableComponentsAsync();
 
 		var componentsToInstall = Settings.Installer.UnattendedInstallPackages.Split(',', ';')
 			.Select(name => name.Trim())
 			.Where(name => !string.IsNullOrEmpty(name))
 			.ToArray();
 
-		components = components.Where(c => componentsToInstall.Any(ci => Equals(c.ComponentName, ci) ||
-			Equals(c.ComponentCode, ci) || Equals(c.Component, ci)))
+		components = components
+			.Where(c => componentsToInstall.Any(ci => Equals(c.ComponentName, ci) ||
+				Equals(c.ComponentCode, ci) || Equals(c.Component, ci)))
+			.Where(c => OSInfo.IsWindows && c.Platforms.HasFlag(Platforms.Windows) ||
+				!OSInfo.IsWindows && c.Platforms.HasFlag(Platforms.Unix))
 			.ToList();
-
-		Settings.Installer.UnattendedInstallPackages = null;
-		SaveSettings();
 
 		var success = true;
 		foreach (var component in components)
@@ -521,7 +521,10 @@ public abstract partial class Installer
 			success &= RunSetup(component, Settings.Installer.Action);
 		}
 
-		UI.EndWaitCursor();
+        Settings.Installer.UnattendedInstallPackages = null;
+        SaveSettings();
+
+        UI.EndWaitCursor();
 
 		Exit(success ? 0 : 1);
 	}

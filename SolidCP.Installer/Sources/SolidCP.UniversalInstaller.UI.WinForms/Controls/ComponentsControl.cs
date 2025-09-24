@@ -234,7 +234,10 @@ namespace SolidCP.UniversalInstaller.Controls
 				this.grdComponents.SelectionChanged += (sender, args) => this.grdComponents.ClearSelection();
 
                 Log.WriteEnd("Available components loaded");
-                SetGridDataSource(dsComponents);
+                using (var alock = await Releases.Lock.LockAsync())
+                {
+                    SetGridDataSource(dsComponents);
+                }
                 AppContext.AppForm.FinishProgress();
             }
             catch (Exception ex)

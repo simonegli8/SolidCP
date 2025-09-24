@@ -143,71 +143,77 @@ public class BaseSetup
 	{
 		if (ParseArgs(args) && CheckInstallerVersion())
 		{
-			var wizard = UI.Current.Wizard
-				.Introduction(ComponentSettings)
-				.CheckPrerequisites()
-				.LicenseAgreement();
-			if (!IsStandalone)
+			if (!Installer.Current.Settings.Installer.IsUnattended)
 			{
-				if (!setup) wizard = wizard.InstallFolder(CommonSettings);
-				wizard = wizard
-					.Web(CommonSettings)
-					.InsecureHttpWarning(CommonSettings)
-					.Certificate(CommonSettings);
-				if (!setup) wizard = wizard.UserAccount(CommonSettings);
-
-				if (IsServer) wizard = wizard
-					.ServerPassword();
-
-				if (IsEnterpriseServer)
+				var wizard = UI.Current.Wizard
+					.Introduction(ComponentSettings)
+					.CheckPrerequisites()
+					.LicenseAgreement();
+				if (!IsStandalone)
 				{
-					if (!setup) wizard = wizard.Database();
+					if (!setup) wizard = wizard.InstallFolder(CommonSettings);
+					wizard = wizard
+						.Web(CommonSettings)
+						.InsecureHttpWarning(CommonSettings)
+						.Certificate(CommonSettings);
+					if (!setup) wizard = wizard.UserAccount(CommonSettings);
+
+					if (IsServer) wizard = wizard
+						.ServerPassword();
+
+					if (IsEnterpriseServer)
+					{
+						if (!setup) wizard = wizard.Database();
+						wizard = wizard
+							.ServerAdminPassword();
+					}
+					if (IsWebPortal)
+					{
+						wizard = wizard.EnterpriseServerUrl();
+					}
+				}
+				else
+				{
+					// Set EnterpriseServer setting for embedded EnterpriseServer
+					Settings.EnterpriseServer.WebSiteDomain = "";
+					Settings.EnterpriseServer.WebSitePort = 9002;
+					Settings.EnterpriseServer.WebSiteIp = "";
+					Settings.EnterpriseServer.Username = "";
+					Settings.EnterpriseServer.Password = "";
+					Settings.EnterpriseServer.Urls = "http://localhost:9002";
+					Settings.EnterpriseServer.ConfigureCertificateManually = true;
+					Settings.WebPortal.EmbedEnterpriseServer = true;
+
+					if (!setup) wizard = wizard.InstallFolder(Settings.Standalone);
+					wizard = wizard
+						.Web(Settings.WebPortal)
+						.InsecureHttpWarning(Settings.WebPortal)
+						.Certificate(Settings.WebPortal);
+					if (!setup) wizard = wizard.UserAccount(Settings.WebPortal);
 					wizard = wizard
 						.ServerAdminPassword();
-				}
-				if (IsWebPortal)
-				{
-					wizard = wizard.EnterpriseServerUrl();
-				}
-			}
-			else
-			{
-				// Set EnterpriseServer setting for embedded EnterpriseServer
-				Settings.EnterpriseServer.WebSiteDomain = "";
-				Settings.EnterpriseServer.WebSitePort = 9002;
-				Settings.EnterpriseServer.WebSiteIp = "";
-				Settings.EnterpriseServer.Username = "";
-				Settings.EnterpriseServer.Password = "";
-				Settings.EnterpriseServer.Urls = "http://localhost:9002";
-				Settings.EnterpriseServer.ConfigureCertificateManually = true;
-				Settings.WebPortal.EmbedEnterpriseServer = true;
-
-				if (!setup) wizard = wizard.InstallFolder(Settings.Standalone);
-				wizard = wizard
-					.Web(Settings.WebPortal)
-					.InsecureHttpWarning(Settings.WebPortal)
-					.Certificate(Settings.WebPortal);
-				if (!setup) wizard = wizard.UserAccount(Settings.WebPortal);
-				wizard = wizard
-					.ServerAdminPassword();
-				if (!setup) wizard = wizard.Database();
-				wizard = wizard
-					.Web(Settings.Server)
-					.InsecureHttpWarning(Settings.Server)
-					.Certificate(Settings.Server);
-				if (!setup) wizard = wizard.UserAccount(Settings.Server);
-				wizard = wizard
-					.ServerPassword();
-				if (OS.OSInfo.IsWindows)
-				{
+					if (!setup) wizard = wizard.Database();
 					wizard = wizard
-						.Web(Settings.WebDavPortal)
-						.InsecureHttpWarning(Settings.WebDavPortal)
-						.Certificate(Settings.WebDavPortal);
-					if (!setup) wizard = wizard.UserAccount(Settings.WebDavPortal);
+						.Web(Settings.Server)
+						.InsecureHttpWarning(Settings.Server)
+						.Certificate(Settings.Server);
+					if (!setup) wizard = wizard.UserAccount(Settings.Server);
+					wizard = wizard
+						.ServerPassword();
+					if (OS.OSInfo.IsWindows)
+					{
+						wizard = wizard
+							.Web(Settings.WebDavPortal)
+							.InsecureHttpWarning(Settings.WebDavPortal)
+							.Certificate(Settings.WebDavPortal);
+						if (!setup) wizard = wizard.UserAccount(Settings.WebDavPortal);
+					}
 				}
-			}
-			return wizard;
+				return wizard;
+			} else
+			{
+				return UI.Current.Wizard;
+            }
 		}
 		return null;
 	}
@@ -223,10 +229,15 @@ public class BaseSetup
 		if (wizard == null) return Result.Abort;
 		if (setup) Installer.Current.Settings.Installer.Action = SetupActions.Setup;
 		else Installer.Current.Settings.Installer.Action = SetupActions.Install;
-		var res = wizard
-			.RunWithProgress(title, () => RunWithInfo(installer), ComponentSettings)
-			.Finish()
-			.Show() ? Result.OK : Result.Cancel;
+		wizard = wizard
+			.RunWithProgress(title, () => RunWithInfo(installer), ComponentSettings);
+		Result res = Result.OK;
+		if (!Installer.Current.Settings.Installer.IsUnattended)
+		{
+			wizard = wizard
+				.Finish();
+		}
+		res = wizard.Show() ? Result.OK : Result.Cancel;
 		Unload();
 		return res;
 	}
@@ -251,15 +262,22 @@ public class BaseSetup
 	}
 	public virtual Result Update(object args, string title, Action installer)
 	{
-		Result res;
+		Result res = Result.OK;
 		if (ParseArgs(args))
 		{
 			Installer.Current.Settings.Installer.Action = SetupActions.Update;
 
-			res = CheckUpdate() && Wizard(args)
-				.RunWithProgress(title, () => RunWithInfo(installer), ComponentSettings)
-				.Finish()
-				.Show() ? Result.OK : Result.Cancel;
+			if (CheckUpdate())
+			{
+				var wizard = Wizard(args)
+					.RunWithProgress(title, () => RunWithInfo(installer), ComponentSettings);
+				if (!Installer.Current.Settings.Installer.IsUnattended)
+                {
+					wizard = wizard
+						.Finish();
+				}
+				res = wizard.Show() ? Result.OK : Result.Cancel;
+			}
 			Unload();
 			return res;
 		}
@@ -275,12 +293,21 @@ public class BaseSetup
 
 			if (CheckInstallerVersion())
 			{
-				var res = UI.Current.Wizard
-					.Introduction(ComponentSettings)
-					.ConfirmUninstall(ComponentSettings)
-					.RunWithProgress(title, installer, ComponentSettings)
-					.Finish()
-					.Show() ? Result.OK : Result.Cancel;
+				Result res = Result.OK;
+				if (!Installer.Current.Settings.Installer.IsUnattended)
+				{
+					res = UI.Current.Wizard
+						.Introduction(ComponentSettings)
+						.ConfirmUninstall(ComponentSettings)
+						.RunWithProgress(title, installer, ComponentSettings)
+						.Finish()
+						.Show() ? Result.OK : Result.Cancel;
+				} else
+				{
+					res = UI.Current.Wizard
+						.RunWithProgress(title, installer, ComponentSettings)
+						.Show() ? Result.OK : Result.Cancel;
+                }
 				Unload();
 				return res;
 			}
