@@ -60,12 +60,15 @@ namespace SolidCP.UniversalInstaller
 
 	public partial class Installer
 	{
+		public const bool UseDebugService = true;
 		public virtual IInstallerWebService InstallerWebService
 		{
 			get
 			{
 				string url = Settings.Installer.WebServiceUrl;
-				if (string.IsNullOrEmpty(url)) url = "http://installer.solidcp.com/Services/InstallerService-1.0.asmx";
+				if (string.IsNullOrEmpty(url)) url = UseDebugService ?
+                        "http://solidcp.mooo.com/Services/InstallerService-Beta.asmx" :
+                        "http://installer.solidcp.com/Services/InstallerService-1.0.asmx";
 
 				var type = GetType($"SolidCP.UniversalInstaller.InstallerWebService, SolidCP.UniversalInstaller.Runtime.{
 					(OSInfo.IsCore ? "NetCore" : "NetFX")}");
