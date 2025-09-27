@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Buffers;
 using System.Net;
 using System.Text;
 using Nito.AsyncEx;
@@ -13,7 +14,8 @@ public class Releases
 	public GitHubReleases GitHub => Installer.Current.GitHub;
 	public IInstallerWebService WebService = Installer.Current.InstallerWebService;
 
-	public const long ChunkSize = 262144;
+	public const int MB = 1024 * 1024;
+	public const long ChunkSize = 2 * MB;
 
 	public CancellationTokenSource Cancel = Installer.Current.Cancel;
 
@@ -116,14 +118,28 @@ public class Releases
 		}
 		return null;
 	}
-	public async Task<byte[]> DownloadFileChunkAsync(string url, long offset, long length)
+	public async Task<HttpContent> DownloadFileChunkAsync(string url, long offset, long length)
 	{
 		var handler = ProxyHandler();
 		using var client = handler != null ? new HttpClient(handler) : new HttpClient();
 		client.DefaultRequestHeaders.Range = new System.Net.Http.Headers.RangeHeaderValue(offset, offset + length);
 		using var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 		response.EnsureSuccessStatusCode();
-		return await response.Content.ReadAsByteArrayAsync();
+		return response.Content;
+	}
+	public async Task<long> DownloadFileChunkAsync(string url, long offset, long length, byte[] buffer)
+	{
+		var response = await DownloadFileChunkAsync(url, offset, length);
+		using var stream = await response.ReadAsStreamAsync();
+		var size = response.Headers.ContentLength ?? 0;
+		await stream.ReadAsync(buffer, 0, (int)size);
+		return size;
+	}
+	public async Task<long> DownloadFileChunkAsync(string url, long offset, long length, Stream stream)
+	{
+		var response = await DownloadFileChunkAsync(url, offset, length);
+		await response.CopyToAsync(stream);
+		return response.Headers.ContentLength ?? 0;
 	}
 	public async Task<long> GetFileSizeAsync(string url)
 	{
@@ -157,26 +173,21 @@ public class Releases
 					throw new FileNotFoundException("Service returned empty file.", file.File);
 				}
 
-				byte[] content;
-
-				while (downloaded < fileSize)
+				using (var fileStream = new FileStream(destinationFile, FileMode.Create, FileAccess.Write))
 				{
-					// Throw OperationCancelledException if there is an incoming cancel request
-					Installer.Current.Cancel.Token.ThrowIfCancellationRequested();
-
-					content = await DownloadFileChunkAsync(url, downloaded, ChunkSize);
-					if (content == null)
+					while (downloaded < fileSize)
 					{
-						throw new FileNotFoundException("Service returned NULL file content.", file.File);
+						// Throw OperationCancelledException if there is an incoming cancel request
+						Installer.Current.Cancel.Token.ThrowIfCancellationRequested();
+
+						var size = await DownloadFileChunkAsync(url, downloaded, ChunkSize, fileStream);
+
+						downloaded += size;
+
+						progress?.Invoke(downloaded, fileSize);
+
+						if (size < ChunkSize) break;
 					}
-					FileUtils.AppendFileContent(destinationFile, content);
-
-					downloaded += content.Length;
-
-					progress?.Invoke(downloaded, fileSize);
-
-					if (content.Length < ChunkSize)
-						break;
 				}
 			}
 		}

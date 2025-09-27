@@ -1,13 +1,10 @@
-﻿using K4os.Compression.LZ4.Streams.Adapters;
-using K4os.Compression.LZ4.Streams.Frames;
-using Mono.Cecil.Cil;
-using Mono.Unix.Native;
-using Nito.AsyncEx;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Buffers;
+using Nito.AsyncEx;
 
 namespace SolidCP.UniversalInstaller;
 
@@ -18,7 +15,7 @@ public class SeekableDownloadStream: System.IO.Stream
 
     public Releases Releases;
 
-    (long Position, int Size, Task<Task> Data)[] Chunks;
+    (long Position, int Size, byte[] Buffer, Task<Task> Data)[] Chunks;
     FileStream Buffer;
     int min = 0, current = 0;
     Task<long> Size = null;
@@ -31,7 +28,7 @@ public class SeekableDownloadStream: System.IO.Stream
     public Task DownloadComplete;
     public bool IsTemp;
     public Action<long, long> Progress;
-    public string Url;
+	public string Url;
 	public SeekableDownloadStream(Releases releases, string url, string tmpFile, bool isTemp = true,
 		Action<long, long> progress = null)
     {
@@ -52,11 +49,11 @@ public class SeekableDownloadStream: System.IO.Stream
             if (Size == null) Size = Releases.GetFileSizeAsync(Url);
         }
     }
-    async Task<byte[]> DownloadChunkAsync(int position, int count) {
+    async Task<long> DownloadChunkAsync(int position, int count, byte[] buffer) {
         var start = DateTime.Now;
-        var buffer = await Releases.DownloadFileChunkAsync(Url, position, count);
+        var size =  await Releases.DownloadFileChunkAsync(Url, position, count, buffer);
         DownloadTime += DateTime.Now - start;
-        return buffer;
+        return size;
     }
     void GetChunk(long size, int i)
     {
@@ -76,7 +73,8 @@ public class SeekableDownloadStream: System.IO.Stream
                 var bufpos = ((long)i) * ChunkSize;
                 chunk.Size = Math.Min(ChunkSize, (int)(size - bufpos));
                 Buffer.SetLength(chunk.Position + chunk.Size);
-                chunk.Data = DownloadChunkAsync(i * ChunkSize, ChunkSize)
+				var buffer = chunk.Buffer = ArrayPool<byte>.Shared.Rent(ChunkSize);
+				chunk.Data = DownloadChunkAsync(i * ChunkSize, ChunkSize, buffer)
                     .ContinueWith(async task =>
                     {
                         using (var îolock = await IOLock.LockAsync())
@@ -84,10 +82,12 @@ public class SeekableDownloadStream: System.IO.Stream
                             if (Buffer != null)
                             {
                                 if (Buffer.Position != chunk.Position) Buffer.Seek(chunk.Position, SeekOrigin.Begin);
-                                var data = task.Result;
-                                Buffer.Write(data, 0, data.Length);
+                                long length= task.Result;
+                                Buffer.Write(buffer, 0, (int)length);
                                 await Buffer.FlushAsync();
-                            }
+                                ArrayPool<byte>.Shared.Return(buffer);
+                                chunk.Buffer = null;
+							}
                         }
                     });
                 Chunks[i] = chunk;
@@ -99,7 +99,7 @@ public class SeekableDownloadStream: System.IO.Stream
     {
         await GetSize();
         var size = await Size;
-        Chunks = new (long Position, int Size, Task<Task> Data)[(int)(size / ChunkSize) + (size % ChunkSize == 0 ? 0 : 1)];
+        Chunks = new (long Position, int Size, byte[] Buffer, Task<Task> Data)[(int)(size / ChunkSize) + (size % ChunkSize == 0 ? 0 : 1)];
         long downloaded = 0;
         for (int i = 0; i < Chunks.Length; i++)
         {
@@ -271,7 +271,7 @@ public class SeekableDownloadStream: System.IO.Stream
                 }
                 catch { }
                 Buffer = null;
-            }
+			}
         }
     }
 }

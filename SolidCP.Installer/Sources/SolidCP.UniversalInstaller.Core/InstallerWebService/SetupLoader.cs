@@ -121,6 +121,7 @@ public class SetupLoader
 
 	protected void RaiseOnProgressChangedEvent(int eventData)
 	{
+
 		RaiseOnProgressChangedEvent(eventData, true);
 	}
 
@@ -189,6 +190,9 @@ public class SetupLoader
 				Path.GetFileName(installerPath));
 			var destinationFile = Path.Combine(dataFolder, fileToDownload);
 			var tmpFile = Path.Combine(tmpFolder, fileToDownload);
+			
+			var progressFile = Path.Combine(Path.GetDirectoryName(tmpFolder), DownloadProgressFile);
+			var progressStream = File.Create(progressFile);
 
 			if (File.Exists(setupFileName))
 			{
@@ -206,7 +210,6 @@ public class SetupLoader
 					if (!SetupOnly) StartDownloadAsyncRelease(remoteFile, tmpFile, destinationFile, tmpFolder, installerPath, token);
 					else
 					{
-						var progressFile = Path.Combine(Path.GetDirectoryName(tmpFolder), DownloadProgressFile);
 						File.Delete(progressFile);
 					}
 					return;
@@ -239,7 +242,6 @@ public class SetupLoader
 						if (!SetupOnly) StartDownloadAsyncRelease(remoteFile, tmpFile, destinationFile, tmpFolder, installerPath, token);
 						else
 						{
-							var progressFile = Path.Combine(Path.GetDirectoryName(tmpFolder), DownloadProgressFile);
 							File.Delete(progressFile);
 						}
 					}, token);
@@ -253,6 +255,14 @@ public class SetupLoader
 			try
 			{
 				// Download the file requested
+				ProgressChanged += (sender, args) =>
+				{
+					try
+					{
+						if (args.EventData > progressStream.Length) progressStream.SetLength(args.EventData);
+					}
+					catch { }
+				};
 				Task downloadFileTask = GetDownloadFileTask(remoteFile, tmpFile, tmpFolder, null, token);
 				// Move the file downloaded from temporary location to Data folder
 				// Unzip file downloaded
@@ -318,11 +328,7 @@ public class SetupLoader
 			{
 				try
 				{
-					while (args.EventData > progressStream.Length)
-					{
-						progressStream.WriteByte(0);
-						progressStream.Flush();
-					}
+					if (args.EventData > progressStream.Length) progressStream.SetLength(args.EventData);
 				}
 				catch { }
 			};
@@ -402,7 +408,7 @@ public class SetupLoader
 							RaiseOnStatusChangedEvent(DownloadingSetupFilesMessage,
 								string.Format(DownloadProgressMessage, downloaded / 1024, fileSize / 1024));
 
-							RaiseOnProgressChangedEvent(Convert.ToInt32((downloaded * 100) / fileSize));
+							RaiseOnProgressChangedEvent((int)(downloaded * 100 / fileSize));
 						});
                 }
                 else
@@ -415,7 +421,7 @@ public class SetupLoader
 							RaiseOnStatusChangedEvent(DownloadingSetupFilesMessage,
 								string.Format(DownloadProgressMessage, downloaded / 1024, fileSize / 1024));
 
-							RaiseOnProgressChangedEvent(Convert.ToInt32((downloaded * 100) / fileSize));
+							RaiseOnProgressChangedEvent((int)((downloaded * 100) / fileSize));
 						});
 				}
 				
