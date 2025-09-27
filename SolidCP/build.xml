@@ -90,7 +90,7 @@
 		<ZipExt Condition="$(HighCompression) == 'true'">.7z</ZipExt>
 		<ZipExt Condition="$(HighCompression) != 'true'">.zip</ZipExt>
 
-		<ZipLevel Condition="$(HighCompression) == 'true'"> -mx9</ZipLevel>
+		<ZipLevel Condition="$(HighCompression) == 'true'"> -mx9 -mmt=on</ZipLevel>
 		<ZipLevel Condition="$(HighCompression) != 'true'"></ZipLevel>
 
 		<ftphost></ftphost>
