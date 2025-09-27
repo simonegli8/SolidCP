@@ -981,6 +981,7 @@ public abstract partial class Installer
 				Log.ProgressOne();
 			}
 		}
+		Log.WriteLine();
 	}
 
 	public void UnzipFromStream(Stream resource, string destinationPath, Func<string, string> filter = null)
@@ -1302,6 +1303,7 @@ public abstract partial class Installer
 			Installer.Current.Files = int.Parse(fileTxt);
 			File.Delete(nofFilesFile);
 		}
+		Log.WriteLine();
 	}
 	public virtual ILoadContext LoadContext
 	{

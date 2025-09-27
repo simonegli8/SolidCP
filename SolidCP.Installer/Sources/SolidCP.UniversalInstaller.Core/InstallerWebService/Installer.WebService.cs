@@ -56,6 +56,7 @@ namespace SolidCP.UniversalInstaller
 		public Task<byte[]> GetFileChunkAsync(string file, int offset, int size);
 		public long GetFileSize(string file);
 		public Task<long> GetFileSizeAsync(string file);
+		public string Url { get; }
 	}
 
 	public partial class Installer

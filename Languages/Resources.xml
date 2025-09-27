@@ -2206,6 +2206,16 @@
     <DefaultValue>Private Network VLANs</DefaultValue>
   </Resource>
   <Resource>
+    <File>App_GlobalResources\SolidCP_Pages.ascx.resx</File>
+    <Key>PageName.APIDocumentation</Key>
+    <DefaultValue>API Documentation</DefaultValue>
+  </Resource>
+  <Resource>
+    <File>App_GlobalResources\SolidCP_Pages.ascx.resx</File>
+    <Key>PageTitle.APIDocumentation</Key>
+    <DefaultValue>API Documentation</DefaultValue>
+  </Resource>
+  <Resource>
     <File>App_GlobalResources\SolidCP_SharedResources.ascx.resx</File>
     <Key>YesNo.False</Key>
     <DefaultValue>No</DefaultValue>

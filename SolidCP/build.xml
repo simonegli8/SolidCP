@@ -23,7 +23,7 @@
 		<SqlCmd Condition="Exists('$(RootFolder)\tools\sqlcmd\sqlcmd.exe')">"$(RootFolder)\tools\sqlcmd\sqlcmd.exe" -S (local) -E</SqlCmd>
 		<MSDeployPath Condition="Exists('$(RootFolder)\tools\webdeploy\msdeploy.exe')">"$(RootFolder)\tools\webdeploy\msdeploy.exe"</MSDeployPath>
 		<ZipCmd>"$(RootFolder)\tools\7-Zip\7z.exe"</ZipCmd>
-
+		
 		<DataBaseName>SolidCP_build</DataBaseName>
 		<MSDeployConnectionString>server=(local);Initial Catalog=$(DataBaseName);Integrated Security=true;</MSDeployConnectionString>
 
@@ -85,6 +85,14 @@
 		<!-- Build legacy database sql script from install_db.sql & update_db.sql -->
 		<BuildLegacyDatabaseScript Condition="'$(BuildLegacyDatabaseScript)' == ''">false</BuildLegacyDatabaseScript>
 
+		<HighCompression Condition="'$(HighCompression)' == ''">true</HighCompression>
+
+		<ZipExt Condition="$(HighCompression) == 'true'">.7z</ZipExt>
+		<ZipExt Condition="$(HighCompression) != 'true'">.zip</ZipExt>
+
+		<ZipLevel Condition="$(HighCompression) == 'true'"> -mx9</ZipLevel>
+		<ZipLevel Condition="$(HighCompression) != 'true'"></ZipLevel>
+
 		<ftphost></ftphost>
 		<ftpUsername></ftpUsername>
 		<ftpPassword></ftpPassword>
@@ -103,6 +111,7 @@
 		<Message Text="UseAspNetPrecompile: $(UseAspNetPrecompile)" Importance="High" />
 		<Message Text="BuildLinuxInstallPackages: $(BuildLinuxInstallPackages)" Importance="High" />
 		<Message Text="BuildLegacyDatabaseScript: $(BuildLegacyDatabaseScript)" Importance="High" />
+		<Message Text="HighCompression: $(HighCompression)" Importance="High" />
 		<Message Text="MsBuildSwitches: $(MsBuildSwitches)" Importance="High" />
 	</Target>
 
@@ -1051,6 +1060,8 @@
 		<ItemGroup>
 			<ZipFilesToDelete Include="$(DeployFolder)\*.zip" />
 			<ZipFilesToDelete Include="$(ToolsFolder)\*.zip" />
+			<ZipFilesToDelete Include="$(DeployFolder)\*.7z" />
+			<ZipFilesToDelete Include="$(ToolsFolder)\*.7z" />
 		</ItemGroup>
 		
 		<Delete Files="@(ZipFilesToDelete)" />
@@ -1062,11 +1073,11 @@
 		<Zip Files="@(StandaloneInstallFiles)" ZipFileName="$(DeployFolder)\SolidCP-StandaloneServerSetup-$(Version).zip" WorkingDirectory="$(StandaloneInstall)" />
 		-->
 
-		<Exec Command="$(ZipCmd) a &quot;$(DeployFolder)\SolidCP-Portal.zip&quot; &quot;$(PortalInstall)\*&quot;" />
-		<Exec Command="$(ZipCmd) a &quot;$(DeployFolder)\SolidCP-Web-Dav-Portal.zip&quot; &quot;$(WebDavPortalInstall)\*&quot;" />
-		<Exec Command="$(ZipCmd) a &quot;$(DeployFolder)\SolidCP-EnterpriseServer.zip&quot; &quot;$(EnterpriseServerInstall)\*&quot;" />
-		<Exec Command="$(ZipCmd) a &quot;$(DeployFolder)\SolidCP-Server.zip&quot; &quot;$(ServerInstall)\*&quot;" />
-		<Exec Command="$(ZipCmd) a &quot;$(DeployFolder)\SolidCP-StandaloneServerSetup.zip&quot; &quot;$(StandaloneInstall)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-Portal$(ZipExt)&quot; &quot;$(PortalInstall)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-Web-Dav-Portal$(ZipExt)&quot; &quot;$(WebDavPortalInstall)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-EnterpriseServer$(ZipExt)&quot; &quot;$(EnterpriseServerInstall)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-Server$(ZipExt)&quot; &quot;$(ServerInstall)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-StandaloneServerSetup$(ZipExt)&quot; &quot;$(StandaloneInstall)\*&quot;" />
 
 		<ItemGroup>
 			<InstallerMsiFile Include="$(InstallerBuild)\*.msi" />
@@ -1091,14 +1102,14 @@
 		<Zip Files="@(InstallerUpdateFiles)" ZipFileName="$(DeployFolder)\SolidCP-Installer-$(Version)-Update.zip" WorkingDirectory="$(InstallerBuild)" />
 		-->
 
-		<Exec Command="$(ZipCmd) a &quot;$(DeployFolder)\SolidCP-Portal-Update.zip&quot; &quot;$(PortalUpdate)\*&quot;" />
-		<Exec Command="$(ZipCmd) a &quot;$(DeployFolder)\SolidCP-WebDavPortal-Update.zip&quot; &quot;$(WebDavPortalUpdate)\*&quot;" />
-		<Exec Command="$(ZipCmd) a &quot;$(DeployFolder)\SolidCP-EnterpriseServer-Update.zip&quot; &quot;$(EnterpriseServerUpdate)\*&quot;" />
-		<Exec Command="$(ZipCmd) a &quot;$(DeployFolder)\SolidCP-Server-Update.zip&quot; &quot;$(ServerUpdate)\*&quot;" />
-		<Exec Command="$(ZipCmd) a &quot;$(DeployFolder)\Manual-Update.zip&quot; &quot;$(UpdateFolder)\*&quot;" />
-		<Exec Command="$(ZipCmd) a &quot;$(DeployFolder)\SolidCP-Installer-$(Version).zip&quot; &quot;$(InstallerBuild)\net48\*&quot;" />
-		<Exec Command="$(ZipCmd) a &quot;$(DeployFolder)\SolidCP-Installer-$(Version)-Update.zip&quot; &quot;$(InstallerBuild)\*&quot;" />
-		<Exec Command="$(ZipCmd) a &quot;$(DeployFolder)\SolidCP-Installer-Unix-$(Version).zip&quot; &quot;$(InstallerBuild)\net8.0\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-Portal-Update$(ZipExt)&quot; &quot;$(PortalUpdate)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-WebDavPortal-Update$(ZipExt)&quot; &quot;$(WebDavPortalUpdate)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-EnterpriseServer-Update$(ZipExt)&quot; &quot;$(EnterpriseServerUpdate)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-Server-Update$(ZipExt)&quot; &quot;$(ServerUpdate)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\Manual-Update$(ZipExt)&quot; &quot;$(UpdateFolder)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-Installer-$(Version)$(ZipExt)&quot; &quot;$(InstallerBuild)\net48\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-Installer-$(Version)-Update$(ZipExt)&quot; &quot;$(InstallerBuild)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-Installer-Unix-$(Version)$(ZipExt)&quot; &quot;$(InstallerBuild)\net8.0\*&quot;" />
 
 		<!-- zip tools
 		<Zip Files="@(ImportCsvInstallFiles)" ZipFileName="$(ToolsFolder)\SolidCP-Import-CsvBulk-$(Version).zip" WorkingDirectory="$(ImportCsvInstall)" />
@@ -1109,19 +1120,19 @@
 		<Zip Files="@(SCPTransportAgentInstallFiles)" ZipFileName="$(ToolsFolder)\SolidCP-SCPTransportAgent-$(Version).zip" WorkingDirectory="$(SCPTransportAgentInstall)" />
 		-->
 
-		<Exec Command="$(ZipCmd) a &quot;$(ToolsFolder)\SolidCP-Import-CsvBulk.zip&quot; &quot;$(ImportCsvInstall)\*&quot;" />
-		<Exec Command="$(ZipCmd) a &quot;$(ToolsFolder)\SolidCP-HyperVUtils.zip&quot; &quot;$(HyperVUtilsInstall)\*&quot;" />
-		<Exec Command="$(ZipCmd) a &quot;$(ToolsFolder)\SolidCP-VMConfig.zip&quot; &quot;$(VMConfigInstall)\*&quot;" />
-		<Exec Command="$(ZipCmd) a &quot;$(ToolsFolder)\SolidCP-Import-Enterprise.zip&quot; &quot;$(ImportEnterpriseInstall)\*&quot;" />
-		<Exec Command="$(ZipCmd) a &quot;$(ToolsFolder)\SolidCP-AWStatsViewer.zip&quot; &quot;$(AWStatsViewerInstall)\*&quot;" />
-		<Exec Command="$(ZipCmd) a &quot;$(ToolsFolder)\SolidCP-SCPTransportAgent.zip&quot; &quot;$(SCPTransportAgentInstall)\*&quot;" />
-		<Exec Command="$(ZipCmd) a &quot;$(ToolsFolder)\SolidCP-FixDefaultPublicFolderMailbox.zip&quot; &quot;$(FixDefaultPublicFolderMailboxInstall)\*&quot;" />
-		<Exec Command="$(ZipCmd) a &quot;$(ToolsFolder)\SolidCP-Configuration-Tool.zip&quot; &quot;$(SolidCP-Configuration-ToolInstall)\*&quot;" />
-		<Exec Command="$(ZipCmd) a &quot;$(ToolsFolder)\SolidCP-CertificateMaker.zip&quot; &quot;$(CertMakerInstall)\*&quot;" />
-		<Exec Command="$(ZipCmd) a &quot;$(ToolsFolder)\MSPtoSCP.zip&quot; &quot;$(MSPtoSCPInstall)\*&quot;" />
-		<Exec Command="$(ZipCmd) a &quot;$(ToolsFolder)\MailTemplates.zip&quot; &quot;$(MailTemplatesInstall)\*&quot;" />
-		<Exec Command="$(ZipCmd) a &quot;$(ToolsFolder)\SolidCP-Auto-Upgrade-Tool.zip&quot; &quot;$(SolidCP-Auto-Upgrade-ToolInstall)\*&quot;" />
-		<Exec Command="$(ZipCmd) a &quot;$(ToolsFolder)\SolidCP-dSHeuristics.zip&quot; &quot;$(SolidCP-dSHeuristicsInstall)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(ToolsFolder)\SolidCP-Import-CsvBulk$(ZipExt)&quot; &quot;$(ImportCsvInstall)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(ToolsFolder)\SolidCP-HyperVUtils$(ZipExt)&quot; &quot;$(HyperVUtilsInstall)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(ToolsFolder)\SolidCP-VMConfig$(ZipExt)&quot; &quot;$(VMConfigInstall)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(ToolsFolder)\SolidCP-Import-Enterprise$(ZipExt)&quot; &quot;$(ImportEnterpriseInstall)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(ToolsFolder)\SolidCP-AWStatsViewer$(ZipExt)&quot; &quot;$(AWStatsViewerInstall)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(ToolsFolder)\SolidCP-SCPTransportAgent$(ZipExt)&quot; &quot;$(SCPTransportAgentInstall)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(ToolsFolder)\SolidCP-FixDefaultPublicFolderMailbox$(ZipExt)&quot; &quot;$(FixDefaultPublicFolderMailboxInstall)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(ToolsFolder)\SolidCP-Configuration-Tool$(ZipExt)&quot; &quot;$(SolidCP-Configuration-ToolInstall)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(ToolsFolder)\SolidCP-CertificateMaker$(ZipExt)&quot; &quot;$(CertMakerInstall)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(ToolsFolder)\MSPtoSCP$(ZipExt)&quot; &quot;$(MSPtoSCPInstall)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(ToolsFolder)\MailTemplates$(ZipExt)&quot; &quot;$(MailTemplatesInstall)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(ToolsFolder)\SolidCP-Auto-Upgrade-Tool$(ZipExt)&quot; &quot;$(SolidCP-Auto-Upgrade-ToolInstall)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(ToolsFolder)\SolidCP-dSHeuristics$(ZipExt)&quot; &quot;$(SolidCP-dSHeuristicsInstall)\*&quot;" />
   </Target>
 
   <Target Name="Deploy" DependsOnTargets="CreateInstallPackages" />
@@ -1193,32 +1204,32 @@
   </Target>
 
   <Target Name="upload-sp-update">
-    <FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/Manual-Update-sp.zip" LocalFile="$(DeployFolder)\Manual-Update.zip" />
+    <FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/Manual-Update-sp$(ZipExt)" LocalFile="$(DeployFolder)\Manual-Update$(ZipExt)" />
   </Target>
 
   <Target Name="uploadtoftp">
-	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Portal.zip" LocalFile="$(DeployFolder)\SolidCP-Portal.zip" />
-	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Web-Dav-Portal.zip" LocalFile="$(DeployFolder)\SolidCP-Web-Dav-Portal.zip" />
-	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-EnterpriseServer.zip" LocalFile="$(DeployFolder)\SolidCP-EnterpriseServer.zip" />
-	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Server.zip" LocalFile="$(DeployFolder)\SolidCP-Server.zip" />
-	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-StandaloneServerSetup.zip" LocalFile="$(DeployFolder)\SolidCP-StandaloneServerSetup.zip" />
-	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Portal-Update.zip" LocalFile="$(DeployFolder)\SolidCP-Portal-Update.zip" />
-	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-EnterpriseServer-Update.zip" LocalFile="$(DeployFolder)\SolidCP-EnterpriseServer-Update.zip" />
-	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Server-Update.zip" LocalFile="$(DeployFolder)\SolidCP-Server-Update.zip" />
-	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Installer-Update.zip" LocalFile="$(DeployFolder)\SolidCP-Installer-Update.zip" />
-	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Import-CsvBulk.zip" LocalFile="$(ToolsFolder)\SolidCP-Import-CsvBulk.zip" />
-	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Import-Enterprise.zip" LocalFile="$(ToolsFolder)\SolidCP-Import-Enterprise.zip" />
-	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-CertificateMaker.zip" LocalFile="$(ToolsFolder)\HostPanelPro-CertificateMaker.zip" />
-	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-AWStatsViewer.zip" LocalFile="$(ToolsFolder)\SolidCP-AWStatsViewer.zip" />
-	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-SCPTransportAgent.zip" LocalFile="$(ToolsFolder)\SolidCP-SCPTransportAgent.zip" />
+	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Portal$(ZipExt)" LocalFile="$(DeployFolder)\SolidCP-Portal$(ZipExt)" />
+	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Web-Dav-Portal$(ZipExt)" LocalFile="$(DeployFolder)\SolidCP-Web-Dav-Portal$(ZipExt)" />
+	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-EnterpriseServer$(ZipExt)" LocalFile="$(DeployFolder)\SolidCP-EnterpriseServer$(ZipExt)" />
+	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Server$(ZipExt)" LocalFile="$(DeployFolder)\SolidCP-Server$(ZipExt)" />
+	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-StandaloneServerSetup$(ZipExt)" LocalFile="$(DeployFolder)\SolidCP-StandaloneServerSetup$(ZipExt)" />
+	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Portal-Update$(ZipExt)" LocalFile="$(DeployFolder)\SolidCP-Portal-Update$(ZipExt)" />
+	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-EnterpriseServer-Update$(ZipExt)" LocalFile="$(DeployFolder)\SolidCP-EnterpriseServer-Update$(ZipExt)" />
+	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Server-Update$(ZipExt)" LocalFile="$(DeployFolder)\SolidCP-Server-Update$(ZipExt)" />
+	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Installer-Update$(ZipExt)" LocalFile="$(DeployFolder)\SolidCP-Installer-Update$(ZipExt)" />
+	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Import-CsvBulk$(ZipExt)" LocalFile="$(ToolsFolder)\SolidCP-Import-CsvBulk$(ZipExt)" />
+	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Import-Enterprise$(ZipExt)" LocalFile="$(ToolsFolder)\SolidCP-Import-Enterprise$(ZipExt)" />
+	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-CertificateMaker$(ZipExt)" LocalFile="$(ToolsFolder)\HostPanelPro-CertificateMaker$(ZipExt)" />
+	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-AWStatsViewer$(ZipExt)" LocalFile="$(ToolsFolder)\SolidCP-AWStatsViewer$(ZipExt)" />
+	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-SCPTransportAgent$(ZipExt)" LocalFile="$(ToolsFolder)\SolidCP-SCPTransportAgent$(ZipExt)" />
 	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP.LocalizationToolkit.msi" LocalFile="$(ToolsFolder)\SolidCP.LocalizationToolkit.msi" />
 	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCPInstaller.msi" LocalFile="$(DeployFolder)\SolidCP.Installer.msi" />
 	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCPInstaller.exe" LocalFile="$(DeployFolder)\SolidCP.Installer.exe" />
     <FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCPInstaller-webpi.msi" LocalFile="$(DeployFolder)\SolidCP.Installer.msi" />
-	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-HyperVUtils.zip" LocalFile="$(ToolsFolder)\SolidCP-HyperVUtils.zip" />
-	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-VMConfig.zip" LocalFile="$(ToolsFolder)\SolidCP-VMConfig.zip" />
-	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/Manual-Update.zip" LocalFile="$(DeployFolder)\Manual-Update.zip" />
-    <FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-FixDefaultPublicFolderMailbox.zip" LocalFile="$(ToolsFolder)\SolidCP-FixDefaultPublicFolderMailbox.zip" />
+	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-HyperVUtils$(ZipExt)" LocalFile="$(ToolsFolder)\SolidCP-HyperVUtils$(ZipExt)" />
+	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-VMConfig$(ZipExt)" LocalFile="$(ToolsFolder)\SolidCP-VMConfig$(ZipExt)" />
+	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/Manual-Update$(ZipExt)" LocalFile="$(DeployFolder)\Manual-Update$(ZipExt)" />
+    <FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-FixDefaultPublicFolderMailbox$(ZipExt)" LocalFile="$(ToolsFolder)\SolidCP-FixDefaultPublicFolderMailbox$(ZipExt)" />
     <FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/Setup2.dll" LocalFile="$(DeployFolder)\Setup2.dll" />
   </Target>
 

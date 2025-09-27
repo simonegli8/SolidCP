@@ -230,7 +230,9 @@ public abstract partial class Installer
 			var password = settings.DatabasePassword ?? Utils.GetRandomString(20);
 			var db = settings.DatabaseName;
 
-			DatabaseUtils.InstallFreshDatabase(connstr, db, user, password, progress => Log.WriteLine("."));
+			DatabaseUtils.InstallFreshDatabase(connstr, db, user, password, progress => Log.Write("."));
+
+			Log.WriteLine();
 
 			if (string.IsNullOrEmpty(settings.CryptoKey)) settings.CryptoKey = Utils.GetRandomString(20);
 

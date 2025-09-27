@@ -1,9 +1,16 @@
-﻿using System;
+﻿using Nito.AsyncEx;
+using Octokit;
+using SharpCompress.Archives;
+using SharpCompress.Archives.SevenZip;
+using SharpCompress.Common;
+using SolidCP.Providers.EnterpriseStorage;
+using SolidCP.UniversalInstaller.Core;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Compression;
+using System.Security.Policy;
 using System.Text;
-using Nito.AsyncEx;
 
 namespace SolidCP.UniversalInstaller;
 
@@ -82,7 +89,33 @@ public class Releases
 			return info != null ? new ComponentUpdateInfo(info, version) : null;
 		}
 	}
-	public void GetFile(RemoteFile file, string destinationFile, Action<long, long> progress = null) =>
+
+	public async Task<string> GetDownloadUrlAsync(RemoteFile file)
+	{
+		if (file.Release.GitHub) return await GitHub.GetDownloadUrl(file);
+		else
+		{
+			var uri = new Uri(WebService.Url);
+			return file.File.Replace("~", $"{uri.Scheme}://{uri.Authority}");
+		}
+    }
+	public async Task<byte[]> DownloadFileChunkAsync(string url, long offset, long length)
+	{
+		using var client = new HttpClient();
+		client.DefaultRequestHeaders.Range = new System.Net.Http.Headers.RangeHeaderValue(offset, offset + length);
+		using var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+		response.EnsureSuccessStatusCode();
+		return await response.Content.ReadAsByteArrayAsync();
+	}
+	public async Task<long> GetFileSizeAsync(string url)
+	{
+        using var client = new HttpClient();
+        var request = new HttpRequestMessage(HttpMethod.Head, url);
+        using var response = await client.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+        return response.Content.Headers.ContentLength ?? -1;
+    }
+    public void GetFile(RemoteFile file, string destinationFile, Action<long, long> progress = null) =>
 		Task.Run(() => GetFileAsync(file, destinationFile, progress)).Wait();
 	public async Task GetFileAsync(RemoteFile file, string destinationFile, Action<long, long> progress = null)
 	{
@@ -127,5 +160,34 @@ public class Releases
 				}
 			}
 		}
+	}
+	public async Task GetFileAndUnzipAsync(SetupLoader loader, RemoteFile file, string destinationFile, string destinationPath, Func<string, bool> filter = null, 
+		Action<long, long> progress = null)
+	{
+		using (var alock = await Lock.LockAsync())
+		{
+			var url = await GetDownloadUrlAsync(file);
+
+			if (string.IsNullOrEmpty(destinationPath)) destinationPath = Path.GetDirectoryName(destinationFile);
+			if (!Directory.Exists(destinationPath)) Directory.CreateDirectory(destinationPath);
+
+			if (file.File.EndsWith(".7z", StringComparison.OrdinalIgnoreCase) ||
+				file.File.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+			{
+				using (var stream = new SeekableDownloadStream(this, file, destinationFile + ".tmp"))
+				{
+					loader.UnzipFile(file.File, destinationPath, filter, stream, (downloaded, size) => progress(downloaded, size));
+				}
+			}
+			else
+			{
+				var stream = new SeekableDownloadStream(this, file, destinationFile);
+				var buf = new byte[SeekableDownloadStream.ChunkSize];
+				for (int i = 0; i < stream.Length; i += SeekableDownloadStream.ChunkSize)
+				{
+					stream.Read(buf, 0, SeekableDownloadStream.ChunkSize);
+				}
+			}
+        }
 	}
 }

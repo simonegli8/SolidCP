@@ -157,8 +157,9 @@ namespace SolidCP.UniversalInstaller
 		/// Write line to log
 		/// </summary>
 		/// <param name="message"></param>
-		public virtual void WriteLine(string message)
+		public virtual void WriteLine(string message = null)
 		{
+			if (message == null) message = "";
 			try
 			{
 				OnWrite?.Invoke();
