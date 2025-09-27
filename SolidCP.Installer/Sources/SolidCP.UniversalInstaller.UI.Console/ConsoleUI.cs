@@ -2079,7 +2079,7 @@ SolidCP cannot be installed on this System.
 	int maxProgress = 200;
 	public override bool DownloadSetup(RemoteFile file, bool setupOnly = false)
 	{
-		var loader = Core.SetupLoaderFactory.CreateFileLoader(file);
+		var loader = new Core.SetupLoader(file);
 		loader.ProgressChanged += DownloadProgressChanged;
 		ShowInstallationProgress("Download and Extract Setup");
 		loader.OperationCompleted += DownloadAndUnzipCompleted;
@@ -2170,6 +2170,16 @@ SolidCP cannot be installed on this System.
 
 	public override void DownloadInstallerUpdate()
 	{
-		new Updater().Update();
+		var form = new ConsoleForm(@"
+Download Update
+===============
+
+[%Progress                                                                               ]")
+			.Show();
+
+		new Updater().Update((downloaded, size) =>
+		{
+			((PercentField)form["Progress"]).Value = (float)downloaded / (float)size;
+		});
 	}
 }

@@ -91,14 +91,17 @@ namespace SolidCP.UniversalInstaller
 
 	public class RemoteFile
 	{
-		public RemoteFile(ComponentUpdateInfo release, bool fullFile)
+		public RemoteFile(ComponentUpdateInfo release, bool fullFile, string downloadUrl = null)
 		{
 			Release = release;
 			FullFile = fullFile;
+			DownloadUrl = downloadUrl;
 		}
+		public RemoteFile(string downloadUrl) : this(null, true, downloadUrl) { }
 		public ComponentUpdateInfo Release { get; set; }
 		public bool FullFile { get; set; }
 		public string File => FullFile ? Release.FullFilePath : Release.UpgradeFilePath;
+		public string DownloadUrl { get; set; }
 	}
 
 	public class ComponentUpdateInfo: ReleaseFileInfo
@@ -222,5 +225,4 @@ namespace SolidCP.UniversalInstaller
 			}
 		}
 	}
-
 }

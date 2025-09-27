@@ -1432,7 +1432,7 @@ public abstract partial class Installer
 		File.Copy(entry, tmpFile);
 
 		//
-		string url = Installer.Current.Settings.Installer.WebServiceUrl;
+		string url = Releases.GetDownloadUrlAsync(new RemoteFile(component, false)).Result;
 		//
 		string proxyServer = string.Empty;
 		string user = string.Empty;
@@ -1466,7 +1466,7 @@ public abstract partial class Installer
 		sb.Append($"-ui={UI.Current.GetType().Name.Replace("UI", "").ToLower()} ");
 		sb.AppendFormat("-url:\"{0}\" ", url);
 		sb.AppendFormat("-target:\"{0}\" ", entry);
-		sb.AppendFormat("-file:\"{0}\" ", component.UpgradeFilePath);
+		//sb.AppendFormat("-file:\"{0}\" ", component.UpgradeFilePath);
 		sb.AppendFormat("-proxy:\"{0}\" ", proxyServer);
 		sb.AppendFormat("-user:\"{0}\" ", user);
 		sb.AppendFormat("-password:\"{0}\" ", password);

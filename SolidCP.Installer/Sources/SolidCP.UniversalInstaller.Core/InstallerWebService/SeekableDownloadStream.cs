@@ -22,35 +22,39 @@ public class SeekableDownloadStream: System.IO.Stream
     FileStream Buffer;
     int min = 0, current = 0;
     Task<long> Size = null;
-    RemoteFile File;
     string TmpFile;
     AsyncLock ChunkLock = new AsyncLock();
     AsyncLock IOLock = new AsyncLock();
     DateTime Start;
     TimeSpan DownloadTime = new TimeSpan(0);
     long Bufposition = 0;
-    public SeekableDownloadStream(Releases releases, RemoteFile file, string tmpFile)
+    public Task DownloadComplete;
+    public bool IsTemp;
+    public Action<long, long> Progress;
+    public string Url;
+	public SeekableDownloadStream(Releases releases, string url, string tmpFile, bool isTemp = true,
+		Action<long, long> progress = null)
     {
         Start = DateTime.Now;
         Releases = releases;
-        File = file;
         TmpFile = tmpFile;
-        Buffer = new FileStream(TmpFile, FileMode.Create, FileAccess.ReadWrite);
-        DownloadSequential();
+        Url = url;
+        IsTemp = isTemp;
+        Progress = progress;
+		Buffer = new FileStream(TmpFile, FileMode.Create, FileAccess.ReadWrite);
+        DownloadComplete = DownloadSequential();
     }
 
-    string fileUrl = null;
-    public async Task<string> FileUrl() => fileUrl ??= await Releases.GetDownloadUrlAsync(File);
     async Task GetSize()
     {
         using (var alock = await ChunkLock.LockAsync())
         {
-            if (Size == null) Size = Releases.GetFileSizeAsync(await FileUrl());
+            if (Size == null) Size = Releases.GetFileSizeAsync(Url);
         }
     }
     async Task<byte[]> DownloadChunkAsync(int position, int count) {
         var start = DateTime.Now;
-        var buffer = await Releases.DownloadFileChunkAsync(await FileUrl(), position, count);
+        var buffer = await Releases.DownloadFileChunkAsync(Url, position, count);
         DownloadTime += DateTime.Now - start;
         return buffer;
     }
@@ -91,16 +95,22 @@ public class SeekableDownloadStream: System.IO.Stream
         }
     }
 
-    public async void DownloadSequential()
+    public async Task DownloadSequential()
     {
         await GetSize();
         var size = await Size;
         Chunks = new (long Position, int Size, Task<Task> Data)[(int)(size / ChunkSize) + (size % ChunkSize == 0 ? 0 : 1)];
+        long downloaded = 0;
         for (int i = 0; i < Chunks.Length; i++)
         {
+            if (Releases.Cancel.IsCancellationRequested) break;
+
             GetChunk(size, i);
             if (Chunks[i].Data != null) await Chunks[i].Data;
-        }
+
+            downloaded += Chunks[i].Size;
+            Progress?.Invoke(Math.Min(downloaded, size), size);
+		}
     }
 
     public override long Length
@@ -257,7 +267,7 @@ public class SeekableDownloadStream: System.IO.Stream
                 Buffer.Dispose();
                 try
                 {
-                    System.IO.File.Delete(Buffer.Name);
+                    if (IsTemp) System.IO.File.Delete(Buffer.Name);
                 }
                 catch { }
                 Buffer = null;

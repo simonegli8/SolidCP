@@ -59,106 +59,6 @@ public class LoaderEventArgs<T> : EventArgs
 	public bool Cancellable { get; set; }
 }
 
-public static class SetupLoaderFactory
-{
-	/// <summary>
-	/// Instantiates either CodeplexLoader or InstallerServiceLoader based on remote file format.
-	/// </summary>
-	/// <param name="remoteFile"></param>
-	/// <returns></returns>
-	public static SetupLoader CreateFileLoader(RemoteFile remoteFile)
-	{
-		/*if (remoteFile.File.StartsWith("http://installer.solidcp.com/"))
-		{
-			return new CodeplexLoader(remoteFile);
-		}
-		else
-		{*/
-		return new SetupLoader(remoteFile);
-	}
-}
-
-/*public class CodeplexLoader : SetupLoader
-{
-	public const string WEB_PI_USER_AGENT_HEADER = "PI-Integrator/3.0.0.0({0})";
-
-	private WebClient fileLoader;
-
-	internal CodeplexLoader(RemoteFile remoteFile)
-		: base(remoteFile)
-	{
-		InitFileLoader();
-	}
-
-	private void InitFileLoader()
-	{
-		fileLoader = new WebClient();
-		// Set HTTP header for Codeplex to allow direct downloads
-		fileLoader.Headers.Add("User-Agent", String.Format(WEB_PI_USER_AGENT_HEADER, Assembly.GetExecutingAssembly().FullName));
-	}
-
-	protected override Task GetDownloadFileTask(RemoteFile remoteFile, string tmpFile, string destPath, Func<string, bool> filter, 
-		CancellationToken ct)
-	{
-		var downloadFileTask = new Task(() =>
-		{
-			if (!File.Exists(tmpFile))
-			{
-				// Mimic synchronous file download operation because we need to track the download progress
-				// and be able to cancel the operation in progress
-				AutoResetEvent autoEvent = new AutoResetEvent(false);
-
-				if (fileLoader.IsBusy.Equals(true))
-				{
-					return;
-				}
-
-				ct.Register(() =>
-				{
-					fileLoader.CancelAsync();
-				});
-
-				Log.WriteStart("Downloading file");
-				Log.WriteInfo("Downloading file \"{0}\" to \"{1}\"", remoteFile, tmpFile);
-
-				// Attach event handlers to track status of the download process
-				fileLoader.DownloadProgressChanged += (obj, e) =>
-				{
-					if (ct.IsCancellationRequested)
-						return;
-
-					RaiseOnProgressChangedEvent(e.ProgressPercentage);
-					RaiseOnStatusChangedEvent(DownloadingSetupFilesMessage,
-							String.Format(DownloadProgressMessage, e.BytesReceived / 1024, e.TotalBytesToReceive / 1024));
-				};
-
-				fileLoader.DownloadFileCompleted += (obj, e) =>
-				{
-					if (ct.IsCancellationRequested == false)
-					{
-						RaiseOnProgressChangedEvent(100);
-						RaiseOnStatusChangedEvent(DownloadingSetupFilesMessage, "100%");
-					}
-
-					if (e.Cancelled)
-					{
-						CancelDownload(tmpFile);
-					}
-
-					autoEvent.Set();
-				};
-
-				fileLoader.DownloadFileAsync(new Uri(remoteFile.File), tmpFile);
-				RaiseOnStatusChangedEvent(DownloadingSetupFilesMessage);
-
-				autoEvent.WaitOne();
-			}
-		}, ct);
-
-		return downloadFileTask;
-	}
-}*/
-
 /// <summary>
 /// Loader form.
 /// </summary>
@@ -182,7 +82,7 @@ public class SetupLoader
 	public event EventHandler<EventArgs> OperationCompleted;
 	public event EventHandler<EventArgs> NoUnzipStatus;
 	public event EventHandler<LoaderEventArgs<int>> SetMaximumProgress;
-	internal SetupLoader(RemoteFile remoteFile)
+	public SetupLoader(RemoteFile remoteFile)
 	{
 		this.remoteFile = remoteFile;
 	}
@@ -327,25 +227,11 @@ public class SetupLoader
 						info.FullFilePath.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
 					{
 						setupFileName = Path.ChangeExtension(setupFileName, Path.GetExtension(info.FullFilePath));
+					}
 
-                        downloadSetupTask = GetDownloadFileTask(new RemoteFile(info, true), setupFileName, exeFolder, null, token);
+					downloadSetupTask = GetDownloadFileTask(new RemoteFile(info, true), setupFileName, exeFolder, null, token);
 
-                        /*downloadSetupTask = downloadSetupTask.ContinueWith(t =>
-						{
-							RaiseOnStatusChangedEvent(PreparingSetupFilesMessage);
-							//
-							RaiseOnProgressChangedEvent(0);
-							//
-							UnzipFile(setupFileName, exeFolder);
-							//
-							RaiseOnProgressChangedEvent(100);
-							File.Delete(setupFileName);
-						}, token);*/
-                    } else {
-                       downloadSetupTask = GetDownloadFileTask(new RemoteFile(info, true), setupFileName, exeFolder, null, token);
-                    }
-
-                    var downloadComponentTask = downloadSetupTask.ContinueWith(async task =>
+					var downloadComponentTask = downloadSetupTask.ContinueWith(task =>
 					{
 						RaiseDownloadCompleteEvent();
 						RaiseOnOperationCompletedEvent();
@@ -447,15 +333,16 @@ public class SetupLoader
 			{
 				progressStream.Close();
 				File.Delete(progressFile);
+				RaiseOnOperationFailedEvent(t.Exception);
 			}, TaskContinuationOptions.NotOnRanToCompletion);
-			// Unzip file downloaded
-			var successDownloadFileTask = downloadFileTask.ContinueWith((t) =>
+			var successDownloadFileTask = downloadFileTask.ContinueWith(t =>
 			{
 				progressStream.Close();
 				File.WriteAllText(nofFilesFile, Installer.Current.Files.ToString());
 				File.Delete(destinationFile);
 				File.Delete(progressFile);
-			}, token, TaskContinuationOptions.NotOnCanceled | TaskContinuationOptions.NotOnFaulted, TaskScheduler.Current);
+			}, CancellationToken.None, TaskContinuationOptions.NotOnCanceled | TaskContinuationOptions.NotOnFaulted,
+			TaskScheduler.Current);
 			//
 
 			try
@@ -507,7 +394,7 @@ public class SetupLoader
 				if (sourceFile.File.EndsWith(".7z", StringComparison.OrdinalIgnoreCase) ||
 					 sourceFile.File.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
 				{
-                    await Installer.Current.Releases.GetFileAndUnzipAsync(this, sourceFile, tmpFile, destPath, filter,
+                    await Installer.Current.Releases.GetFileAndUnzipAsync(sourceFile, tmpFile, destPath, filter,
 						(downloaded, fileSize) =>
 						{
 							downloadedSize = downloaded;
@@ -569,138 +456,6 @@ public class SetupLoader
 	{
 		dataFolder = FileUtils.GetDataDirectory();
 		tmpFolder = Installer.Current.ComponentTempPath; //FileUtils.GetTempDirectory(); + "\Component"
-	}
-	public void UnzipFile(string zipFile, string destFolder, Func<string, bool> filter = null, Stream stream = null,
-		Action<long, long> progress = null)
-	{
-		if (zipFile.EndsWith(".7z")) Unzip7zFile(zipFile, destFolder, filter, stream, progress);
-		else UnzipZipFile(zipFile, destFolder, filter, stream, progress);
-	}
-	public void Unzip7zFile(string zipFile, string destFolder, Func<string, bool> filter = null, Stream stream = null,
-		Action<long, long> progress = null)
-	{
-        try
-        {
-            if (filter == null) filter = name => true;
-
-            int val = 0;
-            // Negative value means no progress made yet
-            //int progress = -1;
-            //
-            Log.WriteStart("Unzipping file");
-            Log.WriteInfo(string.Format("Unzipping file \"{0}\" to the folder \"{1}\"", zipFile, destFolder));
-
-            using (var file = stream ?? new FileStream(zipFile, FileMode.Open, FileAccess.Read))
-            using (var zip = SevenZipArchive.Open(file))
-            {
-                long zipSize = file.Length;
-                long unzipped = 0;
-
-                int files = 0;
-
-                var reader = zip.ExtractAllEntries();
-				while (reader.MoveToNextEntry())
-				{
-					if (filter(reader.Entry.Key) && !reader.Entry.IsDirectory)
-					{
-						reader.WriteEntryToDirectory(destFolder, new ExtractionOptions() { ExtractFullPath = true, Overwrite = true });
-						files++;
-						unzipped += reader.Entry.CompressedSize;
-
-						if (zipSize != 0)
-						{
-							/*val = Convert.ToInt32(unzipped * 100 / zipSize);
-							// Skip to raise the progress event change when calculated progress 
-							// and the current progress value are even
-							if (val == progress)
-							{
-								continue;
-							}
-							//
-							RaiseOnStatusChangedEvent(
-								PreparingSetupFilesMessage,
-								String.Format(PrepareSetupProgressMessage, val),
-								false);
-							//
-							RaiseOnProgressChangedEvent(val, false);*/
-							progress?.Invoke(unzipped, zipSize);
-                        }
-					}
-				}
-
-				Installer.Current.Files = files;
-
-                // Notify client the operation can be cancelled at this time
-                //RaiseOnProgressChangedEvent(100);
-                //
-				progress?.Invoke(zipSize, zipSize);
-                Log.WriteEnd("Unzipped file");
-            }
-        }
-        catch (Exception ex)
-        {
-            if (ex is ThreadAbortException)
-                return;
-            //
-            RaiseOnOperationFailedEvent(ex);
-        }
-    }
-    private void UnzipZipFile(string zipFile, string destFolder, Func<string, bool> filter = null, Stream stream = null, Action<long, long> progress = null)
-	{
-		try
-		{
-			if (filter == null) filter = name => true;
-
-			int val = 0;
-			// Negative value means no progress made yet
-			//int progress = -1;
-			//
-			Log.WriteStart("Unzipping file");
-			Log.WriteInfo(string.Format("Unzipping file \"{0}\" to the folder \"{1}\"", zipFile, destFolder));
-
-			using (var file = stream ?? new FileStream(zipFile, FileMode.Open, FileAccess.Read))
-			using (var zip = new ZipArchive(file))
-			{
-				long zipSize = file.Length;
-				long unzipped = 0;
-
-				int files = 0;
-
-				foreach (var entry in zip.Entries)
-				{
-					if (filter(entry.FullName))
-					{
-						if (string.IsNullOrEmpty(entry.Name))
-						{
-							Directory.CreateDirectory(Path.Combine(destFolder, entry.FullName.Replace('/', Path.DirectorySeparatorChar)));
-						}
-						else
-						{
-							entry.ExtractToFile(Path.Combine(destFolder, entry.FullName.Replace('/', Path.DirectorySeparatorChar)), true);
-							files++;
-						}
-					}
-					else if (!string.IsNullOrEmpty(entry.Name)) files++;
-
-					unzipped += entry.CompressedLength;
-
-					if (zipSize != 0) progress?.Invoke(unzipped, zipSize);
-				}
-
-				Installer.Current.Files = files;
-
-				progress?.Invoke(zipSize, zipSize);
-
-                Log.WriteEnd("Unzipped file");
-			}
-		}
-		catch (Exception ex)
-		{
-			if (ex is ThreadAbortException)
-				return;
-			//
-			RaiseOnOperationFailedEvent(ex);
-		}
 	}
 
 	/// <summary>

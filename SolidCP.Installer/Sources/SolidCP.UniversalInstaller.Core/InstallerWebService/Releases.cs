@@ -3,12 +3,15 @@ using Octokit;
 using SharpCompress.Archives;
 using SharpCompress.Archives.SevenZip;
 using SharpCompress.Common;
+using SharpCompress.Readers;
 using SolidCP.Providers.EnterpriseStorage;
 using SolidCP.UniversalInstaller.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.IO.Compression;
+using System.Net;
 using System.Security.Policy;
 using System.Text;
 
@@ -19,7 +22,9 @@ public class Releases
 	public GitHubReleases GitHub => Installer.Current.GitHub;
 	public IInstallerWebService WebService = Installer.Current.InstallerWebService;
 
-	public const int ChunkSize = 262144;
+	public const long ChunkSize = 262144;
+
+	public CancellationTokenSource Cancel = new CancellationTokenSource();
 
 	public static AsyncLock Lock = new AsyncLock();
 	public ComponentUpdateInfo GetComponentUpdate(string componentCode, string release)
@@ -92,16 +97,38 @@ public class Releases
 
 	public async Task<string> GetDownloadUrlAsync(RemoteFile file)
 	{
-		if (file.Release.GitHub) return await GitHub.GetDownloadUrl(file);
+		if (!string.IsNullOrEmpty(file.DownloadUrl)) return file.DownloadUrl;
+		if (file.Release?.GitHub == true) return await GitHub.GetDownloadUrl(file);
 		else
 		{
 			var uri = new Uri(WebService.Url);
 			return file.File.Replace("~", $"{uri.Scheme}://{uri.Authority}");
 		}
     }
+	HttpClientHandler ProxyHandler()
+	{
+		if (Installer.Current.Settings.Installer.Proxy != null && !string.IsNullOrEmpty(Installer.Current.Settings.Installer.Proxy.Address))
+		{
+			var settings = Installer.Current.Settings.Installer.Proxy;
+			var proxy = new WebProxy(settings.Address, false);  // proxy address + port
+			if (!string.IsNullOrEmpty(settings.Username) && !string.IsNullOrEmpty(settings.Password))
+			{
+				proxy.Credentials = new NetworkCredential(settings.Username, settings.Password); // if proxy needs auth
+			}
+
+			// Attach proxy to handler
+			return new HttpClientHandler
+			{
+				Proxy = proxy,
+				UseProxy = true
+			};
+		}
+		return null;
+	}
 	public async Task<byte[]> DownloadFileChunkAsync(string url, long offset, long length)
 	{
-		using var client = new HttpClient();
+		var handler = ProxyHandler();
+		using var client = handler != null ? new HttpClient(handler) : new HttpClient();
 		client.DefaultRequestHeaders.Range = new System.Net.Http.Headers.RangeHeaderValue(offset, offset + length);
 		using var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 		response.EnsureSuccessStatusCode();
@@ -109,28 +136,30 @@ public class Releases
 	}
 	public async Task<long> GetFileSizeAsync(string url)
 	{
-        using var client = new HttpClient();
-        var request = new HttpRequestMessage(HttpMethod.Head, url);
-        using var response = await client.SendAsync(request);
-        response.EnsureSuccessStatusCode();
-        return response.Content.Headers.ContentLength ?? -1;
-    }
-    public void GetFile(RemoteFile file, string destinationFile, Action<long, long> progress = null) =>
+		var handler = ProxyHandler();
+		using var client = handler != null ? new HttpClient(handler) : new HttpClient();
+		var request = new HttpRequestMessage(HttpMethod.Head, url);
+		using var response = await client.SendAsync(request);
+		response.EnsureSuccessStatusCode();
+		return response.Content.Headers.ContentLength ?? -1;
+	}
+
+	public void GetFile(RemoteFile file, string destinationFile, Action<long, long> progress = null) =>
 		Task.Run(() => GetFileAsync(file, destinationFile, progress)).Wait();
 	public async Task GetFileAsync(RemoteFile file, string destinationFile, Action<long, long> progress = null)
 	{
 		using (var alock = await Lock.LockAsync())
 		{
-			if (file.Release.GitHub) await GitHub.GetFileAsync(file, destinationFile, progress);
+			if (file.Release?.GitHub == true) await GitHub.GetFileAsync(file, destinationFile, progress);
 			else
 			{
-				var service = WebService;
+				var url = await GetDownloadUrlAsync(file);
 
 				var destinationPath = Path.GetDirectoryName(destinationFile);
 				if (!Directory.Exists(destinationPath)) Directory.CreateDirectory(destinationPath);
 
 				long downloaded = 0;
-				long fileSize = service.GetFileSize(file.File);
+				long fileSize = await GetFileSizeAsync(url);
 
 				if (fileSize == 0)
 				{
@@ -144,7 +173,7 @@ public class Releases
 					// Throw OperationCancelledException if there is an incoming cancel request
 					Installer.Current.Cancel.Token.ThrowIfCancellationRequested();
 
-					content = service.GetFileChunk(file.File, (int)downloaded, ChunkSize);
+					content = await DownloadFileChunkAsync(url, downloaded, ChunkSize);
 					if (content == null)
 					{
 						throw new FileNotFoundException("Service returned NULL file content.", file.File);
@@ -161,7 +190,7 @@ public class Releases
 			}
 		}
 	}
-	public async Task GetFileAndUnzipAsync(SetupLoader loader, RemoteFile file, string destinationFile, string destinationPath, Func<string, bool> filter = null, 
+	public async Task GetFileAndUnzipAsync(RemoteFile file, string destinationFile, string destinationPath, Func<string, bool> filter = null, 
 		Action<long, long> progress = null)
 	{
 		using (var alock = await Lock.LockAsync())
@@ -171,23 +200,138 @@ public class Releases
 			if (string.IsNullOrEmpty(destinationPath)) destinationPath = Path.GetDirectoryName(destinationFile);
 			if (!Directory.Exists(destinationPath)) Directory.CreateDirectory(destinationPath);
 
-			if (file.File.EndsWith(".7z", StringComparison.OrdinalIgnoreCase) ||
-				file.File.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+			if (url.EndsWith(".7z", StringComparison.OrdinalIgnoreCase) ||
+				url.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
 			{
-				using (var stream = new SeekableDownloadStream(this, file, destinationFile + ".tmp"))
+				using (var stream = new SeekableDownloadStream(this, url, destinationFile + ".tmp", true))
 				{
-					loader.UnzipFile(file.File, destinationPath, filter, stream, (downloaded, size) => progress(downloaded, size));
+					UnzipFile(destinationFile, destinationPath, filter, stream, progress);
 				}
 			}
 			else
 			{
-				var stream = new SeekableDownloadStream(this, file, destinationFile);
-				var buf = new byte[SeekableDownloadStream.ChunkSize];
-				for (int i = 0; i < stream.Length; i += SeekableDownloadStream.ChunkSize)
+				using (var stream = new SeekableDownloadStream(this, url, destinationFile, false, progress))
 				{
-					stream.Read(buf, 0, SeekableDownloadStream.ChunkSize);
+					await stream.DownloadComplete;
 				}
 			}
         }
 	}
+	public void UnzipFile(string zipFile, string destFolder, Func<string, bool> filter = null, Stream stream = null,
+	Action<long, long> progress = null)
+	{
+		if (zipFile.EndsWith(".7z")) Unzip7zFile(zipFile, destFolder, filter, stream, progress);
+		else UnzipZipFile(zipFile, destFolder, filter, stream, progress);
+	}
+	public void Unzip7zFile(string zipFile, string destFolder, Func<string, bool> filter = null, Stream stream = null,
+		Action<long, long> progress = null)
+	{
+		try
+		{
+			if (filter == null) filter = name => true;
+
+			Log.WriteStart("Unzipping file");
+			Log.WriteInfo(string.Format("Unzipping file \"{0}\" to the folder \"{1}\"", zipFile, destFolder));
+
+			using (var file = stream ?? new FileStream(zipFile, System.IO.FileMode.Open, FileAccess.Read))
+			using (var zip = SevenZipArchive.Open(file))
+			{
+				long zipSize = file.Length;
+				long unzipped = 0;
+
+				int files = 0;
+
+				var reader = zip.ExtractAllEntries();
+				while (reader.MoveToNextEntry())
+				{
+					if (Cancel.IsCancellationRequested) break;
+
+					if (filter(reader.Entry.Key) && !reader.Entry.IsDirectory)
+					{
+						reader.WriteEntryToDirectory(destFolder, new ExtractionOptions() { ExtractFullPath = true, Overwrite = true });
+						files++;
+						unzipped += reader.Entry.CompressedSize;
+
+						if (zipSize != 0)
+						{
+							progress?.Invoke(unzipped, zipSize);
+						}
+					}
+				}
+
+				Installer.Current.Files = files;
+
+				progress?.Invoke(zipSize, zipSize);
+				Log.WriteEnd("Unzipped file");
+			}
+		}
+		catch (Exception ex)
+		{
+			if (ex is ThreadAbortException)
+				return;
+
+			throw;
+		}
+	}
+	private void UnzipZipFile(string zipFile, string destFolder, Func<string, bool> filter = null, Stream stream = null,
+		Action<long, long> progress = null)
+	{
+		try
+		{
+			if (filter == null) filter = name => true;
+
+			Log.WriteStart("Unzipping file");
+			Log.WriteInfo(string.Format("Unzipping file \"{0}\" to the folder \"{1}\"", zipFile, destFolder));
+
+			using (var file = stream ?? new FileStream(zipFile, System.IO.FileMode.Open, FileAccess.Read))
+			using (var zip = new ZipArchive(file))
+			{
+				long zipSize = file.Length;
+				long unzipped = 0;
+
+				int files = 0;
+
+				foreach (var entry in zip.Entries)
+				{
+					if (Cancel.IsCancellationRequested) break;
+
+					if (filter(entry.FullName))
+					{
+						if (string.IsNullOrEmpty(entry.Name))
+						{
+							Directory.CreateDirectory(Path.Combine(destFolder, entry.FullName.Replace('/', Path.DirectorySeparatorChar)));
+						}
+						else
+						{
+							entry.ExtractToFile(Path.Combine(destFolder, entry.FullName.Replace('/', Path.DirectorySeparatorChar)), true);
+							files++;
+						}
+					}
+					else if (!string.IsNullOrEmpty(entry.Name)) files++;
+
+					unzipped += entry.CompressedLength;
+
+					if (zipSize != 0) progress?.Invoke(unzipped, zipSize);
+				}
+
+				Installer.Current.Files = files;
+
+				progress?.Invoke(zipSize, zipSize);
+
+				Log.WriteEnd("Unzipped file");
+			}
+		}
+		catch (Exception ex)
+		{
+			if (ex is ThreadAbortException)
+				return;
+			throw;
+		}
+	}
+
+	public void AbortOperation()
+	{
+		if (Cancel != null) Cancel.Cancel();
+	}
+
 }

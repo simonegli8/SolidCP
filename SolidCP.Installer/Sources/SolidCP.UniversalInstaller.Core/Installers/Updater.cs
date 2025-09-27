@@ -4,29 +4,27 @@ using System.IO.Compression;
 using System.IO;
 using System.Text;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace SolidCP.UniversalInstaller;  
 
 public class Updater
 {
-	private const int ChunkSize = 262144;
-
-	private IInstallerWebService service;
-
-	public Updater()
+	public Action<long, long> Progress = null;
+	public Updater(Action<long, long> progress = null)
 	{
 		var url = GetCommandLineArgument("url");
 		Installer.Current.Settings.Installer.WebServiceUrl = url;
-		service = Installer.Current.InstallerWebService;
 	}
 
-	public void Update()
+	public void Update(Action<long, long> progress)
 	{
 		try
 		{
+			Progress = progress;
 			string url = GetCommandLineArgument("url");
 			string targetFile = GetCommandLineArgument("target");
-			string fileToDownload = GetCommandLineArgument("file");
+			//string fileToDownload = GetCommandLineArgument("file");
 			string proxyServer = GetCommandLineArgument("proxy");
 			string user = GetCommandLineArgument("user");
 			string password = GetCommandLineArgument("password");
@@ -43,15 +41,12 @@ public class Updater
 			}
 
 			Installer.Current.Settings.Installer.WebServiceUrl = url;
-			service = Installer.Current.InstallerWebService;
 
 			string destinationFile = Path.GetTempFileName();
 			string baseDir = Path.GetDirectoryName(targetFile);
 			string tempDir = Path.Combine(baseDir, "Temp");
 
-			DownloadFile(fileToDownload, destinationFile);
-
-			UnzipFile(destinationFile, tempDir);
+			DownloadAndUnzipFile(new RemoteFile(url), destinationFile, tempDir).Wait();
 
 			if (Providers.OS.OSInfo.IsCore)
 			{
@@ -151,87 +146,13 @@ public class Updater
 		}
 	}
 
-	private void DownloadFile(string sourceFile, string destinationFile)
+	public Releases Releases => Installer.Current.Releases;
+
+	private async Task DownloadAndUnzipFile(RemoteFile file, string destinationFile, string destPath)
 	{
 		try
 		{
-			long downloaded = 0;
-			long fileSize = service.GetFileSize(sourceFile);
-			if (fileSize == 0)
-			{
-				throw new FileNotFoundException("Service returned empty file.", sourceFile);
-			}
-
-			byte[] content;
-
-			while (downloaded < fileSize)
-			{
-				content = service.GetFileChunk(sourceFile, (int)downloaded, ChunkSize);
-				if (content == null)
-				{
-					throw new FileNotFoundException("Service returned NULL file content.", sourceFile);
-				}
-				FileUtils.AppendFileContent(destinationFile, content);
-				downloaded += content.Length;
-
-				if (content.Length < ChunkSize)
-					break;
-			}
-		}
-		catch (Exception ex)
-		{
-			if (Utils.IsThreadAbortException(ex))
-				return;
-
-			throw;
-		}
-	}
-
-	private static void UnzipFile(string zipFile, string destFolder)
-	{
-		try
-		{
-			destFolder = Path.GetFullPath(destFolder);
-			if (!destFolder.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
-				destFolder += Path.DirectorySeparatorChar;
-
-			if (!Directory.Exists(destFolder)) Directory.CreateDirectory(destFolder);
-
-			//calculate size
-			long zipSize = 0;
-			using (ZipArchive zip = ZipFile.OpenRead(zipFile))
-			{
-				foreach (ZipArchiveEntry entry in zip.Entries)
-				{
-					zipSize += entry.Length;
-				}
-			}
-
-			long unzipped = 0;
-			using (ZipArchive zip = ZipFile.OpenRead(zipFile))
-			{
-				foreach (ZipArchiveEntry entry in zip.Entries)
-				{
-					// Gets the full path to ensure that relative segments are removed.
-					string destinationPath = Path.GetFullPath(Path.Combine(destFolder, entry.FullName))
-						.Replace('/', Path.DirectorySeparatorChar)
-						.Replace('\\', Path.DirectorySeparatorChar);
-
-					// Ordinal match is safest, case-sensitive volumes can be mounted within volumes that
-					// are case-insensitive.
-					if (destinationPath.StartsWith(destFolder, StringComparison.Ordinal) &&
-						!string.IsNullOrEmpty(entry.Name))
-					{
-						entry.ExtractToFile(destinationPath, true);
-					}
-					else
-					{
-						Directory.CreateDirectory(destinationPath.Substring(0, destinationPath.Length - 1));
-					}
-
-					unzipped += entry.Length;
-				}
-			}
+			await Releases.GetFileAndUnzipAsync(file, destinationFile, destPath, null, Progress);
 		}
 		catch (Exception ex)
 		{
