@@ -61,7 +61,6 @@ public abstract partial class Installer
 
 	public const bool UseHttpsOnWindows = true;
 	public const bool UseLettuceEncrypt = false;
-
 	public Action OnExit { get; set; }
 	public Action<Exception> OnError { get; set; }
 
