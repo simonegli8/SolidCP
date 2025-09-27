@@ -977,7 +977,8 @@
 		<Copy SourceFiles="$(SetupBuildFolder)\Setup2.dll" DestinationFolder="$(StandaloneInstall)\Setup" />
 		<!--<Copy SourceFiles="$(SetupBuildFolder)\Setup2.pdb" DestinationFolder="$(StandaloneInstall)\Setup" Condition=" '$(BuildConfiguration)' == 'Debug' Or $(IncludeReleasePdbs) " />-->
 	
-			<Copy SourceFiles="$(SetupBuildFolder)\Setup2.dll" DestinationFolder="$(DeployFolder)" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(SetupBuildFolder)\Setup2.dll$(ZipExt)&quot; &quot;$(SetupBuildFolder)\Setup2.dll&quot;" />
+		<Copy SourceFiles="$(SetupBuildFolder)\Setup2.dll$(ZipExt)" DestinationFolder="$(DeployFolder)" />
 	</Target>
 
 	<Target Name="DeploySqlScripts" DependsOnTargets="CopySetupDLL">

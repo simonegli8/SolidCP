@@ -928,7 +928,7 @@
         <releases>
             <release version="2.0.0" date="05/26/2025" available="false" beta="false">
                 <releaseFileID>700</releaseFileID>
-                <fullFilePath>~/Files/2.0.0/Setup2.dll</fullFilePath>
+                <fullFilePath>~/Files/2.0.0/Setup2.dll.7z</fullFilePath>
                 <upgradeFilePath></upgradeFilePath>
                 <installerPath></installerPath>
                 <installerType></installerType>
