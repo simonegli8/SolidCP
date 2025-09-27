@@ -10,7 +10,7 @@
         <releases>
             <release version="2.0.0" date="08/12/2024" available="true" beta="true">
                 <releaseFileID>200</releaseFileID>
-                <fullFilePath>~/Files/2.0.0/SolidCP-StandaloneServerSetup.zip</fullFilePath>
+                <fullFilePath>~/Files/2.0.0/SolidCP-StandaloneServerSetup.7z</fullFilePath>
                 <upgradeFilePath></upgradeFilePath>
                 <installerPath>Setup\Setup2.dll</installerPath>
                 <installerType>SolidCP.Setup.StandaloneServer200</installerType>
@@ -172,8 +172,8 @@
         <releases>
             <release version="2.0.0" date="08/12/2024" available="true" beta="true">
                 <releaseFileID>2200</releaseFileID>
-                <fullFilePath>~/Files/2.0.0/SolidCP-Portal.zip</fullFilePath>
-                <upgradeFilePath>~/Files/2.0.0/SolidCP-Portal-Update.zip</upgradeFilePath>
+                <fullFilePath>~/Files/2.0.0/SolidCP-Portal.7z</fullFilePath>
+                <upgradeFilePath>~/Files/2.0.0/SolidCP-Portal-Update.7z</upgradeFilePath>
                 <installerPath>Setup\Setup2.dll</installerPath>
                 <installerType>SolidCP.Setup.Portal200</installerType>
             </release>
@@ -334,8 +334,8 @@
         <releases>
             <release version="2.0.0" date="02/12/2024" available="true" beta="true">
                 <releaseFileID>3200</releaseFileID>
-                <fullFilePath>~/Files/2.0.0/SolidCP-EnterpriseServer.zip</fullFilePath>
-                <upgradeFilePath>~/Files/2.0.0/SolidCP-EnterpriseServer-Update.zip</upgradeFilePath>
+                <fullFilePath>~/Files/2.0.0/SolidCP-EnterpriseServer.7z</fullFilePath>
+                <upgradeFilePath>~/Files/2.0.0/SolidCP-EnterpriseServer-Update.7z</upgradeFilePath>
                 <installerPath>Setup\Setup2.dll</installerPath>
                 <installerType>SolidCP.Setup.EnterpriseServer200</installerType>
             </release>
@@ -496,8 +496,8 @@
         <releases>
             <release version="2.0.0" date="02/12/2024" available="true" beta="true">
                 <releaseFileID>4200</releaseFileID>
-                <fullFilePath>~/Files/2.0.0/SolidCP-Server.zip</fullFilePath>
-                <upgradeFilePath>~/Files/2.0.0/SolidCP-Server-Update.zip</upgradeFilePath>
+                <fullFilePath>~/Files/2.0.0/SolidCP-Server.7z</fullFilePath>
+                <upgradeFilePath>~/Files/2.0.0/SolidCP-Server-Update.7z</upgradeFilePath>
                 <installerPath>Setup\Setup2.dll</installerPath>
                 <installerType>SolidCP.Setup.Server200</installerType>
             </release>
@@ -511,8 +511,8 @@
         <releases>
             <release version="2.0.0" date="02/12/2024" available="true" beta="true">
                 <releaseFileID>4200</releaseFileID>
-                <fullFilePath>~/Files/2.0.0/SolidCP-Server.zip</fullFilePath>
-                <upgradeFilePath>~/Files/2.0.0/SolidCP-Server-Update.zip</upgradeFilePath>
+                <fullFilePath>~/Files/2.0.0/SolidCP-Server.7z</fullFilePath>
+                <upgradeFilePath>~/Files/2.0.0/SolidCP-Server-Update.7z</upgradeFilePath>
                 <installerPath>Setup\Setup2.dll</installerPath>
                 <installerType>SolidCP.Setup.Server200</installerType>
             </release>
@@ -940,7 +940,7 @@
             <release version="2.0.0" date="05/26/2025" available="false" beta="false">
                 <releaseFileID>803</releaseFileID>
                 <fullFilePath></fullFilePath>
-                <upgradeFilePath>~/Files/2.0.0/SolidCP-Installer-2.0.0.zip</upgradeFilePath>
+                <upgradeFilePath>~/Files/2.0.0/SolidCP-Installer-2.0.0.7z</upgradeFilePath>
                 <installerPath></installerPath>
                 <installerType></installerType>
             </release>
@@ -961,7 +961,7 @@
             <release version="2.0.0" date="05/26/2025" available="false" beta="false">
                 <releaseFileID>802</releaseFileID>
                 <fullFilePath></fullFilePath>
-                <upgradeFilePath>~/Files/2.0.0/SolidCP-Installer-Unix-2.0.0.zip</upgradeFilePath>
+                <upgradeFilePath>~/Files/2.0.0/SolidCP-Installer-Unix-2.0.0.7z</upgradeFilePath>
                 <installerPath></installerPath>
                 <installerType></installerType>
             </release>
