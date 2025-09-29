@@ -1,7 +1,3 @@
-// Copyright (c) 2016, SolidCP
-// SolidCP is distributed under the Creative Commons Share-alike license
-// 
-// SolidCP is a fork of WebsitePanel:
 // Copyright (c) 2015, Outercurve Foundation.
 // All rights reserved.
 //
@@ -30,12 +26,17 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE)  ARISING  IN  ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using SharpCompress.Archives;
+using SharpCompress.Archives.SevenZip;
+using SharpCompress.Common;
+using SharpCompress.Readers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
+using System.IO;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
@@ -44,11 +45,8 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
-using SharpCompress.Archives;
-using SharpCompress.Archives.SevenZip;
-using SharpCompress.Common;
-using SharpCompress.Readers;
 
 namespace SolidCP.UniversalInstaller.Core;
 
@@ -121,7 +119,6 @@ public class SetupLoader
 
 	protected void RaiseOnProgressChangedEvent(int eventData)
 	{
-
 		RaiseOnProgressChangedEvent(eventData, true);
 	}
 
@@ -194,7 +191,7 @@ public class SetupLoader
 				Path.GetFileName(installerPath));
 			var destinationFile = Path.Combine(dataFolder, fileToDownload);
 			var tmpFile = Path.Combine(tmpFolder, fileToDownload);
-			
+
 			var progressFile = Path.Combine(Path.GetDirectoryName(tmpFolder), DownloadProgressFile);
 
 			if (File.Exists(setupFileName))
@@ -205,6 +202,7 @@ public class SetupLoader
 					version.Minor == remoteFile.Release.Version.Minor &&
 					version.Build == remoteFile.Release.Version.Build)
 				{
+					RaiseNoUzipStatusEvent();
 					RaiseSetMaximumProgressEvent(100);
 					RaiseOnProgressChangedEvent(100);
 					RaiseDownloadCompleteEvent();
@@ -215,6 +213,7 @@ public class SetupLoader
 					{
 						File.Delete(progressFile);
 					}
+
 					return;
 				}
 			}
@@ -234,16 +233,17 @@ public class SetupLoader
 					}
 					else RaiseNoUzipStatusEvent();
 
-						downloadSetupTask = GetDownloadFileTask(new RemoteFile(info, true), setupFileName, exeFolder, null, token);
+					downloadSetupTask = GetDownloadFileTask(new RemoteFile(info, true), setupFileName, exeFolder, null, token);
 
 					var downloadComponentTask = downloadSetupTask.ContinueWith(task =>
 					{
 						RaiseDownloadCompleteEvent();
 						RaiseOnOperationCompletedEvent();
-						
+
 						if (!SetupOnly) StartDownloadAsyncRelease(remoteFile, tmpFile, destinationFile, tmpFolder, installerPath, token);
 						else
 						{
+							var progressFile = Path.Combine(Path.GetDirectoryName(tmpFolder), DownloadProgressFile);
 							File.Delete(progressFile);
 						}
 					}, token);
@@ -259,18 +259,8 @@ public class SetupLoader
 				var progressStream = new FileStream(progressFile, FileMode.Create, FileAccess.Write, FileShare.ReadWrite | FileShare.Delete);
 
 				// Download the file requested
-				ProgressChanged += (sender, args) =>
-				{
-					try
-					{
-						if (args.EventData > progressStream.Length) progressStream.SetLength(args.EventData);
-					}
-					catch { }
-				};
 				Task downloadFileTask = GetDownloadFileTask(remoteFile, tmpFile, tmpFolder, null, token);
-				// Move the file downloaded from temporary location to Data folder
-				// Unzip file downloaded
-				//
+
 				var notifyCompletionTask = downloadFileTask.ContinueWith(t =>
 				{
 					RaiseDownloadCompleteEvent();
@@ -344,7 +334,11 @@ public class SetupLoader
 			{
 				try
 				{
-					if (args.EventData > progressStream.Length) progressStream.SetLength(args.EventData);
+					while (args.EventData > progressStream.Length)
+					{
+						progressStream.WriteByte(0);
+						progressStream.Flush();
+					}
 				}
 				catch { }
 			};
@@ -362,6 +356,8 @@ public class SetupLoader
 				progressStream.Close();
 				File.WriteAllText(nofFilesFile, Installer.Current.Files.ToString());
 				File.Delete(progressFile);
+				RaiseDownloadCompleteEvent();
+				RaiseOnOperationCompletedEvent();
 			}, CancellationToken.None, TaskContinuationOptions.NotOnCanceled | TaskContinuationOptions.NotOnFaulted,
 			TaskScheduler.Current);
 			//
@@ -414,9 +410,9 @@ public class SetupLoader
 
 				long downloadedSize = 0;
 				if (sourceFile.File.EndsWith(".7z", StringComparison.OrdinalIgnoreCase) ||
-					 sourceFile.File.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+					sourceFile.File.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
 				{
-                    await Installer.Current.Releases.GetFileAndUnzipAsync(sourceFile, tmpFile, destPath, filter,
+					await Installer.Current.Releases.GetFileAndUnzipAsync(sourceFile, tmpFile, destPath, filter,
 						(downloaded, fileSize) =>
 						{
 							downloadedSize = downloaded;
@@ -426,8 +422,8 @@ public class SetupLoader
 
 							RaiseOnProgressChangedEvent((int)(downloaded * 100 / fileSize));
 						});
-                }
-                else
+				}
+				else
 				{
 					await Installer.Current.Releases.GetFileAsync(sourceFile, tmpFile,
 						(downloaded, fileSize) =>
@@ -440,7 +436,6 @@ public class SetupLoader
 							RaiseOnProgressChangedEvent((int)(downloaded * 100 / fileSize));
 						});
 				}
-				
 				RaiseOnProgressChangedEvent(100);
 				RaiseOnStatusChangedEvent(DownloadingSetupFilesMessage, "100%");
 				Log.WriteEnd(string.Format("Downloaded {0} bytes", downloadedSize));
