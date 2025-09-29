@@ -1063,7 +1063,7 @@
         "ProductName" = "8:SolidCP Installer"
         "ProductCode" = "8:{A6327109-0DEE-42A4-A825-AA7D99A83D7F}"
         "PackageCode" = "8:{ABEF10ED-58D6-47EB-9452-43BB3FD09649}"
-        "UpgradeCode" = "8:{F59D3AED-C1B8-46B4-AFE2-A97F3B7DFB5E}"
+        "UpgradeCode" = "8:{629CCD5C-1F6D-4168-BBE6-01C69E232F43}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
