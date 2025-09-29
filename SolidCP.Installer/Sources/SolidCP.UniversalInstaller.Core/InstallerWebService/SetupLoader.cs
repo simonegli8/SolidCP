@@ -196,7 +196,6 @@ public class SetupLoader
 			var tmpFile = Path.Combine(tmpFolder, fileToDownload);
 			
 			var progressFile = Path.Combine(Path.GetDirectoryName(tmpFolder), DownloadProgressFile);
-			var progressStream = File.Create(progressFile);
 
 			if (File.Exists(setupFileName))
 			{
@@ -257,6 +256,8 @@ public class SetupLoader
 
 			try
 			{
+				var progressStream = new FileStream(progressFile, FileMode.Create, FileAccess.Write, FileShare.ReadWrite | FileShare.Delete);
+
 				// Download the file requested
 				ProgressChanged += (sender, args) =>
 				{
@@ -336,7 +337,7 @@ public class SetupLoader
 			var installerPathDir = Path.GetDirectoryName(installerPath).Replace(Path.DirectorySeparatorChar, '/');
 			if (!string.IsNullOrEmpty(installerPathDir) && installerPathDir != "/") installerPath = installerPathDir;
 			var loader = new SetupLoader(remoteFile);
-			var progressStream = File.Create(progressFile);
+			var progressStream = new FileStream(progressFile, FileMode.Create, FileAccess.Write, FileShare.ReadWrite | FileShare.Delete);
 
 			// report progress in progress file so it can be read by setup
 			loader.ProgressChanged += (sender, args) =>
