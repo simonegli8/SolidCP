@@ -258,6 +258,21 @@ public class SetupLoader
 			{
 				var progressStream = new FileStream(progressFile, FileMode.Create, FileAccess.Write, FileShare.ReadWrite | FileShare.Delete);
 
+				// report progress in progress file so it can be read by setup
+				EventHandler<LoaderEventArgs<int>> handler = (sender, args) =>
+				{
+					try
+					{
+						while (args.EventData > progressStream.Length)
+						{
+							progressStream.WriteByte(0);
+							progressStream.Flush();
+						}
+					}
+					catch { }
+				};
+				ProgressChanged += handler;
+
 				// Download the file requested
 				Task downloadFileTask = GetDownloadFileTask(remoteFile, tmpFile, tmpFolder, null, token);
 
@@ -270,6 +285,7 @@ public class SetupLoader
 					File.WriteAllText(nofFilesFile, Installer.Current.Files.ToString());
 					progressStream.Close();
 					File.Delete(progressFile);
+					ProgressChanged -= handler;
 				}, CancellationToken.None, TaskContinuationOptions.NotOnCanceled | TaskContinuationOptions.NotOnFaulted,
 				TaskScheduler.Current);
 
@@ -280,6 +296,7 @@ public class SetupLoader
 					File.WriteAllText(nofFilesFile, Installer.Current.Files.ToString());
 					progressStream.Close();
 					File.Delete(progressFile);
+					ProgressChanged -= handler;
 				}, CancellationToken.None, TaskContinuationOptions.NotOnRanToCompletion, TaskScheduler.Current);
 
 				downloadFileTask.Start();
@@ -330,7 +347,7 @@ public class SetupLoader
 			var progressStream = new FileStream(progressFile, FileMode.Create, FileAccess.Write, FileShare.ReadWrite | FileShare.Delete);
 
 			// report progress in progress file so it can be read by setup
-			loader.ProgressChanged += (sender, args) =>
+			EventHandler<LoaderEventArgs<int>> handler = (sender, args) =>
 			{
 				try
 				{
@@ -342,6 +359,7 @@ public class SetupLoader
 				}
 				catch { }
 			};
+			loader.ProgressChanged += handler;
 
 			// Download the file requested
 			Task downloadFileTask = loader.GetDownloadFileTask(remoteFile, tmpFile, tmpFolder, null, token);
@@ -349,6 +367,7 @@ public class SetupLoader
 			{
 				progressStream.Close();
 				File.Delete(progressFile);
+				loader.ProgressChanged -= handler;
 				RaiseOnOperationFailedEvent(t.Exception);
 			}, TaskContinuationOptions.NotOnRanToCompletion);
 			var successDownloadFileTask = downloadFileTask.ContinueWith(t =>
@@ -356,6 +375,7 @@ public class SetupLoader
 				progressStream.Close();
 				File.WriteAllText(nofFilesFile, Installer.Current.Files.ToString());
 				File.Delete(progressFile);
+				loader.ProgressChanged -= handler;
 				RaiseDownloadCompleteEvent();
 				RaiseOnOperationCompletedEvent();
 			}, CancellationToken.None, TaskContinuationOptions.NotOnCanceled | TaskContinuationOptions.NotOnFaulted,
