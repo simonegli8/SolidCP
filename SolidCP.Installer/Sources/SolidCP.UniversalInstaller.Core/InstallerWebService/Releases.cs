@@ -126,9 +126,15 @@ public class Releases
 		client.DefaultRequestHeaders.Range = new System.Net.Http.Headers.RangeHeaderValue(offset, offset + length - 1);
 		using var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 		response.EnsureSuccessStatusCode();
+		if (response.StatusCode != HttpStatusCode.PartialContent) throw new InvalidDataException("Request did not return a PartialContent status code.");
 		using var stream = await response.Content.ReadAsStreamAsync();
 		var size = response.Content.Headers.ContentLength ?? 0;
-		await stream.ReadAsync(buffer, 0, (int)size);
+		int totalRead = 0;
+		int read;
+		while ((read = await stream.ReadAsync(buffer, totalRead, (int)size - totalRead)) > 0)
+		{
+			totalRead += read;
+		}
 		return size;
 	}
 	public async Task<long> DownloadFileChunkAsync(string url, long offset, long length, Stream stream)
@@ -139,6 +145,7 @@ public class Releases
 		client.DefaultRequestHeaders.Range = new System.Net.Http.Headers.RangeHeaderValue(offset, offset + length - 1);
 		using var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 		response.EnsureSuccessStatusCode();
+		if (response.StatusCode != HttpStatusCode.PartialContent) throw new InvalidDataException("Request did not return a PartialContent status code.");
 		await response.Content.CopyToAsync(stream);
 		return response.Content.Headers.ContentLength ?? 0;
 	}

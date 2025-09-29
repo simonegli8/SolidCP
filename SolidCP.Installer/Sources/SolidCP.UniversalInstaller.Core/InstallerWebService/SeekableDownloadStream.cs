@@ -11,7 +11,7 @@ namespace SolidCP.UniversalInstaller;
 public class SeekableDownloadStream : System.IO.Stream
 {
 	public const int MB = 1024 * 1024;
-	public const int ChunkSize = 12 * MB;
+	public const int ChunkSize = 4*MB;
 
 	public Releases Releases;
 
