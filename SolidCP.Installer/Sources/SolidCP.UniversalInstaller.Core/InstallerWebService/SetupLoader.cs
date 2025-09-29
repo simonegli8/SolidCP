@@ -125,9 +125,13 @@ public class SetupLoader
 		RaiseOnProgressChangedEvent(eventData, true);
 	}
 
+	int maxProgress = 0;
 	protected void RaiseSetMaximumProgressEvent(int eventData)
 	{
-		SetMaximumProgress?.Invoke(eventData, new LoaderEventArgs<int>() { EventData = eventData });
+		if (maxProgress != eventData)
+		{
+			SetMaximumProgress?.Invoke(eventData, new LoaderEventArgs<int>() { EventData = eventData });
+		}
 	}
 
 	protected void RaiseOnProgressChangedEvent(int eventData, bool cancellable)
@@ -202,7 +206,7 @@ public class SetupLoader
 					version.Minor == remoteFile.Release.Version.Minor &&
 					version.Build == remoteFile.Release.Version.Build)
 				{
-					RaiseNoUzipStatusEvent();
+					RaiseSetMaximumProgressEvent(100);
 					RaiseOnProgressChangedEvent(100);
 					RaiseDownloadCompleteEvent();
 					RaiseOnOperationCompletedEvent();
@@ -222,17 +226,16 @@ public class SetupLoader
 			{
 				try
 				{
-					RaiseNoUzipStatusEvent();
-
 					Task downloadSetupTask;
 
-                    if (info.FullFilePath.EndsWith(".7z", StringComparison.OrdinalIgnoreCase) ||
+					if (info.FullFilePath.EndsWith(".7z", StringComparison.OrdinalIgnoreCase) ||
 						info.FullFilePath.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
 					{
 						setupFileName = Path.ChangeExtension(setupFileName, Path.GetExtension(info.FullFilePath));
 					}
+					else RaiseNoUzipStatusEvent();
 
-					downloadSetupTask = GetDownloadFileTask(new RemoteFile(info, true), setupFileName, exeFolder, null, token);
+						downloadSetupTask = GetDownloadFileTask(new RemoteFile(info, true), setupFileName, exeFolder, null, token);
 
 					var downloadComponentTask = downloadSetupTask.ContinueWith(task =>
 					{
@@ -267,14 +270,26 @@ public class SetupLoader
 				// Move the file downloaded from temporary location to Data folder
 				// Unzip file downloaded
 				//
-				var notifyCompletionTask = downloadFileTask.ContinueWith((t) =>
+				var notifyCompletionTask = downloadFileTask.ContinueWith(t =>
 				{
 					RaiseDownloadCompleteEvent();
 					RaiseOnOperationCompletedEvent();
 
-					var progressFile = Path.Combine(Path.GetDirectoryName(tmpFolder), DownloadProgressFile);
+					var nofFilesFile = Path.Combine(Path.GetDirectoryName(tmpFolder), NofFilesFile);
+					File.WriteAllText(nofFilesFile, Installer.Current.Files.ToString());
+					progressStream.Close();
 					File.Delete(progressFile);
-				}, token);
+				}, CancellationToken.None, TaskContinuationOptions.NotOnCanceled | TaskContinuationOptions.NotOnFaulted,
+				TaskScheduler.Current);
+
+				var failedTask = downloadFileTask.ContinueWith(t =>
+				{
+					RaiseOnOperationFailedEvent(t.Exception);
+					var nofFilesFile = Path.Combine(Path.GetDirectoryName(tmpFolder), NofFilesFile);
+					File.WriteAllText(nofFilesFile, Installer.Current.Files.ToString());
+					progressStream.Close();
+					File.Delete(progressFile);
+				}, CancellationToken.None, TaskContinuationOptions.NotOnRanToCompletion, TaskScheduler.Current);
 
 				downloadFileTask.Start();
 				downloadFileTask.Wait();
@@ -345,7 +360,6 @@ public class SetupLoader
 			{
 				progressStream.Close();
 				File.WriteAllText(nofFilesFile, Installer.Current.Files.ToString());
-				File.Delete(destinationFile);
 				File.Delete(progressFile);
 			}, CancellationToken.None, TaskContinuationOptions.NotOnCanceled | TaskContinuationOptions.NotOnFaulted,
 			TaskScheduler.Current);
@@ -390,6 +404,7 @@ public class SetupLoader
 		{
 			if (!File.Exists(tmpFile))
 			{
+				RaiseSetMaximumProgressEvent(100);
 				RaiseOnProgressChangedEvent(0);
 				RaiseOnStatusChangedEvent(DownloadingSetupFilesMessage);
 
@@ -421,13 +436,15 @@ public class SetupLoader
 							RaiseOnStatusChangedEvent(DownloadingSetupFilesMessage,
 								string.Format(DownloadProgressMessage, downloaded / 1024, fileSize / 1024));
 
-							RaiseOnProgressChangedEvent((int)((downloaded * 100) / fileSize));
+							RaiseOnProgressChangedEvent((int)(downloaded * 100 / fileSize));
 						});
 				}
 				
 				RaiseOnProgressChangedEvent(100);
 				RaiseOnStatusChangedEvent(DownloadingSetupFilesMessage, "100%");
 				Log.WriteEnd(string.Format("Downloaded {0} bytes", downloadedSize));
+				RaiseDownloadCompleteEvent();
+				RaiseOnOperationCompletedEvent();
 			}
 		}, ct);
 

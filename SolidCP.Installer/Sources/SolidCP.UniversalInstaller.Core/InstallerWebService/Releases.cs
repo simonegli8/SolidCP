@@ -118,28 +118,29 @@ public class Releases
 		}
 		return null;
 	}
-	public async Task<HttpContent> DownloadFileChunkAsync(string url, long offset, long length)
-	{
-		var handler = ProxyHandler();
-		using var client = handler != null ? new HttpClient(handler) : new HttpClient();
-		client.DefaultRequestHeaders.Range = new System.Net.Http.Headers.RangeHeaderValue(offset, offset + length);
-		using var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
-		response.EnsureSuccessStatusCode();
-		return response.Content;
-	}
 	public async Task<long> DownloadFileChunkAsync(string url, long offset, long length, byte[] buffer)
 	{
-		var response = await DownloadFileChunkAsync(url, offset, length);
-		using var stream = await response.ReadAsStreamAsync();
-		var size = response.Headers.ContentLength ?? 0;
+		if (length <= 0) return 0;
+		var handler = ProxyHandler();
+		using var client = handler != null ? new HttpClient(handler) : new HttpClient();
+		client.DefaultRequestHeaders.Range = new System.Net.Http.Headers.RangeHeaderValue(offset, offset + length - 1);
+		using var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+		response.EnsureSuccessStatusCode();
+		using var stream = await response.Content.ReadAsStreamAsync();
+		var size = response.Content.Headers.ContentLength ?? 0;
 		await stream.ReadAsync(buffer, 0, (int)size);
 		return size;
 	}
 	public async Task<long> DownloadFileChunkAsync(string url, long offset, long length, Stream stream)
 	{
-		var response = await DownloadFileChunkAsync(url, offset, length);
-		await response.CopyToAsync(stream);
-		return response.Headers.ContentLength ?? 0;
+		if (length <= 0) return 0;
+		var handler = ProxyHandler();
+		using var client = handler != null ? new HttpClient(handler) : new HttpClient();
+		client.DefaultRequestHeaders.Range = new System.Net.Http.Headers.RangeHeaderValue(offset, offset + length - 1);
+		using var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+		response.EnsureSuccessStatusCode();
+		await response.Content.CopyToAsync(stream);
+		return response.Content.Headers.ContentLength ?? 0;
 	}
 	public async Task<long> GetFileSizeAsync(string url)
 	{
@@ -212,11 +213,8 @@ public class Releases
 			}
 			else
 			{
-				using (var stream = new SeekableDownloadStream(this, url, destinationFile, false, progress))
-				{
-					await stream.DownloadComplete;
-				}
+				await GetFileAsync(file, destinationFile, progress);
 			}
-        }
+		}
 	}
 }
