@@ -15,6 +15,7 @@ public class LaunchdServiceController : ServiceController
 	public override bool IsInstalled => OSInfo.IsMac;
 	public Shell Shell => Shell.Standard;
 	public override void SystemReboot() => Shell.Exec("launchctrl reboot");
+	string ServiceFile(string serviceId) => Path.Combine(ServicesDirectory, $"{serviceId}.plist");
 	public override IEnumerable<OSService> All()
 	{
 		var servicesText = Shell.Exec("launchctl list").Output().Result;
@@ -74,7 +75,7 @@ public class LaunchdServiceController : ServiceController
 			if (status == OSServiceStatus.PausePending || status == OSServiceStatus.Paused ||
 				status == OSServiceStatus.Stopped || status == OSServiceStatus.StopPending)
 			{
-				Shell.Exec($"launchctl stop {serviceId}");
+				Shell.Exec($"launchctl bootout system {ServiceFile(serviceId)}");
 			}
 		}
 		else
@@ -82,14 +83,16 @@ public class LaunchdServiceController : ServiceController
 			if (status == OSServiceStatus.StartPending || status == OSServiceStatus.Running ||
 				status == OSServiceStatus.ContinuePending)
 			{
-				Shell.Exec($"launchctl start {serviceId}");
+				Shell.Exec($"launchctl bootstrap system {ServiceFile(serviceId)}");
 			}
 		}
 	}
 	public override void Remove(string serviceId)
 	{
+		var serviceFile = Path.Combine(ServicesDirectory, $"{serviceId}.plist");
+
 		Shell.Exec($"launchctl disable system {serviceId}");
-		Shell.Exec($"launchctl unload system {serviceId}");
+		Shell.Exec($"launchctl bootout  system {ServiceFile(serviceId)}");
 	}
 
 	public override ServiceManager Install(ServiceDescription serviceDescription)
@@ -98,7 +101,7 @@ public class LaunchdServiceController : ServiceController
 		if (srvc == null) throw new ArgumentException("Service description is not of type LaunchdServiceDescription");
 
 		var serviceId = srvc.ServiceId;
-		var serviceFile = Path.Combine(ServicesDirectory, $"{serviceId}.plist");
+		var serviceFile = ServiceFile(serviceId);
 		var dict = new NSDictionary();
 		dict.Add("Label", serviceId);
 		if (srvc.Program != null)
@@ -160,7 +163,7 @@ public class LaunchdServiceController : ServiceController
 		{
 			PropertyListParser.SaveAsXml(dict, file);
 		}
-		Shell.Exec($"launchctl load -w {serviceFile}");
+		Shell.Exec($"launchctl bootstrap system {serviceFile}");
 		Shell.Exec($"launchctl enable system {serviceId}");
 
 		return new ServiceManager(this, serviceId);
