@@ -1295,6 +1295,7 @@ public abstract partial class Installer
 			Thread.Sleep(50);
 			info = new FileInfo(progressFile);
 		}
+		while (n++ < 100) Log.ProgressOne();
 
 		if (File.Exists(nofFilesFile))
 		{
