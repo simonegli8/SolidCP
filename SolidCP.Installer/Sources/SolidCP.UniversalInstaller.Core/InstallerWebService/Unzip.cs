@@ -31,7 +31,7 @@ public class Unzip
 			using (var file = stream ?? new FileStream(zipFile, System.IO.FileMode.Open, FileAccess.Read))
 			using (var zip = SevenZipArchive.Open(file))
 			{
-				long zipSize = file.Length;
+				long zipSize = zip.TotalUncompressSize;
 				long unzipped = 0;
 
 				int files = 0;
@@ -45,7 +45,7 @@ public class Unzip
 					{
 						reader.WriteEntryToDirectory(destFolder, new ExtractionOptions() { ExtractFullPath = true, Overwrite = true });
 						files++;
-						unzipped += reader.Entry.CompressedSize;
+						unzipped += reader.Entry.Size;
 
 						if (zipSize != 0)
 						{
