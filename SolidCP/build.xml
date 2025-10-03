@@ -1111,7 +1111,7 @@
 		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\Manual-Update$(ZipExt)&quot; &quot;$(UpdateFolder)\*&quot;" />
 		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-Installer-$(Version)$(ZipExt)&quot; &quot;$(InstallerBuild)\net48\*&quot;" />
 		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-Installer-$(Version)-Update$(ZipExt)&quot; &quot;$(InstallerBuild)\*&quot;" />
-		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-Installer-Unix-$(Version)$(ZipExt)&quot; &quot;$(InstallerBuild)\net8.0\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-Installer-Unix-$(Version).zip&quot; &quot;$(InstallerBuild)\net8.0\*&quot;" />
 
 		<!-- zip tools
 		<Zip Files="@(ImportCsvInstallFiles)" ZipFileName="$(ToolsFolder)\SolidCP-Import-CsvBulk-$(Version).zip" WorkingDirectory="$(ImportCsvInstall)" />
@@ -1219,15 +1219,16 @@
 	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-EnterpriseServer-Update$(ZipExt)" LocalFile="$(DeployFolder)\SolidCP-EnterpriseServer-Update$(ZipExt)" />
 	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Server-Update$(ZipExt)" LocalFile="$(DeployFolder)\SolidCP-Server-Update$(ZipExt)" />
 	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Installer-Update$(ZipExt)" LocalFile="$(DeployFolder)\SolidCP-Installer-Update$(ZipExt)" />
-	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Import-CsvBulk$(ZipExt)" LocalFile="$(ToolsFolder)\SolidCP-Import-CsvBulk$(ZipExt)" />
+    <FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Installer-Unix-$(Version).zip" LocalFile="$(DeployFolder)\SolidCP-Installer-Unix-$(Version).zip" />
+    <FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Import-CsvBulk$(ZipExt)" LocalFile="$(ToolsFolder)\SolidCP-Import-CsvBulk$(ZipExt)" />
 	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Import-Enterprise$(ZipExt)" LocalFile="$(ToolsFolder)\SolidCP-Import-Enterprise$(ZipExt)" />
 	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-CertificateMaker$(ZipExt)" LocalFile="$(ToolsFolder)\HostPanelPro-CertificateMaker$(ZipExt)" />
 	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-AWStatsViewer$(ZipExt)" LocalFile="$(ToolsFolder)\SolidCP-AWStatsViewer$(ZipExt)" />
 	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-SCPTransportAgent$(ZipExt)" LocalFile="$(ToolsFolder)\SolidCP-SCPTransportAgent$(ZipExt)" />
 	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP.LocalizationToolkit.msi" LocalFile="$(ToolsFolder)\SolidCP.LocalizationToolkit.msi" />
-	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCPInstaller.msi" LocalFile="$(DeployFolder)\SolidCP.Installer.msi" />
+	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP.Installer.msi" LocalFile="$(DeployFolder)\SolidCP.Installer.msi" />
 	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCPInstaller.exe" LocalFile="$(DeployFolder)\SolidCP.Installer.exe" />
-    <FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCPInstaller-webpi.msi" LocalFile="$(DeployFolder)\SolidCP.Installer.msi" />
+    <!--<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCPInstaller-webpi.msi" LocalFile="$(DeployFolder)\SolidCP.Installer.msi" />-->
 	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-HyperVUtils$(ZipExt)" LocalFile="$(ToolsFolder)\SolidCP-HyperVUtils$(ZipExt)" />
 	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-VMConfig$(ZipExt)" LocalFile="$(ToolsFolder)\SolidCP-VMConfig$(ZipExt)" />
 	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/Manual-Update$(ZipExt)" LocalFile="$(DeployFolder)\Manual-Update$(ZipExt)" />
