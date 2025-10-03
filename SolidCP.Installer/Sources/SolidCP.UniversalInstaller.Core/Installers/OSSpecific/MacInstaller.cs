@@ -10,7 +10,6 @@ namespace SolidCP.UniversalInstaller;
 public class MacInstaller : UnixInstaller
 {
 	Brew Brew => (Brew)OSInfo.Unix.Brew;
-	public override string InstallExeRootPath { get => base.InstallExeRootPath ?? $"/var/bin/{SolidCP.ToLower()}"; set => base.InstallExeRootPath = value; }
 	public override string UnixAppRootPath => "/var/bin";
 
 	public override void InstallNet8Runtime()
