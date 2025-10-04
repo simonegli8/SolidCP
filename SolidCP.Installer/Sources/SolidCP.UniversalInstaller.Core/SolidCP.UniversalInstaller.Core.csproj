@@ -76,7 +76,7 @@
 			<RuntimeFiles Include="$(PkgMono_Unix)\runtimes\**\*.*" />
 		</ItemGroup>
 		<Message Importance="high" Text="Copying Mono.Posix native library from $(MonoUnixRuntimePath) to $(OutputDir)" />
-	    <Copy SourceFiles="@(RuntimeFiles)" DestinationFolder="$(OutputDir)\runtimes\%(RecursiveDir)" SkipUnchangedFiles="true" />
+	    <Copy SourceFiles="@(RuntimeFiles)" DestinationFolder="$(OutputPath)\runtimes\%(RecursiveDir)" SkipUnchangedFiles="true" />
 	</Target>
 
 </Project>
