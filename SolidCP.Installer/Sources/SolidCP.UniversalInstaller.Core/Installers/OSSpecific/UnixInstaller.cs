@@ -115,7 +115,8 @@ public abstract class UnixInstaller : Installer
 				WorkingDirectory = Directory,
 				Environment = new Dictionary<string, string>()
 				{
-					{ "ASPNETCORE_ENVIRONMENT", "Production" }
+					{ "ASPNETCORE_ENVIRONMENT", "Production" },
+					{ "PATH", Environment.GetEnvironmentVariable("PATH") }
 				},
 				ExitTimeout = 30,
 				KeepAlive = true,
