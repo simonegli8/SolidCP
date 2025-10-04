@@ -30,7 +30,7 @@ public abstract class UnixInstaller : Installer
 	{
 		Log.WriteStart("Install AspNetCoreSharedServer");
 
-		const string AspNetCoreSharedServerVersion = "1.2.0";
+		const string AspNetCoreSharedServerVersion = "1.2.1";
 
 		if (installedAspNetCoreSharedServer) return;
 		installedAspNetCoreSharedServer = true;
