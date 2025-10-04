@@ -50,7 +50,17 @@ public class LaunchdServiceController : ServiceController
 		var output = Shell.Exec($"launchctl print system/{serviceId}").Output().Result;
 		if (output == null) return null;
 		var exists = Regex.IsMatch(output, @"^\s*(?<id>[^\n]*?)[ \t]*=[ \t]*{[ \t]*\r?\n", RegexOptions.Singleline);
-		if (!exists) return null;
+		if (!exists)
+		{
+			if (File.Exists(ServiceFile(serviceId))) return new OSService()
+			{
+				Id = serviceId,
+				Name = serviceId,
+				Description = "",
+				Status = OSServiceStatus.Stopped
+			};
+			else return null;
+		}
 		var match = Regex.Match(output, @"^\s*state\s*=\s*(?<state>.+?)\s*?$", RegexOptions.Multiline);
 		string status = null;
 		if (match.Success)
@@ -69,7 +79,8 @@ public class LaunchdServiceController : ServiceController
 	public override void ChangeStatus(string serviceId, OSServiceStatus status)
 	{
 		var service = Info(serviceId);
-		if (seervice != null && service.Status == OSServiceStatus.Running)
+		if (service == null) throw new ArgumentException($"Service {serviceId} not found");
+		if (service.Status == OSServiceStatus.Running)
 		{
 			if (status == OSServiceStatus.PausePending || status == OSServiceStatus.Paused ||
 				status == OSServiceStatus.Stopped || status == OSServiceStatus.StopPending)
