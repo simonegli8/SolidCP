@@ -91,7 +91,7 @@ public class LaunchdServiceController : ServiceController
 	{
 		var serviceFile = Path.Combine(ServicesDirectory, $"{serviceId}.plist");
 
-		Shell.Exec($"launchctl disable system {serviceId}");
+		Shell.Exec($"launchctl disable system/{serviceId}");
 		Shell.Exec($"launchctl bootout  system {ServiceFile(serviceId)}");
 	}
 
@@ -164,7 +164,7 @@ public class LaunchdServiceController : ServiceController
 			PropertyListParser.SaveAsXml(dict, file);
 		}
 		Shell.Exec($"launchctl bootstrap system {serviceFile}");
-		Shell.Exec($"launchctl enable system {serviceId}");
+		Shell.Exec($"launchctl enable system/{serviceId}");
 
 		return new ServiceManager(this, serviceId);
 	}
