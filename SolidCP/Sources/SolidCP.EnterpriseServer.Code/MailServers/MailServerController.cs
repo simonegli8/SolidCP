@@ -1101,8 +1101,10 @@ namespace SolidCP.EnterpriseServer
 
             PackageContext cntx = PackageController.GetPackageContext(item.PackageId);
 			bool mailaccesscontrols = false;
-            mailaccesscontrols = (cntx.Quotas[Quotas.MAIL_ALLOWACCESSCONTROLS].QuotaAllocatedValue == 1);
-
+			QuotaValueInfo quotaValue = default;
+			cntx.Quotas.TryGetValue(Quotas.MAIL_ALLOWACCESSCONTROLS, out quotaValue);
+			mailaccesscontrols = quotaValue?.QuotaAllocatedValue == 1;
+			
 			if (mailaccesscontrols == false)
 			{
                 mailPolicy["AcessAuthTypePolicy"] = "1";

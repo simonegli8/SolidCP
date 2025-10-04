@@ -10240,6 +10240,9 @@ namespace SolidCP.EnterpriseServer
 						.Where(t => t.ParentPackageId == packageId)
 						.Count();
 					break;
+				case 771: // Mail Accounts per Domains
+					result = 0; // Don't calculate quota as it is individual for each Mail Domain
+					break;
 				default:
 					if (quota.QuotaName.StartsWith("ServiceLevel.")) // Support Service Level Quota
 					{
