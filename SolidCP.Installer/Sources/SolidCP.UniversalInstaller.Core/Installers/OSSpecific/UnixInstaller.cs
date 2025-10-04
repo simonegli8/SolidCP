@@ -16,7 +16,7 @@ namespace SolidCP.UniversalInstaller;
 
 public abstract class UnixInstaller : Installer
 {
-	public override string InstallExeRootPath { get => base.InstallExeRootPath ?? $"/usr/share/{SolidCP.ToLower()}"; set => base.InstallExeRootPath = value; }
+	public override string InstallExeRootPath { get => base.InstallExeRootPath ?? $"{UnixAppRootPath}/{SolidCP.ToLower()}"; set => base.InstallExeRootPath = value; }
 	public override string InstallWebRootPath { get => base.InstallWebRootPath ?? $"/var/www/{SolidCP.ToLower()}"; set => base.InstallWebRootPath = value; }
 	public override string WebsiteLogsPath => $"/var/log/{SolidCP.ToLower()}";
 	public override string UnixServerServiceId => "solidcp-server";
