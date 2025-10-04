@@ -1281,6 +1281,8 @@ public abstract partial class Installer
 
 	public virtual void WaitForDownloadToComplete()
 	{
+		Info("Download & Unizp Component...");
+
 		var progressFile = Path.Combine(TempPath, SetupLoader.DownloadProgressFile);
 		var nofFilesFile = Path.Combine(TempPath, SetupLoader.NofFilesFile);
 		int n = 0;
