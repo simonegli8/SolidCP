@@ -298,7 +298,8 @@ namespace SolidCP.EnterpriseServer.Data
 
         public DbContext()
         {
-            //SetDbConfiguration();
+			DynamicLibraries.Init();
+			//SetDbConfiguration();
 
 #if NETSTANDARD
             BaseContext = (IGenericDbContext)Activator.CreateInstance(ContextType, this);

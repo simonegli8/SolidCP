@@ -66,7 +66,7 @@ namespace SolidCP.Providers.OS
             if (nativeSkiaDllLoaded) return;
             nativeSkiaDllLoaded = true;
 
-            if (OSInfo.IsLinux)
+            if (OSInfo.IsLinux || OSInfo.IsMac)
             {
                 // call NativeLibrary.SetDllImportResolver via reflection, becuase it's not available in NET Standard
                 var nativeLibrary = Type.GetType("System.Runtime.InteropServices.NativeLibrary, System.Runtime.InteropServices");
