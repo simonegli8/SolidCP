@@ -19,6 +19,7 @@
         <OutputPath>bin\$(Configuration)</OutputPath>
         <EntityFramework6>6.5</EntityFramework6>
         <PackageId>SolidCP.EnterpriseServer.Data</PackageId>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <!-- Use EntityFramework 6.4 or 6.5 -->
     </PropertyGroup>
 
@@ -60,6 +61,9 @@
         <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="9.103.9.3" />
         <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.1" />
         <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.9" />
+        <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.2" />
+        <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.linux" Version="1.1.14" />
+        <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.osx" Version="1.1.14" />
         <!-- .NET 9 -->
         <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.9" />
         <PackageReference Include="Microsoft.Extensions.Primitives" Version="9.0.9" />

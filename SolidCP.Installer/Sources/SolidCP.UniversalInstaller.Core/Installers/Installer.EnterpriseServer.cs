@@ -1,18 +1,18 @@
-using System;
-using System.Reflection;
+using SolidCP.EnterpriseServer.Data;
 using SolidCP.Providers;
-using SolidCP.Providers.Web;
+using SolidCP.Providers.Common;
 using SolidCP.Providers.OS;
 using SolidCP.Providers.Utils;
-using SolidCP.EnterpriseServer.Data;
-using System.Globalization;
-using System.Security.Policy;
-using System.Diagnostics.Contracts;
-using System.Net.Http;
-using System.Text.RegularExpressions;
+using SolidCP.Providers.Web;
+using System;
 using System.Data;
+using System.Diagnostics.Contracts;
+using System.Globalization;
+using System.Net.Http;
+using System.Reflection;
+using System.Security.Policy;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using SolidCP.Providers.Common;
 
 namespace SolidCP.UniversalInstaller;
 
@@ -218,6 +218,17 @@ public abstract partial class Installer
 			Info("Install Database...");
 			var settings = Settings.EnterpriseServer;
 			var connstr = settings.DbInstallConnectionString;
+			if (settings.DatabaseType == EnterpriseServer.Data.DbType.Sqlite ||
+				settings.DatabaseType == EnterpriseServer.Data.DbType.SqliteFX)
+			{
+				var csb = new ConnectionStringBuilder(connstr);
+				if (csb["Data Source"] != null)
+				{
+					csb["Data Source"] = Path.Combine(Settings.EnterpriseServer.InstallPath, (string)csb["Data Source"]);
+				}
+				csb["Data Source"] = Path.Combine(Settings.EnterpriseServer.InstallPath, (string)csb["Data Source"]);
+				connstr = csb.ConnectionString;
+			}
 			if (string.IsNullOrEmpty(connstr) ||
 				!DatabaseUtils.CheckSqlConnection(connstr)) throw new DataException("Unable to connect to database.");
 			if (settings.DatabaseWindowsAuthentication)
@@ -365,10 +376,9 @@ public abstract partial class Installer
 
         var binFolder = (Settings.EnterpriseServer.RunOnNetCore ||
             Settings.WebPortal.RunOnNetCore && Settings.WebPortal.EmbedEnterpriseServer) ?
-                "bin_dotnet" : "bin\\Code";
-        var exe = Path.Combine(Settings.EnterpriseServer.InstallPath, binFolder, "SolidCP.SchedulerService.exe");
+                "bin_dotnet" : Path.Combine("bin", "Code");
+        var config = Path.Combine(Settings.EnterpriseServer.InstallPath, binFolder, $"SolidCP.SchedulerService.{(Settings.EnterpriseServer.RunOnNetCore ? "dll" : "exe")}.config");
 
-        var config = exe + ".config";
         var xml = XElement.Load(config);
 
         var conStrings = xml.Element("connectionStrings");
