@@ -121,8 +121,8 @@ namespace SolidCP.UniversalInstaller
 			RemoveWebPortalWebsite();
 			RemoveServerWebsite();
             RemoveSchedulerService();
-            RemoveStandaloneServerFolder();
 			DeleteDatabase();
+			RemoveStandaloneServerFolder();
 		}
 		public virtual void ReadStandaloneServerConfiguration() { }
 

@@ -445,9 +445,9 @@ public abstract partial class Installer
 	public virtual void RemoveEnterpriseServer()
 	{
 		RemoveEnterpriseServerWebsite();
+		DeleteDatabase();
 		RemoveEnterpriseServerFolder();
 		RemoveEnterpriseServerUser();
-		DeleteDatabase();
 	}
 	public virtual void ReadEnterpriseServerConfiguration() => ReadEnterpriseServerConfigurationNetFX();
 
