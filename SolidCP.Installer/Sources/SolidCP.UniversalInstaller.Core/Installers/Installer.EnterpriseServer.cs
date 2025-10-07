@@ -241,6 +241,8 @@ public abstract partial class Installer
 			var password = settings.DatabasePassword ?? Utils.GetRandomString(20);
 			var db = settings.DatabaseName;
 
+			Log.WriteLine($"Connection String: {connstr}; Database: {db}; User: {user}; Password {password}");
+
 			DatabaseUtils.InstallFreshDatabase(connstr, db, user, password, progress => Log.Write("."));
 
 			Log.WriteLine();
