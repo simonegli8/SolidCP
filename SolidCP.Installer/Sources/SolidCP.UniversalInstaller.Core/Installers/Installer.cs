@@ -810,7 +810,7 @@ public abstract partial class Installer
 		return tmp;
 	}
 	public string DownloadFile(string url) => DownloadFileAsync(url).Result;
-	public string SetupFilter(string file) => file != null && !Regex.IsMatch(file, @"^([a-zA-Z ]+/)?Setup(/|$)") ? file : null;
+	public string SetupFilter(string file) => file != null && !Regex.IsMatch(file, @"^(?:[a-zA-Z ]+/)?Setup(?:/|$)") ? file : null;
 	public string Net48Filter(string file)
 	{
 		file = SetupFilter(file);
