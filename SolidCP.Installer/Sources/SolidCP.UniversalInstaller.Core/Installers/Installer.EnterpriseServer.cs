@@ -211,24 +211,30 @@ public abstract partial class Installer
 		File.WriteAllText(configFile, config.ToString());
 	}
 
+	public virtual string ConnectionString()
+	{
+		var settings = Settings.EnterpriseServer;
+		var connstr = settings.DbInstallConnectionString;
+		if (settings.DatabaseType == EnterpriseServer.Data.DbType.Sqlite ||
+			settings.DatabaseType == EnterpriseServer.Data.DbType.SqliteFX)
+		{
+			var csb = new ConnectionStringBuilder(connstr);
+			if (csb["Data Source"] != null)
+			{
+				csb["Data Source"] = Path.Combine(Settings.EnterpriseServer.InstallPath, (string)csb["Data Source"]);
+			}
+			connstr = csb.ConnectionString;
+		}
+		return connstr;
+	}
+
 	public virtual void InstallDatabase()
 	{
 		Transaction(() =>
 		{
 			Info("Install Database...");
 			var settings = Settings.EnterpriseServer;
-			var connstr = settings.DbInstallConnectionString;
-			if (settings.DatabaseType == EnterpriseServer.Data.DbType.Sqlite ||
-				settings.DatabaseType == EnterpriseServer.Data.DbType.SqliteFX)
-			{
-				var csb = new ConnectionStringBuilder(connstr);
-				if (csb["Data Source"] != null)
-				{
-					csb["Data Source"] = Path.Combine(Settings.EnterpriseServer.InstallPath, (string)csb["Data Source"]);
-				}
-				csb["Data Source"] = Path.Combine(Settings.EnterpriseServer.InstallPath, (string)csb["Data Source"]);
-				connstr = csb.ConnectionString;
-			}
+			var connstr = ConnectionString();
 			if (string.IsNullOrEmpty(connstr) ||
 				!DatabaseUtils.CheckSqlConnection(connstr)) throw new DataException("Unable to connect to database.");
 			if (settings.DatabaseWindowsAuthentication)
@@ -282,6 +288,7 @@ public abstract partial class Installer
 			settings.DatabaseName = databaseName;
 			settings.DatabaseUser = (csb["Uid"] ?? csb["User Id"]) as string;
 			settings.DatabasePassword = (csb["Pwd"] ?? csb["Password"]) as string;
+			settings.DatabaseType = EnterpriseServer.Data.DbType.SqlServer;
 		} else
 		{
 			var csb = new ConnectionStringBuilder(cstring);
@@ -290,9 +297,19 @@ public abstract partial class Installer
 			settings.DatabaseName ??= databaseName;
 			settings.DatabaseUser ??= (csb["Uid"] ?? csb["User Id"] ?? csb["User"] ?? csb["Username"]) as string;
 			settings.DatabasePassword ??= (csb["Pwd"] ?? csb["Password"]) as string;
+			settings.DatabaseType = (EnterpriseServer.Data.DbType)Enum.Parse(typeof(EnterpriseServer.Data.DbType), (csb["DbType"] ?? "SqlServer") as string, true);
+			if (settings.DatabaseType == EnterpriseServer.Data.DbType.Sqlite ||
+				settings.DatabaseType == EnterpriseServer.Data.DbType.SqliteFX)
+			{
+				if (csb["Data Source"] != null)
+				{
+					csb["Data Source"] = Path.GetFullPath(Path.Combine(Settings.EnterpriseServer.InstallPath, (string)csb["Data Source"]));
+				}
+				cstring = csb.ConnectionString;
+			}
 		}
 
-		DatabaseUtils.UpdateDatabase(settings.DbInstallConnectionString, settings.DatabaseName,
+		DatabaseUtils.UpdateDatabase(cstring, settings.DatabaseName,
 			settings.DatabaseUser, settings.DatabasePassword, dataNewVersion);
 
 		InstallLog("Updated Database");
@@ -301,7 +318,7 @@ public abstract partial class Installer
 	{
 		Info("Delete Database");
 		var settings = Settings.EnterpriseServer;
-		var connstr = settings.DbInstallConnectionString;
+		var connstr = ConnectionString();
 		DatabaseUtils.DeleteDatabase(connstr, settings.DatabaseName);
 		if (string.IsNullOrEmpty(settings.DatabaseUser))
 		{
@@ -319,7 +336,7 @@ public abstract partial class Installer
 	public virtual void CountInstallDatabaseStatements()
 	{
 		var settings = Settings.EnterpriseServer;
-		var connstr = settings.DbInstallConnectionString;
+		var connstr = ConnectionString();
 		if (string.IsNullOrEmpty(settings.DatabaseUser))
 		{
 			settings.DatabaseUser = settings.DatabaseName;
@@ -334,7 +351,7 @@ public abstract partial class Installer
 	public virtual void CountUpdateDatabaseStatements()
 	{
 		var settings = Settings.EnterpriseServer;
-		var connstr = settings.DbInstallConnectionString;
+		var connstr = ConnectionString();
 		var user = settings.DatabaseUser;
 		var password = settings.DatabasePassword;
 		var db = settings.DatabaseName;
