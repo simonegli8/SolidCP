@@ -554,7 +554,6 @@ public abstract partial class Installer
 							{
 								csb["Data Source"] = Path.Combine(Settings.WebPortal.EnterpriseServerPath, (string)csb["Data Source"]);
 							}
-							csb["Data Source"] = Path.Combine(Settings.WebPortal.EnterpriseServerPath, (string)csb["Data Source"]);
 							esConString.Attribute("value").SetValue(csb.ConnectionString);
 						}
 					}
