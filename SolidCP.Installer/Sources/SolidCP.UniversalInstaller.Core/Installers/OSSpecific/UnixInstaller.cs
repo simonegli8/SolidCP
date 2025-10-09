@@ -51,6 +51,8 @@ public abstract class UnixInstaller : Installer
 			conf.Load();
 			conf.EnableHttp3 = false;
 			conf.User = "www-data";
+			conf.IdleTimeout = TimeSpan.FromMinutes(5);
+			conf.Recycle = TimeSpan.FromHours(29);
 			conf.Group = null;
 			conf.Save();
 		}
