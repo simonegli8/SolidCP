@@ -35,19 +35,19 @@ public abstract partial class Installer
 		InstallServerPrerequisites();
 		CopyServer(true, StandardInstallFilter);
 		CreateServerUser();
+		ConfigureServer();
 		SetServerFilePermissions();
 		SetServerFileOwner();
-		ConfigureServer();
 		InstallServerWebsite();
 	}
 	public virtual void UpdateServer()
 	{
 		InstallServerPrerequisites();
 		CopyServer(true, StandardUpdateFilter);
-		SetServerFilePermissions();
-		SetServerFileOwner();
 		UpdateServerConfig();
 		ConfigureServer();
+		SetServerFilePermissions();
+		SetServerFileOwner();
 		InstallServerWebsite();
 	}
 	public virtual void SetupServer()

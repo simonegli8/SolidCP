@@ -38,11 +38,11 @@ public abstract partial class Installer
 		InstallEnterpriseServerPrerequisites();
 		CopyEnterpriseServer(true, this.StandardInstallFilter);
 		CreateEnterpriseServerUser();
-		SetEnterpriseServerFilePermissions();
-		SetEnterpriseServerFileOwner();
 		InstallDatabase();
 		ConfigureEnterpriseServer();
 		InstallSchedulerService();
+		SetEnterpriseServerFilePermissions();
+		SetEnterpriseServerFileOwner();
 		InstallEnterpriseServerWebsite();
 	}
 	public virtual void UpdateEnterpriseServer()
@@ -53,13 +53,13 @@ public abstract partial class Installer
 		RemoveSchedulerService();
 		DisableEnterpriseServerWebsite();
 		CopyEnterpriseServer(true, StandardUpdateFilter);
-		SetEnterpriseServerFilePermissions();
-		SetEnterpriseServerFileOwner();
 		UpdateEnterpriseServerConfig();
 		ConfigureEnterpriseServer();
 		UpdateDatabase();
-		EnableEnterpriseServerWebsite();
 		InstallSchedulerService();
+		SetEnterpriseServerFilePermissions();
+		SetEnterpriseServerFileOwner();
+		EnableEnterpriseServerWebsite();
 	}
 	public void SetupEnterpriseServer()
 	{
@@ -544,7 +544,7 @@ public abstract partial class Installer
 				if (esConStrings != null)
 				{
 					var esConString = esConStrings.Elements("add").FirstOrDefault(e => e.Attribute("name")?.Value == "EnterpriseServer");
-					var esCstring = esConString?.Attribute("value")?.Value;
+					var esCstring = esConString?.Attribute("connectionString")?.Value;
 					if (esCstring != null)
 					{
 						var csb = new ConnectionStringBuilder(esCstring);
@@ -554,7 +554,7 @@ public abstract partial class Installer
 							{
 								csb["Data Source"] = Path.Combine(Settings.WebPortal.EnterpriseServerPath, (string)csb["Data Source"]);
 							}
-							esConString.Attribute("value").SetValue(csb.ConnectionString);
+							esConString.Attribute("connectionString").SetValue(csb.ConnectionString);
 						}
 					}
 				}

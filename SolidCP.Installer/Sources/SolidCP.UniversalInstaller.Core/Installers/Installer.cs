@@ -1,3 +1,4 @@
+using Claunia.PropertyList;
 using Microsoft.Identity.Client;
 using Microsoft.Web.Administration;
 using Newtonsoft.Json;
@@ -1122,7 +1123,9 @@ public abstract partial class Installer
 					{
 						if (csb["Data Source"] != null)
 						{
-							csb["Data Source"] = Path.Combine(Settings.WebPortal.EnterpriseServerPath, (string)csb["Data Source"]);
+							var cspath = (string)csb["Data Source"];
+							cspath = Regex.Replace(cspath, $@"^\.\.{Regex.Escape(Path.DirectorySeparatorChar.ToString())}", "");
+							csb["Data Source"] = Path.Combine("..", Settings.WebPortal.EnterpriseServerPath, cspath);
 						}
 						appsettings.EnterpriseServer.ConnectionString = csb.ConnectionString;
 					}
@@ -1134,6 +1137,16 @@ public abstract partial class Installer
 		{
 			var connectionString = DatabaseUtils.BuildConnectionString(esettings.DatabaseType, esettings.DatabaseServer,
 				esettings.DatabasePort, esettings.DatabaseName, esettings.DatabaseUser, esettings.DatabasePassword, null, false);
+			var csb = new ConnectionStringBuilder(connectionString);
+			if ((csb["DbType"] as string)?.Contains("Sqlite") == true)
+			{
+				if (csb["Data Source"] != null)
+				{
+					csb["Data Source"] = Path.Combine("..", (string)csb["Data Source"]);
+				}
+				connectionString = csb.ConnectionString;
+			}
+
 			appsettings.EnterpriseServer = new AppSettings.EnterpriseServerSetting()
 			{
 				CryptoKey = esettings.CryptoKey ?? CryptoUtils.GetRandomString(20),

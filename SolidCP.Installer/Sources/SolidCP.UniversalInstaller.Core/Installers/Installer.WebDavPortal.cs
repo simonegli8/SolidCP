@@ -20,9 +20,9 @@ namespace SolidCP.UniversalInstaller
 			ReadWebDavPortalConfiguration();
 			CopyWebDavPortal(true);//, //this.StandardInstallFilter);
 			CreateWebDavPortalUser();
+			ConfigureWebDavPortal();
 			SetWebDavPortalFilePermissions();
 			SetWebDavPortalFileOwner();
-			ConfigureWebDavPortal();
 			InstallWebDavPortalWebsite();
 		}
 		public virtual void UpdateWebDavPortal()
@@ -30,10 +30,10 @@ namespace SolidCP.UniversalInstaller
 			InstallWebDavPortalPrerequisites();
 			ReadWebDavPortalConfiguration();
 			CopyWebDavPortal(true, StandardUpdateFilter);
-			SetWebDavPortalFilePermissions();
-			SetWebDavPortalFileOwner();
 			UpdateWebDavPortalConfig();
 			ConfigureWebDavPortal();
+			SetWebDavPortalFilePermissions();
+			SetWebDavPortalFileOwner();
 			InstallWebDavPortalWebsite();
 		}
 		public virtual void InstallWebDavPortalWebsite()

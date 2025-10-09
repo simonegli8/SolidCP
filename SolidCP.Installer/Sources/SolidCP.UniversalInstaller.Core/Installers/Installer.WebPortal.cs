@@ -45,9 +45,9 @@ public abstract partial class Installer
 		ReadWebPortalConfiguration();
 		CopyWebPortal(true, WebPortalInstallFilter);
 		CreateWebPortalUser();
+		ConfigureWebPortal();
 		SetWebPortalFilePermissions();
 		SetWebPortalFileOwner();
-		ConfigureWebPortal();
 		InstallWebPortalWebsite();
 	}
 	public virtual void RemoveWebPortalWebsite() {
@@ -266,10 +266,10 @@ public abstract partial class Installer
 		InstallWebPortalPrerequisites();
 		ReadWebPortalConfiguration();
 		CopyWebPortal(true, WebPortalSetupFilter);
-		SetWebPortalFilePermissions();
-		SetWebPortalFileOwner();
 		UpdateWebPortalConfig();
 		ConfigureWebPortal();
+		SetWebPortalFilePermissions();
+		SetWebPortalFileOwner();
 		InstallWebPortalWebsite();
 	}
 
