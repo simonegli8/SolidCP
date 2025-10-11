@@ -1,5 +1,4 @@
 ﻿using Nito.AsyncEx;
-using SolidCP.UniversalInstaller;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
@@ -110,7 +109,7 @@ public class SeekableDownloadStream : System.IO.Stream
 		var size = await Size;
 		Chunks = new (long Position, int Size, Task<Task> Data)[(int)(size / ChunkSize) + (size % ChunkSize == 0 ? 0 : 1)];
 		long downloaded = 0;
-		/*for (int i = 0; i < Chunks.Length; i++)
+		for (int i = 0; i < Chunks.Length; i++)
 		{
 			if (Releases.Cancel.IsCancellationRequested) break;
 
@@ -119,7 +118,7 @@ public class SeekableDownloadStream : System.IO.Stream
 
 			downloaded += Chunks[i].Size;
 			Progress?.Invoke(Math.Min(downloaded, size), size);
-		}*/
+		}
 	}
 
 	public override long Length
@@ -142,20 +141,27 @@ public class SeekableDownloadStream : System.IO.Stream
 	public override int Read(byte[] buffer, int offset, int count)
 	{
 		var size = Length;
+		// return 0 for EOF (important to avoid indexing past Chunks)
+		if (Position >= size) return 0;
+
 		int nread = 0, nreadchunk;
-		while (count > 0 && offset < buffer.Length)
+		while (count > 0 && offset < buffer.Length && Position < size)
 		{
 			var i = (int)(Position / ChunkSize);
+			// safety: ensure i is in bounds
+			if (i < 0 || i >= Chunks.Length) return nread;
+
 			GetChunk(size, i);
 			var chunk = Chunks[i];
 			var posoffset = (int)(Position % ChunkSize);
 			var bufpos = chunk.Position + posoffset;
 			var chunkcount = Math.Min(count, ChunkSize - posoffset);
 			if (Position + chunkcount > Length) chunkcount = (int)(Length - Position);
+			if (chunkcount <= 0) break;
 			chunk.Data.Unwrap().Wait();
 			using (var iolock = IOLock.Lock())
 			{
-				if (Buffer == null) return 0;
+				if (Buffer == null) return nread;
 				if (Buffer.Position != bufpos) Buffer.Seek(bufpos, SeekOrigin.Begin);
 				nread += nreadchunk = Buffer.Read(buffer, offset, chunkcount);
 				Position += nreadchunk;
@@ -170,15 +176,23 @@ public class SeekableDownloadStream : System.IO.Stream
 	{
 		await GetSize();
 		var size = await Size;
+		// EOF guard
+		if (Position >= size) return 0;
+
 		int nread = 0, nreadchunk;
-		while (count > 0 && offset < buffer.Length)
+		while (count > 0 && offset < buffer.Length && Position < size)
 		{
 			var i = (int)(Position / ChunkSize);
+			// safety: ensure i is in bounds
+			if (i < 0 || i >= Chunks.Length) return nread;
+
 			GetChunk(size, i);
 			var chunk = Chunks[i];
 			var posoffset = (int)(Position % ChunkSize);
 			var bufpos = chunk.Position + posoffset;
 			var chunkcount = Math.Min(count, ChunkSize - posoffset);
+			if (Position + chunkcount > size) chunkcount = (int)(size - Position);
+			if (chunkcount <= 0) break;
 			await chunk.Data.Unwrap();
 			using (var iolock = await IOLock.LockAsync())
 			{
@@ -271,6 +285,8 @@ public class SeekableDownloadStream : System.IO.Stream
 		{
 			if (Buffer != null)
 			{
+				// capture name before disposing
+				var bufferName = Buffer.Name;
 				var size = Buffer.Length / MB;
 				var totalTime = (DateTime.Now - Start).TotalSeconds;
 				var download = DownloadTime.TotalSeconds;
@@ -278,7 +294,7 @@ public class SeekableDownloadStream : System.IO.Stream
 				Buffer.Dispose();
 				try
 				{
-					if (IsTemp) System.IO.File.Delete(Buffer.Name);
+					if (IsTemp) System.IO.File.Delete(bufferName);
 				}
 				catch { }
 				Buffer = null;
