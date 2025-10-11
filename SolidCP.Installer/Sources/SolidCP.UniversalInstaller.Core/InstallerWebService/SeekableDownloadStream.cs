@@ -1,17 +1,19 @@
-﻿using System;
+﻿using Nito.AsyncEx;
+using SolidCP.UniversalInstaller;
+using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using Nito.AsyncEx;
 
 namespace SolidCP.UniversalInstaller;
 
 public class SeekableDownloadStream : System.IO.Stream
 {
 	public const int MB = 1024 * 1024;
-	public const int ChunkSize = 4*MB;
+	public const int ChunkSize = 4 * MB;
 
 	public Releases Releases;
 
@@ -78,16 +80,23 @@ public class SeekableDownloadStream : System.IO.Stream
 				chunk.Data = DownloadChunkAsync(i * ChunkSize, chunk.Size, buffer)
 					.ContinueWith(async task =>
 					{
-						using (var îolock = await IOLock.LockAsync())
+						var rented = buffer;
+						try
 						{
-							if (Buffer != null)
+							using (var îolock = await IOLock.LockAsync())
 							{
-								if (Buffer.Position != chunk.Position) Buffer.Seek(chunk.Position, SeekOrigin.Begin);
-								long length = task.Result;
-								Buffer.Write(buffer, 0, (int)length);
-								await Buffer.FlushAsync();
-								ArrayPool<byte>.Shared.Return(buffer);
+								if (Buffer != null)
+								{
+									if (Buffer.Position != chunk.Position) Buffer.Seek(chunk.Position, SeekOrigin.Begin);
+									long length = task.Result;
+									await Buffer.WriteAsync(rented, 0, (int)length);
+									await Buffer.FlushAsync();
+								}
 							}
+						}
+						finally
+						{
+							if (rented != null) ArrayPool<byte>.Shared.Return(rented);
 						}
 					});
 				Chunks[i] = chunk;
@@ -101,7 +110,7 @@ public class SeekableDownloadStream : System.IO.Stream
 		var size = await Size;
 		Chunks = new (long Position, int Size, Task<Task> Data)[(int)(size / ChunkSize) + (size % ChunkSize == 0 ? 0 : 1)];
 		long downloaded = 0;
-		for (int i = 0; i < Chunks.Length; i++)
+		/*for (int i = 0; i < Chunks.Length; i++)
 		{
 			if (Releases.Cancel.IsCancellationRequested) break;
 
@@ -110,7 +119,7 @@ public class SeekableDownloadStream : System.IO.Stream
 
 			downloaded += Chunks[i].Size;
 			Progress?.Invoke(Math.Min(downloaded, size), size);
-		}
+		}*/
 	}
 
 	public override long Length
@@ -159,6 +168,7 @@ public class SeekableDownloadStream : System.IO.Stream
 
 	public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
 	{
+		await GetSize();
 		var size = await Size;
 		int nread = 0, nreadchunk;
 		while (count > 0 && offset < buffer.Length)
@@ -174,7 +184,7 @@ public class SeekableDownloadStream : System.IO.Stream
 			{
 				if (Buffer == null) return 0;
 				if (Buffer.Position != bufpos) Buffer.Seek(bufpos, SeekOrigin.Begin);
-				nread += nreadchunk = Buffer.Read(buffer, offset, chunkcount);
+				nread += nreadchunk = await Buffer.ReadAsync(buffer, offset, chunkcount);
 				Position += nreadchunk;
 			}
 			count -= chunkcount;
@@ -192,8 +202,8 @@ public class SeekableDownloadStream : System.IO.Stream
 	byte[] bytebuf = new byte[1];
 	public override int ReadByte()
 	{
-		Read(bytebuf, 0, 1);
-		return bytebuf[0];
+		var nread = Read(bytebuf, 0, 1);
+		return nread == 0 ? -1 : bytebuf[0];
 	}
 	public override long Seek(long offset, SeekOrigin origin)
 	{
