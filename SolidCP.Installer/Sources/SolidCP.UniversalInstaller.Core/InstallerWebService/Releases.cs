@@ -213,7 +213,9 @@ public class Releases
 			if (url.EndsWith(".7z", StringComparison.OrdinalIgnoreCase) ||
 				url.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
 			{
-				using (var stream = new SeekableDownloadStream(this, url, destinationFile + ".tmp", true))
+				var singleFile = url.EndsWith(".dll.zip", StringComparison.OrdinalIgnoreCase) ||
+					url.EndsWith(".dll.7z", StringComparison.OrdinalIgnoreCase);				
+				using (var stream = new SeekableDownloadStream(this, url, destinationFile + ".tmp", true, singleFile ? progress : null))
 				{
 					Unzip.UnzipFile(destinationFile, destinationPath, filter, stream, progress);
 				}
