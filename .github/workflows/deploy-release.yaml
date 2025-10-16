@@ -69,6 +69,7 @@ jobs:
       UseAspNetPrecompile: "false"
       BuildLinuxInstallPackages: "true"
       BuildLegacyDatabaseScript: "false"
+      HighCompression: "true"
       MsBuildSwitches: "/v:n /m:1"
       GitHubAction: true
 
