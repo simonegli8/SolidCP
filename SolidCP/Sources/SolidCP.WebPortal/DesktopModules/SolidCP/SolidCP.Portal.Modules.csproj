@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>Library</OutputType>
         <RootNamespace>SolidCP.Portal</RootNamespace>
@@ -148,7 +148,6 @@
         <Compile Include="Code\Framework\ISchedulerTaskView.cs" />
         <Compile Include="Code\Framework\WebPortalPageTitleProvider.cs" />
         <Compile Include="Code\Framework\WebPortalThemeProvider.cs" />
-        <Compile Include="Code\Helpers\AppInstallerHelpers.cs" />
         <Compile Include="Code\Framework\SolidCPControlBase.cs">
             <SubType>ASPXCodeBehind</SubType>
         </Compile>
@@ -194,7 +193,6 @@
         <Compile Include="Code\Helpers\VirtualMachinesHelper.cs" />
         <Compile Include="Code\Helpers\VirtualMachinesProxmoxHelper.cs" />
         <Compile Include="Code\Helpers\VLANsHelper.cs" />
-        <Compile Include="Code\Helpers\WebAppGalleryHelpers.cs" />
         <Compile Include="Code\ProviderControls\IDatabaseEditDatabaseControl.cs" />
         <Compile Include="Code\ProviderControls\IDatabaseEditUserControl.cs" />
         <Compile Include="Code\ProviderControls\IFtpEditAccountControl.cs" />
@@ -1927,13 +1925,6 @@
         <Compile Include="ProviderControls\EnterpriseStorage_Settings.ascx.designer.cs">
             <DependentUpon>EnterpriseStorage_Settings.ascx</DependentUpon>
         </Compile>
-        <Compile Include="ProviderControls\HeliconZoo_Settings.ascx.cs">
-            <DependentUpon>HeliconZoo_Settings.ascx</DependentUpon>
-            <SubType>ASPXCodeBehind</SubType>
-        </Compile>
-        <Compile Include="ProviderControls\HeliconZoo_Settings.ascx.designer.cs">
-            <DependentUpon>HeliconZoo_Settings.ascx</DependentUpon>
-        </Compile>
         <Compile Include="ProviderControls\hMailServer5_EditAccount.ascx.cs">
             <DependentUpon>hMailServer5_EditAccount.ascx</DependentUpon>
             <SubType>ASPXCodeBehind</SubType>
@@ -2032,15 +2023,8 @@
         <Compile Include="ProviderControls\RDS_Settings.ascx.designer.cs">
             <DependentUpon>RDS_Settings.ascx</DependentUpon>
         </Compile>
-        <Compile Include="ServersEditWebPlatformInstaller.ascx.cs">
-            <DependentUpon>ServersEditWebPlatformInstaller.ascx</DependentUpon>
-            <SubType>ASPXCodeBehind</SubType>
-        </Compile>
         <Compile Include="ProviderControls\Lync_Settings.ascx.designer.cs">
             <DependentUpon>Lync_Settings.ascx</DependentUpon>
-        </Compile>
-        <Compile Include="ServersEditWebPlatformInstaller.ascx.designer.cs">
-            <DependentUpon>ServersEditWebPlatformInstaller.ascx</DependentUpon>
         </Compile>
         <Compile Include="ScheduleTaskControls\NotifyOverusedDatabases.ascx.cs">
             <DependentUpon>NotifyOverusedDatabases.ascx</DependentUpon>
@@ -3282,13 +3266,6 @@
         <Compile Include="ExchangeServer\UserControls\SizeBox.ascx.designer.cs">
             <DependentUpon>SizeBox.ascx</DependentUpon>
         </Compile>
-        <Compile Include="InstallerInstallApplicationComplete.ascx.cs">
-            <DependentUpon>InstallerInstallApplicationComplete.ascx</DependentUpon>
-            <SubType>ASPXCodeBehind</SubType>
-        </Compile>
-        <Compile Include="InstallerInstallApplicationComplete.ascx.designer.cs">
-            <DependentUpon>InstallerInstallApplicationComplete.ascx</DependentUpon>
-        </Compile>
         <Compile Include="Login.ascx.cs">
             <DependentUpon>Login.ascx</DependentUpon>
             <SubType>ASPXCodeBehind</SubType>
@@ -3796,27 +3773,6 @@
         </Compile>
         <Compile Include="HostingPlansQuotas.ascx.designer.cs">
             <DependentUpon>HostingPlansQuotas.ascx</DependentUpon>
-        </Compile>
-        <Compile Include="InstallerApplicationHeader.ascx.cs">
-            <DependentUpon>InstallerApplicationHeader.ascx</DependentUpon>
-            <SubType>ASPXCodeBehind</SubType>
-        </Compile>
-        <Compile Include="InstallerApplicationHeader.ascx.designer.cs">
-            <DependentUpon>InstallerApplicationHeader.ascx</DependentUpon>
-        </Compile>
-        <Compile Include="InstallerApplications.ascx.cs">
-            <DependentUpon>InstallerApplications.ascx</DependentUpon>
-            <SubType>ASPXCodeBehind</SubType>
-        </Compile>
-        <Compile Include="InstallerApplications.ascx.designer.cs">
-            <DependentUpon>InstallerApplications.ascx</DependentUpon>
-        </Compile>
-        <Compile Include="InstallerInstallApplication.ascx.cs">
-            <DependentUpon>InstallerInstallApplication.ascx</DependentUpon>
-            <SubType>ASPXCodeBehind</SubType>
-        </Compile>
-        <Compile Include="InstallerInstallApplication.ascx.designer.cs">
-            <DependentUpon>InstallerInstallApplication.ascx</DependentUpon>
         </Compile>
         <Compile Include="IPAddresses.ascx.cs">
             <DependentUpon>IPAddresses.ascx</DependentUpon>
@@ -5413,41 +5369,6 @@
         <Compile Include="VPS\VpsToolsReinstallServer.ascx.designer.cs">
             <DependentUpon>VpsToolsReinstallServer.ascx</DependentUpon>
         </Compile>
-        <Compile Include="WebApplicationGallery.ascx.cs">
-            <DependentUpon>WebApplicationGallery.ascx</DependentUpon>
-            <SubType>ASPXCodeBehind</SubType>
-        </Compile>
-        <Compile Include="WebApplicationGallery.ascx.designer.cs">
-            <DependentUpon>WebApplicationGallery.ascx</DependentUpon>
-        </Compile>
-        <Compile Include="WebApplicationGalleryHeader.ascx.cs">
-            <DependentUpon>WebApplicationGalleryHeader.ascx</DependentUpon>
-            <SubType>ASPXCodeBehind</SubType>
-        </Compile>
-        <Compile Include="WebApplicationGalleryHeader.ascx.designer.cs">
-            <DependentUpon>WebApplicationGalleryHeader.ascx</DependentUpon>
-        </Compile>
-        <Compile Include="WebApplicationGalleryInstall.ascx.cs">
-            <DependentUpon>WebApplicationGalleryInstall.ascx</DependentUpon>
-            <SubType>ASPXCodeBehind</SubType>
-        </Compile>
-        <Compile Include="WebApplicationGalleryInstall.ascx.designer.cs">
-            <DependentUpon>WebApplicationGalleryInstall.ascx</DependentUpon>
-        </Compile>
-        <Compile Include="WebApplicationGalleryParamControl.ascx.cs">
-            <DependentUpon>WebApplicationGalleryParamControl.ascx</DependentUpon>
-            <SubType>ASPXCodeBehind</SubType>
-        </Compile>
-        <Compile Include="WebApplicationGalleryParamControl.ascx.designer.cs">
-            <DependentUpon>WebApplicationGalleryParamControl.ascx</DependentUpon>
-        </Compile>
-        <Compile Include="WebApplicationGalleryParams.ascx.cs">
-            <DependentUpon>WebApplicationGalleryParams.ascx</DependentUpon>
-            <SubType>ASPXCodeBehind</SubType>
-        </Compile>
-        <Compile Include="WebApplicationGalleryParams.ascx.designer.cs">
-            <DependentUpon>WebApplicationGalleryParams.ascx</DependentUpon>
-        </Compile>
         <Compile Include="WebSites.ascx.cs">
             <DependentUpon>WebSites.ascx</DependentUpon>
             <SubType>ASPXCodeBehind</SubType>
@@ -5531,12 +5452,6 @@
         </Compile>
         <Compile Include="WebSitesEditVirtualDir.ascx.designer.cs">
             <DependentUpon>WebSitesEditVirtualDir.ascx</DependentUpon>
-        </Compile>
-        <Compile Include="WebSitesHeliconZooControl.ascx.cs">
-            <DependentUpon>WebSitesHeliconZooControl.ascx</DependentUpon>
-        </Compile>
-        <Compile Include="WebSitesHeliconZooControl.ascx.designer.cs">
-            <DependentUpon>WebSitesHeliconZooControl.ascx</DependentUpon>
         </Compile>
         <Compile Include="WebSitesEditWebFolder.ascx.cs">
             <DependentUpon>WebSitesEditWebFolder.ascx</DependentUpon>
@@ -6302,11 +6217,6 @@
         <Content Include="App_LocalResources\VpsMenu.ascx.de-DE.resx">
             <SubType>Designer</SubType>
         </Content>
-        <Content Include="App_LocalResources\WebApplicationGallery.ascx.de-DE.resx" />
-        <Content Include="App_LocalResources\WebApplicationGalleryHeader.ascx.de-DE.resx" />
-        <Content Include="App_LocalResources\WebApplicationGalleryInstall.ascx.de-DE.resx" />
-        <Content Include="App_LocalResources\WebApplicationGalleryParamControl.ascx.de-DE.resx" />
-        <Content Include="App_LocalResources\WebApplicationGalleryParams.ascx.de-DE.resx" />
         <Content Include="App_LocalResources\WebSites.ascx.de-DE.resx" />
         <Content Include="App_LocalResources\WebSitesAddPointer.ascx.de-DE.resx" />
         <Content Include="App_LocalResources\WebSitesAddSite.ascx.de-DE.resx">
@@ -6329,7 +6239,6 @@
         <Content Include="App_LocalResources\WebSitesEditWebUser.ascx.de-DE.resx" />
         <Content Include="App_LocalResources\WebSitesExtensionsControl.ascx.de-DE.resx" />
         <Content Include="App_LocalResources\WebSitesHeliconApeControl.ascx.de-DE.resx" />
-        <Content Include="App_LocalResources\WebSitesHeliconZooControl.ascx.de-DE.resx" />
         <Content Include="App_LocalResources\WebSitesHomeFolderControl.ascx.de-DE.resx" />
         <Content Include="App_LocalResources\WebSitesIPAddresses.ascx.de-DE.resx" />
         <Content Include="App_LocalResources\WebSitesMimeTypesControl.ascx.de-DE.resx" />
@@ -6506,7 +6415,6 @@
         <Content Include="ProviderControls\App_LocalResources\FileZilla_Settings.ascx.de-DE.resx" />
         <Content Include="ProviderControls\App_LocalResources\Gene6FTP_EditAccount.ascx.de-DE.resx" />
         <Content Include="ProviderControls\App_LocalResources\Gene6FTP_Settings.ascx.de-DE.resx" />
-        <Content Include="ProviderControls\App_LocalResources\HeliconZoo_Settings.ascx.de-DE.resx" />
         <Content Include="ProviderControls\App_LocalResources\hMailServer43_EditAccount.ascx.de-DE.resx" />
         <Content Include="ProviderControls\App_LocalResources\hMailServer43_EditDomain.ascx.de-DE.resx" />
         <Content Include="ProviderControls\App_LocalResources\hMailServer43_EditGroup.ascx.de-DE.resx" />
@@ -6841,7 +6749,6 @@
         <Content Include="OrganizationMenu.ascx" />
         <Content Include="ProviderControls\CRM2011_Settings.ascx" />
         <Content Include="ProviderControls\EnterpriseStorage_Settings.ascx" />
-        <Content Include="ProviderControls\HeliconZoo_Settings.ascx" />
         <Content Include="ProviderControls\IceWarp_EditAccount.ascx" />
         <Content Include="ProviderControls\IceWarp_EditDomain.ascx" />
         <Content Include="ProviderControls\IceWarp_EditForwarding.ascx" />
@@ -6849,7 +6756,6 @@
         <Content Include="ProviderControls\IceWarp_EditList.ascx" />
         <Content Include="ProviderControls\IceWarp_Settings.ascx" />
         <Content Include="ProviderControls\RDS_Settings.ascx" />
-        <Content Include="ServersEditWebPlatformInstaller.ascx" />
         <Content Include="ExchangeServer\ExchangeMailboxPlans.ascx" />
         <Content Include="ExchangeServer\UserControls\AccountsListWithPermissions.ascx" />
         <Content Include="ExchangeServer\UserControls\MailboxPlanSelector.ascx" />
@@ -6952,7 +6858,6 @@
         <Content Include="VPS\UserControls\Generation.ascx" />
         <Content Include="WebSitesAddVirtualDir.ascx" />
         <Content Include="WebSitesEditVirtualDir.ascx" />
-        <Content Include="WebSitesHeliconZooControl.ascx" />
         <Content Include="VirtualDirectoryHomeFolderControl.ascx" />
         <Content Include="WebsitesSSL.ascx" />
         <Content Include="LyncPhoneNumbers.ascx" />
@@ -7506,9 +7411,6 @@
         <Content Include="HostingPlans.ascx" />
         <Content Include="HostingPlansEditPlan.ascx" />
         <Content Include="HostingPlansQuotas.ascx" />
-        <Content Include="InstallerApplicationHeader.ascx" />
-        <Content Include="InstallerApplications.ascx" />
-        <Content Include="InstallerInstallApplication.ascx" />
         <Content Include="IPAddresses.ascx" />
         <Content Include="IPAddressesAddIPAddress.ascx" />
         <Content Include="IPAddressesEditIPAddress.ascx" />
@@ -7612,7 +7514,6 @@
         <Content Include="VirtualServersAddServices.ascx" />
         <Content Include="VirtualServersEditServer.ascx" />
         <Content Include="VPSForPC\VpsEventsLog.ascx" />
-        <Content Include="WebApplicationGalleryParamControl.ascx" />
         <Content Include="WebSites.ascx" />
         <Content Include="WebSitesAddPointer.ascx" />
         <Content Include="WebSitesAddSite.ascx" />
@@ -7947,7 +7848,6 @@
     </ItemGroup>
     <ItemGroup>
         <Content Include="ApplicationInstallerControls\CommerceStarterKitComplete.ascx" />
-        <Content Include="InstallerInstallApplicationComplete.ascx" />
         <Content Include="Login.ascx" />
         <Content Include="ProviderControls\AbilityMailServer_EditAccount.ascx" />
         <Content Include="ProviderControls\AbilityMailServer_EditDomain.ascx" />
@@ -8104,9 +8004,6 @@
         <Content Include="App_LocalResources\UsersDeleteUser.ascx.resx">
             <SubType>Designer</SubType>
         </Content>
-        <Content Include="App_LocalResources\WebApplicationGalleryParamControl.ascx.resx">
-            <SubType>Designer</SubType>
-        </Content>
         <Content Include="App_LocalResources\SettingsOrganizationUserSummaryLetter.ascx.resx">
             <SubType>Designer</SubType>
         </Content>
@@ -8258,7 +8155,6 @@
         </Content>
         <Content Include="App_LocalResources\SettingsExchangeMailboxPlansPolicy.ascx.resx" />
         <Content Include="App_LocalResources\SettingsLyncUserPlansPolicy.ascx.resx" />
-        <Content Include="ProviderControls\App_LocalResources\HeliconZoo_Settings.ascx.resx" />
         <Content Include="ExchangeServer\App_LocalResources\OrganizationDomainNames.ascx.resx">
             <SubType>Designer</SubType>
         </Content>
@@ -8277,7 +8173,6 @@
         </Content>
         <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
         <None Include="Resources\Windows2008_Settings.ascx.resx" />
-        <Content Include="App_LocalResources\WebSitesHeliconZooControl.ascx.resx" />
         <Content Include="ExchangeServer\App_LocalResources\ExchangeDisclaimers.ascx.resx">
             <SubType>Designer</SubType>
         </Content>
@@ -8641,18 +8536,6 @@
             <SubType>Designer</SubType>
         </Content>
         <Content Include="ProviderControls\App_LocalResources\NetticaDNS_Settings.ascx.resx">
-            <SubType>Designer</SubType>
-        </Content>
-        <Content Include="App_LocalResources\WebApplicationGallery.ascx.resx">
-            <SubType>Designer</SubType>
-        </Content>
-        <Content Include="App_LocalResources\WebApplicationGalleryInstall.ascx.resx">
-            <SubType>Designer</SubType>
-        </Content>
-        <Content Include="App_LocalResources\WebApplicationGalleryParams.ascx.resx">
-            <SubType>Designer</SubType>
-        </Content>
-        <Content Include="App_LocalResources\WebApplicationGalleryHeader.ascx.resx">
             <SubType>Designer</SubType>
         </Content>
         <Content Include="ExchangeServer\App_LocalResources\OrganizationUserSetupInstructions.ascx.resx">
@@ -9316,10 +9199,6 @@
         <Content Include="VPS\VdcManagementNetwork.ascx" />
         <Content Include="VPS\VirtualMachineImage.ashx" />
         <Content Include="VPS\VirtualMachineSnapshotImage.ashx" />
-        <Content Include="WebApplicationGallery.ascx" />
-        <Content Include="WebApplicationGalleryHeader.ascx" />
-        <Content Include="WebApplicationGalleryInstall.ascx" />
-        <Content Include="WebApplicationGalleryParams.ascx" />
         <Content Include="WebSitesAllocateIPAddresses.ascx" />
         <Content Include="WebSitesColdFusionControl.ascx" />
         <Content Include="WebSitesIPAddresses.ascx" />

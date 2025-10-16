@@ -10,7 +10,6 @@ using SolidCP.Providers.OS;
 using SolidCP.Providers.Common;
 using SolidCP.Providers.ResultObjects;
 using SolidCP.Providers.Web;
-using SolidCP.Providers.WebAppGallery;
 using SolidCP.Providers.Web.Apache;
 
 namespace SolidCP.Providers.Web
@@ -406,11 +405,6 @@ namespace SolidCP.Providers.Web
 			throw new NotImplementedException();
 		}
 
-		public GalleryWebAppStatus DownloadGalleryApplication(int UserId, string id)
-		{
-			throw new NotImplementedException();
-		}
-
 		public void EnableHeliconApe(string siteId)
 		{
 			throw new NotImplementedException();
@@ -494,41 +488,6 @@ namespace SolidCP.Providers.Web
 		}
 
 		public List<WebFolder> GetFolders(string siteId)
-		{
-			throw new NotImplementedException();
-		}
-
-		public GalleryApplicationResult GetGalleryApplication(int UserId, string id)
-		{
-			throw new NotImplementedException();
-		}
-
-		public DeploymentParametersResult GetGalleryApplicationParameters(int UserId, string id)
-		{
-			throw new NotImplementedException();
-		}
-
-		public GalleryApplicationsResult GetGalleryApplications(int UserId, string categoryId)
-		{
-			throw new NotImplementedException();
-		}
-
-		public GalleryApplicationsResult GetGalleryApplicationsFiltered(int UserId, string pattern)
-		{
-			throw new NotImplementedException();
-		}
-
-		public GalleryWebAppStatus GetGalleryApplicationStatus(int UserId, string id)
-		{
-			throw new NotImplementedException();
-		}
-
-		public GalleryCategoriesResult GetGalleryCategories(int UserId)
-		{
-			throw new NotImplementedException();
-		}
-
-		public GalleryLanguagesResult GetGalleryLanguages(int UserId)
 		{
 			throw new NotImplementedException();
 		}
@@ -740,10 +699,6 @@ namespace SolidCP.Providers.Web
 			ReadDirectory(loc, dir);
 			return dir;
 		}
-		public WebAppVirtualDirectory[] GetZooApplications(string siteId)
-		{
-			throw new NotImplementedException();
-		}
 
 		public void GrantWebDeployPublishingAccess(string siteId, string accountName, string accountPassword)
 		{
@@ -776,11 +731,6 @@ namespace SolidCP.Providers.Web
 		}
 
 		public bool InstallFrontPage(string siteId, string username, string password)
-		{
-			throw new NotImplementedException();
-		}
-
-		public StringResultObject InstallGalleryApplication(int UserId, string id, List<DeploymentParameter> updatedValues, string languageId)
 		{
 			throw new NotImplementedException();
 		}
@@ -844,21 +794,6 @@ namespace SolidCP.Providers.Web
 		}
 
 		public void SetResourceLanguage(int UserId, string resourceLanguage)
-		{
-			throw new NotImplementedException();
-		}
-
-		public StringResultObject SetZooConsoleDisabled(string siteId, string appName)
-		{
-			throw new NotImplementedException();
-		}
-
-		public StringResultObject SetZooConsoleEnabled(string siteId, string appName)
-		{
-			throw new NotImplementedException();
-		}
-
-		public StringResultObject SetZooEnvironmentVariable(string siteId, string appName, string envName, string envValue)
 		{
 			throw new NotImplementedException();
 		}

@@ -71,19 +71,7 @@ namespace SolidCP.Providers.OS
 		TerminalSession[] GetTerminalServicesSessions();
 		void CloseTerminalServicesSession(int sessionId);
 
-		// web platform installer
-		WPIProduct[] GetWPIProducts(string tabId, string keywordId);
-		WPIProduct[] GetWPIProductsFiltered(string filter);
-		WPIProduct GetWPIProductById(string productdId);
-		WPITab[] GetWPITabs();
-		void InitWPIFeeds(string feedUrls);
-		WPIKeyword[] GetWPIKeywords();
-		WPIProduct[] GetWPIProductsWithDependencies(string[] products);
-		void InstallWPIProducts(string[] products);
-		void CancelInstallWPIProducts();
-		string GetWPIStatus();
-		string WpiGetLogFileDirectory();
-		SettingPair[] WpiGetLogsInDirectory(string Path);
+
 
 		Installer WinGet { get; }
 		Installer Chocolatey { get; }

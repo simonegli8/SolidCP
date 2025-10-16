@@ -49,7 +49,6 @@ public partial class ResourceGroupConfiguration : EntityTypeConfiguration<Resour
             new ResourceGroup() { GroupId = 33, GroupName = "VPS2012", GroupOrder = 20, ShowGroup = true },
             new ResourceGroup() { GroupId = 40, GroupName = "VPSForPC", GroupOrder = 20, ShowGroup = true },
             new ResourceGroup() { GroupId = 41, GroupName = "Lync", GroupOrder = 24, ShowGroup = true },
-            new ResourceGroup() { GroupId = 42, GroupController = "SolidCP.EnterpriseServer.HeliconZooController", GroupName = "HeliconZoo", GroupOrder = 2, ShowGroup = true },
             new ResourceGroup() { GroupId = 44, GroupController = "SolidCP.EnterpriseServer.EnterpriseStorageController", GroupName = "EnterpriseStorage", GroupOrder = 26, ShowGroup = true },
             new ResourceGroup() { GroupId = 45, GroupName = "RDS", GroupOrder = 27, ShowGroup = true },
             new ResourceGroup() { GroupId = 46, GroupController = "SolidCP.EnterpriseServer.DatabaseServerController", GroupName = "MsSQL2014", GroupOrder = 10, ShowGroup = true },

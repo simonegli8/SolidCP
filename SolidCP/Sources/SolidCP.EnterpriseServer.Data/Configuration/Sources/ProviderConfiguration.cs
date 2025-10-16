@@ -93,8 +93,6 @@ public partial class ProviderConfiguration: EntityTypeConfiguration<Provider>
             new Provider() { ProviderId = 111, DisplayName = "Windows Server 2016", EditorControl = "Windows2008", GroupId = 1, ProviderName = "Windows2016", ProviderType = "SolidCP.Providers.OS.Windows2016, SolidCP.Providers.OS.Windows2016" },
             new Provider() { ProviderId = 112, DisplayName = "Internet Information Services 10.0", EditorControl = "IIS70", GroupId = 2, ProviderName = "IIS100", ProviderType = "SolidCP.Providers.Web.IIs100, SolidCP.Providers.Web.IIs100" },
             new Provider() { ProviderId = 113, DisplayName = "Microsoft FTP Server 10.0", EditorControl = "MSFTP70", GroupId = 3, ProviderName = "MSFTP100", ProviderType = "SolidCP.Providers.FTP.MsFTP100, SolidCP.Providers.FTP.IIs100" },
-            new Provider() { ProviderId = 135, DisableAutoDiscovery = true, DisplayName = "Web Application Engines", EditorControl = "HeliconZoo", GroupId = 42, ProviderName = "HeliconZoo",
-                ProviderType = "SolidCP.Providers.Web.HeliconZoo.HeliconZoo, SolidCP.Providers.Web.HeliconZoo" },
             new Provider() { ProviderId = 160, DisplayName = "IceWarp Mail Server", EditorControl = "IceWarp", GroupId = 4, ProviderName = "IceWarp", ProviderType = "SolidCP.Providers.Mail.IceWarp, SolidCP.Providers.Mail.IceWarp" },
             new Provider() { ProviderId = 200, DisplayName = "Hosted Windows SharePoint Services 3.0", EditorControl = "HostedSharePoint30", GroupId = 20, ProviderName = "HostedSharePoint30", ProviderType = "SolidCP.Providers.HostedSolution.HostedSharePointServer, SolidCP.Providers.Hoste" +
                 "dSolution" },

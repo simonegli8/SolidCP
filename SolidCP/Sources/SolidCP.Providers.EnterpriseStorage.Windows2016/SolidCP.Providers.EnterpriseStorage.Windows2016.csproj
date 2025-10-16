@@ -25,8 +25,7 @@
 			<SpecificVersion>False</SpecificVersion>
 		</Reference>
 		<ProjectReference Include="..\SolidCP.Providers.Base\SolidCP.Providers.Base.csproj" />
-		<ProjectReference Include="..\SolidCP.Providers.OS.Windows2003\SolidCP.Providers.OS.Windows2003.csproj" />
-		<ProjectReference Include="..\SolidCP.Providers.OS.Windows2012\SolidCP.Providers.OS.Windows2012.csproj" />
+		<ProjectReference Include="..\SolidCP.Providers.OS.Windows2022\SolidCP.Providers.OS.Windows2022.csproj" />
 		<ProjectReference Include="..\SolidCP.Providers.Web.IIs60\SolidCP.Providers.Web.IIs60.csproj" />
 		<ProjectReference Include="..\SolidCP.Providers.Web.IIS70\SolidCP.Providers.Web.IIs70.csproj" />
 		<ProjectReference Include="..\SolidCP.Providers.Web.IIs80\SolidCP.Providers.Web.IIs80.csproj" />

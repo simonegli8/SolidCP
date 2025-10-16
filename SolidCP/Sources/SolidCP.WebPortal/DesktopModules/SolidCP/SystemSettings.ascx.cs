@@ -113,34 +113,6 @@ namespace SolidCP.Portal
             }
 
 
-            // WPI
-            settings = ES.Services.System.GetSystemSettings(SCP.SystemSettings.WPI_SETTINGS);
-
-            /*
-            if (settings != null)
-            {
-                wpiMicrosoftFeed.Checked = Utils.ParseBool(settings[FEED_ENABLE_MICROSOFT],true);
-                wpiHeliconTechFeed.Checked = Utils.ParseBool(settings[FEED_ENABLE_HELICON],true);
-            }
-            else
-            {
-                wpiMicrosoftFeed.Checked = true;
-                wpiHeliconTechFeed.Checked = true;
-            }
-            */
-
-            if (null != settings)
-            {
-                wpiEditFeedsList.Value = settings[SCP.SystemSettings.FEED_ULS_KEY];
-
-                string mainFeedUrl = settings[SCP.SystemSettings.WPI_MAIN_FEED_KEY];
-                if (string.IsNullOrEmpty(mainFeedUrl))
-                {
-                    mainFeedUrl = WebPlatformInstaller.MAIN_FEED_URL;
-                }
-                txtMainFeedUrl.Text = mainFeedUrl;
-            }
-
             // FILE MANAGER
             settings = ES.Services.System.GetSystemSettings(SCP.SystemSettings.FILEMANAGER_SETTINGS);
 
@@ -273,42 +245,6 @@ namespace SolidCP.Portal
 
                 int result = ES.Services.System.SetSystemSettings(
                     SCP.SystemSettings.BACKUP_SETTINGS, settings);
-
-                if (result < 0)
-                {
-                    ShowResultMessage(result);
-                    return;
-                }
-            }
-            catch (Exception ex)
-            {
-                ShowErrorMessage("SYSTEM_SETTINGS_SAVE", ex);
-                return;
-            }
-
-            ShowSuccessMessage("SYSTEM_SETTINGS_SAVE");
-        }
-        private void SaveWPI()
-        {
-            try
-            {
-                SCP.SystemSettings settings = new SCP.SystemSettings();
-                // WPI
-                /*
-                settings[FEED_ENABLE_MICROSOFT] = wpiMicrosoftFeed.Checked.ToString();
-                settings[FEED_ENABLE_HELICON] = wpiHeliconTechFeed.Checked.ToString();
-                */
-
-                settings[SCP.SystemSettings.FEED_ULS_KEY] = wpiEditFeedsList.Value;
-                string mainFeedUrl = txtMainFeedUrl.Text;
-                if (string.IsNullOrEmpty(mainFeedUrl))
-                {
-                    mainFeedUrl = WebPlatformInstaller.MAIN_FEED_URL;
-                }
-                settings[SCP.SystemSettings.WPI_MAIN_FEED_KEY] = mainFeedUrl;
-
-
-                int result = ES.Services.System.SetSystemSettings(SCP.SystemSettings.WPI_SETTINGS, settings);
 
                 if (result < 0)
                 {
@@ -554,10 +490,6 @@ namespace SolidCP.Portal
         protected void btnSaveBACKUP_Click(object sender, EventArgs e)
         {
             SaveBACKUP();
-        }
-        protected void btnSaveWPI_Click(object sender, EventArgs e)
-        {
-            SaveWPI();
         }
         protected void btnSaveFILEMANAGER_Click(object sender, EventArgs e)
         {
