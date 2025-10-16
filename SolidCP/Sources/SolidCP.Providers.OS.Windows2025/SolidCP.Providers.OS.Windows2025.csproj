@@ -26,7 +26,7 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\SolidCP.Providers.Base\SolidCP.Providers.Base.csproj" />
-        <ProjectReference Include="..\SolidCP.Providers.OS.Windows2003\SolidCP.Providers.OS.Windows2003.csproj" />
+        <ProjectReference Include="..\SolidCP.Providers.OS.Windows2016\SolidCP.Providers.OS.Windows2016.csproj" />
         <ProjectReference Include="..\SolidCP.Server.Utils\SolidCP.Server.Utils.csproj" />
     </ItemGroup>
 </Project>

@@ -57,7 +57,7 @@ using SolidCP.Providers.DNS;
 namespace SolidCP.Providers.OS
 {
 
-    public class Windows2022 : Windows2003
+    public class Windows2022 : Windows2016
     {
         #region Properties
         protected string PrimaryDomainController

@@ -48,7 +48,7 @@ using System.Management.Automation.Runspaces;
 
 namespace SolidCP.Providers.EnterpriseStorage
 {
-    public class Windows2012 : HostingServiceProviderBase, IEnterpriseStorage
+    public class Windows2016 : HostingServiceProviderBase, IEnterpriseStorage
     {
         #region Properties
 
@@ -82,7 +82,7 @@ namespace SolidCP.Providers.EnterpriseStorage
                 string rootPath = string.Format("{0}:\\{1}\\{2}", setting.LocationDrive, setting.HomeFolder,
                     organizationId);
 
-                var windows = new SolidCP.Providers.OS.Windows2012();
+                var windows = new SolidCP.Providers.OS.Windows2022();
 
                 if (Directory.Exists(rootPath))
                 {
@@ -129,7 +129,7 @@ namespace SolidCP.Providers.EnterpriseStorage
 
         public SystemFile[] GetQuotasForOrganization(SystemFile[] folders)
         {
-            var windows = new SolidCP.Providers.OS.Windows2012();
+            var windows = new SolidCP.Providers.OS.Windows2022();
 
             var quotasArray = new Dictionary<string, Dictionary<string, Quota>>();
 
@@ -214,7 +214,7 @@ namespace SolidCP.Providers.EnterpriseStorage
                 organizationId, folderName);
             SystemFile folder = null;
 
-            var windows = new SolidCP.Providers.OS.Windows2012();
+            var windows = new SolidCP.Providers.OS.Windows2022();
 
             if (Directory.Exists(fullName))
             {
