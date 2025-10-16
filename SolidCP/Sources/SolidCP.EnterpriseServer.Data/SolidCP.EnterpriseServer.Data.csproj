@@ -99,6 +99,7 @@
         <PackageReference Include="Npgsql" Version="8.0.7" />
         <PackageReference Include="System.Data.SQLite.EF6" Version="2.0.2" />
         <PackageReference Include="System.Data.SQLite" Version="2.0.2" />
+        <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net48' AND '$(EntityFramework6)' == '6.4'">
@@ -111,6 +112,7 @@
         <PackageReference Include="Npgsql" Version="8.0.7" />
         <PackageReference Include="System.Data.SQLite.EF6" Version="2.0.2" />
         <PackageReference Include="System.Data.SQLite" Version="2.0.2" />
+        <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
     </ItemGroup>
 
     <ItemGroup>
@@ -206,12 +208,14 @@
       <Folder Include="Migrations\Sqlite\" />
     </ItemGroup>
 
-    <Target Name="CopySQLite" AfterTargets="Build"  Condition="'$(TargetFramework)' == 'net8.0' OR '$(TargetFramework)' == 'net9.0'">
+    <Target Name="CopySQLite" BeforeTargets="CopyFilesToOutputDirectory"  Condition="'$(TargetFramework)' == 'net8.0' OR '$(TargetFramework)' == 'net9.0'">
         <ItemGroup>
             <x64SQLiteFiles Include="$(PkgSQLitePCLRaw_lib_e_sqlite3)\runtimes\win-x64\native\*.dll" />
             <x86SQLiteFiles Include="$(PkgSQLitePCLRaw_lib_e_sqlite3)\runtimes\win-x86\native\*.dll" />
         </ItemGroup>
+        <!--<Message Text="Copy native dlls: @(x64SQLiteFiles);@(x86SQLiteFiles)" Importance="high" />-->
         <Copy SourceFiles="@(x64SQLiteFiles)" DestinationFolder="bin\$(Configuration)\net48\x64" SkipUnchangedFiles="true" />
         <Copy SourceFiles="@(x86SQLiteFiles)" DestinationFolder="bin\$(Configuration)\net48\x86" SkipUnchangedFiles="true" />
     </Target>
+
 </Project>

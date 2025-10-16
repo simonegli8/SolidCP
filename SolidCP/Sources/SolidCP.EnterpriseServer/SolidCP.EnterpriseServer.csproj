@@ -127,20 +127,21 @@
       </Content>
     </ItemGroup>
 
-    <Target Name="CopyCoreWebConfig" AfterTargets="Build">
-        <Copy SourceFiles="Core.Web.config" DestinationFiles="bin_dotnet\Web.config" />
+    <Target Name="CopyCoreWebConfig" AfterTargets="CopyFilesToOutputDirectory">
+        <Copy SourceFiles="Core.Web.config" DestinationFiles="bin_dotnet\Web.config" SkipUnchangedFiles="true" />
         <Message Text="Copied Core.Web.config" Importance="high" />
     </Target>
 
-    <Target Name="CopyNativeDlls" AfterTargets="Build">
+    <Target Name="CopyNativeDlls" AfterTargets="CopyFilesToOutputDirectory">
         <ItemGroup>
             <ESDataFiles64 Include="..\SolidCP.EnterpriseServer.Data\bin\$(Configuration)\net48\x64\**\*.*" />
             <ESDataFiles86 Include="..\SolidCP.EnterpriseServer.Data\bin\$(Configuration)\net48\x86\**\*.*" />
         </ItemGroup>
+        <!--<Message Text="Copy native dll files: @(ESDataFiles64);@(ESDataFiles86)" Importance="high" />-->
         <Copy SourceFiles="@(ESDataFiles64)" DestinationFolder="bin\Code\x64\%(RecursiveDir)" SkipUnchangedFiles="true" />
         <Copy SourceFiles="@(ESDataFiles86)" DestinationFolder="bin\Code\x86\%(RecursiveDir)" SkipUnchangedFiles="true" />
     </Target>
-    
+
     <Target Name="DeleteUnusedDlls" AfterTargets="Build">
 
         <!-- move lazy loaded assemblies to bin\Code and delete unused assemblies in bin -->
