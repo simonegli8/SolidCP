@@ -5,7 +5,7 @@ using System.IO;
 using System.Buffers;
 using System.Net;
 using System.Text;
-using Nito.AsyncEx;
+using NeoSmart.AsyncLock;
 
 namespace SolidCP.UniversalInstaller;
 
