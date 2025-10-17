@@ -939,8 +939,10 @@
 
 	<!-- Compile and deploy Setup.dll -->
 	<Target Name="CopySetupDLL" DependsOnTargets="PublishSqlInstallScripts">
-		<!-- Compile Setup.dll -->
-		<MSBuild Projects="$(SetupTrunkFolder)\Sources\SolidCP.Installer.sln"  Properties="Configuration=$(BuildConfiguration);Platform=$(Platform)" />
+        <!-- Restore -->
+        <Exec Command="dotnet restore $(InstallerProjectRoot)\SolidCP.Installer.sln" />
+        <!-- Compile Setup.dll -->
+        <MSBuild Projects="$(SetupTrunkFolder)\Sources\SolidCP.Installer.sln"  Properties="Configuration=$(BuildConfiguration);Platform=$(Platform)" />
 
 		<!-- Copy Setup.dll -->
 		<MakeDir Directories="$(ServerInstall)\Setup" />
@@ -1018,7 +1020,14 @@
 		<Copy SourceFiles="$(RootFolder)\SolidCP.Installer\Sources\SolidCP.UniversalInstaller.Msi\$(BuildConfiguration)\SolidCP.Installer.msi" DestinationFolder="$(DeployFolder)" />-->
 				<!-- build MSI package -->
 		<!--<Message Text="&quot;$(DevEnv)&quot; &quot;$(InstallerProjectRoot)SolidCP.UniversalInstaller.Msi.sln&quot; /build &quot;$(BuildConfiguration)|$(Platform)&quot;" Importance="high" />-->
-		<Exec Command="&quot;$(DevEnv)&quot; &quot;$(InstallerProjectRoot)SolidCP.UniversalInstaller.Msi.sln&quot; /build &quot;$(BuildConfiguration)|$(Platform)&quot;" />
+
+        <!-- copy installer binaries for upgrade -->
+        <ItemGroup>
+            <InstallerBinariesExe Include="$(InstallerProjectBin)\net48\*.exe" />
+        </ItemGroup>
+        <Copy SourceFiles="@(InstallerBinariesExe)" DestinationFolder="$(InstallerProjectRoot)\SolidCP.Installer.Msi" />
+
+        <Exec Command="&quot;$(DevEnv)&quot; &quot;$(InstallerProjectRoot)SolidCP.UniversalInstaller.Msi.sln&quot; /build &quot;$(BuildConfiguration)|$(Platform)&quot;" />
 		<ItemGroup>
 			<InstallerMsi Include="$(InstallerProjectRoot)SolidCP.UniversalInstaller.Msi\$(BuildConfiguration)\*.msi" />
 		</ItemGroup>
