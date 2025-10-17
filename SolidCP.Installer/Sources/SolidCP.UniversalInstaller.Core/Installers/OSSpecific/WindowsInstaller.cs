@@ -558,7 +558,7 @@ public class WindowsInstaller : Installer
 
 	}
 
-	private void SetFolderPermission(string path, string account, NtfsPermission permission)
+	public void SetFolderPermission(string path, string account, NtfsPermission permission)
 	{
 		try
 		{

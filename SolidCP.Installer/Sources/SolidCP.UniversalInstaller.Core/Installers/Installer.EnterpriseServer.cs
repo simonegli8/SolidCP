@@ -24,7 +24,16 @@ public abstract partial class Installer
 	public virtual void RemoveEnterpriseServerPrerequisites() { }
 	public virtual void CreateEnterpriseServerUser() => CreateUser(Settings.EnterpriseServer);
 	public virtual void RemoveEnterpriseServerUser() => RemoveUser(Settings.EnterpriseServer.Username);
-	public virtual void SetEnterpriseServerFilePermissions() => SetFilePermissions(Settings.EnterpriseServer.InstallPath);
+	public virtual void SetEnterpriseServerFilePermissions()
+	{
+		if (!OSInfo.IsWindows) SetFilePermissions(Settings.EnterpriseServer.InstallPath);
+		else
+		{
+			var user = string.IsNullOrEmpty(Settings.EnterpriseServer.Username) && Settings.WebPortal.EmbedEnterpriseServer ?
+				Settings.WebPortal.Username : Settings.EnterpriseServer.Username;
+			((WindowsInstaller)this).SetFolderPermission(Settings.EnterpriseServer.InstallPath, user, NtfsPermission.FullControl);
+		}
+	}
 	public virtual void SetEnterpriseServerFileOwner()
 	{
 		var user = string.IsNullOrEmpty(Settings.EnterpriseServer.Username) && Settings.WebPortal.EmbedEnterpriseServer ?
