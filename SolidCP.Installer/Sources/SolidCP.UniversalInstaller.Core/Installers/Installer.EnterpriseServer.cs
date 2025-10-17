@@ -29,9 +29,19 @@ public abstract partial class Installer
 		if (!OSInfo.IsWindows) SetFilePermissions(Settings.EnterpriseServer.InstallPath);
 		else
 		{
-			var user = string.IsNullOrEmpty(Settings.EnterpriseServer.Username) && Settings.WebPortal.EmbedEnterpriseServer ?
-				Settings.WebPortal.Username : Settings.EnterpriseServer.Username;
-			((WindowsInstaller)this).SetFolderPermission(Settings.EnterpriseServer.InstallPath, user, NtfsPermission.FullControl);
+			var user = Settings.WebPortal.EmbedEnterpriseServer ? Settings.WebPortal.Username : Settings.EnterpriseServer.Username;
+			if (!string.IsNullOrEmpty(user))
+			{
+				SetFilePermissions(Settings.EnterpriseServer.InstallPath, user);
+			}
+			if (Settings.WebPortal.EmbedEnterpriseServer)
+			{
+				user = Settings.EnterpriseServer.Username;
+				if (!string.IsNullOrEmpty(user))
+				{
+					SetFilePermissions(Settings.EnterpriseServer.InstallPath, user);
+				}
+			}
 		}
 	}
 	public virtual void SetEnterpriseServerFileOwner()

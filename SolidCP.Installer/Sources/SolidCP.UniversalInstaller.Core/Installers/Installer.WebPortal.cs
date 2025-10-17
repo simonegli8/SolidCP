@@ -22,7 +22,7 @@ public abstract partial class Installer
 	public virtual void RemoveWebPortalPrerequisites() { }
 	public virtual void CreateWebPortalUser() => CreateUser(Settings.WebPortal);
 	public virtual void RemoveWebPortalUser() => RemoveUser(Settings.WebPortal.Username);
-	public virtual void SetWebPortalFilePermissions() => SetFilePermissions(Settings.WebPortal.InstallPath);
+	public virtual void SetWebPortalFilePermissions() => SetFilePermissions(Settings.WebPortal.InstallPath, Settings.WebPortal.Username);
 	public virtual void SetWebPortalFileOwner() => SetFileOwner(Settings.WebPortal.InstallPath, Settings.WebPortal.Username, SolidCPGroup);
 	public virtual void InstallWebPortalWebsite()
 	{

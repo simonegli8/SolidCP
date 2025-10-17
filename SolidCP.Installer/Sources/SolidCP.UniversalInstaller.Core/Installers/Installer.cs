@@ -562,7 +562,7 @@ public abstract partial class Installer
 			InstallLog("Removed .NET 8 Runtime");
 	}
 	public virtual string[] UserIsMemeberOf(CommonSettings settings) => new string[0];
-	public virtual void SetFilePermissions(string folder)
+	public virtual void SetFilePermissions(string folder, string user = null)
 	{
 		if (!Path.IsPathRooted(folder)) folder = Path.Combine(InstallWebRootPath, folder);
 
@@ -574,6 +574,13 @@ public abstract partial class Installer
 				UnixFileMode.UserRead | UnixFileMode.GroupRead | UnixFileMode.OtherRead |
 				UnixFileMode.UserExecute | UnixFileMode.GroupExecute, true);
 			InstallLog($"Granted file permissions on {folder}.");
+		}
+		else
+		{
+			if (!string.IsNullOrEmpty(user))
+			{
+				((WindowsInstaller)this).SetFolderPermission(folder, user, NtfsPermission.FullControl);
+			}
 		}
 	}
 	public virtual void SetFileOwner(string folder, string owner, string group)
