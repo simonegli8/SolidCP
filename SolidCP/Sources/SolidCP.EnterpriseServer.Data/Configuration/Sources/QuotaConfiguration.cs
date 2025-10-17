@@ -171,8 +171,6 @@ public partial class QuotaConfiguration: EntityTypeConfiguration<Quota>
                 ServiceQuota = false },
             new Quota() { QuotaId = 94, GroupId = 2, QuotaDescription = "ColdFusion", QuotaName = "Web.ColdFusion", QuotaOrder = 17, QuotaTypeId = 1,
                 ServiceQuota = false },
-            new Quota() { QuotaId = 95, GroupId = 2, QuotaDescription = "Web Application Gallery", QuotaName = "Web.WebAppGallery", QuotaOrder = 1, QuotaTypeId = 1,
-                ServiceQuota = false },
             new Quota() { QuotaId = 96, GroupId = 2, QuotaDescription = "ColdFusion Virtual Directories", QuotaName = "Web.CFVirtualDirectories", QuotaOrder = 18, QuotaTypeId = 1,
                 ServiceQuota = false },
             new Quota() { QuotaId = 97, GroupId = 2, QuotaDescription = "Remote web management allowed", QuotaName = "Web.RemoteManagement", QuotaOrder = 20, QuotaTypeId = 1,

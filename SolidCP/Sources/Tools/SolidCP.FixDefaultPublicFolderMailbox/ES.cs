@@ -62,11 +62,6 @@ namespace SolidCP.FixDefaultPublicFolderMailbox
             get { return GetCachedProxy<esSystem>(); }
         }
 
-        public esApplicationsInstaller ApplicationsInstaller
-        {
-            get { return GetCachedProxy<esApplicationsInstaller>(); }
-        }
-
         public esAuditLog AuditLog
         {
             get { return GetCachedProxy<esAuditLog>(); }

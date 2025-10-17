@@ -134,47 +134,6 @@
 
         <div class="panel panel-default">
             <div class="panel-heading panel-heading-link">
-                <span><i class="fa fa-windows" aria-hidden="true">&nbsp;</i>&nbsp;</span>
-                <a data-toggle="collapse" data-parent="#accordion" href="#lclWpiSettings" aria-expanded="false" class="collapsed">
-                    <asp:Localize runat="server" meta:resourcekey="HeaderWpiCustomFeeds" /><span class='fa fa-plus pull-right' aria-hidden='true'> </span>
-                </a>
-            </div>
-            <div id="lclWpiSettings" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
-                <div class="panel-body">
-                    <fieldset>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <CPCC:H5Label runat="server" for="txtMainFeedUrl" class="col-sm-2 control-label">
-                                                <asp:Localize ID="SettinglblWpiMainFeedUrl" runat="server" meta:resourcekey="SettinglblWpiMainFeedUrl" Text="Main feed URL:" />
-                                    </CPCC:H5Label>
-                                    <div class="col-sm-6">
-                                        <asp:TextBox runat="server" ID="txtMainFeedUrl" CssClass="form-control" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <CPCC:H5Label runat="server" for="wpiEditFeedsList" class="col-sm-2 control-label">
-                                                <asp:Localize ID="SettingBtnWpiAddCustomFeeds" runat="server" meta:resourcekey="SettinglblWpiAddCustomFeeds" />
-                                    </CPCC:H5Label>
-                                    <div class="col-sm-6">
-                                        <uc1:EditFeedsList ID="wpiEditFeedsList" runat="server" DisplayNames="false" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </fieldset>
-                    <hr />
-                    <CPCC:StyleButton ID="StyleButton3" CssClass="btn btn-success btn-block" runat="server" meta:resourcekey="SettingbtnSaveSettings" OnClick="btnSaveWPI_Click" />
-                </div>
-            </div>
-        </div>
-
-        <div class="panel panel-default">
-            <div class="panel-heading panel-heading-link">
                 <span><i class="fa fa-file-text" aria-hidden="true">&nbsp;</i>&nbsp;&nbsp;</span>
                 <a data-toggle="collapse" data-parent="#accordion" href="#PanelFileManagereSettings" aria-expanded="false" class="collapsed">
                     <asp:Localize runat="server" meta:resourcekey="HeaderFileManagerSettings" /><span class='fa fa-plus pull-right' aria-hidden='true'> </span>

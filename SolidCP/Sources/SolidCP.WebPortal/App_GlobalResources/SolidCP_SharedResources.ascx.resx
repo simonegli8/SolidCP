@@ -5681,7 +5681,7 @@
     <value>Database service is not available</value>
   </data>
   <data name="WebAppGallery.DatabaseUserCannotAccessDatabase" xml:space="preserve">
-    <value>Database user '{1}' cannot access selected database</value>
+    <value>Database user '{1}' cannot access selected database</value>f
   </data>
   <data name="WebAppGallery.DatabaseUserCreationError" xml:space="preserve">
     <value>Cannot create database user account</value>

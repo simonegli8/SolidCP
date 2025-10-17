@@ -120,68 +120,6 @@
 </fieldset>
 <br />
 
-<fieldset>
-    <legend>
-        <asp:Label ID="lblWebAppGallery" runat="server" meta:resourcekey="lblWebAppGallery" Text="Pools" CssClass="NormalBold"></asp:Label>&nbsp;
-    </legend>
-<br />
-      <table width="100%" cellpadding="4">
-		<tr>
-			<td class="Normal" valign="top" width="192">
-		        <asp:Label ID="Label1" runat="server" meta:resourcekey="GalleryFeedFilter" Text="Gallery feed filter:"></asp:Label>
-                
-		    </td>
-		    <td class="Normal" valign="top">
-                <asp:RadioButtonList  ID="radioFilterAppsList" runat="server">
-                    <asp:ListItem Value="Exclude">Exclude selected applications</asp:ListItem>
-                    <asp:ListItem Value="Include">Include only selected applications</asp:ListItem>
-                </asp:RadioButtonList>
-                <br/>
-                <asp:Button runat="server" CssClass="Button1" ID="FilterDialogButton" Text="Change a filter" />
-                <br/><br/>
-                <asp:CheckBox ID="chkGalleryAppsAlwaysIgnoreDependencies" runat="server" meta:resourcekey="chkGalleryAppsAlwaysIgnoreDependencies" Text="Always ignore dependencies" />
-			</td>
-		</tr>
-
-
-        <tr>
-			<td class="SubHead" colspan="2">Custom feeds:</td>
-		</tr>
-
-        <tr>
-			<td colspan="2"><uc6:EditFeedsList ID="wpiEditFeedsList" runat="server" DisplayNames="false" /><br/></td>
-		</tr>
-
-    </table>
-</fieldset>
-<br />
-
-<asp:Panel ID="FilterDialogPanel" runat="server" CssClass="PopupContainer" style="display:none" DefaultButton="OkButton">
-    <div class="widget">
-        <div class="widget-header clearfix">
-            <h3><i class="fa fa-list"></i> <scp:PopupHeader runat="server" meta:resourcekey="popWebAppGalleryFilter" Text="Web Application Gallery Filter" /></h3>
-        </div>
-        <div class="widget-content">
-			<div class="BorderFillBox" style="padding: 5px 5px 5px 5px; overflow-y: scroll; width: auto; height: 300px;">
-				<asp:CheckBoxList runat="server" ID="WebAppGalleryList" DataSourceID="WebAppGalleryListDS" 
-					DataValueField="Id" DataTextField="Title" OnDataBound="WebAppGalleryList_DataBound">
-				</asp:CheckBoxList>
-			</div>
-            <br /><br />
-            <asp:Button ID="OkButton" runat="server" CssClass="Button1" Text="Apply" CausesValidation="false" />
-            <asp:Button ID="ResetButton" runat="server" CssClass="Button1" Text="Reset" OnClick="ResetButton_Click" CausesValidation="false" />
-            <asp:Button ID="CancelButton" runat="server" CssClass="Button1" Text="Cancel" CausesValidation="false" />
-	
-	<asp:ObjectDataSource runat="server" ID="WebAppGalleryListDS" TypeName="SolidCP.Portal.WebAppGalleryHelpers" 
-		SelectMethod="GetGalleryApplicationsByServiceId">
-		<SelectParameters>
-			<asp:QueryStringParameter Name="serviceId" QueryStringField="ServiceID" Type="Int32" />
-		</SelectParameters>
-	</asp:ObjectDataSource>
-            </div>
-	</div>
-</asp:Panel>
-
 <ajaxToolkit:ModalPopupExtender ID="FilterDialogModal" runat="server"
     TargetControlID="FilterDialogButton" PopupControlID="FilterDialogPanel"
     BackgroundCssClass="modalBackground" DropShadow="false" CancelControlID="CancelButton" 
