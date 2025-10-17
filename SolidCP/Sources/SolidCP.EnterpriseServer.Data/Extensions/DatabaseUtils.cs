@@ -153,11 +153,11 @@ namespace SolidCP.EnterpriseServer.Data
 		{
 			if (String.IsNullOrEmpty(dbLogin) && String.IsNullOrEmpty(dbPassw))
 			{
-				return String.Format("DbType=SqlServer;Server={0};Database={1};Integrated Security=SSPI;TrustServerCertificate=true;", dbServer, dbName);
+				return String.Format("DbType=SqlServer;Server={0};Initial Catalog={1};Integrated Security=SSPI;TrustServerCertificate=true;", dbServer, dbName);
 			}
 			else
 			{
-				return String.Format("DbType=SqlServer;Server={0};Database={1};User id={2};Password={3};TrustServerCertificate=true;", dbServer, dbName, dbLogin, dbPassw);
+				return String.Format("DbType=SqlServer;Server={0};Initial Catalog={1};User id={2};Password={3};TrustServerCertificate=true;", dbServer, dbName, dbLogin, dbPassw);
 			}
 		}
 

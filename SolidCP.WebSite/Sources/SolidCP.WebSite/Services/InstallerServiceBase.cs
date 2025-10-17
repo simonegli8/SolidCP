@@ -40,6 +40,7 @@ using System.Data;
 using System.Xml.Linq;
 using System.Diagnostics;
 using System.Runtime.Remoting.Lifetime;
+using System.Text.RegularExpressions;
 
 namespace SolidCP.WebSite.Services
 {
@@ -125,7 +126,14 @@ namespace SolidCP.WebSite.Services
 			return GetComponentUpdate(componentCode, release, IncludeBeta);
 		}
 
-		#endregion
+        [WebMethod]
+        public string GetFileDownloadUrl(string fileName)
+        {
+            var url = HttpContext.Current.Request.RawUrl;
+            url = Regex.Replace(url, @"Services/[^/]+$", "");
+            return fileName.Replace("~", url);
+        }
+        #endregion
 
         public DataSet GetLatestComponentUpdate(string componentCode, bool includeBeta)
         {
@@ -323,6 +331,7 @@ namespace SolidCP.WebSite.Services
             }
             return content;
         }
+
 
         private XDocument GetReleasesFeed()
         {

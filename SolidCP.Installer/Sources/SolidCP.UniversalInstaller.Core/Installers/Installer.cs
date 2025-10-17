@@ -1,3 +1,4 @@
+using Claunia.PropertyList;
 using Microsoft.Identity.Client;
 using Microsoft.Web.Administration;
 using Newtonsoft.Json;
@@ -61,7 +62,6 @@ public abstract partial class Installer
 
 	public const bool UseHttpsOnWindows = true;
 	public const bool UseLettuceEncrypt = false;
-
 	public Action OnExit { get; set; }
 	public Action<Exception> OnError { get; set; }
 
@@ -494,25 +494,25 @@ public abstract partial class Installer
 		return a.Equals(b, StringComparison.OrdinalIgnoreCase) ||
 			a.Replace(" ", "").Equals(b.Replace(" ", ""), StringComparison.OrdinalIgnoreCase);
 	}
-	public void RunUnattended()
+	public async Task RunUnattended()
 	{
 		UI.ShowWaitCursor();
 
 		var releases = Installer.Current.Releases;
 
-		var components = releases.GetAvailableComponents();
+		var components = await releases.GetAvailableComponentsAsync();
 
 		var componentsToInstall = Settings.Installer.UnattendedInstallPackages.Split(',', ';')
 			.Select(name => name.Trim())
 			.Where(name => !string.IsNullOrEmpty(name))
 			.ToArray();
 
-		components = components.Where(c => componentsToInstall.Any(ci => Equals(c.ComponentName, ci) ||
-			Equals(c.ComponentCode, ci) || Equals(c.Component, ci)))
+		components = components
+			.Where(c => componentsToInstall.Any(ci => Equals(c.ComponentName, ci) ||
+				Equals(c.ComponentCode, ci) || Equals(c.Component, ci)))
+			.Where(c => OSInfo.IsWindows && c.Platforms.HasFlag(Platforms.Windows) ||
+				!OSInfo.IsWindows && c.Platforms.HasFlag(Platforms.Unix))
 			.ToList();
-
-		Settings.Installer.UnattendedInstallPackages = null;
-		SaveSettings();
 
 		var success = true;
 		foreach (var component in components)
@@ -521,7 +521,10 @@ public abstract partial class Installer
 			success &= RunSetup(component, Settings.Installer.Action);
 		}
 
-		UI.EndWaitCursor();
+        Settings.Installer.UnattendedInstallPackages = null;
+        SaveSettings();
+
+        UI.EndWaitCursor();
 
 		Exit(success ? 0 : 1);
 	}
@@ -559,7 +562,7 @@ public abstract partial class Installer
 			InstallLog("Removed .NET 8 Runtime");
 	}
 	public virtual string[] UserIsMemeberOf(CommonSettings settings) => new string[0];
-	public virtual void SetFilePermissions(string folder)
+	public virtual void SetFilePermissions(string folder, string user = null)
 	{
 		if (!Path.IsPathRooted(folder)) folder = Path.Combine(InstallWebRootPath, folder);
 
@@ -571,6 +574,13 @@ public abstract partial class Installer
 				UnixFileMode.UserRead | UnixFileMode.GroupRead | UnixFileMode.OtherRead |
 				UnixFileMode.UserExecute | UnixFileMode.GroupExecute, true);
 			InstallLog($"Granted file permissions on {folder}.");
+		}
+		else
+		{
+			if (!string.IsNullOrEmpty(user))
+			{
+				((WindowsInstaller)this).SetFolderPermission(folder, user, NtfsPermission.FullControl);
+			}
 		}
 	}
 	public virtual void SetFileOwner(string folder, string owner, string group)
@@ -808,7 +818,7 @@ public abstract partial class Installer
 		return tmp;
 	}
 	public string DownloadFile(string url) => DownloadFileAsync(url).Result;
-	public string SetupFilter(string file) => file != null && !file.StartsWith("Setup/") ? file : null;
+	public string SetupFilter(string file) => file != null && !Regex.IsMatch(file, @"^(?:[a-zA-Z ]+/)?Setup(?:/|$)") ? file : null;
 	public string Net48Filter(string file)
 	{
 		file = SetupFilter(file);
@@ -978,6 +988,7 @@ public abstract partial class Installer
 				Log.ProgressOne();
 			}
 		}
+		Log.WriteLine();
 	}
 
 	public void UnzipFromStream(Stream resource, string destinationPath, Func<string, string> filter = null)
@@ -1119,9 +1130,10 @@ public abstract partial class Installer
 					{
 						if (csb["Data Source"] != null)
 						{
-							csb["Data Source"] = Path.Combine(Settings.WebPortal.EnterpriseServerPath, (string)csb["Data Source"]);
+							var cspath = (string)csb["Data Source"];
+							cspath = Regex.Replace(cspath, $@"^\.\.{Regex.Escape(Path.DirectorySeparatorChar.ToString())}", "");
+							csb["Data Source"] = Path.Combine("..", Settings.WebPortal.EnterpriseServerPath, cspath);
 						}
-						csb["Data Source"] = Path.Combine(Settings.WebPortal.EnterpriseServerPath, (string)csb["Data Source"]);
 						appsettings.EnterpriseServer.ConnectionString = csb.ConnectionString;
 					}
 				}
@@ -1132,6 +1144,16 @@ public abstract partial class Installer
 		{
 			var connectionString = DatabaseUtils.BuildConnectionString(esettings.DatabaseType, esettings.DatabaseServer,
 				esettings.DatabasePort, esettings.DatabaseName, esettings.DatabaseUser, esettings.DatabasePassword, null, false);
+			var csb = new ConnectionStringBuilder(connectionString);
+			if ((csb["DbType"] as string)?.Contains("Sqlite") == true)
+			{
+				if (csb["Data Source"] != null)
+				{
+					csb["Data Source"] = Path.Combine("..", (string)csb["Data Source"]);
+				}
+				connectionString = csb.ConnectionString;
+			}
+
 			appsettings.EnterpriseServer = new AppSettings.EnterpriseServerSetting()
 			{
 				CryptoKey = esettings.CryptoKey ?? CryptoUtils.GetRandomString(20),
@@ -1278,6 +1300,8 @@ public abstract partial class Installer
 
 	public virtual void WaitForDownloadToComplete()
 	{
+		Info("Download & Unzip Component...");
+
 		var progressFile = Path.Combine(TempPath, SetupLoader.DownloadProgressFile);
 		var nofFilesFile = Path.Combine(TempPath, SetupLoader.NofFilesFile);
 		int n = 0;
@@ -1292,6 +1316,7 @@ public abstract partial class Installer
 			Thread.Sleep(50);
 			info = new FileInfo(progressFile);
 		}
+		while (n++ < 100) Log.ProgressOne();
 
 		if (File.Exists(nofFilesFile))
 		{
@@ -1299,6 +1324,7 @@ public abstract partial class Installer
 			Installer.Current.Files = int.Parse(fileTxt);
 			File.Delete(nofFilesFile);
 		}
+		Log.WriteLine();
 	}
 	public virtual ILoadContext LoadContext
 	{
@@ -1377,7 +1403,7 @@ public abstract partial class Installer
 					case OSFlavor.Alpine: current = new AlpineInstaller(); break;
 					default:
 						var assembly = Assembly.GetExecutingAssembly();
-						var type = assembly.GetType($"HostPanelPro.UniversalInstaller.{flavor}");
+						var type = assembly.GetType($"SolidCP.UniversalInstaller.{flavor}");
 						if (type != null) current = Activator.CreateInstance(type) as Installer;
 						else throw new PlatformNotSupportedException("This OS is not supported by the installer.");
 						break;
@@ -1427,7 +1453,7 @@ public abstract partial class Installer
 		File.Copy(entry, tmpFile);
 
 		//
-		string url = Installer.Current.Settings.Installer.WebServiceUrl;
+		string url = Releases.GetDownloadUrlAsync(new RemoteFile(component, false)).Result;
 		//
 		string proxyServer = string.Empty;
 		string user = string.Empty;
@@ -1461,7 +1487,7 @@ public abstract partial class Installer
 		sb.Append($"-ui={UI.Current.GetType().Name.Replace("UI", "").ToLower()} ");
 		sb.AppendFormat("-url:\"{0}\" ", url);
 		sb.AppendFormat("-target:\"{0}\" ", entry);
-		sb.AppendFormat("-file:\"{0}\" ", component.UpgradeFilePath);
+		//sb.AppendFormat("-file:\"{0}\" ", component.UpgradeFilePath);
 		sb.AppendFormat("-proxy:\"{0}\" ", proxyServer);
 		sb.AppendFormat("-user:\"{0}\" ", user);
 		sb.AppendFormat("-password:\"{0}\" ", password);

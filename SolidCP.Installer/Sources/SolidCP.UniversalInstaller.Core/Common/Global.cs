@@ -153,7 +153,7 @@ namespace SolidCP.UniversalInstaller
             public const string SetupController = "WebDavPortal";
 			public const string DefaultDbServer = @"localhost\sqlexpress";
 			public const string DefaultDatabase = "SolidCP";
-			public const string AspNetConnectionStringFormat = "server={0};database={1};uid={2};pwd={3};";
+			public const string AspNetConnectionStringFormat = "server={0};Initial Catalog={1};uid={2};pwd={3};";
 
 			public static string[] ServiceUserMembership
             {
@@ -221,7 +221,7 @@ namespace SolidCP.UniversalInstaller
 			public const string DefaultDomain = "";
 			public const string DefaultDbServer = @"localhost\sqlexpress";
 			public const string DefaultDatabase = "SolidCP";
-			public const string AspNetConnectionStringFormat = "server={0};database={1};uid={2};pwd={3};";
+			public const string AspNetConnectionStringFormat = "server={0};Initial Catalog={1};uid={2};pwd={3};";
 			public const string ComponentCode = "enterprise server";
 			public const string SetupController = "EnterpriseServer";
 

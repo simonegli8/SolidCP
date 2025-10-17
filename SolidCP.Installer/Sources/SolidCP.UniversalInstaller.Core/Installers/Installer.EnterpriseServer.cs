@@ -1,18 +1,18 @@
-using System;
-using System.Reflection;
+using SolidCP.EnterpriseServer.Data;
 using SolidCP.Providers;
-using SolidCP.Providers.Web;
+using SolidCP.Providers.Common;
 using SolidCP.Providers.OS;
 using SolidCP.Providers.Utils;
-using SolidCP.EnterpriseServer.Data;
-using System.Globalization;
-using System.Security.Policy;
-using System.Diagnostics.Contracts;
-using System.Net.Http;
-using System.Text.RegularExpressions;
+using SolidCP.Providers.Web;
+using System;
 using System.Data;
+using System.Diagnostics.Contracts;
+using System.Globalization;
+using System.Net.Http;
+using System.Reflection;
+using System.Security.Policy;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using SolidCP.Providers.Common;
 
 namespace SolidCP.UniversalInstaller;
 
@@ -24,7 +24,26 @@ public abstract partial class Installer
 	public virtual void RemoveEnterpriseServerPrerequisites() { }
 	public virtual void CreateEnterpriseServerUser() => CreateUser(Settings.EnterpriseServer);
 	public virtual void RemoveEnterpriseServerUser() => RemoveUser(Settings.EnterpriseServer.Username);
-	public virtual void SetEnterpriseServerFilePermissions() => SetFilePermissions(Settings.EnterpriseServer.InstallPath);
+	public virtual void SetEnterpriseServerFilePermissions()
+	{
+		if (!OSInfo.IsWindows) SetFilePermissions(Settings.EnterpriseServer.InstallPath);
+		else
+		{
+			var user = Settings.WebPortal.EmbedEnterpriseServer ? Settings.WebPortal.Username : Settings.EnterpriseServer.Username;
+			if (!string.IsNullOrEmpty(user))
+			{
+				SetFilePermissions(Settings.EnterpriseServer.InstallPath, user);
+			}
+			if (Settings.WebPortal.EmbedEnterpriseServer)
+			{
+				user = Settings.EnterpriseServer.Username;
+				if (!string.IsNullOrEmpty(user))
+				{
+					SetFilePermissions(Settings.EnterpriseServer.InstallPath, user);
+				}
+			}
+		}
+	}
 	public virtual void SetEnterpriseServerFileOwner()
 	{
 		var user = string.IsNullOrEmpty(Settings.EnterpriseServer.Username) && Settings.WebPortal.EmbedEnterpriseServer ?
@@ -38,11 +57,11 @@ public abstract partial class Installer
 		InstallEnterpriseServerPrerequisites();
 		CopyEnterpriseServer(true, this.StandardInstallFilter);
 		CreateEnterpriseServerUser();
-		SetEnterpriseServerFilePermissions();
-		SetEnterpriseServerFileOwner();
 		InstallDatabase();
 		ConfigureEnterpriseServer();
 		InstallSchedulerService();
+		SetEnterpriseServerFilePermissions();
+		SetEnterpriseServerFileOwner();
 		InstallEnterpriseServerWebsite();
 	}
 	public virtual void UpdateEnterpriseServer()
@@ -53,13 +72,13 @@ public abstract partial class Installer
 		RemoveSchedulerService();
 		DisableEnterpriseServerWebsite();
 		CopyEnterpriseServer(true, StandardUpdateFilter);
-		SetEnterpriseServerFilePermissions();
-		SetEnterpriseServerFileOwner();
 		UpdateEnterpriseServerConfig();
 		ConfigureEnterpriseServer();
 		UpdateDatabase();
-		EnableEnterpriseServerWebsite();
 		InstallSchedulerService();
+		SetEnterpriseServerFilePermissions();
+		SetEnterpriseServerFileOwner();
+		EnableEnterpriseServerWebsite();
 	}
 	public void SetupEnterpriseServer()
 	{
@@ -211,13 +230,30 @@ public abstract partial class Installer
 		File.WriteAllText(configFile, config.ToString());
 	}
 
+	public virtual string ConnectionString()
+	{
+		var settings = Settings.EnterpriseServer;
+		var connstr = settings.DbInstallConnectionString;
+		if (settings.DatabaseType == EnterpriseServer.Data.DbType.Sqlite ||
+			settings.DatabaseType == EnterpriseServer.Data.DbType.SqliteFX)
+		{
+			var csb = new ConnectionStringBuilder(connstr);
+			if (csb["Data Source"] != null)
+			{
+				csb["Data Source"] = Path.Combine(Settings.EnterpriseServer.InstallPath, (string)csb["Data Source"]);
+			}
+			connstr = csb.ConnectionString;
+		}
+		return connstr;
+	}
+
 	public virtual void InstallDatabase()
 	{
 		Transaction(() =>
 		{
 			Info("Install Database...");
 			var settings = Settings.EnterpriseServer;
-			var connstr = settings.DbInstallConnectionString;
+			var connstr = ConnectionString();
 			if (string.IsNullOrEmpty(connstr) ||
 				!DatabaseUtils.CheckSqlConnection(connstr)) throw new DataException("Unable to connect to database.");
 			if (settings.DatabaseWindowsAuthentication)
@@ -230,7 +266,11 @@ public abstract partial class Installer
 			var password = settings.DatabasePassword ?? Utils.GetRandomString(20);
 			var db = settings.DatabaseName;
 
-			DatabaseUtils.InstallFreshDatabase(connstr, db, user, password, progress => Log.WriteLine("."));
+			Log.WriteLine($"Connection String: {connstr}; Database: {db}; User: {user}; Password {password}");
+
+			DatabaseUtils.InstallFreshDatabase(connstr, db, user, password, progress => Log.Write("."));
+
+			Log.WriteLine();
 
 			if (string.IsNullOrEmpty(settings.CryptoKey)) settings.CryptoKey = Utils.GetRandomString(20);
 
@@ -267,6 +307,7 @@ public abstract partial class Installer
 			settings.DatabaseName = databaseName;
 			settings.DatabaseUser = (csb["Uid"] ?? csb["User Id"]) as string;
 			settings.DatabasePassword = (csb["Pwd"] ?? csb["Password"]) as string;
+			settings.DatabaseType = EnterpriseServer.Data.DbType.SqlServer;
 		} else
 		{
 			var csb = new ConnectionStringBuilder(cstring);
@@ -275,9 +316,19 @@ public abstract partial class Installer
 			settings.DatabaseName ??= databaseName;
 			settings.DatabaseUser ??= (csb["Uid"] ?? csb["User Id"] ?? csb["User"] ?? csb["Username"]) as string;
 			settings.DatabasePassword ??= (csb["Pwd"] ?? csb["Password"]) as string;
+			settings.DatabaseType = (EnterpriseServer.Data.DbType)Enum.Parse(typeof(EnterpriseServer.Data.DbType), (csb["DbType"] ?? "SqlServer") as string, true);
+			if (settings.DatabaseType == EnterpriseServer.Data.DbType.Sqlite ||
+				settings.DatabaseType == EnterpriseServer.Data.DbType.SqliteFX)
+			{
+				if (csb["Data Source"] != null)
+				{
+					csb["Data Source"] = Path.GetFullPath(Path.Combine(Settings.EnterpriseServer.InstallPath, (string)csb["Data Source"]));
+				}
+				cstring = csb.ConnectionString;
+			}
 		}
 
-		DatabaseUtils.UpdateDatabase(settings.DbInstallConnectionString, settings.DatabaseName,
+		DatabaseUtils.UpdateDatabase(cstring, settings.DatabaseName,
 			settings.DatabaseUser, settings.DatabasePassword, dataNewVersion);
 
 		InstallLog("Updated Database");
@@ -286,7 +337,7 @@ public abstract partial class Installer
 	{
 		Info("Delete Database");
 		var settings = Settings.EnterpriseServer;
-		var connstr = settings.DbInstallConnectionString;
+		var connstr = ConnectionString();
 		DatabaseUtils.DeleteDatabase(connstr, settings.DatabaseName);
 		if (string.IsNullOrEmpty(settings.DatabaseUser))
 		{
@@ -304,7 +355,7 @@ public abstract partial class Installer
 	public virtual void CountInstallDatabaseStatements()
 	{
 		var settings = Settings.EnterpriseServer;
-		var connstr = settings.DbInstallConnectionString;
+		var connstr = ConnectionString();
 		if (string.IsNullOrEmpty(settings.DatabaseUser))
 		{
 			settings.DatabaseUser = settings.DatabaseName;
@@ -319,7 +370,7 @@ public abstract partial class Installer
 	public virtual void CountUpdateDatabaseStatements()
 	{
 		var settings = Settings.EnterpriseServer;
-		var connstr = settings.DbInstallConnectionString;
+		var connstr = ConnectionString();
 		var user = settings.DatabaseUser;
 		var password = settings.DatabasePassword;
 		var db = settings.DatabaseName;
@@ -347,9 +398,60 @@ public abstract partial class Installer
 
 	public virtual void EnableEnterpriseServerWebsite() { }
 	public virtual void DisableEnterpriseServerWebsite() { }
-	public virtual void InstallSchedulerService() { }
-	public virtual void RemoveSchedulerService() { }
-	public virtual void RemoveEnterpriseServerWebsite() {
+    public virtual string SchedulerServiceId => "SolidCP.SchedulerService";
+    public virtual void InstallSchedulerService() { }
+    public virtual void RemoveSchedulerService()
+    {
+        RemoveService(SchedulerServiceId);
+    }
+    public virtual void ConfigureSchedulerService()
+    {
+        ConfigureSchedulerServiceNetFX();
+    }
+    public virtual void ConfigureSchedulerServiceNetFX()
+    {
+        if (Settings.EnterpriseServer.RunOnNetCore) return;
+
+        var binFolder = (Settings.EnterpriseServer.RunOnNetCore ||
+            Settings.WebPortal.RunOnNetCore && Settings.WebPortal.EmbedEnterpriseServer) ?
+                "bin_dotnet" : Path.Combine("bin", "Code");
+        var config = Path.Combine(Settings.EnterpriseServer.InstallPath, binFolder, $"SolidCP.SchedulerService.{(Settings.EnterpriseServer.RunOnNetCore ? "dll" : "exe")}.config");
+
+        var xml = XElement.Load(config);
+
+        var conStrings = xml.Element("connectionStrings");
+        if (conStrings == null) xml.Add(conStrings = new XElement("connectionStrings"));
+        var appSettings = xml.Element("appSettings");
+        if (appSettings == null) xml.Add(appSettings = new XElement("appSettings"));
+
+        var conStrElement = conStrings.Elements("add").FirstOrDefault(e => e.Attribute("name")?.Value == "EnterpriseServer");
+        var esConfFile = Path.GetFullPath(Path.Combine(Settings.EnterpriseServer.InstallPath, "Web.config"));
+        if (File.Exists(esConfFile))
+        {
+            var esConf = XElement.Load(esConfFile);
+            var esAppSettings = esConf.Element("appSettings");
+
+            foreach (var esSetting in esAppSettings.Elements("add"))
+            {
+                var key = esSetting.Attribute("key")?.Value;
+                var setting = appSettings.Elements("add").FirstOrDefault(s => s.Attribute("key")?.Value == key);
+                if (setting == null)
+                {
+                    appSettings.Add(esSetting);
+                }
+                else
+                {
+                    setting.Attribute("value").SetValue(esSetting.Attribute("value")?.Value);
+                }
+            }
+
+            var esConStrings = esConf.Element("connectionStrings");
+            conStrings.ReplaceWith(esConStrings);
+
+            File.WriteAllText(config, xml.ToString());
+        }
+    }
+    public virtual void RemoveEnterpriseServerWebsite() {
 		RemoveWebsite(EnterpriseServerSiteId, Settings.EnterpriseServer);
 	}
 	public virtual void RemoveEnterpriseServerFolder()
@@ -362,9 +464,9 @@ public abstract partial class Installer
 	public virtual void RemoveEnterpriseServer()
 	{
 		RemoveEnterpriseServerWebsite();
+		DeleteDatabase();
 		RemoveEnterpriseServerFolder();
 		RemoveEnterpriseServerUser();
-		DeleteDatabase();
 	}
 	public virtual void ReadEnterpriseServerConfiguration() => ReadEnterpriseServerConfigurationNetFX();
 
@@ -461,7 +563,7 @@ public abstract partial class Installer
 				if (esConStrings != null)
 				{
 					var esConString = esConStrings.Elements("add").FirstOrDefault(e => e.Attribute("name")?.Value == "EnterpriseServer");
-					var esCstring = esConString?.Attribute("value")?.Value;
+					var esCstring = esConString?.Attribute("connectionString")?.Value;
 					if (esCstring != null)
 					{
 						var csb = new ConnectionStringBuilder(esCstring);
@@ -471,8 +573,7 @@ public abstract partial class Installer
 							{
 								csb["Data Source"] = Path.Combine(Settings.WebPortal.EnterpriseServerPath, (string)csb["Data Source"]);
 							}
-							csb["Data Source"] = Path.Combine(Settings.WebPortal.EnterpriseServerPath, (string)csb["Data Source"]);
-							esConString.Attribute("value").SetValue(csb.ConnectionString);
+							esConString.Attribute("connectionString").SetValue(csb.ConnectionString);
 						}
 					}
 				}
@@ -530,7 +631,8 @@ public abstract partial class Installer
 	{
 		ConfigureEnterpriseServerNetCore();
 		ConfigureEnterpriseServerNetFX();
-		InstallLog("Configured Enterprise Server.");
+        ConfigureSchedulerService();
+        InstallLog("Configured Enterprise Server.");
 	}
 	public virtual void CopyEnterpriseServer(bool clearDestination = false, Func<string, string> filter = null)
 	{

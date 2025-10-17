@@ -127,7 +127,8 @@
             <FilesToMove Include="bin\Microsoft.IdentityModel.*" />
             <FilesToMove Include="bin\Microsoft.Practices.*" />
             <FilesToMove Include="bin\Mono.Posix.*" />
-            <FilesToMove Include="bin\MySql.*" />
+			<FilesToMove Include="bin\Mono.Unix.*" />
+			<FilesToMove Include="bin\MySql.*" />
             <FilesToMove Include="bin\Microsoft.Extensions.*" />
             <FilesToMove Include="bin\SolidCP.Server.WPIService.*" />
             <FilesToMove Include="bin\WPIServiceContract.*" />

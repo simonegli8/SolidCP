@@ -15,6 +15,7 @@ public class LaunchdServiceController : ServiceController
 	public override bool IsInstalled => OSInfo.IsMac;
 	public Shell Shell => Shell.Standard;
 	public override void SystemReboot() => Shell.Exec("launchctrl reboot");
+	string ServiceFile(string serviceId) => Path.Combine(ServicesDirectory, $"{serviceId}.plist");
 	public override IEnumerable<OSService> All()
 	{
 		var servicesText = Shell.Exec("launchctl list").Output().Result;
@@ -46,17 +47,26 @@ public class LaunchdServiceController : ServiceController
 
 	public override OSService Info(string serviceId)
 	{
-		var output = Shell.Exec($"launchctl list {serviceId}").Output().Result;
+		var output = Shell.Exec($"launchctl print system/{serviceId}").Output().Result;
 		if (output == null) return null;
-		var match = Regex.Match(output, @"^\s*Loaded:\s*(?<loaded>[^\s$]+).*?$(^.*$\r?\n)*\s*Active:\s*(?<active>[^\s$]+)\s+\((?<status>[^\)]+)\)", RegexOptions.Multiline);
-		string loaded, active, status = null;
+		var exists = Regex.IsMatch(output, @"^\s*(?<id>[^\n]*?)[ \t]*=[ \t]*{[ \t]*\r?\n", RegexOptions.Singleline);
+		if (!exists)
+		{
+			if (File.Exists(ServiceFile(serviceId))) return new OSService()
+			{
+				Id = serviceId,
+				Name = serviceId,
+				Description = "",
+				Status = OSServiceStatus.Stopped
+			};
+			else return null;
+		}
+		var match = Regex.Match(output, @"^\s*state\s*=\s*(?<state>.+?)\s*?$", RegexOptions.Multiline);
+		string status = null;
 		if (match.Success)
 		{
-			loaded = match.Groups["loaded"].Value;
-			active = match.Groups["active"].Value;
-			status = match.Groups["status"].Value;
+			status = match.Groups["state"].Value;
 		}
-		else return null;
 
 		return new OSService()
 		{
@@ -75,7 +85,7 @@ public class LaunchdServiceController : ServiceController
 			if (status == OSServiceStatus.PausePending || status == OSServiceStatus.Paused ||
 				status == OSServiceStatus.Stopped || status == OSServiceStatus.StopPending)
 			{
-				Shell.Exec($"launchctl stop {serviceId}");
+				Shell.Exec($"launchctl bootout system {ServiceFile(serviceId)}");
 			}
 		}
 		else
@@ -83,14 +93,16 @@ public class LaunchdServiceController : ServiceController
 			if (status == OSServiceStatus.StartPending || status == OSServiceStatus.Running ||
 				status == OSServiceStatus.ContinuePending)
 			{
-				Shell.Exec($"launchctl start {serviceId}");
+				Shell.Exec($"launchctl bootstrap system {ServiceFile(serviceId)}");
 			}
 		}
 	}
 	public override void Remove(string serviceId)
 	{
-		Shell.Exec($"launchctl disable system {serviceId}");
-		Shell.Exec($"launchctl unload system {serviceId}");
+		var serviceFile = Path.Combine(ServicesDirectory, $"{serviceId}.plist");
+
+		Shell.Exec($"launchctl disable system/{serviceId}");
+		Shell.Exec($"launchctl bootout  system {ServiceFile(serviceId)}");
 	}
 
 	public override ServiceManager Install(ServiceDescription serviceDescription)
@@ -99,7 +111,7 @@ public class LaunchdServiceController : ServiceController
 		if (srvc == null) throw new ArgumentException("Service description is not of type LaunchdServiceDescription");
 
 		var serviceId = srvc.ServiceId;
-		var serviceFile = Path.Combine(ServicesDirectory, $"{serviceId}.plist");
+		var serviceFile = ServiceFile(serviceId);
 		var dict = new NSDictionary();
 		dict.Add("Label", serviceId);
 		if (srvc.Program != null)
@@ -117,21 +129,26 @@ public class LaunchdServiceController : ServiceController
 						.Select(m => m.Value.Length > 2 && m.Value[0] == '"' && m.Value[m.Value.Length - 1] == '"' ?
 							m.Value.Substring(1, m.Value.Length - 2) : m.Value))
 						.ToArray();
-				dict.Add("ProgramArguments", args);
+				dict.Add("ProgramArguments", new NSArray(args
+					.Select(arg => new NSString(arg))
+					.ToArray()));
 			}
 		}
 
 		if (srvc.UserName != null) dict.Add("UserName", srvc.UserName);
 		if (srvc.OnDemand != null) dict.Add("OnDemand", srvc.OnDemand);
 		if (srvc.StartOnMount != null) dict.Add("StartOnMount", srvc.StartOnMount);
-		if (srvc.OnDemand != null) dict.Add("OnDemand", srvc.OnDemand);
 		if (srvc.QueueDirectories != null && srvc.QueueDirectories.Count > 0)
 		{
-			dict.Add("QueueDirectories", srvc.QueueDirectories);
+			dict.Add("QueueDirectories", new NSArray(srvc.QueueDirectories
+				.Select(dir => new NSString(dir))
+				.ToArray()));
 		}
 		if (srvc.WatchPaths != null && srvc.WatchPaths.Count > 0)
 		{
-			dict.Add("WatchPaths", srvc.WatchPaths);
+			dict.Add("WatchPaths", new NSArray(srvc.WatchPaths
+				.Select(dir => new NSString(dir))
+				.ToArray()));
 		}
 		if (srvc.StartInterval != null) dict.Add("StartInterval", srvc.StartInterval);
 		if (srvc.RunAtLoad != null) dict.Add("RunAtLoad", srvc.RunAtLoad);
@@ -145,15 +162,29 @@ public class LaunchdServiceController : ServiceController
 		if (srvc.SessionCreate != null) dict.Add("SessionCreate", srvc.SessionCreate);
 		if (srvc.KeepAlive != null) dict.Add("KeepAlive", srvc.KeepAlive);
 		if (srvc.ExitTimeout != null) dict.Add("ExitTimeout", srvc.ExitTimeout);
-		if (srvc.Environment != null && srvc.Environment.Count > 0) dict.Add("EnvironmentVariables", srvc.Environment);
+		if (srvc.Environment != null && srvc.Environment.Count > 0)
+		{
+			var env = new NSDictionary();
+			foreach (var kvp in srvc.Environment) env.Add(kvp.Key, kvp.Value);
+			dict.Add("EnvironmentVariables", env);
+		}
 
 		using (var file = File.Create(serviceFile))
 		{
 			PropertyListParser.SaveAsXml(dict, file);
 		}
-		Shell.Exec($"launchctl load -w {serviceFile}");
-		Shell.Exec($"launchctl enable system {serviceId}");
+		Shell.Exec($"launchctl bootstrap system {serviceFile}");
+		Shell.Exec($"launchctl enable system/{serviceId}");
 
 		return new ServiceManager(this, serviceId);
+	}
+
+	public override void Enable(string serviceId)
+	{
+		Shell.Exec($"launchctl enable system/{serviceId}");
+	}
+	public override void Disable(string serviceId)
+	{
+		Shell.Exec($"launchctl disable system/{serviceId}");
 	}
 }

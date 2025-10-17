@@ -1494,7 +1494,7 @@ Best regards,
 		userName=""#WebSite.WebDeployPublishingAccount#""
 		userPWD=""#WebSite.WebDeployPublishingPassword#""
 		destinationAppUrl=""http://#WebSite.Name#/""
-		<ad:if test=""#Not(IsNull(MsSqlDatabase)) and Not(IsNull(MsSqlUser))#"">SQLServerDBConnectionString=""server=#MsSqlServerExternalAddress#;database=#MsSqlDatabase.Name#;uid=#MsSqlUser.Name#;pwd=#MsSqlUser.Password#""</ad:if>
+		<ad:if test=""#Not(IsNull(MsSqlDatabase)) and Not(IsNull(MsSqlUser))#"">SQLServerDBConnectionString=""server=#MsSqlServerExternalAddress#;Initial Catalog=#MsSqlDatabase.Name#;uid=#MsSqlUser.Name#;pwd=#MsSqlUser.Password#""</ad:if>
 		<ad:if test=""#Not(IsNull(MySqlDatabase)) and Not(IsNull(MySqlUser))#"">mySQLDBConnectionString=""server=#MySqlAddress#;database=#MySqlDatabase.Name#;uid=#MySqlUser.Name#;pwd=#MySqlUser.Password#""</ad:if>
 		<ad:if test=""#Not(IsNull(MariaDBDatabase)) and Not(IsNull(MariaDBUser))#"">MariaDBDBConnectionString=""server=#MariaDBAddress#;database=#MariaDBDatabase.Name#;uid=#MariaDBUser.Name#;pwd=#MariaDBUser.Password#""</ad:if>
 		hostingProviderForumLink=""https://solidcp.com/support""
@@ -1510,7 +1510,7 @@ Best regards,
 		userName=""#FtpAccount.Name#""
 		userPWD=""#FtpAccount.Password#""
 		destinationAppUrl=""http://#WebSite.Name#/""
-		<ad:if test=""#Not(IsNull(MsSqlDatabase)) and Not(IsNull(MsSqlUser))#"">SQLServerDBConnectionString=""server=#MsSqlServerExternalAddress#;database=#MsSqlDatabase.Name#;uid=#MsSqlUser.Name#;pwd=#MsSqlUser.Password#""</ad:if>
+		<ad:if test=""#Not(IsNull(MsSqlDatabase)) and Not(IsNull(MsSqlUser))#"">SQLServerDBConnectionString=""server=#MsSqlServerExternalAddress#;Initial Catalog=#MsSqlDatabase.Name#;uid=#MsSqlUser.Name#;pwd=#MsSqlUser.Password#""</ad:if>
 		<ad:if test=""#Not(IsNull(MySqlDatabase)) and Not(IsNull(MySqlUser))#"">mySQLDBConnectionString=""server=#MySqlAddress#;database=#MySqlDatabase.Name#;uid=#MySqlUser.Name#;pwd=#MySqlUser.Password#""</ad:if>
 		<ad:if test=""#Not(IsNull(MariaDBDatabase)) and Not(IsNull(MariaDBUser))#"">MariaDBDBConnectionString=""server=#MariaDBAddress#;database=#MariaDBDatabase.Name#;uid=#MariaDBUser.Name#;pwd=#MariaDBUser.Password#""</ad:if>
 		hostingProviderForumLink=""https://solidcp.com/support""

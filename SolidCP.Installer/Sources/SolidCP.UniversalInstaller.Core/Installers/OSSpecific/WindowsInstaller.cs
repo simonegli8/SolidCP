@@ -558,7 +558,7 @@ public class WindowsInstaller : Installer
 
 	}
 
-	private void SetFolderPermission(string path, string account, NtfsPermission permission)
+	public void SetFolderPermission(string path, string account, NtfsPermission permission)
 	{
 		try
 		{
@@ -803,7 +803,6 @@ public class WindowsInstaller : Installer
 			File.WriteAllText(config, xml.ToString());
 		}
 	}
-	public virtual string SchedulerServiceId => "SolidCP.SchedulerService";
 	public override void InstallSchedulerService()
 	{
 		var services = OSInfo.Current.ServiceController;

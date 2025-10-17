@@ -22,8 +22,8 @@
         <OutputPath>..\SolidCP.EnterpriseServer\bin_dotnet</OutputPath>
     </PropertyGroup>
 
-    <ItemGroup>
-        <Reference Include="System.Configuration.Install" />
+	<ItemGroup Condition="$(TargetFramework) == 'net48'">
+		<Reference Include="System.Configuration.Install" />
         <Reference Include="System.Data.DataSetExtensions" />
         <Reference Include="Microsoft.CSharp" />
         <Reference Include="System.ServiceProcess" />

@@ -11489,7 +11489,7 @@
   <Resource>
     <File>App_GlobalResources\SolidCP_SharedResources.ascx.resx</File>
     <Key>WebAppGallery.DatabaseUserCannotAccessDatabase</Key>
-    <DefaultValue>f</DefaultValue>
+    <DefaultValue>Database user '{1}' cannot access selected database</DefaultValue>
   </Resource>
   <Resource>
     <File>App_GlobalResources\SolidCP_SharedResources.ascx.resx</File>

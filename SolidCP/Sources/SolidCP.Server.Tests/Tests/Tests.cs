@@ -53,7 +53,7 @@ public class Tests
 			catch (Exception ex)
 			{
 				throw;
-				Assert.Fail("Exception", ex);
+				Assert.Fail($"Exception {ex}");
 			}
 		}
 	}
@@ -157,7 +157,7 @@ public class Tests
 			catch (Exception ex)
 			{
 				throw;
-				Assert.Fail("Exception", ex);
+				Assert.Fail($"Exception {ex}");
 			}
 		}
 	}
@@ -201,12 +201,12 @@ public class Tests
 			catch (FaultException fex)
 			{
 				TestContext.WriteLine($"Fault: {fex};{fex.InnerException}");
-				Assert.Fail("FaultException", fex);
+				Assert.Fail($"Exception {fex}");
 			}
 			catch (Exception ex)
 			{
 				throw;
-				Assert.Fail("Exception", ex);
+				Assert.Fail($"Exception {ex}");
 			}
 		}
 	}

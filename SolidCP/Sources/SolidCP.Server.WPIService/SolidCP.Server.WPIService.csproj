@@ -28,11 +28,11 @@
 			<Private>False</Private>
 			<SpecificVersion>False</SpecificVersion>
 		</Reference>
-		<Reference Include="Microsoft.Web.PlatformInstaller.WebDeployShim">
+		<!--<Reference Include="Microsoft.Web.PlatformInstaller.WebDeployShim">
 			<HintPath>..\..\Lib\References\Microsoft\Microsoft.Web.PlatformInstaller.WebDeployShim.dll</HintPath>
 			<Private>False</Private>
 			<SpecificVersion>False</SpecificVersion>
-		</Reference>
+		</Reference>-->
 		<Reference Include="System.Runtime.Remoting" />
 		<Reference Include="System.Web" />
 	</ItemGroup>

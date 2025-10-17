@@ -79,7 +79,7 @@ SolidCP.EnterpriseServer.Data uses an additional setting in the connection strin
 the correct database type according to the `DbType` token in your connection string automatically. So for
 example correct connection strings would be:
 
-- SQL Server: `DbType=SqlServer;Server=(local);Database=SolidCP;uid=sa;pwd=Password12`
+- SQL Server: `DbType=SqlServer;Server=(local);Initial Catalog=SolidCP;uid=sa;pwd=Password12`
 - MySQL: `DbType=MySql;server=localhost;port=3306;database=SolidCP;uid=root;password=Password12`
 - MariaDB: `DbType=MariaDb;server=localhost;port=3306;database=SolidCP;uid=root;password=Password12`
 - SQLite: `DbType=Sqlite;data source=App_Data\SolidCP.sqlite`

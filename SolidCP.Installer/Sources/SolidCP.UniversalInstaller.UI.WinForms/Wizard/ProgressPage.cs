@@ -112,7 +112,7 @@ namespace SolidCP.UniversalInstaller.WinForms
 			}
 			else
 			{
-				lblProcess.Text = text;
+				lblProcess.Text = text.Replace("&", "&&");
 				Update();
 			}
 		}

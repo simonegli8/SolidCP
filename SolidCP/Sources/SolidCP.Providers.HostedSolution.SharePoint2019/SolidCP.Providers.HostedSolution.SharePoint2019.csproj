@@ -47,8 +47,7 @@
             <FilesToDelete Include="$(OutputPath)Mono.*" />
             <FilesToDelete Include="$(OutputPath)SolidCP.Providers.Base.*" />
             <FilesToDelete Include="$(OutputPath)SolidCP.Server.Utils.*" />
-            <FilesToDelete Include="$(OutputPath)SolidCP.Providers.HostedSolution.dll" />
-            <FilesToDelete Include="$(OutputPath)SolidCP.Providers.HostedSolution.pdb" />
+            <FilesToDelete Include="$(OutputPath)SolidCP.Providers.HostedSolution.*" />
             <FilesToDelete Include="$(OutputPath)Microsoft.Win32.*" />
         </ItemGroup>
         <Delete Files="@(FilesToDelete)" />

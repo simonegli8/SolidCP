@@ -104,7 +104,7 @@ namespace SolidCP.UniversalInstaller.Controls
 		/// <param name="remoteFile">URL of the file to be downloaded</param>
 		public void Start(RemoteFile remoteFile, Action<Exception> callback, bool setupOnly)
         {
-            appLoader = Core.SetupLoaderFactory.CreateFileLoader(remoteFile);
+            appLoader = new Core.SetupLoader(remoteFile);
             appLoader.SetupOnly = setupOnly;
 
             appLoader.OperationFailed += new EventHandler<Core.LoaderEventArgs<Exception>>(appLoader_OperationFailed);

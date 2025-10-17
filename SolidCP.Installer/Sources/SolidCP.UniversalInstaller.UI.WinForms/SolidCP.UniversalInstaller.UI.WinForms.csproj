@@ -48,16 +48,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\SolidCP.UniversalInstaller.Core\SolidCP.UniversalInstaller.Core.csproj" />
-        <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-            <HintPath>..\..\Lib\Microsoft.Web.Administration.dll</HintPath>
-            <Private>False</Private>
-            <SpecificVersion>False</SpecificVersion>
-        </Reference>
-        <Reference Include="Microsoft.Web.Management, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-            <HintPath>..\..\Lib\Microsoft.Web.Management.dll</HintPath>
-            <Private>False</Private>
-            <SpecificVersion>False</SpecificVersion>
-        </Reference>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="System.Resources.Extensions" Version="9.0.9" />
     </ItemGroup>

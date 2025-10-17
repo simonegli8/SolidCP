@@ -156,7 +156,10 @@ namespace SolidCP.EnterpriseServer.Data
 							break;
 						case DbType.Sqlite:
                         case DbType.SqliteFX:
-							dbConnection = SqliteDbConnection;
+#if NETCOREAPP
+                            SQLitePCL.Batteries_V2.Init();
+#endif
+                            dbConnection = SqliteDbConnection;
                             break;
 						case DbType.PostgreSql:
 							dbConnection = PostgreSqlDbConnection;
@@ -298,7 +301,8 @@ namespace SolidCP.EnterpriseServer.Data
 
         public DbContext()
         {
-            //SetDbConfiguration();
+            DynamicLibraries.Init();
+			//SetDbConfiguration();
 
 #if NETSTANDARD
             BaseContext = (IGenericDbContext)Activator.CreateInstance(ContextType, this);

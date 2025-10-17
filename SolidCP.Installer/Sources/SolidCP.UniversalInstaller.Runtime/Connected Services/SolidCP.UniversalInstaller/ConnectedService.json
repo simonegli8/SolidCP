@@ -37,6 +37,7 @@
       "Microsoft.Web.Deployment.Tracing, {Microsoft.Web.Deployment, 4.0.5}",
       "Microsoft.Win32.Registry, {Microsoft.Win32.Registry, 5.0.0}",
       "Mono.Posix, {Mono.Posix, 7.1.0-final.1.21458.1}",
+      "Mono.Unix, {Mono.Unix, 7.1.0-final.1.21458.1}",
       "MySql.Data, {MySql.Data, 9.2.0}",
       "Newtonsoft.Json, {Newtonsoft.Json, 13.0.3}",
       "Renci.SshNet, {SSH.NET, 2024.2.0}",

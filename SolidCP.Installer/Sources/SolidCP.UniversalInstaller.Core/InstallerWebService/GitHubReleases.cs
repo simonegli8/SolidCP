@@ -161,11 +161,8 @@ namespace SolidCP.UniversalInstaller
 			return component;
 		}
 
-		public async Task GetFileAsync(RemoteFile file, string destinationFile, Action<long, long> progress = null)
+		public async Task<string> GetDownloadUrl(RemoteFile file)
 		{
-			var destinationPath = Path.GetDirectoryName(destinationFile);
-			if (!Directory.Exists(destinationPath)) Directory.CreateDirectory(destinationPath);
-
 			var componentTasks = (await Repository.Release.GetAll(Owner, Repo))
 				.Select(release => ReleaseComponentsAsync(release));
 			var component = (await Task.WhenAll(componentTasks))
@@ -175,7 +172,14 @@ namespace SolidCP.UniversalInstaller
 					component.Component.UpgradeFilePath == file.Release.UpgradeFilePath);
 			var filename = file.FullFile ? component.Component.FullFilePath : component.Component.UpgradeFilePath;
 			filename = filename.Split('/').LastOrDefault();
-			var url = component.Release.Assets.FirstOrDefault(asset => asset.Name.EndsWith(filename))?.Url;
+			return component.Release.Assets.FirstOrDefault(asset => asset.Name.EndsWith(filename))?.Url;
+		}
+        public async Task GetFileAsync(RemoteFile file, string destinationFile, Action<long, long> progress = null)
+		{
+			var destinationPath = Path.GetDirectoryName(destinationFile);
+			if (!Directory.Exists(destinationPath)) Directory.CreateDirectory(destinationPath);
+
+			var url = await GetDownloadUrl(file);
 
 			const int BufferSize = 8 * 1024;
 

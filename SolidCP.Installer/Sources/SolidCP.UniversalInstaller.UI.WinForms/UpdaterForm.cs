@@ -355,7 +355,7 @@ namespace SolidCP.Updater
 		private void ShowError()
 		{
 			string message = "An unexpected error has occurred. We apologize for this inconvenience.\n" +
-				"Please contact Technical Support at info@hostpanelpro.com";
+				"Please contact Technical Support at info@solidcp.com";
 			MessageBox.Show(this, message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 	}

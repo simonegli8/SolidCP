@@ -4,7 +4,7 @@
 
 <asp:UpdatePanel ID="upUsage" runat="server" UpdateMode="Conditional">
     <ContentTemplate>
-        <asp:Timer ID="Timer1" runat="server" Interval="100" OnTick="Timer1_Tick" Enabled="false" />
+        <%-- <asp:Timer ID="Timer1" runat="server" Interval="100" OnTick="Timer1_Tick" Enabled="false" /> --%>
 
         <asp:UpdateProgress ID="loadProgress" runat="server" AssociatedUpdatePanelID="upUsage" DisplayAfter="0">
             <ProgressTemplate>

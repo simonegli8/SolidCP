@@ -145,9 +145,9 @@ namespace SolidCP.UniversalInstaller
 			try
 			{
 				OnWrite?.Invoke();
-				string line = string.Format("[{0:G}] {1}", DateTime.Now, message);
+				if (message != ".") message = string.Format("[{0:G}] {1}", DateTime.Now, message);
 				CloseProgress();
-				Trace.Write(line);
+				Trace.Write(message);
 			}
 			catch { }
 		}
@@ -157,8 +157,9 @@ namespace SolidCP.UniversalInstaller
 		/// Write line to log
 		/// </summary>
 		/// <param name="message"></param>
-		public virtual void WriteLine(string message)
+		public virtual void WriteLine(string message = null)
 		{
+			if (message == null) message = "";
 			try
 			{
 				OnWrite?.Invoke();

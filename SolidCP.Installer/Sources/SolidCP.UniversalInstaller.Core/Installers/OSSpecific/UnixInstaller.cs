@@ -16,7 +16,7 @@ namespace SolidCP.UniversalInstaller;
 
 public abstract class UnixInstaller : Installer
 {
-	public override string InstallExeRootPath { get => base.InstallExeRootPath ?? $"/usr/share/{SolidCP.ToLower()}"; set => base.InstallExeRootPath = value; }
+	public override string InstallExeRootPath { get => base.InstallExeRootPath ?? $"{UnixAppRootPath}/{SolidCP.ToLower()}"; set => base.InstallExeRootPath = value; }
 	public override string InstallWebRootPath { get => base.InstallWebRootPath ?? $"/var/www/{SolidCP.ToLower()}"; set => base.InstallWebRootPath = value; }
 	public override string WebsiteLogsPath => $"/var/log/{SolidCP.ToLower()}";
 	public override string UnixServerServiceId => "solidcp-server";
@@ -26,18 +26,23 @@ public abstract class UnixInstaller : Installer
 	public override string SolidCPUnixGroup => SolidCPGroup;
 	public UnixInstaller() : base() { }
 	bool installedAspNetCoreSharedServer = false;
-	public void InstallAspNetCoreSharedServer()
+	public virtual void InstallAspNetCoreSharedServer()
 	{
 		Log.WriteStart("Install AspNetCoreSharedServer");
 
-		const string AspNetCoreSharedServerVersion = "1.1.11";
+		const string AspNetCoreSharedServerVersion = "1.2.1";
 
 		if (installedAspNetCoreSharedServer) return;
 		installedAspNetCoreSharedServer = true;
 
-		Shell.Exec($"dotnet tool install AspNetCoreSharedServer -g --version {AspNetCoreSharedServerVersion}");
+        if (!OSInfo.IsMac) Shell.Exec($"dotnet tool install AspNetCoreSharedServer -g --version {AspNetCoreSharedServerVersion}");
+        else
+        {
+            if (!System.IO.Directory.Exists("/var/bin")) System.IO.Directory.CreateDirectory("/var/bin");
+            Shell.Exec($"dotnet tool install AspNetCoreSharedServer --tool-path /var/bin --version {AspNetCoreSharedServerVersion}");
+        }
 
-		AddUnixGroup("www-data");
+        AddUnixGroup("www-data");
 		AddUnixUser("www-data", "www-data", Utils.GetRandomString(16));
 
 		var conf = Configuration.Current;
@@ -46,14 +51,18 @@ public abstract class UnixInstaller : Installer
 			conf.Load();
 			conf.EnableHttp3 = false;
 			conf.User = "www-data";
+			conf.IdleTimeout = TimeSpan.FromMinutes(5);
+			conf.Recycle = TimeSpan.FromHours(29);
 			conf.Group = null;
 			conf.Save();
 		}
 
 		const string ServiceId = "aspnetcore-shared-server";
 		const string Description = "ASP.NET Core Shared Server support for shared hosting of ASP.NET Core applications";
-		const string Command = "/root/.dotnet/tools/AspNetCoreSharedServer";
-		string Directory = Path.GetDirectoryName(Command);
+        string Command;
+        if (!OSInfo.IsMac) Command = "/root/.dotnet/tools/AspNetCoreSharedServer";
+        else Command = "/var/bin/AspNetCoreSharedServer";
+        string Directory = Path.GetDirectoryName(Command);
 
 		ServiceDescription service;
 		if (IsSystemd)
@@ -108,7 +117,8 @@ public abstract class UnixInstaller : Installer
 				WorkingDirectory = Directory,
 				Environment = new Dictionary<string, string>()
 				{
-					{ "ASPNETCORE_ENVIRONMENT", "Production" }
+					{ "ASPNETCORE_ENVIRONMENT", "Production" },
+					{ "PATH", Environment.GetEnvironmentVariable("PATH") }
 				},
 				ExitTimeout = 30,
 				KeepAlive = true,
@@ -168,8 +178,99 @@ public abstract class UnixInstaller : Installer
 
 		Log.WriteEnd($"Created web site \"{name}\"");
 	}
+    public override void InstallSchedulerService()
+    {
+        var services = OSInfo.Current.ServiceController;
+        if (services.Info(SchedulerServiceId) != null) services.Remove(SchedulerServiceId);
 
-	public virtual void AddUnixGroup(string group) => Shell.Exec($"groupadd {group}");
+        ConfigureSchedulerService();
+
+        Transaction(() =>
+        {
+            var binFolder = (Settings.EnterpriseServer.RunOnNetCore ||
+                Settings.WebPortal.RunOnNetCore && Settings.WebPortal.EmbedEnterpriseServer) ?
+                    "bin_dotnet" : "bin\\Code";
+            var dll = Path.Combine(Settings.EnterpriseServer.InstallPath, binFolder, "SolidCP.SchedulerService.dll");
+            string Command = $"dotnet \"{dll}\"";
+            string Directory = Path.GetDirectoryName(dll);
+            string description = "SolidCP Scheduler Service";
+            ServiceDescription service;
+            if (IsSystemd)
+            {
+                service = new SystemdServiceDescription()
+                {
+                    ServiceId = SchedulerServiceId,
+                    Description = description,
+                    Executable = Command,
+                    Directory = Directory,
+                    DependsOn = new List<string>() { "network-online.target" },
+                    Environment = new Dictionary<string, string>()
+                {
+                    { "ASPNETCORE_ENVIRONMENT", "Production" }
+                },
+                    Restart = "on-failure",
+                    RestartSec = "1s",
+                    StartLimitBurst = "5",
+                    StartLimitIntervalSec = "500",
+                    User = "root",
+                    Group = "root",
+                    SyslogIdentifier = SchedulerServiceId
+                };
+            }
+            else if (IsOpenRC)
+            {
+                var rcservice = new OpenRCServiceDescription()
+                {
+                    ServiceId = SchedulerServiceId,
+                    Description = description,
+                    Environment = new Dictionary<string, string>()
+                {
+                    { "ASPNETCORE_ENVIRONMENT", "Production" }
+                },
+                    CommandUser = "root",
+                    Command = Command,
+                    WorkingDirectory = Directory,
+                    CommandBackground = true,
+                    PidFile = $"/run/{SchedulerServiceId}.pid",
+                    StopTimeout = 30
+                };
+                if (!OSInfo.IsWSL) rcservice.Need = "net";
+                service = rcservice;
+            }
+            else if (OSInfo.IsMac)
+            {
+                var log = Path.Combine(WebsiteLogsPath, $"{SchedulerServiceId}.log");
+                service = new LaunchdServiceDescription()
+                {
+                    Label = SchedulerServiceId,
+                    Executable = Command,
+                    WorkingDirectory = Directory,
+                    Environment = new Dictionary<string, string>()
+                {
+                    { "ASPNETCORE_ENVIRONMENT", "Production" }
+                },
+                    ExitTimeout = 30,
+                    KeepAlive = true,
+                    RunAtLoad = true,
+                    StandardOutPath = log,
+                    StandardErrorPath = log,
+                    StartOnMount = true
+                };
+            }
+            else throw new NotSupportedException("Only SystemD, OpenRC and Launchd are supported.");
+
+            InstallService(service);
+
+        }).WithRollback(() =>
+        {
+            try
+            {
+                RemoveSchedulerService();
+            }
+            catch { }
+        });
+    }
+    public virtual void AddUnixGroup(string group) => Shell.Exec($"groupadd {group}");
 	public virtual void AddUnixUser(string user, string group, string password)
 	{
 		if (string.IsNullOrEmpty(user) || string.IsNullOrEmpty(password)) return;

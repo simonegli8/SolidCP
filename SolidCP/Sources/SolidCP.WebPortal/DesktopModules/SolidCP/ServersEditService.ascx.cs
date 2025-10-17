@@ -30,36 +30,37 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE)  ARISING  IN  ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using Nito.AsyncEx;
+using SolidCP.EnterpriseServer;
 using System;
-using System.Data;
-using System.Configuration;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Configuration;
+using System.Data;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
-using System.Web.UI.HtmlControls;
-using System.Threading.Tasks;
-
-using SolidCP.EnterpriseServer;
 
 namespace SolidCP.Portal
 {
 	public partial class ServersEditService : SolidCPModuleBase
 	{
-
 		int ServiceId;
 		Task<ServiceInfo> service = null;
 		Task<ProviderInfo> provider = null;
 		Task<ResourceGroupInfo> resourceGroup = null;
-		
+
+		public AsyncLock ServiceLock = new AsyncLock();
 		async Task<ServiceInfo> Service()
 		{
-			lock (this)
+			using (var alock = await ServiceLock.LockAsync())
 			{
 				if (service == null)
 				{
@@ -68,23 +69,24 @@ namespace SolidCP.Portal
 			}
 			return await service;
 		}
-
-		async Task<ProviderInfo> Provider()
+        public AsyncLock ProviderLock = new AsyncLock();
+        async Task<ProviderInfo> Provider()
 		{
 			var service = await Service();
-			lock (this)
-			{
-				if (provider == null)
+            using (var alock = await ProviderLock.LockAsync())
+            {
+                if (provider == null)
 					provider = ES.Services.Servers.GetProviderAsync(service.ProviderId);
 			}
 			return await provider;
 		}
-		async Task<ResourceGroupInfo> ResourceGroup()
+        public AsyncLock ResourceLock = new AsyncLock();
+        async Task<ResourceGroupInfo> ResourceGroup()
 		{
 			var provider = await Provider();
-			lock (this)
-			{
-				if (resourceGroup == null)
+            using (var alock = await ResourceLock.LockAsync())
+            {
+                if (resourceGroup == null)
 				{
 					resourceGroup = ES.Services.Servers.GetResourceGroupAsync(provider.GroupId);
 				}
@@ -153,7 +155,7 @@ namespace SolidCP.Portal
 			if (ResourceGroups.VPS2012 == resourceGroup.GroupName || ResourceGroups.Os == resourceGroup.GroupName)
 			{
 				textProvider.Visible = false;
-				ddlProviders.DataSource = ES.Services.Servers.GetProvidersByGroupId(provider.GroupId);
+				ddlProviders.DataSource = await ES.Services.Servers.GetProvidersByGroupIdAsync(provider.GroupId);
 				ddlProviders.DataBind();
 				ddlProviders.SelectedValue = provider.ProviderId.ToString();
 			}
@@ -228,7 +230,6 @@ namespace SolidCP.Portal
 			// bind
 			ctrl.BindSettings(ConvertArrayToDictionary(settings));
 		}
-
 
 		private async Task ToggleGlobalDNS()
 		{
