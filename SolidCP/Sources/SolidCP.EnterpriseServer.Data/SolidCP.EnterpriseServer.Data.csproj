@@ -20,6 +20,7 @@
         <EntityFramework6>6.5</EntityFramework6>
         <PackageId>SolidCP.EnterpriseServer.Data</PackageId>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <DebugType>embedded</DebugType>
         <!-- Use EntityFramework 6.4 or 6.5 -->
     </PropertyGroup>
 
