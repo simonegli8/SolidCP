@@ -11,6 +11,10 @@
         <DebugType>embedded</DebugType>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <Optimize>false</Optimize>
+    </PropertyGroup>
+
     <PropertyGroup Condition="$(TargetFramework) == 'net48'">
         <AssemblyName>SolidCP.UniversalInstaller.UI.WinForms.NetFX</AssemblyName>
     </PropertyGroup>

@@ -12,9 +12,11 @@
         <StartupObject>SolidCP.UniversalInstaller.Core.Program</StartupObject>
         <DebugType>embedded</DebugType>
     </PropertyGroup>
+    
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <Optimize>false</Optimize>
     </PropertyGroup>
+    
     <ItemGroup>
       <Compile Remove="Common\Utils.Old.cs" />
     </ItemGroup>

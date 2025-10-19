@@ -24,6 +24,10 @@
         <!-- Use EntityFramework 6.4 or 6.5 -->
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <Optimize>false</Optimize>
+    </PropertyGroup>
+
     <PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
         <AssemblyName>SolidCP.EnterpriseServer.Data.NetFX</AssemblyName>
         <OutputType>Library</OutputType>
