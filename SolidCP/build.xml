@@ -483,7 +483,7 @@
 
 		<PropertyGroup>
 			<InstallerProjectRoot>$(RootFolder)\SolidCP.Installer\Sources\</InstallerProjectRoot>
-			<InstallerProjectBin>$(InstallerProjectRoot)SolidCP.UniversalInstaller\bin\$(BuildConfiguration)</InstallerProjectBin>
+			<InstallerProjectBin>$(InstallerProjectRoot)SolidCP.UniversalInstaller\bin\$(BuildConfiguration)\net8.0</InstallerProjectBin>
 		</PropertyGroup>
 
 		<Exec Command="dotnet restore /p:BuildWithNetFrameworkHostedCompiler=true $(InstallerProjectRoot)SolidCP.Installer.sln" />
@@ -501,38 +501,19 @@
 			<InstallerBinaries Include="$(InstallerProjectBin)\**\*.runtimeconfig.json" />
 			<SetupDll Include="$(InstallerProjectRoot)\SolidCP.Setup\bin\$(BuildConfiguration)\**\Setup2.dll" />
 			<SetupDll Include="$(InstallerProjectRoot)\SolidCP.Setup\bin\$(BuildConfiguration)\**\Setup2.pdb" />
-			<InstallerExe Include="$(InstallerProjectBin)\net48\SolidCP.Installer.exe" />
 		</ItemGroup>
 		<Copy SourceFiles="@(InstallerBinaries)" DestinationFolder="$(InstallerBuild)\%(RecursiveDir)" />
 		<Copy SourceFiles="@(SetupDll)" DestinationFolder="$(SetupBuildFolder)" />
-		<Copy SourceFiles="@(InstallerExe)" DestinationFolder="$(DeployFolder)" />
 
-		<!-- Compile updater.exe -->
-		<!--<MSBuild Projects="$(RootFolder)\SolidCP.Installer\Sources\SolidCP.Updater\SolidCP.Updater.csproj" Properties="Configuration=$(BuildConfiguration);Platform=$(Platform)" />-->
+        <!-- build MSI package -->
+        <Exec Command="&quot;$(DevEnv)&quot; &quot;$(InstallerProjectRoot)\HostPanelPro.Installer.Msi.sln&quot; /build &quot;$(BuildConfiguration)|$(Platform)&quot;" />
+        <ItemGroup>
+            <InstallerMsi Include="$(InstallerProjectRoot)\HostPanelPro.UniversalInstaller.Msi\$(BuildConfiguration)\*.msi" />
+        </ItemGroup>
+        <Copy SourceFiles="@(InstallerMsi)" DestinationFolder="$(BuildFolder)" />
+
 	</Target>
 	
-	<Target Name="CreateUniversalSetupBuild" DependsOnTargets="ZipDeploy">
-		<!-- Not needed anymore, use CreateSetupBuild -->
-		<PropertyGroup>
-			<InstallerProjectRoot>$(RootFolder)\SolidCP.Installer\Sources\</InstallerProjectRoot>
-			<InstallerProjectBin>$(InstallerProjectRoot)SolidCP.UniversalInstaller\bin\$(BuildConfiguration)\net48\</InstallerProjectBin>
-		</PropertyGroup>
-
-	    <Exec Command="dotnet restore /p:BuildWithNetFrameworkHostedCompiler=true $(InstallerProjectRoot)SolidCP.UniversalInstaller.sln" />
-
-		<!-- compile Installer -->
-		<MSBuild Projects="$(InstallerProjectRoot)SolidCP.UniversalInstaller.sln" Properties="Configuration=$(BuildConfiguration);Platform=$(Platform)" />
-
-		<!-- copy installer binaries for upgrade -->
-		<ItemGroup>
-			<!--<InstallerBinaries Include="$(InstallerProjectBin)\*.dll" />-->
-			<InstallerBinaries Include="$(InstallerProjectBin)\*.exe" />
-		</ItemGroup>
-		<Copy SourceFiles="@(InstallerBinaries)" DestinationFolder="$(DeployFolder)" />
-
-		<!-- build MSI package -->
-	</Target>
-
 	<Target Name="CreateInstallPackages" DependsOnTargets="ZipDeploy" Condition="'$(BuildLinuxInstallPackages)' == 'true'">
 		<PropertyGroup>
 			<InstallerProjectRoot>$(RootFolder)\SolidCP.Installer\Sources\</InstallerProjectRoot>
@@ -1117,10 +1098,8 @@
 		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-WebDavPortal-Update$(ZipExt)&quot; &quot;$(WebDavPortalUpdate)\*&quot;" />
 		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-EnterpriseServer-Update$(ZipExt)&quot; &quot;$(EnterpriseServerUpdate)\*&quot;" />
 		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-Server-Update$(ZipExt)&quot; &quot;$(ServerUpdate)\*&quot;" />
-		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\Manual-Update$(ZipExt)&quot; &quot;$(UpdateFolder)\*&quot;" />
-		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-Installer-$(Version)$(ZipExt)&quot; &quot;$(InstallerBuild)\net48\*&quot;" />
-		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-Installer-$(Version)-Update$(ZipExt)&quot; &quot;$(InstallerBuild)\*&quot;" />
-		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-Installer-Unix-$(Version).zip&quot; &quot;$(InstallerBuild)\net8.0\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-Manual-Update$(ZipExt)&quot; &quot;$(UpdateFolder)\*&quot;" />
+		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-Installer.zip&quot; &quot;$(InstallerBuild)\*&quot;" />
 
 		<!-- zip tools
 		<Zip Files="@(ImportCsvInstallFiles)" ZipFileName="$(ToolsFolder)\SolidCP-Import-CsvBulk-$(Version).zip" WorkingDirectory="$(ImportCsvInstall)" />
@@ -1130,8 +1109,13 @@
 		<Zip Files="@(AWStatsViewerInstallFiles)" ZipFileName="$(ToolsFolder)\SolidCP-AWStatsViewer-$(Version).zip" WorkingDirectory="$(AWStatsViewerInstall)" />
 		<Zip Files="@(SCPTransportAgentInstallFiles)" ZipFileName="$(ToolsFolder)\SolidCP-SCPTransportAgent-$(Version).zip" WorkingDirectory="$(SCPTransportAgentInstall)" />
 		-->
+        <ItemGroup>
+            <InstallerMsiFile Include="$(BuildFolder)\*.msi" />
+        </ItemGroup>
 
-		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(ToolsFolder)\SolidCP-Import-CsvBulk$(ZipExt)&quot; &quot;$(ImportCsvInstall)\*&quot;" />
+        <Copy SourceFiles="@(InstallerMsiFile)" DestinationFiles="$(DeployFolder)\SolidCP-Installer-$(Version).msi" />
+
+        <Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(ToolsFolder)\SolidCP-Import-CsvBulk$(ZipExt)&quot; &quot;$(ImportCsvInstall)\*&quot;" />
 		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(ToolsFolder)\SolidCP-HyperVUtils$(ZipExt)&quot; &quot;$(HyperVUtilsInstall)\*&quot;" />
 		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(ToolsFolder)\SolidCP-VMConfig$(ZipExt)&quot; &quot;$(VMConfigInstall)\*&quot;" />
 		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(ToolsFolder)\SolidCP-Import-Enterprise$(ZipExt)&quot; &quot;$(ImportEnterpriseInstall)\*&quot;" />
@@ -1242,7 +1226,7 @@
 	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-VMConfig$(ZipExt)" LocalFile="$(ToolsFolder)\SolidCP-VMConfig$(ZipExt)" />
 	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/Manual-Update$(ZipExt)" LocalFile="$(DeployFolder)\Manual-Update$(ZipExt)" />
     <FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-FixDefaultPublicFolderMailbox$(ZipExt)" LocalFile="$(ToolsFolder)\SolidCP-FixDefaultPublicFolderMailbox$(ZipExt)" />
-    <FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/Setup2.dll" LocalFile="$(DeployFolder)\Setup2.dll" />
+    <FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/Setup2.dll$(ZipExt)" LocalFile="$(DeployFolder)\Setup2.dll$(ZipExt)" />
   </Target>
 
   <Import Project="$(RootFolder)\tools\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
