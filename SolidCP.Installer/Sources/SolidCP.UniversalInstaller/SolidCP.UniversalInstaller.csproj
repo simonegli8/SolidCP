@@ -151,9 +151,11 @@
         <Delete Files="@(DllsToDelete)" />
     </Target>
 
-    <Target Name="CopyOutput" AfterTargets="Build" Condition="$(TargetFramework) == 'net48'">
+    <Target Name="CopyOutput" AfterTargets="Build" Condition="$(TargetFramework) == 'net8.0'">
         <ItemGroup>
-            <OutputExe Include="$(OutputPath)\**\SolidCP.Installer.exe" />
+            <OutputExe Include="$(OutputPath)\**\SolidCP.Installer.deps.json" />
+            <OutputExe Include="$(OutputPath)\**\SolidCP.Installer.runtimeconfig.json" />
+            <OutputExe Include="$(OutputPath)\**\SolidCP.Installer.*" />
         </ItemGroup>
         <Copy SourceFiles="@(OutputExe)" DestinationFolder="..\SolidCP.UniversalInstaller.Msi" />
     </Target>

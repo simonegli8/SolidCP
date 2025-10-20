@@ -56,8 +56,8 @@ namespace SolidCP.UniversalInstaller.WinForms
 		
 		public const bool SqlServerOnly = !Data.DbContext.SupportsEF;
         public bool MariaDbSupport => Data.DbContext.UsePomelo && Installer.Current.Settings.EnterpriseServer.RunOnNetCore;
-        public bool MySqlSupport => Data.DbContext.UsePomelo || Data.DbContext.UseMySql; // || !Installer.Current.Settings.EnterpriseServer.RunOnNetCore;
-
+        public bool MySqlSupport => (Data.DbContext.UsePomelo || Data.DbContext.UseMySql) &&
+			OSInfo.IsCore; // NetFX does not support MySQL Connector in different AppDomain
         public EnterpriseServerSettings Settings => Installer.Current.Settings.EnterpriseServer;
 		public WebPortalSettings WebPortalSettings => Installer.Current.Settings.WebPortal;
 

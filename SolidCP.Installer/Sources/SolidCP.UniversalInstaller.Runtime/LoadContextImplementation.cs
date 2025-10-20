@@ -50,6 +50,7 @@ public class LoadContextImplementation : MarshalByRefObject, ILoadContext
 	const bool AlwaysUseLoadContext = true;
 	const bool UseLocalSetupDllForDebugging = true;
 	public bool UseLocalSetupDll = false;
+	public bool UseSeparateAppDomain = true;
 
 #if NETCOREAPP
 	public AssemblyLoadContext AssemblyLoadContext { get; set; } = null;
@@ -107,7 +108,7 @@ public class LoadContextImplementation : MarshalByRefObject, ILoadContext
 			domain.InitializeLifetimeService();
 			//domain.UnhandledException += new UnhandledExceptionEventHandler(OnDomainUnhandledException);
 
-			if (!Debugger.IsAttached)
+			if (UseSeparateAppDomain && !Debugger.IsAttached)
 			{
 				/* loader = (AssemblyLoader)domain.CreateInstanceAndUnwrap(
 					typeof(AssemblyLoader).Assembly.FullName,

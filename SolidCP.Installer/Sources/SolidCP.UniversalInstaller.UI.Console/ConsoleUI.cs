@@ -581,9 +581,10 @@ when adding the server in SolidCP Portal.
 
         public const bool SqlServerOnly = !DbContext.SupportsEF;
         public bool MariaDbSupport => DbContext.UsePomelo && Installer.Current.Settings.EnterpriseServer.RunOnNetCore;
-        public bool MySqlSupport => DbContext.UsePomelo || DbContext.UseMySql; // || !Installer.Current.Settings.EnterpriseServer.RunOnNetCore;
+        public bool MySqlSupport => (DbContext.UsePomelo || DbContext.UseMySql) &&
+			OSInfo.IsCore; // NetFX does not support MySQL Connector in different AppDomain
 
-        public override UI.SetupWizard Database()
+		public override UI.SetupWizard Database()
 		{
 			var settings = Settings.EnterpriseServer;
 			AddInteractivePage(() =>
