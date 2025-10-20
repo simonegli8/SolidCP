@@ -241,7 +241,7 @@ namespace SolidCP.Providers.Database
             }
 
             //size in KB
-            database.DataSize = (int)(data + index) / 1024;
+            database.DataSize = (int)((data + index) / 1024);
 
             // get database uzers
             database.Users = GetDatabaseUsers(databaseName);
