@@ -33,12 +33,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9C502469DF204A58AC8C9F815820979C"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_BD9521DC66DF472CB4A4C4B377759436"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -46,6 +40,12 @@
         "Entry"
         {
         "MsmKey" = "8:_CB6C4A2B6CFB4E21B5740F9CFE359A18"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D2AFEEB9995A4D14BA48585CB8CA72D4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -127,31 +127,31 @@
     {
         "CustomAction"
         {
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_37F1C5FF9CD4432B8A35B12099FB4374"
-            {
-            "Name" = "8:SetPath"
-            "Condition" = "8:"
-            "Object" = "8:_9C502469DF204A58AC8C9F815820979C"
-            "FileType" = "3:2"
-            "InstallAction" = "3:1"
-            "Arguments" = "8:"
-            "EntryPoint" = "8:"
-            "Sequence" = "3:1"
-            "Identifier" = "8:_780D8DB3_311C_4BFB_9752_15EC9431E5E3"
-            "InstallerClass" = "11:TRUE"
-            "CustomActionData" = "8:"
-            }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_A51A559771ED48C59DB674F78CE6A9EC"
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_0E4647824C184103A5B15DC64444C058"
             {
             "Name" = "8:RemovePath"
             "Condition" = "8:"
-            "Object" = "8:_9C502469DF204A58AC8C9F815820979C"
-            "FileType" = "3:2"
+            "Object" = "8:_BD9521DC66DF472CB4A4C4B377759436"
+            "FileType" = "3:1"
             "InstallAction" = "3:4"
             "Arguments" = "8:"
             "EntryPoint" = "8:"
             "Sequence" = "3:1"
-            "Identifier" = "8:_D7675419_70D1_420A_BE9E_6662C9375EB7"
+            "Identifier" = "8:_4A674F1F_FC74_428F_AD0B_DE831AB9B254"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:"
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_D265E175335342308377C2EF9A03EC5C"
+            {
+            "Name" = "8:SetPath"
+            "Condition" = "8:"
+            "Object" = "8:_BD9521DC66DF472CB4A4C4B377759436"
+            "FileType" = "3:1"
+            "InstallAction" = "3:1"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_FEBBE0F2_DC32_4869_925F_BDD678C01377"
             "InstallerClass" = "11:TRUE"
             "CustomActionData" = "8:"
             }
@@ -238,37 +238,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9C502469DF204A58AC8C9F815820979C"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:SolidCP.Installer, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_9C502469DF204A58AC8C9F815820979C"
-                    {
-                    "Name" = "8:SolidCP.Installer.exe"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:SolidCP.Installer.exe"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_69534927F8764F848A73EDCFB8B13EC6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_BD9521DC66DF472CB4A4C4B377759436"
             {
             "AssemblyRegister" = "3:1"
@@ -304,6 +273,26 @@
             {
             "SourcePath" = "8:..\\SolidCP.UniversalInstaller\\Resources\\SolidCP.ico"
             "TargetName" = "8:SolidCP.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_69534927F8764F848A73EDCFB8B13EC6"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D2AFEEB9995A4D14BA48585CB8CA72D4"
+            {
+            "SourcePath" = "8:SolidCP.Installer.exe"
+            "TargetName" = "8:SolidCP.Installer.exe"
             "Tag" = "8:"
             "Folder" = "8:_69534927F8764F848A73EDCFB8B13EC6"
             "Condition" = "8:"
@@ -528,7 +517,7 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_2087B9FDECDD42AFA688B70C5E9A3DC5"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_8D00A265C4214054AA585C72CCFDABB0"
             {
             "Name" = "8:SolidCP Installer"
             "Arguments" = "8:"
@@ -536,24 +525,10 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_9C502469DF204A58AC8C9F815820979C"
+            "Target" = "8:_D2AFEEB9995A4D14BA48585CB8CA72D4"
             "Folder" = "8:_2368989E4B03471DA8EBE75CBA32AE89"
             "WorkingFolder" = "8:_69534927F8764F848A73EDCFB8B13EC6"
             "Icon" = "8:"
-            "Feature" = "8:"
-            }
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_7504F9D8EDC64AA2BBB1B9EE93805844"
-            {
-            "Name" = "8:SolidCP Installer"
-            "Arguments" = "8:"
-            "Description" = "8:"
-            "ShowCmd" = "3:1"
-            "IconIndex" = "3:0"
-            "Transitive" = "11:FALSE"
-            "Target" = "8:_9C502469DF204A58AC8C9F815820979C"
-            "Folder" = "8:_7CE85549734B4A438AECDF89FF12DC7D"
-            "WorkingFolder" = "8:_69534927F8764F848A73EDCFB8B13EC6"
-            "Icon" = "8:_CB6C4A2B6CFB4E21B5740F9CFE359A18"
             "Feature" = "8:"
             }
         }
