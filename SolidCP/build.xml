@@ -506,7 +506,7 @@
 		<Copy SourceFiles="@(SetupDll)" DestinationFolder="$(SetupBuildFolder)" />
 
         <!-- build MSI package -->
-        <Exec Command="&quot;$(DevEnv)&quot; &quot;$(InstallerProjectRoot)SolidCP.Installer.Msi.sln&quot; /build &quot;$(BuildConfiguration)|$(Platform)&quot;" />
+        <Exec Command="&quot;$(DevEnv)&quot; &quot;$(InstallerProjectRoot)SolidCP.UniversalInstaller.Msi.sln&quot; /build &quot;$(BuildConfiguration)|$(Platform)&quot;" />
         <ItemGroup>
             <InstallerMsi Include="$(InstallerProjectRoot)\HostPanelPro.UniversalInstaller.Msi\$(BuildConfiguration)\*.msi" />
         </ItemGroup>
