@@ -33,12 +33,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_BD9521DC66DF472CB4A4C4B377759436"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_CB6C4A2B6CFB4E21B5740F9CFE359A18"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -52,6 +46,12 @@
         "Entry"
         {
         "MsmKey" = "8:_D31DFB96B7DB41E8A589CCB792F17B04"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_FF2BD004F3A340F9B309E6A193D2C3FF"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -127,34 +127,6 @@
     {
         "CustomAction"
         {
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_0E4647824C184103A5B15DC64444C058"
-            {
-            "Name" = "8:RemovePath"
-            "Condition" = "8:"
-            "Object" = "8:_BD9521DC66DF472CB4A4C4B377759436"
-            "FileType" = "3:1"
-            "InstallAction" = "3:4"
-            "Arguments" = "8:"
-            "EntryPoint" = "8:"
-            "Sequence" = "3:1"
-            "Identifier" = "8:_4A674F1F_FC74_428F_AD0B_DE831AB9B254"
-            "InstallerClass" = "11:TRUE"
-            "CustomActionData" = "8:"
-            }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_D265E175335342308377C2EF9A03EC5C"
-            {
-            "Name" = "8:SetPath"
-            "Condition" = "8:"
-            "Object" = "8:_BD9521DC66DF472CB4A4C4B377759436"
-            "FileType" = "3:1"
-            "InstallAction" = "3:1"
-            "Arguments" = "8:"
-            "EntryPoint" = "8:"
-            "Sequence" = "3:1"
-            "Identifier" = "8:_FEBBE0F2_DC32_4869_925F_BDD678C01377"
-            "InstallerClass" = "11:TRUE"
-            "CustomActionData" = "8:"
-            }
         }
         "DefaultFeature"
         {
@@ -238,37 +210,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_BD9521DC66DF472CB4A4C4B377759436"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:SolidCP.Installer, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_BD9521DC66DF472CB4A4C4B377759436"
-                    {
-                    "Name" = "8:SolidCP.Installer.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:SolidCP.Installer.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_69534927F8764F848A73EDCFB8B13EC6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CB6C4A2B6CFB4E21B5740F9CFE359A18"
             {
             "SourcePath" = "8:..\\SolidCP.UniversalInstaller\\Resources\\SolidCP.ico"
@@ -313,6 +254,37 @@
             {
             "SourcePath" = "8:SolidCP.Installer.deps.json"
             "TargetName" = "8:SolidCP.Installer.deps.json"
+            "Tag" = "8:"
+            "Folder" = "8:_69534927F8764F848A73EDCFB8B13EC6"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_FF2BD004F3A340F9B309E6A193D2C3FF"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:SolidCP.Installer, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_FF2BD004F3A340F9B309E6A193D2C3FF"
+                    {
+                    "Name" = "8:SolidCP.Installer.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:SolidCP.Installer.dll"
+            "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_69534927F8764F848A73EDCFB8B13EC6"
             "Condition" = "8:"
@@ -397,7 +369,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:SolidCP Installer"
         "ProductCode" = "8:{A6327109-0DEE-42A4-A825-AA7D99A83D7F}"
-        "PackageCode" = "8:{ABEF10ED-58D6-47EB-9452-43BB3FD09649}"
+        "PackageCode" = "8:{C7A43175-A095-485F-958F-A6DF2A86800E}"
         "UpgradeCode" = "8:{629CCD5C-1F6D-4168-BBE6-01C69E232F43}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
