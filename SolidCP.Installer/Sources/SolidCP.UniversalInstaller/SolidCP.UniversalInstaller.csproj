@@ -17,7 +17,8 @@
         <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
         <RestoreSources>$(RestoreSources);../../Lib;https://api.nuget.org/v3/index.json</RestoreSources>
         <ApplicationManifest>SolidCP.Installer.manifest</ApplicationManifest>
-        <UseAppHost>false</UseAppHost>
+        <UseAppHost>true</UseAppHost>
+        <AppHostRuntimeIdentifier>win-x64</AppHostRuntimeIdentifier>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -44,10 +45,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\SolidCP\Sources\SolidCP.Providers.Base\SolidCP.Providers.Base.csproj" />
-        <ProjectReference Include="..\SolidCP.UniversalInstaller.Bootstrapper\SolidCP.UniversalInstaller.Bootstrapper.csproj">
-            <SetTargetFramework>TargetFramework=net48</SetTargetFramework>
-            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-        </ProjectReference>
         <ProjectReference Include="..\SolidCP.UniversalInstaller.Core\SolidCP.UniversalInstaller.Core.csproj" />
         <ProjectReference Include="..\SolidCP.UniversalInstaller.Runtime\SolidCP.UniversalInstaller.Runtime.csproj" />
         <!--<ProjectReference Include="..\SolidCP.UniversalInstaller.Runtime\SolidCP.UniversalInstaller.Runtime.csproj">
