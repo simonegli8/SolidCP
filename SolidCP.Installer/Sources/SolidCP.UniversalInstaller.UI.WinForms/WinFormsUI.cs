@@ -124,6 +124,7 @@ namespace SolidCP.UniversalInstaller {
 			{
 				if (OSInfo.IsWindows || OSInfo.IsMono)
 				{
+					if (OSInfo.IsWindows && Installer.Current.IsRemoteConsole) return false;
 					Init();
 					return isAvailable;
 				}

@@ -508,7 +508,7 @@
         <!-- build MSI package -->
         <Exec Command="&quot;$(DevEnv)&quot; &quot;$(InstallerProjectRoot)SolidCP.UniversalInstaller.Msi.sln&quot; /build &quot;$(BuildConfiguration)|$(Platform)&quot;" />
         <ItemGroup>
-            <InstallerMsi Include="$(InstallerProjectRoot)\HostPanelPro.UniversalInstaller.Msi\$(BuildConfiguration)\*.msi" />
+            <InstallerMsi Include="$(InstallerProjectRoot)\SolidCP.UniversalInstaller.Msi\$(BuildConfiguration)\*.msi" />
         </ItemGroup>
         <Copy SourceFiles="@(InstallerMsi)" DestinationFolder="$(BuildFolder)" />
 
@@ -1215,7 +1215,7 @@
     <FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Installer-Unix-$(Version).zip" LocalFile="$(DeployFolder)\SolidCP-Installer-Unix-$(Version).zip" />
     <FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Import-CsvBulk$(ZipExt)" LocalFile="$(ToolsFolder)\SolidCP-Import-CsvBulk$(ZipExt)" />
 	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-Import-Enterprise$(ZipExt)" LocalFile="$(ToolsFolder)\SolidCP-Import-Enterprise$(ZipExt)" />
-	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-CertificateMaker$(ZipExt)" LocalFile="$(ToolsFolder)\HostPanelPro-CertificateMaker$(ZipExt)" />
+	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-CertificateMaker$(ZipExt)" LocalFile="$(ToolsFolder)\SolidCP-CertificateMaker$(ZipExt)" />
 	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-AWStatsViewer$(ZipExt)" LocalFile="$(ToolsFolder)\SolidCP-AWStatsViewer$(ZipExt)" />
 	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP-SCPTransportAgent$(ZipExt)" LocalFile="$(ToolsFolder)\SolidCP-SCPTransportAgent$(ZipExt)" />
 	<FtpUpload Username="$(ftpUsername)" password="$(ftpPassword)" RemoteUri="ftp://$(ftphost)/SolidCP.LocalizationToolkit.msi" LocalFile="$(ToolsFolder)\SolidCP.LocalizationToolkit.msi" />
