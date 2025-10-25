@@ -1075,7 +1075,7 @@
 			<InstallerMsiFile Include="$(InstallerBuild)\*.msi" />
 		</ItemGroup>
 		
-		<Copy SourceFiles="@(InstallerMsiFile)" DestinationFiles="$(DeployFolder)\SolidCP.Installer.msi" />
+		<Copy SourceFiles="@(InstallerMsiFile)" DestinationFiles="$(DeployFolder)\SolidCP.Installer--$(Version).msi" />
 
 		<!-- zip updates
 		<ItemGroup>
@@ -1109,11 +1109,6 @@
 		<Zip Files="@(AWStatsViewerInstallFiles)" ZipFileName="$(ToolsFolder)\SolidCP-AWStatsViewer-$(Version).zip" WorkingDirectory="$(AWStatsViewerInstall)" />
 		<Zip Files="@(SCPTransportAgentInstallFiles)" ZipFileName="$(ToolsFolder)\SolidCP-SCPTransportAgent-$(Version).zip" WorkingDirectory="$(SCPTransportAgentInstall)" />
 		-->
-        <ItemGroup>
-            <InstallerMsiFile Include="$(BuildFolder)\*.msi" />
-        </ItemGroup>
-
-        <Copy SourceFiles="@(InstallerMsiFile)" DestinationFiles="$(DeployFolder)\SolidCP-Installer-$(Version).msi" />
 
         <Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(ToolsFolder)\SolidCP-Import-CsvBulk$(ZipExt)&quot; &quot;$(ImportCsvInstall)\*&quot;" />
 		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(ToolsFolder)\SolidCP-HyperVUtils$(ZipExt)&quot; &quot;$(HyperVUtilsInstall)\*&quot;" />
