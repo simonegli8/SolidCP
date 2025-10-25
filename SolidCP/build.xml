@@ -510,7 +510,7 @@
         <ItemGroup>
             <InstallerMsi Include="$(InstallerProjectRoot)\SolidCP.UniversalInstaller.Msi\$(BuildConfiguration)\*.msi" />
         </ItemGroup>
-        <Copy SourceFiles="@(InstallerMsi)" DestinationFolder="$(BuildFolder)" />
+        <Copy SourceFiles="@(InstallerMsi)" DestinationFolder="$(InstallerBuild)" />
 
 	</Target>
 	
@@ -992,31 +992,8 @@
     <TokenReplace Path="C:\Project\Target.config" Token="$MyToken$" Replacement="MyValue"/>
   </Target>
 
-	<Target Name="CreateStandaloneBootstrapper" DependsOnTargets="DeploySqlScripts">
-        <!--<MSBuild Projects='$(RootFolder)\SolidCP.Installer\Sources\Setup.WIXBootstrapper\Setup.WIXBootstrapper.csproj' Properties='Configuration=$(BuildConfiguration);Platform=$(Platform)' Targets='Build'>
-           <Output TaskParameter="TargetOutputs" ItemName="StandaloneBootstrapper" />
-        </MSBuild>
-		<Copy SourceFiles="@(StandaloneBootstrapper)" DestinationFolder="$(DeployFolder)\%(RecursiveDir)" />
-		<MSBuild Projects="$(RootFolder)\SolidCP.Installer\Sources\SolidCP.UniversalInstaller.Msi.sln" Properties="Configuration=$(BuildConfiguration);Platform=$(Platform)" Targets="Build" />
-		<Copy SourceFiles="$(RootFolder)\SolidCP.Installer\Sources\SolidCP.UniversalInstaller.Msi\$(BuildConfiguration)\SolidCP.Installer.msi" DestinationFolder="$(DeployFolder)" />-->
-				<!-- build MSI package -->
-		<!--<Message Text="&quot;$(DevEnv)&quot; &quot;$(InstallerProjectRoot)SolidCP.UniversalInstaller.Msi.sln&quot; /build &quot;$(BuildConfiguration)|$(Platform)&quot;" Importance="high" />-->
-
-        <!-- copy installer binaries for upgrade -->
-        <ItemGroup>
-            <InstallerBinariesExe Include="$(InstallerProjectBin)\net48\*.exe" />
-        </ItemGroup>
-        <Copy SourceFiles="@(InstallerBinariesExe)" DestinationFolder="$(InstallerProjectRoot)\SolidCP.Installer.Msi" />
-
-        <Exec Command="&quot;$(DevEnv)&quot; &quot;$(InstallerProjectRoot)SolidCP.UniversalInstaller.Msi.sln&quot; /build &quot;$(BuildConfiguration)|$(Platform)&quot;" />
-		<ItemGroup>
-			<InstallerMsi Include="$(InstallerProjectRoot)SolidCP.UniversalInstaller.Msi\$(BuildConfiguration)\*.msi" />
-		</ItemGroup>
-		<Copy SourceFiles="@(InstallerMsi)" DestinationFolder="$(InstallerBuild)" />
-	</Target>
-
 	<!-- Deploy -->
-	<Target Name="ZipDeploy" DependsOnTargets="CreateStandaloneBootstrapper" >
+	<Target Name="ZipDeploy" DependsOnTargets="CopySqlScripts" >
 		<ItemGroup>
 			<PortalInstallFiles Include="$(PortalInstall)\**\*.*" />
 			<WebDavPortalInstallFiles Include="$(WebDavPortalInstall)\**\*.*" />
@@ -1072,10 +1049,10 @@
 		<Exec Command="$(ZipCmd)$(ZipLevel) a &quot;$(DeployFolder)\SolidCP-StandaloneServerSetup$(ZipExt)&quot; &quot;$(StandaloneInstall)\*&quot;" />
 
 		<ItemGroup>
-			<InstallerMsiFile Include="$(InstallerBuild)\*.msi" />
+			<InstallerBuildMsiFile Include="$(InstallerBuild)\*.msi" />
 		</ItemGroup>
 		
-		<Copy SourceFiles="@(InstallerMsiFile)" DestinationFiles="$(DeployFolder)\SolidCP.Installer--$(Version).msi" />
+		<Copy SourceFiles="@(InstallerBuildMsiFile)" DestinationFiles="$(DeployFolder)\SolidCP.Installer--$(Version).msi" />
 
 		<!-- zip updates
 		<ItemGroup>
