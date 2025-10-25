@@ -993,7 +993,7 @@
   </Target>
 
 	<!-- Deploy -->
-	<Target Name="ZipDeploy" DependsOnTargets="CopySqlScripts" >
+	<Target Name="ZipDeploy" DependsOnTargets="DeploySqlScripts" >
 		<ItemGroup>
 			<PortalInstallFiles Include="$(PortalInstall)\**\*.*" />
 			<WebDavPortalInstallFiles Include="$(WebDavPortalInstall)\**\*.*" />
