@@ -48,22 +48,7 @@ public class Updater
 
 			DownloadAndUnzipFile(new RemoteFile(url), destinationFile, tempDir).Wait();
 
-			if (Providers.OS.OSInfo.IsCore)
-			{
-				for (int ver = 20; ver >= 8; ver--)
-				{
-					var path = Path.Combine(tempDir, $"net{ver}.0");
-					if (Directory.Exists(path))
-					{
-						CopyDirectory(path, baseDir, true);
-						break;
-					}
-				}
-			}
-			else
-			{
-				CopyDirectory(Path.Combine(tempDir, "net48"), baseDir, true);
-			}
+			CopyDirectory(tempDir, baseDir, true);
 
 			FileUtils.DeleteFile(destinationFile);
 			Directory.Delete(tempDir, true);

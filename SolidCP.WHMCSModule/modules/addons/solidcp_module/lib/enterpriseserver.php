@@ -531,9 +531,9 @@ final class SolidCP_EnterpriseServer
 				$pwd = str_replace("&", "&amp;", $pwd);
 				$pwd = str_replace("<", "&lt;", $pwd);
 				$pwd = str_replace(">", "&gt;", $pwd);
-				$auth = "<Credentials xmlns=\"http://hostpanelpro/headers/Credentials\"><Password xmlns=\"http://hostpanelpro/credentials\">$pwd</Password><Username xmlns=\"http://hostpanelpro/credentials\">$this->_username</Username></Credentials>";
+				$auth = "<Credentials xmlns=\"http://solidcp/headers/Credentials\"><Password xmlns=\"http://hostpanelpro/credentials\">$pwd</Password><Username xmlns=\"http://hostpanelpro/credentials\">$this->_username</Username></Credentials>";
 				$auth_block = new SoapVar( $auth, XSD_ANYXML, NULL, NULL, NULL, NULL );
-				$soapHeader = new SoapHeader('http://hostpanelpro/headers/Credentials', 'Credentials', $auth_block);
+				$soapHeader = new SoapHeader('http://solidcp/headers/Credentials', 'Credentials', $auth_block);
 				$client -> __setSoapHeaders($soapHeader);
 			}
 		} catch (SoapFault $ex) {

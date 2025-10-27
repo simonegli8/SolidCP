@@ -58,10 +58,6 @@ namespace SolidCP.EnterpriseServer
     [ToolboxItem(false)]
     public class esServers: WebService
     {
-        /*
-        public const string MAIN_WPI_FEED = "https://www.microsoft.com/web/webpi/5.0/WebProductList.xml";
-        public const string HELICON_WPI_FEED = "http://www.helicontech.com/zoo/feed/wsp4";
-        */
 
         #region Servers
         [WebMethod]
@@ -858,116 +854,7 @@ namespace SolidCP.EnterpriseServer
         {
             OperatingSystemController.EnableLoadUserProfile(serverId);
         }
-
-        
-
-        [WebMethod]
-        public void InitWPIFeeds(int serverId)
-        {
-            var wpiSettings = SystemController.GetSystemSettings(SystemSettings.WPI_SETTINGS);
-            
-
-            List<string> feeds = new List<string>();
-            
-            // Microsoft feed
-            string mainFeedUrl = wpiSettings[SystemSettings.WPI_MAIN_FEED_KEY];
-            if (string.IsNullOrEmpty(mainFeedUrl))
-            {
-                mainFeedUrl = WebPlatformInstaller.MAIN_FEED_URL;
-            }
-            feeds.Add(mainFeedUrl);
-
-            // Zoo Feed
-            feeds.Add(WebPlatformInstaller.ZOO_FEED);
-
-
-            // additional feeds
-            string additionalFeeds = wpiSettings[SystemSettings.FEED_ULS_KEY];
-            if (!string.IsNullOrEmpty(additionalFeeds))
-            {
-                feeds.AddRange(additionalFeeds.Split(';'));
-            }
-
-            OperatingSystemController.InitWPIFeeds(serverId, string.Join(";", feeds));
-
-        }
-
-        [WebMethod]
-        public WPITab[] GetWPITabs(int serverId)
-        {
-            InitWPIFeeds(serverId);
-            return OperatingSystemController.GetWPITabs(serverId);
-        }
-
-        [WebMethod]
-        public WPIKeyword[] GetWPIKeywords(int serverId)
-        {
-            InitWPIFeeds(serverId);
-            return OperatingSystemController.GetWPIKeywords(serverId);
-        }
-
-        [WebMethod]
-        public WPIProduct[] GetWPIProducts(int serverId, string tabId, string keywordId)
-        {
-            InitWPIFeeds(serverId);
-            return OperatingSystemController.GetWPIProducts(serverId, tabId, keywordId);
-        }
-
-        [WebMethod]
-        public WPIProduct[] GetWPIProductsFiltered(int serverId, string keywordId)
-        {
-            InitWPIFeeds(serverId);
-            return OperatingSystemController.GetWPIProductsFiltered(serverId, keywordId);
-        }
-        
-        [WebMethod]
-        public WPIProduct GetWPIProductById(int serverId, string productdId)
-        {
-            InitWPIFeeds(serverId);
-            return OperatingSystemController.GetWPIProductById(serverId, productdId);
-        }
-
-        [WebMethod]
-        public WPIProduct[] GetWPIProductsWithDependencies(int serverId, string[] products)
-        {
-            InitWPIFeeds(serverId);
-            return OperatingSystemController.GetWPIProductsWithDependencies(serverId, products);
-        }
-
-        [WebMethod]
-        public void InstallWPIProducts(int serverId, string[] products)
-        {
-            InitWPIFeeds(serverId);
-            OperatingSystemController.InstallWPIProducts(serverId, products);
-        }
-
-        [WebMethod]
-        public void CancelInstallWPIProducts(int serviceId)
-        {
-            OperatingSystemController.CancelInstallWPIProducts(serviceId);
-        }
-
-
-        [WebMethod]
-        public string GetWPIStatus(int serverId)
-        {
-            return OperatingSystemController.GetWPIStatus(serverId);
-        }
-
-        [WebMethod]
-        public string WpiGetLogFileDirectory(int serverId)
-        {
-            return OperatingSystemController.WpiGetLogFileDirectory(serverId);
-        }
-
-        [WebMethod]
-        public SettingPair[] WpiGetLogsInDirectory(int serverId, string Path)
-        {
-            return OperatingSystemController.WpiGetLogsInDirectory(serverId, Path);
-        }
         #endregion
-
-
 
         #region Windows Services
         [WebMethod]

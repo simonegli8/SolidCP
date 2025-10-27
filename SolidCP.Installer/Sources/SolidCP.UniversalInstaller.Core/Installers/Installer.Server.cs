@@ -28,26 +28,26 @@ public abstract partial class Installer
 	public virtual void RemoveServerPrerequisites() { }
 	public virtual void CreateServerUser() => CreateUser(Settings.Server);
 	public virtual void RemoveServerUser() => RemoveUser(Settings.Server.Username);
-	public virtual void SetServerFilePermissions() => SetFilePermissions(Settings.Server.InstallPath);
+	public virtual void SetServerFilePermissions() => SetFilePermissions(Settings.Server.InstallPath, Settings.Server.Username);
 	public virtual void SetServerFileOwner() => SetFileOwner(Settings.Server.InstallPath, Settings.Server.Username, SolidCPGroup);
 	public virtual void InstallServer()
 	{
 		InstallServerPrerequisites();
 		CopyServer(true, StandardInstallFilter);
 		CreateServerUser();
+		ConfigureServer();
 		SetServerFilePermissions();
 		SetServerFileOwner();
-		ConfigureServer();
 		InstallServerWebsite();
 	}
 	public virtual void UpdateServer()
 	{
 		InstallServerPrerequisites();
 		CopyServer(true, StandardUpdateFilter);
-		SetServerFilePermissions();
-		SetServerFileOwner();
 		UpdateServerConfig();
 		ConfigureServer();
+		SetServerFilePermissions();
+		SetServerFileOwner();
 		InstallServerWebsite();
 	}
 	public virtual void SetupServer()

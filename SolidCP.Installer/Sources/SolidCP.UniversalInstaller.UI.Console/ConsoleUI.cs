@@ -581,9 +581,10 @@ when adding the server in SolidCP Portal.
 
         public const bool SqlServerOnly = !DbContext.SupportsEF;
         public bool MariaDbSupport => DbContext.UsePomelo && Installer.Current.Settings.EnterpriseServer.RunOnNetCore;
-        public bool MySqlSupport => DbContext.UsePomelo || DbContext.UseMySql; // || !Installer.Current.Settings.EnterpriseServer.RunOnNetCore;
+        public bool MySqlSupport => (DbContext.UsePomelo || DbContext.UseMySql) &&
+			OSInfo.IsCore; // NetFX does not support MySQL Connector in different AppDomain
 
-        public override UI.SetupWizard Database()
+		public override UI.SetupWizard Database()
 		{
 			var settings = Settings.EnterpriseServer;
 			AddInteractivePage(() =>
@@ -591,9 +592,7 @@ when adding the server in SolidCP Portal.
 				var dbType = settings.DatabaseType;
 				ConsoleForm form = null;
 
-				if (dbType == DbType.Unknown)
-				{
-					form = new ConsoleForm(@$"
+				form = new ConsoleForm(@$"
 Database Settings:
 ==================
 
@@ -605,18 +604,17 @@ Database Settings:
 
 [  Back  ]
 ")
-					.ShowDialog();
-					if (form["Back"].Clicked)
-					{
-						Back();
-						return;
-					}
-					else
-					{
-						if (form[0].Clicked) dbType = DbType.SqlServer;
-						else if (form[1].Clicked) dbType = DbType.MySql;
-                        else if (MySqlSupport && form[2].Clicked || !MySqlSupport && form[1].Clicked) dbType = DbType.Sqlite;
-                    }
+				.ShowDialog();
+				if (form["Back"].Clicked)
+				{
+					Back();
+					return;
+				}
+				else
+				{
+					if (form[0].Clicked) dbType = DbType.SqlServer;
+					else if (form[1].Clicked) dbType = DbType.MySql;
+                    else if (MySqlSupport && form[2].Clicked || !MySqlSupport && form[1].Clicked) dbType = DbType.Sqlite;
                 }
 
 				settings.DatabaseType = dbType;

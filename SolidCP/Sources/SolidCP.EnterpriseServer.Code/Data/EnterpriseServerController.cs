@@ -33,8 +33,6 @@ namespace SolidCP.EnterpriseServer
 
 		public new FtpServerController FtpServerController => base.FtpServerController;
 
-		public new HeliconZooController HeliconZooController => base.HeliconZooController;
-
 		public new Code.SharePoint.HostedSharePointServerController HostedSharePointServerController => base.HostedSharePointServerController;
 
 		public new Code.SharePoint.HostedSharePointServerEntController HostedSharePointServerEntController => base.HostedSharePointServerEntController;
@@ -86,8 +84,6 @@ namespace SolidCP.EnterpriseServer
 		public new VirtualizationServerControllerForPrivateCloud VirtualizationServerControllerForPrivateCloud => base.VirtualizationServerControllerForPrivateCloud;
 
 		public new VirtualizationServerControllerProxmox VirtualizationServerControllerProxmox => base.VirtualizationServerControllerProxmox;
-
-		public new WebAppGalleryController WebAppGalleryController => base.WebAppGalleryController;
 
 		public new WebServerController WebServerController => base.WebServerController;
 

@@ -8,7 +8,12 @@
         <PackageId>SolidCP.UniversalInstaller.UI.WinForms</PackageId>
         <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
 		<DefineConstants>$(DefineConstants);EFSupport</DefineConstants>
-	</PropertyGroup>
+        <DebugType>embedded</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <Optimize>false</Optimize>
+    </PropertyGroup>
 
     <PropertyGroup Condition="$(TargetFramework) == 'net48'">
         <AssemblyName>SolidCP.UniversalInstaller.UI.WinForms.NetFX</AssemblyName>

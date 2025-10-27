@@ -277,8 +277,12 @@ namespace SolidCP.Web.Clients
             var arch = RuntimeInformation.ProcessArchitecture;
             var assemblyPath = Path.GetDirectoryName(originalFile);
 
-            if (a.GetName().Name == "System.Data.SQLite") LoadNativeDll(a, assemblyPath, arch, "SQLite.Interop.dll");
-            if (a.GetName().Name == "SkiaSharp") LoadNativeDll(a, assemblyPath, arch, "libSkiaSharp.dll");
+            if (a.GetName().Name == "System.Data.SQLite")
+            {
+                LoadNativeDll(a, assemblyPath, arch, "SQLite.Interop.dll");
+				LoadNativeDll(a, assemblyPath, arch, "e_sqlite3.dll");
+			}
+			if (a.GetName().Name == "SkiaSharp") LoadNativeDll(a, assemblyPath, arch, "libSkiaSharp.dll");
             if (a.GetName().Name == "Microsoft.Data.SqlClient") LoadNativeDll(a, assemblyPath, arch, "Microsoft.Data.SqlClient.SNI.dll", true);
         }
 

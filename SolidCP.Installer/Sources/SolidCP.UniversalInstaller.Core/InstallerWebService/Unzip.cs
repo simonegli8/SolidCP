@@ -41,9 +41,18 @@ public class Unzip
 				{
 					if (Cancel.IsCancellationRequested) break;
 
-					if (filter(reader.Entry.Key) && !reader.Entry.IsDirectory)
+					if (filter(reader.Entry.Key))
 					{
-						reader.WriteEntryToDirectory(destFolder, new ExtractionOptions() { ExtractFullPath = true, Overwrite = true });
+						try
+						{
+							if (reader.Entry.IsDirectory) Directory.CreateDirectory(Path.Combine(destFolder, reader.Entry.Key.Replace('/', Path.DirectorySeparatorChar)));
+							else reader.WriteEntryToDirectory(destFolder, new ExtractionOptions() { ExtractFullPath = true, Overwrite = true });
+						}
+						catch (Exception ex)
+						{
+							throw;
+						}
+						
 						files++;
 						unzipped += reader.Entry.Size;
 

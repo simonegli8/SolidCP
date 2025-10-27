@@ -7,7 +7,7 @@
   <groupId>org.apache.guacamole</groupId>
   <artifactId>guacamole-auth-solidcp</artifactId>
   <packaging>jar</packaging>
-  <version>1.4.0</version>
+  <version>1.4.1</version>
   <name>guacamole-auth-solidcp</name>
 
   <properties>

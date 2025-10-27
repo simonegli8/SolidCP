@@ -10,10 +10,13 @@
         <OutputPath>bin\$(Configuration)</OutputPath>
         <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
         <StartupObject>SolidCP.UniversalInstaller.Core.Program</StartupObject>
+        <DebugType>embedded</DebugType>
     </PropertyGroup>
+    
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <Optimize>false</Optimize>
     </PropertyGroup>
+    
     <ItemGroup>
       <Compile Remove="Common\Utils.Old.cs" />
     </ItemGroup>
@@ -25,9 +28,6 @@
         <ProjectReference Include="..\..\..\SolidCP\Sources\SolidCP.EnterpriseServer.Data\SolidCP.EnterpriseServer.Data.csproj" />
         <ProjectReference Include="..\..\..\SolidCP\Sources\SolidCP.Providers.Base\SolidCP.Providers.Base.csproj" />
         <ProjectReference Include="..\..\..\SolidCP\Sources\SolidCP.Providers.OS.Unix\SolidCP.Providers.OS.Unix.csproj" />
-        <ProjectReference Include="..\..\..\SolidCP\Sources\SolidCP.Providers.OS.Windows2003\SolidCP.Providers.OS.Windows2003.csproj" />
-        <ProjectReference Include="..\..\..\SolidCP\Sources\SolidCP.Providers.OS.Windows2008\SolidCP.Providers.OS.Windows2008.csproj" />
-        <ProjectReference Include="..\..\..\SolidCP\Sources\SolidCP.Providers.OS.Windows2012\SolidCP.Providers.OS.Windows2012.csproj" />
         <ProjectReference Include="..\..\..\SolidCP\Sources\SolidCP.Providers.OS.Windows2016\SolidCP.Providers.OS.Windows2016.csproj" />
         <ProjectReference Include="..\..\..\SolidCP\Sources\SolidCP.Providers.OS.Windows2019\SolidCP.Providers.OS.Windows2019.csproj" />
         <ProjectReference Include="..\..\..\SolidCP\Sources\SolidCP.Providers.OS.Windows2022\SolidCP.Providers.OS.Windows2022.csproj" />
@@ -51,7 +51,7 @@
     </ItemGroup>
     <ItemGroup>
 		<PackageReference Include="SharpCompress" Version="0.40.0" />
-		<PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
+		<PackageReference Include="NeoSmart.AsyncLock" Version="3.2.1" />
         <PackageReference Include="AspNetCoreSharedServer.Api" Version="1.1.13" />
         <PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
         <PackageReference Include="Mono.Cecil" Version="0.11.6" />
@@ -76,7 +76,7 @@
 			<RuntimeFiles Include="$(PkgMono_Unix)\runtimes\**\*.*" />
 		</ItemGroup>
 		<Message Importance="high" Text="Copying Mono.Posix native library from $(MonoUnixRuntimePath) to $(OutputDir)" />
-	    <Copy SourceFiles="@(RuntimeFiles)" DestinationFolder="$(OutputDir)\runtimes\%(RecursiveDir)" SkipUnchangedFiles="true" />
+	    <Copy SourceFiles="@(RuntimeFiles)" DestinationFolder="$(OutputPath)\runtimes\%(RecursiveDir)" SkipUnchangedFiles="true" />
 	</Target>
 
 </Project>

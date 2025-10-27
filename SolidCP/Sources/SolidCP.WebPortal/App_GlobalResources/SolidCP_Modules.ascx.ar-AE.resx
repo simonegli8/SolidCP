@@ -825,9 +825,6 @@
   <data name="ModuleTitle.ApplyEnableHardQuotaFeature" xml:space="preserve">
     <value>الحصة الثابتة للنظام</value>
   </data>
-  <data name="ModuleTitle.HeliconZoo" xml:space="preserve">
-    <value>Helicon Zoo</value>
-  </data>
   <data name="ModuleTitle.LyncPhoneNumbers" xml:space="preserve">
     <value>أرقام الهواتف</value>
   </data>

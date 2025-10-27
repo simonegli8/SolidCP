@@ -34,7 +34,6 @@ using System;
 using System.Collections.Generic;
 using SolidCP.Providers.HostedSolution;
 using SolidCP.Providers.ResultObjects;
-using SolidCP.Providers.WebAppGallery;
 using SolidCP.Providers.Common;
 
 namespace SolidCP.Providers.Web
@@ -134,29 +133,8 @@ namespace SolidCP.Providers.Web
 		void UpdateHeliconApeGroup(string siteId, WebGroup group);
 		void DeleteHeliconApeGroup(string siteId, string groupName);
 
-		// Helicon Zoo
-		WebAppVirtualDirectory[] GetZooApplications(string siteId);
-		StringResultObject SetZooEnvironmentVariable(string siteId, string appName, string envName, string envValue);
-		StringResultObject SetZooConsoleEnabled(string siteId, string appName);
-		StringResultObject SetZooConsoleDisabled(string siteId, string appName);
-
-
-		// web app gallery
 		bool CheckLoadUserProfile();
 		void EnableLoadUserProfile();
-		void InitFeeds(int UserId, string[] feeds);
-		void SetResourceLanguage(int UserId, string resourceLanguage);
-		bool IsMsDeployInstalled();
-		GalleryLanguagesResult GetGalleryLanguages(int UserId);
-		GalleryCategoriesResult GetGalleryCategories(int UserId);
-		GalleryApplicationsResult GetGalleryApplications(int UserId, string categoryId);
-		GalleryApplicationsResult GetGalleryApplicationsFiltered(int UserId, string pattern);
-		GalleryApplicationResult GetGalleryApplication(int UserId, string id);
-		GalleryWebAppStatus GetGalleryApplicationStatus(int UserId, string id);
-		GalleryWebAppStatus DownloadGalleryApplication(int UserId, string id);
-		DeploymentParametersResult GetGalleryApplicationParameters(int UserId, string id);
-		StringResultObject InstallGalleryApplication(int UserId, string id, List<DeploymentParameter> updatedValues, string languageId);
-
 		//
 		void GrantWebManagementAccess(string siteId, string accountName, string accountPassword);
 		void RevokeWebManagementAccess(string siteId, string accountName);

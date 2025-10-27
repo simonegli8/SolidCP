@@ -47,13 +47,11 @@ using System.IO;
 using Microsoft.Win32;
 using Microsoft.Web.Deployment;
 using SolidCP.Providers.HostedSolution;
-using SolidCP.Providers.Web.WPIWebApplicationGallery;
 using SolidCP.Server.Utils;
 using SolidCP.Providers.OS;
 using SolidCP.Providers.Utils;
 using SolidCP.Providers.Utils.LogParser;
 using SolidCP.Providers.ResultObjects;
-using SolidCP.Providers.WebAppGallery;
 
 using ProcessStartInfo = System.Diagnostics.ProcessStartInfo;
 using System.Xml.Serialization;
@@ -2862,31 +2860,6 @@ namespace SolidCP.Providers.Web
 
 		#endregion
 
-		#region Helicon Zoo
-		public virtual WebAppVirtualDirectory[] GetZooApplications(string siteId)
-		{
-			return new WebAppVirtualDirectory[] { };
-		}
-
-		public virtual StringResultObject SetZooEnvironmentVariable(string siteId, string appName, string envName, string envValue)
-		{
-			//pass
-			return new StringResultObject();
-
-		}
-
-		public virtual StringResultObject SetZooConsoleEnabled(string siteId, string appName)
-		{
-			return new StringResultObject();
-		}
-
-		public virtual StringResultObject SetZooConsoleDisabled(string siteId, string appName)
-		{
-			return new StringResultObject();
-		}
-
-		#endregion
-
 		#region Private Helper Methods
 		protected string GetVirtualDirectoryPath(string siteId, string directoryName)
 		{
@@ -4135,13 +4108,6 @@ namespace SolidCP.Providers.Web
 			return OSInfo.IsWindows && IsIISInstalled();
 		}
 
-
-		#region Microsoft Web Application Gallery
-
-		private const string MS_DEPLOY_ASSEMBLY_NAME = "Microsoft.Web.Deployment";
-		private const string WPI_INSTANCE_VIEWER = "viewer";
-		private const string WPI_INSTANCE_INSTALLER = "installer";
-
 		virtual public bool CheckLoadUserProfile()
 		{
 			//throw new NotImplementedException("LoadUserProfile option valid only on IIS7 or higer");
@@ -4152,221 +4118,6 @@ namespace SolidCP.Providers.Web
 		{
 			throw new NotImplementedException("LoadUserProfile option valid only on IIS7 or higer");
 		}
-
-
-
-		public void InitFeeds(int UserId, string[] feeds)
-		{
-			//need to call InitFeeds() before any operation with WPIApplicationGallery()
-			WPIApplicationGallery module = new WPIApplicationGallery(WPI_INSTANCE_VIEWER);
-			module.InitFeeds(UserId, feeds);
-		}
-
-		public void SetResourceLanguage(int UserId, string resourceLanguage)
-		{
-			WPIApplicationGallery module = new WPIApplicationGallery(WPI_INSTANCE_VIEWER);
-			module.SetResourceLanguage(UserId, resourceLanguage);
-		}
-
-		public bool IsMsDeployInstalled()
-		{
-			// TO-DO: Implement Web Deploy detection (x64/x86)
-			var isInstalled = false;
-			//
-			try
-			{
-				var msdeployRegKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\IIS Extensions\MSDeploy\3");
-				//
-				var keyValue = msdeployRegKey.GetValue("Install");
-				// We have found the required key in the registry hive
-				if (keyValue != null && keyValue.Equals(1))
-				{
-					isInstalled = true;
-				}
-			}
-			catch (Exception ex)
-			{
-				Log.WriteError("Could not retrieve Web Deploy key from the registry", ex);
-			}
-			//
-			return isInstalled;
-
-
-		}
-
-		public GalleryLanguagesResult GetGalleryLanguages(int UserId)
-		{
-			GalleryLanguagesResult result = new GalleryLanguagesResult();
-			WPIApplicationGallery module = new WPIApplicationGallery(WPI_INSTANCE_VIEWER);
-			try
-			{
-				result.Value = module.GetLanguages(UserId);
-				result.IsSuccess = true;
-			}
-			catch (Exception ex)
-			{
-				result.IsSuccess = false;
-				result.AddError(GalleryErrors.GetLanguagesError, ex);
-			}
-
-			return result;
-		}
-
-		public GalleryCategoriesResult GetGalleryCategories(int UserId)
-		{
-			GalleryCategoriesResult result = new GalleryCategoriesResult();
-
-			//try
-			//{
-			WPIApplicationGallery module = new WPIApplicationGallery(WPI_INSTANCE_VIEWER);
-			//
-			result.Value = module.GetCategories(UserId);
-			result.IsSuccess = true;
-			//}
-			//catch (Exception ex)
-			//{
-			//    result.IsSuccess = false;
-			//    result.AddError(GalleryErrors.ProcessingFeedXMLError, ex);
-			//}
-			////
-			return result;
-		}
-
-		public GalleryApplicationsResult GetGalleryApplications(int UserId, string categoryId)
-		{
-			GalleryApplicationsResult result = new GalleryApplicationsResult();
-
-			try
-			{
-				WPIApplicationGallery module = new WPIApplicationGallery(WPI_INSTANCE_VIEWER);
-				//
-				result.Value = module.GetApplications(UserId, categoryId);
-				result.IsSuccess = true;
-			}
-			catch (Exception ex)
-			{
-				result.IsSuccess = false;
-				result.AddError(GalleryErrors.ProcessingFeedXMLError, ex);
-			}
-			//
-			return result;
-		}
-
-		public GalleryApplicationsResult GetGalleryApplicationsFiltered(int UserId, string pattern)
-		{
-			GalleryApplicationsResult result = new GalleryApplicationsResult();
-
-			try
-			{
-				WPIApplicationGallery module = new WPIApplicationGallery(WPI_INSTANCE_VIEWER);
-
-				result.Value = module.GetGalleryApplicationsFiltered(UserId, pattern);
-				result.IsSuccess = true;
-			}
-			catch (Exception ex)
-			{
-				result.IsSuccess = false;
-				result.AddError(ex.Message, ex);
-			}
-
-
-			return result;
-		}
-
-
-		public GalleryApplicationResult GetGalleryApplication(int UserId, string id)
-		{
-			GalleryApplicationResult result = new GalleryApplicationResult();
-			//
-			try
-			{
-				WPIApplicationGallery module = new WPIApplicationGallery(WPI_INSTANCE_VIEWER);
-				//
-				result.Value = module.GetApplicationByProductId(UserId, id);
-				result.IsSuccess = true;
-				result.ErrorCodes.AddRange(module.GetMissingDependenciesForApplicationById(UserId, id));
-			}
-			catch (Exception ex)
-			{
-				result.IsSuccess = false;
-				result.AddError(GalleryErrors.ProcessingFeedXMLError, ex);
-			}
-			//
-			return result;
-		}
-
-		public GalleryWebAppStatus DownloadGalleryApplication(int UserId, string id)
-		{
-			return GetGalleryApplicationStatus(UserId, id);
-		}
-
-		public GalleryWebAppStatus GetGalleryApplicationStatus(int UserId, string id)
-		{
-			try
-			{
-				WPIApplicationGallery module = new WPIApplicationGallery(WPI_INSTANCE_INSTALLER);
-
-				return module.DownloadAppAndGetStatus(UserId, id);
-			}
-			catch (UnauthorizedAccessException ex)
-			{
-				Log.WriteError(ex);
-				return GalleryWebAppStatus.UnauthorizedAccessException;
-			}
-			catch (Exception ex)
-			{
-				Log.WriteError(ex);
-				return GalleryWebAppStatus.Failed;
-			}
-		}
-
-		public DeploymentParametersResult GetGalleryApplicationParameters(int UserId, string id)
-		{
-			DeploymentParametersResult result = new DeploymentParametersResult();
-
-			try
-			{
-				WPIApplicationGallery module = new WPIApplicationGallery(WPI_INSTANCE_INSTALLER);
-				//
-				result.Value = module.GetApplicationParameters(UserId, id);
-				result.IsSuccess = true;
-			}
-			catch (Exception ex)
-			{
-				result.IsSuccess = false;
-				result.AddError(GalleryErrors.ProcessingPackageError, ex);
-			}
-			//
-			return result;
-		}
-
-
-		public StringResultObject InstallGalleryApplication(int UserId, string webAppId, List<DeploymentParameter> updatedValues, string languageId)
-		{
-			StringResultObject result = new StringResultObject();
-
-			try
-			{
-				WPIApplicationGallery module = new WPIApplicationGallery(WPI_INSTANCE_INSTALLER);
-				//
-				module.InstallApplication(UserId, webAppId, updatedValues, languageId, ref result);
-
-				if (result.IsSuccess)
-				{
-					module.DeleteWpiHelper(UserId);
-				}
-			}
-			catch (Exception ex)
-			{
-				result.IsSuccess = false;
-				result.AddError(GalleryErrors.PackageInstallationError, ex);
-			}
-			//
-			return result;
-		}
-
-		#endregion
-
 		#region Remote Management Access
 		public virtual void GrantWebManagementAccess(string siteName, string accountName, string accountPassword)
 		{

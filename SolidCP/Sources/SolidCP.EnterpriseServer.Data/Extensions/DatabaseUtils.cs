@@ -1455,7 +1455,8 @@ LOG ON(
 			command.Delimiter = ";";
 			int i = 0;
 			float n = commandCount;
-			command.Query = ProcessInstallVariables?.Invoke(script.Reader.ReadToEnd());
+			var sql = script.Reader.ReadToEnd();
+			command.Query = ProcessInstallVariables != null ? ProcessInstallVariables?.Invoke(sql) : sql;
 			command.StatementExecuted += (sender, args) =>
 				OnProgressChange?.Invoke((float)++i / n);
 			command.Error += (sender, args) =>

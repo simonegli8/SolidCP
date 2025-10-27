@@ -48,9 +48,7 @@
     </ItemGroup>
  
     <ItemGroup>
-        <Compile Remove="Code\WPIHelper.cs" />
         <Content Remove="wwwroot\img\logo.png" />
-        <None Include="Code\WPIHelper.cs" />
         <None Include="wwwroot\img\logo.png">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>

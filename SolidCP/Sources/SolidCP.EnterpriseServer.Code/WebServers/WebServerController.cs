@@ -42,7 +42,6 @@ using System.Xml;
 using System.Xml.Serialization;
 
 using SolidCP.Providers;
-using SolidCP.Providers.HeliconZoo;
 using SolidCP.Providers.Web;
 using SolidCP.Providers.DNS;
 using OS = SolidCP.Server.Client;
@@ -489,8 +488,6 @@ namespace SolidCP.EnterpriseServer
                         }
                     }
                 }
-
-                TryEnableHeliconZooEngines(site.SiteId, site.PackageId);
 
                 TaskManager.ItemId = siteItemId;
 
@@ -3646,103 +3643,6 @@ namespace SolidCP.EnterpriseServer
                 TaskManager.CompleteTask();
             }
         }
-        #endregion
-
-        #region Helicon Zoo
-
-        public List<WebAppVirtualDirectory> GetZooApplications(int siteItemId)
-        {
-            List<WebAppVirtualDirectory> dirs = new List<WebAppVirtualDirectory>();
-
-            // load site item
-            WebSite siteItem = (WebSite)PackageController.GetPackageItem(siteItemId);
-            if (siteItem == null)
-                return dirs;
-
-            // truncate home folders
-            WebServer web = new WebServer();
-            ServiceProviderProxy.Init(web, siteItem.ServiceId);
-            WebAppVirtualDirectory[] vdirs = web.GetZooApplications(siteItem.SiteId);
-
-            foreach (WebAppVirtualDirectory vdir in vdirs)
-            {
-                vdir.ContentPath = FilesController.GetVirtualPackagePath(siteItem.PackageId, vdir.ContentPath);
-                dirs.Add(vdir);
-            }
-
-            return dirs;
-        }
-
-        public StringResultObject SetZooEnvironmentVariable(int siteItemId, string appName, string envName, string envValue)
-        {
-            StringResultObject result = new StringResultObject {IsSuccess = false};
-
-
-            // load site item
-            WebSite siteItem = (WebSite)PackageController.GetPackageItem(siteItemId);
-            if (siteItem == null)
-                return result;
-
-
-            WebServer web = new WebServer();
-            ServiceProviderProxy.Init(web, siteItem.ServiceId);
-            return web.SetZooEnvironmentVariable(siteItem.SiteId, appName, envName, envValue);
-        }
-
-        public StringResultObject SetZooConsoleEnabled(int siteItemId, string appName)
-        {
-            StringResultObject result = new StringResultObject { IsSuccess = false };
-
-
-            // load site item
-            WebSite siteItem = (WebSite)PackageController.GetPackageItem(siteItemId);
-            if (siteItem == null)
-                return result;
-
-
-            WebServer web = new WebServer();
-            ServiceProviderProxy.Init(web, siteItem.ServiceId);
-            return web.SetZooConsoleEnabled(siteItem.SiteId, appName);
-        }
-
-
-        public StringResultObject SetZooConsoleDisabled(int siteItemId, string appName)
-        {
-            StringResultObject result = new StringResultObject { IsSuccess = false };
-
-
-            // load site item
-            WebSite siteItem = (WebSite)PackageController.GetPackageItem(siteItemId);
-            if (siteItem == null)
-                return result;
-
-
-            WebServer web = new WebServer();
-            ServiceProviderProxy.Init(web, siteItem.ServiceId);
-            return web.SetZooConsoleDisabled(siteItem.SiteId, appName);
-        }
-
-        public void TryEnableHeliconZooEngines(string siteId, int packageId)
-        {
-            try
-            {
-                ShortHeliconZooEngine[] allowedEngines = HeliconZooController.GetAllowedHeliconZooQuotasForPackage(packageId);
-                string[] engineNames = new string[allowedEngines.Length];
-                int i = 0;
-                foreach (ShortHeliconZooEngine engine in allowedEngines)
-                {
-                    engineNames[i] = engine.Name.Replace(HeliconZooController.HeliconZooQuotaPrefix, "");
-                    i++;
-                }
-                HeliconZooController.SetEnabledEnginesForSite(siteId, packageId, engineNames);
-            }
-            catch(Exception e)
-            {
-                // TODO: write to right place debug warning message
-                // TaskManager.WriteWarning("Error on enabling zoo engines for site '{0}': {1}", siteId, e.ToString());
-            }
-        }
-
         #endregion
 
         #region WebManagement Access

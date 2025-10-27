@@ -65,7 +65,6 @@ using System.Collections.Specialized;
 using SolidCP.Providers.Web.WebObjects;
 using SolidCP.Providers.Web.Iis.Common;
 using SolidCP.Providers.Web.Iis;
-using SolidCP.Providers.WebAppGallery;
 using SolidCP.Server.Utils;
 using SolidCP.Providers.Web.Delegation;
 
@@ -2950,85 +2949,6 @@ namespace SolidCP.Providers.Web
 
 			return;
 		}
-
-		#endregion
-
-		#region Helicon Zoo
-
-		public override WebAppVirtualDirectory[] GetZooApplications(string siteId)
-		{
-			using (ServerManager srvman = webObjectsSvc.GetServerManager())
-			{
-				return webObjectsSvc.GetZooApplications(srvman, siteId);
-			}
-		}
-
-		public override StringResultObject SetZooEnvironmentVariable(string siteId, string appName, string envName, string envValue)
-		{
-			StringResultObject result = new StringResultObject();
-
-			try
-			{
-				using (ServerManager srvman = webObjectsSvc.GetServerManager())
-				{
-					webObjectsSvc.SetZooEnvironmentVariable(srvman, siteId, appName, envName, envValue);
-				}
-
-				result.IsSuccess = true;
-			}
-			catch (Exception e)
-			{
-				result.AddError("Exception", e);
-			}
-
-			return result;
-		}
-
-
-		public override StringResultObject SetZooConsoleEnabled(string siteId, string appName)
-		{
-			StringResultObject result = new StringResultObject();
-
-			try
-			{
-				using (ServerManager srvman = webObjectsSvc.GetServerManager())
-				{
-					webObjectsSvc.SetZooConsoleEnabled(srvman, siteId, appName);
-				}
-
-				result.IsSuccess = true;
-			}
-			catch (Exception e)
-			{
-				result.AddError("Exception", e);
-			}
-
-			return result;
-		}
-
-		public override StringResultObject SetZooConsoleDisabled(string siteId, string appName)
-		{
-			StringResultObject result = new StringResultObject();
-
-			try
-			{
-				using (ServerManager srvman = webObjectsSvc.GetServerManager())
-				{
-					webObjectsSvc.SetZooConsoleDisabled(srvman, siteId, appName);
-				}
-
-				result.IsSuccess = true;
-			}
-			catch (Exception e)
-			{
-				result.AddError("Exception", e);
-			}
-
-			return result;
-		}
-
-
-
 
 		#endregion
 

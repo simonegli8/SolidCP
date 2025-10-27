@@ -30,7 +30,7 @@ public abstract class UnixInstaller : Installer
 	{
 		Log.WriteStart("Install AspNetCoreSharedServer");
 
-		const string AspNetCoreSharedServerVersion = "1.2.0";
+		const string AspNetCoreSharedServerVersion = "1.2.1";
 
 		if (installedAspNetCoreSharedServer) return;
 		installedAspNetCoreSharedServer = true;
@@ -51,6 +51,8 @@ public abstract class UnixInstaller : Installer
 			conf.Load();
 			conf.EnableHttp3 = false;
 			conf.User = "www-data";
+			conf.IdleTimeout = TimeSpan.FromMinutes(5);
+			conf.Recycle = TimeSpan.FromHours(29);
 			conf.Group = null;
 			conf.Save();
 		}
@@ -115,7 +117,8 @@ public abstract class UnixInstaller : Installer
 				WorkingDirectory = Directory,
 				Environment = new Dictionary<string, string>()
 				{
-					{ "ASPNETCORE_ENVIRONMENT", "Production" }
+					{ "ASPNETCORE_ENVIRONMENT", "Production" },
+					{ "PATH", Environment.GetEnvironmentVariable("PATH") }
 				},
 				ExitTimeout = 30,
 				KeepAlive = true,

@@ -167,11 +167,11 @@ public class SolidCPAuthenticationProvider extends SimpleAuthenticationProvider 
 		GuacamoleConfiguration config = new GuacamoleConfiguration();
 		config.setProtocol(protocol);
 		config.setParameter("hostname", hypervHost);
-		config.setParameter("port", port);
+		config.setParameter("port", "2179");
 		config.setParameter("username", userName);
 		config.setParameter("password", password);
 		config.setParameter("domain", domain);
-		config.setParameter("security", security);
+		config.setParameter("security", "vmconnect");
 		config.setParameter("ignore-cert", "true");
 		config.setParameter("disable-auth", "false");
 		config.setParameter("preconnection-id", "");

@@ -40,9 +40,6 @@ namespace SolidCP.EnterpriseServer
 			return (T)clone;
 		}
 
-		WebApplicationsInstaller webApplicationsInstaller = null;
-		protected WebApplicationsInstaller WebApplicationsInstaller => webApplicationsInstaller ??= new WebApplicationsInstaller(this);
-
 		AuditLog auditLog = null;
 		public AuditLog AuditLog => auditLog ??= new AuditLog(this);
 
@@ -75,9 +72,6 @@ namespace SolidCP.EnterpriseServer
 
 		FtpServerController ftpServerController = null;
 		protected FtpServerController FtpServerController => ftpServerController ??= new FtpServerController(this);
-
-		HeliconZooController heliconZooController = null;
-		protected HeliconZooController HeliconZooController => heliconZooController ??= new HeliconZooController(this);
 
 		HostedSharePointServerController hostedSharePointServerController = null;
 		protected HostedSharePointServerController HostedSharePointServerController => hostedSharePointServerController ??= new HostedSharePointServerController(this);
@@ -156,9 +150,6 @@ namespace SolidCP.EnterpriseServer
 
 		VirtualizationServerControllerProxmox virtualizationServerControllerProxmox = null;
 		protected VirtualizationServerControllerProxmox VirtualizationServerControllerProxmox => virtualizationServerControllerProxmox ??= new VirtualizationServerControllerProxmox(this);
-
-		WebAppGalleryController webAppGalleryController = null;
-		protected WebAppGalleryController WebAppGalleryController => webAppGalleryController ??= new WebAppGalleryController(this);
 
 		WebServerController webServerController = null;
 		protected WebServerController WebServerController => webServerController ??= new WebServerController(this);

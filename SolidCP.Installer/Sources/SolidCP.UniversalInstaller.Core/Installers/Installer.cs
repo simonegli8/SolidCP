@@ -1,3 +1,4 @@
+using Claunia.PropertyList;
 using Microsoft.Identity.Client;
 using Microsoft.Web.Administration;
 using Newtonsoft.Json;
@@ -79,6 +80,13 @@ public abstract partial class Installer
 		set => hasDotnet = value;
 	}
 	public void ResetHasDotnet() => hasDotnet = null;
+	public virtual bool IsRemoteConsole =>
+		!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PSRemotingProtocolVersion")) ||
+		!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PSSenderInfo")) ||
+		!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WSManStackVersion")) ||
+		!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SSH_CLIENT")) ||
+		!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SSH_TTY"));
+
 	public bool NeedRemoveNet8Runtime = false;
 	public bool NeedRemoveNet8AspRuntime = false;
 	public virtual string InstallWebRootPath { get; set; } = null;
@@ -561,7 +569,7 @@ public abstract partial class Installer
 			InstallLog("Removed .NET 8 Runtime");
 	}
 	public virtual string[] UserIsMemeberOf(CommonSettings settings) => new string[0];
-	public virtual void SetFilePermissions(string folder)
+	public virtual void SetFilePermissions(string folder, string user = null)
 	{
 		if (!Path.IsPathRooted(folder)) folder = Path.Combine(InstallWebRootPath, folder);
 
@@ -573,6 +581,13 @@ public abstract partial class Installer
 				UnixFileMode.UserRead | UnixFileMode.GroupRead | UnixFileMode.OtherRead |
 				UnixFileMode.UserExecute | UnixFileMode.GroupExecute, true);
 			InstallLog($"Granted file permissions on {folder}.");
+		}
+		else
+		{
+			if (!string.IsNullOrEmpty(user))
+			{
+				((WindowsInstaller)this).SetFolderPermission(folder, user, NtfsPermission.FullControl);
+			}
 		}
 	}
 	public virtual void SetFileOwner(string folder, string owner, string group)
@@ -810,7 +825,7 @@ public abstract partial class Installer
 		return tmp;
 	}
 	public string DownloadFile(string url) => DownloadFileAsync(url).Result;
-	public string SetupFilter(string file) => file != null && !file.StartsWith("Setup/") ? file : null;
+	public string SetupFilter(string file) => file != null && !Regex.IsMatch(file, @"^(?:[a-zA-Z ]+/)?Setup(?:/|$)") ? file : null;
 	public string Net48Filter(string file)
 	{
 		file = SetupFilter(file);
@@ -1122,9 +1137,10 @@ public abstract partial class Installer
 					{
 						if (csb["Data Source"] != null)
 						{
-							csb["Data Source"] = Path.Combine(Settings.WebPortal.EnterpriseServerPath, (string)csb["Data Source"]);
+							var cspath = (string)csb["Data Source"];
+							cspath = Regex.Replace(cspath, $@"^\.\.{Regex.Escape(Path.DirectorySeparatorChar.ToString())}", "");
+							csb["Data Source"] = Path.Combine("..", Settings.WebPortal.EnterpriseServerPath, cspath);
 						}
-						csb["Data Source"] = Path.Combine(Settings.WebPortal.EnterpriseServerPath, (string)csb["Data Source"]);
 						appsettings.EnterpriseServer.ConnectionString = csb.ConnectionString;
 					}
 				}
@@ -1135,6 +1151,16 @@ public abstract partial class Installer
 		{
 			var connectionString = DatabaseUtils.BuildConnectionString(esettings.DatabaseType, esettings.DatabaseServer,
 				esettings.DatabasePort, esettings.DatabaseName, esettings.DatabaseUser, esettings.DatabasePassword, null, false);
+			var csb = new ConnectionStringBuilder(connectionString);
+			if ((csb["DbType"] as string)?.Contains("Sqlite") == true)
+			{
+				if (csb["Data Source"] != null)
+				{
+					csb["Data Source"] = Path.Combine("..", (string)csb["Data Source"]);
+				}
+				connectionString = csb.ConnectionString;
+			}
+
 			appsettings.EnterpriseServer = new AppSettings.EnterpriseServerSetting()
 			{
 				CryptoKey = esettings.CryptoKey ?? CryptoUtils.GetRandomString(20),
@@ -1281,6 +1307,8 @@ public abstract partial class Installer
 
 	public virtual void WaitForDownloadToComplete()
 	{
+		Info("Download & Unzip Component...");
+
 		var progressFile = Path.Combine(TempPath, SetupLoader.DownloadProgressFile);
 		var nofFilesFile = Path.Combine(TempPath, SetupLoader.NofFilesFile);
 		int n = 0;
