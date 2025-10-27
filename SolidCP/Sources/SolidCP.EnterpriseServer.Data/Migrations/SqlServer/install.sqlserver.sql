@@ -12369,6 +12369,7 @@ BEGIN
         		IPAddressID = @IPAddressID
         	WHERE
         		ServiceID = @ServiceID AND ServerID = @ServerID AND PackageID = @PackageID
+                AND RecordName = @RecordName AND RecordType = @RecordType
         ELSE
         	INSERT INTO GlobalDnsRecords
         	(
@@ -18730,6 +18731,10 @@ BEGIN
 
         -- delete service
         DELETE FROM Services
+        WHERE ServiceID = @ServiceID
+
+        -- delete PackageServices
+        DELETE FROM PackageServices
         WHERE ServiceID = @ServiceID
 
         COMMIT TRAN
@@ -27708,7 +27713,7 @@ BEGIN
         	PROV.EditorControl,
         	PROV.DisplayName,
         	PROV.ProviderType,
-        	RG.GroupName + '' - '' + PROV.DisplayName AS ProviderName,
+        	RG.GroupName + '' - '' + PROV.DisplayName AS ProviderGroupName,
         	PROV.DisableAutoDiscovery
         FROM Providers AS PROV
         INNER JOIN ResourceGroups AS RG ON PROV.GroupID = RG.GroupID
@@ -28607,9 +28612,9 @@ BEGIN
         	D.DomainName,
         	D.HostingAllowed,
         	D.WebSiteID,
-        	WS.ItemName,
+        	WS.ItemName AS WebSiteName,
         	D.MailDomainID,
-        	MD.ItemName
+        	MD.ItemName AS MailDomainName
         FROM Domains AS D
         INNER JOIN PackagesTree(@ParentPackageID, 0) AS PT ON D.PackageID = PT.PackageID
         LEFT OUTER JOIN ServiceItems AS WS ON D.WebSiteID = WS.ItemID
@@ -29044,7 +29049,7 @@ BEGIN
         	U.FirstName,
         	U.LastName,
         	U.FullName,
-        	U.RoleID,
+        	U.RoleID AS UserRoleID,
         	U.Email
         FROM @Schedules AS STEMP
         INNER JOIN Schedule AS S ON STEMP.ScheduleID = S.ScheduleID
@@ -29183,7 +29188,7 @@ BEGIN
         	U.FirstName,
         	U.LastName,
         	U.FullName,
-        	U.RoleID,
+        	U.RoleID AS UserRoleID,
         	U.Email
         FROM @Schedules AS STEMP
         INNER JOIN Schedule AS S ON STEMP.ScheduleID = S.ScheduleID
@@ -31089,7 +31094,6 @@ BEGIN
         	SI.ServiceID,
         	SI.PackageID,
         	P.PackageName,
-        	S.ServiceID,
         	S.ServiceName,
         	SRV.ServerID,
         	SRV.ServerName,
@@ -31181,7 +31185,6 @@ BEGIN
         	SI.ServiceID,
         	SI.PackageID,
         	P.PackageName,
-        	S.ServiceID,
         	S.ServiceName,
         	SRV.ServerID,
         	SRV.ServerName,
@@ -31360,7 +31363,6 @@ BEGIN
         	SI.ServiceID,
         	SI.PackageID,
         	P.PackageName,
-        	S.ServiceID,
         	S.ServiceName,
         	SRV.ServerID,
         	SRV.ServerName,
@@ -31445,7 +31447,6 @@ BEGIN
         	SI.ServiceID,
         	SI.PackageID,
         	P.PackageName,
-        	S.ServiceID,
         	S.ServiceName,
         	SRV.ServerID,
         	SRV.ServerName,
@@ -40468,7 +40469,3497 @@ IF NOT EXISTS (
 )
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20250621163139_InitialCreate', N'9.0.6');
+    VALUES (N'20250621163139_InitialCreate', N'9.0.9');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    ALTER TABLE [PackageServices] DROP CONSTRAINT [FK_PackageServices_Packages];
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    ALTER TABLE [PackageServices] DROP CONSTRAINT [FK_PackageServices_Services];
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'DELETE FROM [Providers]
+    WHERE [ProviderID] = 135;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'DELETE FROM [Quotas]
+    WHERE [QuotaID] = 95;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'DELETE FROM [ResourceGroups]
+    WHERE [GroupID] = 42;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    DECLARE @var sysname;
+    SELECT @var = [d].[name]
+    FROM [sys].[default_constraints] [d]
+    INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+    WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Quotas]') AND [c].[name] = N'QuotaOrder');
+    IF @var IS NOT NULL EXEC(N'ALTER TABLE [Quotas] DROP CONSTRAINT [' + @var + '];');
+    ALTER TABLE [Quotas] ALTER COLUMN [QuotaOrder] float NOT NULL;
+    ALTER TABLE [Quotas] ADD DEFAULT 1.0E0 FOR [QuotaOrder];
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 2;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 3;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 4;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 12;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 13;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 14;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 15;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 18;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 19;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 20;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 24;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 25;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 26;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 27;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 28;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 29;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 7.0E0
+    WHERE [QuotaID] = 30;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 8.0E0
+    WHERE [QuotaID] = 31;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 9.0E0
+    WHERE [QuotaID] = 32;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 10.0E0
+    WHERE [QuotaID] = 33;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 11.0E0
+    WHERE [QuotaID] = 34;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 12.0E0
+    WHERE [QuotaID] = 35;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 13.0E0
+    WHERE [QuotaID] = 36;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 14.0E0
+    WHERE [QuotaID] = 37;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 15.0E0
+    WHERE [QuotaID] = 38;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 16.0E0
+    WHERE [QuotaID] = 39;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 40;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 41;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 42;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 43;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 7.0E0
+    WHERE [QuotaID] = 44;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 45;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 47;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 48;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 49;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 7.0E0
+    WHERE [QuotaID] = 50;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 51;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 52;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 53;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 54;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 55;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 8.0E0
+    WHERE [QuotaID] = 57;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 8.0E0
+    WHERE [QuotaID] = 58;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 8.0E0
+    WHERE [QuotaID] = 59;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 8.0E0
+    WHERE [QuotaID] = 60;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 8.0E0
+    WHERE [QuotaID] = 61;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 62;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 63;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 64;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 65;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 66;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 7.0E0
+    WHERE [QuotaID] = 67;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 68;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 69;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 70;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 9.0E0
+    WHERE [QuotaID] = 71;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 10.0E0
+    WHERE [QuotaID] = 72;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 11.0E0
+    WHERE [QuotaID] = 73;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 7.0E0
+    WHERE [QuotaID] = 74;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 8.0E0
+    WHERE [QuotaID] = 75;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 77;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 78;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 79;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 80;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 81;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 9.0E0
+    WHERE [QuotaID] = 83;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 11.0E0
+    WHERE [QuotaID] = 84;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 13.0E0
+    WHERE [QuotaID] = 85;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 15.0E0
+    WHERE [QuotaID] = 86;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 17.0E0
+    WHERE [QuotaID] = 87;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 8.0E0
+    WHERE [QuotaID] = 88;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 17.0E0
+    WHERE [QuotaID] = 94;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 18.0E0
+    WHERE [QuotaID] = 96;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 20.0E0
+    WHERE [QuotaID] = 97;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 19.0E0
+    WHERE [QuotaID] = 100;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 8.0E0
+    WHERE [QuotaID] = 102;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 103;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 104;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 105;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 106;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 107;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 108;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 110;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 111;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 112;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 113;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 114;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 115;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 120;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 121;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 122;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 123;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 124;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 125;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 200;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 203;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 204;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 205;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 206;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 207;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 208;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 209;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 210;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 211;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 212;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 213;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 214;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 215;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 7.0E0
+    WHERE [QuotaID] = 216;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 217;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 218;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 219;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 220;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 221;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 222;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 223;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 7.0E0
+    WHERE [QuotaID] = 224;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 225;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 230;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 300;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 301;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 302;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 7.0E0
+    WHERE [QuotaID] = 303;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 8.0E0
+    WHERE [QuotaID] = 304;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 305;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 306;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 307;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 10.0E0
+    WHERE [QuotaID] = 308;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 11.0E0
+    WHERE [QuotaID] = 309;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 13.0E0
+    WHERE [QuotaID] = 310;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 14.0E0
+    WHERE [QuotaID] = 311;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 9.0E0
+    WHERE [QuotaID] = 312;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 15.0E0
+    WHERE [QuotaID] = 313;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 16.0E0
+    WHERE [QuotaID] = 314;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 17.0E0
+    WHERE [QuotaID] = 315;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 18.0E0
+    WHERE [QuotaID] = 316;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 19.0E0
+    WHERE [QuotaID] = 317;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 12.0E0
+    WHERE [QuotaID] = 318;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 319;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 320;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 321;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 322;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 323;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 324;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 325;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 7.0E0
+    WHERE [QuotaID] = 326;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 8.0E0
+    WHERE [QuotaID] = 327;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 9.0E0
+    WHERE [QuotaID] = 328;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 10.0E0
+    WHERE [QuotaID] = 329;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 10.0E0
+    WHERE [QuotaID] = 330;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 331;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 21.0E0
+    WHERE [QuotaID] = 332;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 22.0E0
+    WHERE [QuotaID] = 333;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 23.0E0
+    WHERE [QuotaID] = 334;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 9.0E0
+    WHERE [QuotaID] = 344;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 345;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 346;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 347;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 7.0E0
+    WHERE [QuotaID] = 348;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 7.0E0
+    WHERE [QuotaID] = 349;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 350;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 351;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 352;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 10.0E0
+    WHERE [QuotaID] = 353;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 11.0E0
+    WHERE [QuotaID] = 354;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 13.0E0
+    WHERE [QuotaID] = 355;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 14.0E0
+    WHERE [QuotaID] = 356;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 9.0E0
+    WHERE [QuotaID] = 357;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 15.0E0
+    WHERE [QuotaID] = 358;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 16.0E0
+    WHERE [QuotaID] = 359;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 17.0E0
+    WHERE [QuotaID] = 360;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 18.0E0
+    WHERE [QuotaID] = 361;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 19.0E0
+    WHERE [QuotaID] = 362;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 12.0E0
+    WHERE [QuotaID] = 363;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 19.0E0
+    WHERE [QuotaID] = 364;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 20.0E0
+    WHERE [QuotaID] = 365;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 21.0E0
+    WHERE [QuotaID] = 366;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 22.0E0
+    WHERE [QuotaID] = 367;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 368;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 23.0E0
+    WHERE [QuotaID] = 369;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 370;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 371;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 372;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 373;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 374;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 375;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 7.0E0
+    WHERE [QuotaID] = 376;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 8.0E0
+    WHERE [QuotaID] = 377;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 9.0E0
+    WHERE [QuotaID] = 378;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 10.0E0
+    WHERE [QuotaID] = 379;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 11.0E0
+    WHERE [QuotaID] = 380;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 12.0E0
+    WHERE [QuotaID] = 381;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 400;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 13.0E0
+    WHERE [QuotaID] = 409;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 12.0E0
+    WHERE [QuotaID] = 410;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 13.0E0
+    WHERE [QuotaID] = 411;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 24.0E0
+    WHERE [QuotaID] = 420;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 25.0E0
+    WHERE [QuotaID] = 421;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 26.0E0
+    WHERE [QuotaID] = 422;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 423;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 27.0E0
+    WHERE [QuotaID] = 424;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 29.0E0
+    WHERE [QuotaID] = 425;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 28.0E0
+    WHERE [QuotaID] = 426;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 31.0E0
+    WHERE [QuotaID] = 428;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 30.0E0
+    WHERE [QuotaID] = 429;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 430;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 431;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 447;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 448;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 450;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 451;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 452;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 453;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 460;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 461;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 462;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 463;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 464;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 465;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 466;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 467;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 468;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 470;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 471;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 472;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 473;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 474;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 7.0E0
+    WHERE [QuotaID] = 475;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 476;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 491;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 495;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 496;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 550;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 551;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 552;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 553;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 554;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 555;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 7.0E0
+    WHERE [QuotaID] = 556;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 8.0E0
+    WHERE [QuotaID] = 557;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 558;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 559;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 560;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 10.0E0
+    WHERE [QuotaID] = 561;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 11.0E0
+    WHERE [QuotaID] = 562;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 13.0E0
+    WHERE [QuotaID] = 563;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 14.0E0
+    WHERE [QuotaID] = 564;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 9.0E0
+    WHERE [QuotaID] = 565;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 15.0E0
+    WHERE [QuotaID] = 566;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 16.0E0
+    WHERE [QuotaID] = 567;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 17.0E0
+    WHERE [QuotaID] = 568;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 18.0E0
+    WHERE [QuotaID] = 569;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 19.0E0
+    WHERE [QuotaID] = 570;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 12.0E0
+    WHERE [QuotaID] = 571;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 20.0E0
+    WHERE [QuotaID] = 572;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 573;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 574;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 575;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 576;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 577;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 7.0E0
+    WHERE [QuotaID] = 578;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 579;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 12.0E0
+    WHERE [QuotaID] = 581;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 582;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 583;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 584;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 585;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 586;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 587;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 7.0E0
+    WHERE [QuotaID] = 588;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 8.0E0
+    WHERE [QuotaID] = 589;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 9.0E0
+    WHERE [QuotaID] = 590;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 10.0E0
+    WHERE [QuotaID] = 591;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 11.0E0
+    WHERE [QuotaID] = 592;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 673;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 674;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 675;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 7.0E0
+    WHERE [QuotaID] = 676;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 8.0E0
+    WHERE [QuotaID] = 677;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 678;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 679;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 680;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 10.0E0
+    WHERE [QuotaID] = 681;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 11.0E0
+    WHERE [QuotaID] = 682;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 13.0E0
+    WHERE [QuotaID] = 683;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 14.0E0
+    WHERE [QuotaID] = 684;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 9.0E0
+    WHERE [QuotaID] = 685;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 15.0E0
+    WHERE [QuotaID] = 686;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 16.0E0
+    WHERE [QuotaID] = 687;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 17.0E0
+    WHERE [QuotaID] = 688;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 18.0E0
+    WHERE [QuotaID] = 689;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 19.0E0
+    WHERE [QuotaID] = 690;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 12.0E0
+    WHERE [QuotaID] = 691;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 20.0E0
+    WHERE [QuotaID] = 692;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 701;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 702;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 703;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 704;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 705;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 7.0E0
+    WHERE [QuotaID] = 706;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 707;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 711;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 712;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 713;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 714;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 715;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 7.0E0
+    WHERE [QuotaID] = 716;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 717;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 721;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 722;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 723;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 724;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 725;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 7.0E0
+    WHERE [QuotaID] = 726;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 727;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 14.0E0
+    WHERE [QuotaID] = 728;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 32.0E0
+    WHERE [QuotaID] = 729;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 730;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 31.0E0
+    WHERE [QuotaID] = 731;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 732;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 733;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 734;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 735;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 736;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 7.0E0
+    WHERE [QuotaID] = 737;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 738;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 22.0E0
+    WHERE [QuotaID] = 750;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 23.0E0
+    WHERE [QuotaID] = 751;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 24.0E0
+    WHERE [QuotaID] = 752;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 753;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 9.0E0
+    WHERE [QuotaID] = 754;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 1.0E0
+    WHERE [QuotaID] = 760;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 2.0E0
+    WHERE [QuotaID] = 761;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 3.0E0
+    WHERE [QuotaID] = 762;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 5.0E0
+    WHERE [QuotaID] = 763;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 6.0E0
+    WHERE [QuotaID] = 764;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 7.0E0
+    WHERE [QuotaID] = 765;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [Quotas] SET [QuotaOrder] = 4.0E0
+    WHERE [QuotaID] = 766;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'QuotaID', N'GroupID', N'HideQuota', N'ItemTypeID', N'PerOrganization', N'QuotaDescription', N'QuotaName', N'QuotaOrder', N'QuotaTypeID', N'ServiceQuota') AND [object_id] = OBJECT_ID(N'[Quotas]'))
+        SET IDENTITY_INSERT [Quotas] ON;
+    EXEC(N'INSERT INTO [Quotas] ([QuotaID], [GroupID], [HideQuota], [ItemTypeID], [PerOrganization], [QuotaDescription], [QuotaName], [QuotaOrder], [QuotaTypeID], [ServiceQuota])
+    VALUES (770, 4, NULL, 11, NULL, N''Mail Domains'', N''Mail.Domains'', 2.1000000000000001E0, 2, CAST(1 AS bit)),
+    (771, 4, NULL, NULL, NULL, N''Mail Accounts per Domain'', N''Mail.Accounts.per.Domains'', 2.2000000000000002E0, 2, CAST(1 AS bit))');
+    IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'QuotaID', N'GroupID', N'HideQuota', N'ItemTypeID', N'PerOrganization', N'QuotaDescription', N'QuotaName', N'QuotaOrder', N'QuotaTypeID', N'ServiceQuota') AND [object_id] = OBJECT_ID(N'[Quotas]'))
+        SET IDENTITY_INSERT [Quotas] OFF;
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    EXEC(N'UPDATE [UserSettings] SET [PropertyValue] = CONCAT(CAST(N''<?xml version="1.0" encoding="utf-8"?>'' AS nvarchar(max)), nchar(13), nchar(10), N''<publishData>'', nchar(13), nchar(10), N''<ad:if test="#WebSite.WebDeploySitePublishingEnabled#">'', nchar(13), nchar(10), N''	<publishProfile'', nchar(13), nchar(10), N''		profileName="#WebSite.Name# - Web Deploy"'', nchar(13), nchar(10), N''		publishMethod="MSDeploy"'', nchar(13), nchar(10), N''		publishUrl="#WebSite["WmSvcServiceUrl"]#:#WebSite["WmSvcServicePort"]#"'', nchar(13), nchar(10), N''		msdeploySite="#WebSite.Name#"'', nchar(13), nchar(10), N''		userName="#WebSite.WebDeployPublishingAccount#"'', nchar(13), nchar(10), N''		userPWD="#WebSite.WebDeployPublishingPassword#"'', nchar(13), nchar(10), N''		destinationAppUrl="http://#WebSite.Name#/"'', nchar(13), nchar(10), N''		<ad:if test="#Not(IsNull(MsSqlDatabase)) and Not(IsNull(MsSqlUser))#">SQLServerDBConnectionString="server=#MsSqlServerExternalAddress#;Initial Catalog=#MsSqlDatabase.Name#;uid=#MsSqlUser.Name#;pwd=#MsSqlUser.Password#"</ad:if>'', nchar(13), nchar(10), N''		<ad:if test="#Not(IsNull(MySqlDatabase)) and Not(IsNull(MySqlUser))#">mySQLDBConnectionString="server=#MySqlAddress#;database=#MySqlDatabase.Name#;uid=#MySqlUser.Name#;pwd=#MySqlUser.Password#"</ad:if>'', nchar(13), nchar(10), N''		<ad:if test="#Not(IsNull(MariaDBDatabase)) and Not(IsNull(MariaDBUser))#">MariaDBDBConnectionString="server=#MariaDBAddress#;database=#MariaDBDatabase.Name#;uid=#MariaDBUser.Name#;pwd=#MariaDBUser.Password#"</ad:if>'', nchar(13), nchar(10), N''		hostingProviderForumLink="https://solidcp.com/support"'', nchar(13), nchar(10), N''		controlPanelLink="https://panel.solidcp.com/"'', nchar(13), nchar(10), N''	/>'', nchar(13), nchar(10), N''</ad:if>'', nchar(13), nchar(10), N''<ad:if test="#IsDefined("FtpAccount")#">'', nchar(13), nchar(10), N''	<publishProfile'', nchar(13), nchar(10), N''		profileName="#WebSite.Name# - FTP"'', nchar(13), nchar(10), N''		publishMethod="FTP"'', nchar(13), nchar(10), N''		publishUrl="ftp://#FtpServiceAddress#"'', nchar(13), nchar(10), N''		ftpPassiveMode="True"'', nchar(13), nchar(10), N''		userName="#FtpAccount.Name#"'', nchar(13), nchar(10), N''		userPWD="#FtpAccount.Password#"'', nchar(13), nchar(10), N''		destinationAppUrl="http://#WebSite.Name#/"'', nchar(13), nchar(10), N''		<ad:if test="#Not(IsNull(MsSqlDatabase)) and Not(IsNull(MsSqlUser))#">SQLServerDBConnectionString="server=#MsSqlServerExternalAddress#;Initial Catalog=#MsSqlDatabase.Name#;uid=#MsSqlUser.Name#;pwd=#MsSqlUser.Password#"</ad:if>'', nchar(13), nchar(10), N''		<ad:if test="#Not(IsNull(MySqlDatabase)) and Not(IsNull(MySqlUser))#">mySQLDBConnectionString="server=#MySqlAddress#;database=#MySqlDatabase.Name#;uid=#MySqlUser.Name#;pwd=#MySqlUser.Password#"</ad:if>'', nchar(13), nchar(10), N''		<ad:if test="#Not(IsNull(MariaDBDatabase)) and Not(IsNull(MariaDBUser))#">MariaDBDBConnectionString="server=#MariaDBAddress#;database=#MariaDBDatabase.Name#;uid=#MariaDBUser.Name#;pwd=#MariaDBUser.Password#"</ad:if>'', nchar(13), nchar(10), N''		hostingProviderForumLink="https://solidcp.com/support"'', nchar(13), nchar(10), N''		controlPanelLink="https://panel.solidcp.com/"'', nchar(13), nchar(10), N''    />'', nchar(13), nchar(10), N''</ad:if>'', nchar(13), nchar(10), N''</publishData>'', nchar(13), nchar(10), nchar(13), nchar(10), N''<!--'', nchar(13), nchar(10), N''Control Panel:'', nchar(13), nchar(10), N''Username: #User.Username#'', nchar(13), nchar(10), N''Password: #User.Password#'', nchar(13), nchar(10), nchar(13), nchar(10), N''Technical Contact:'', nchar(13), nchar(10), N''support@solidcp.com'', nchar(13), nchar(10), N''-->'')
+    WHERE [PropertyName] = N''PublishingProfile'' AND [SettingsName] = N''WebPolicy'' AND [UserID] = 1;
+    SELECT @@ROWCOUNT');
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    ALTER TABLE [PackageServices] ADD CONSTRAINT [FK_PackageServices_Packages] FOREIGN KEY ([PackageID]) REFERENCES [Packages] ([PackageID]);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    ALTER TABLE [PackageServices] ADD CONSTRAINT [FK_PackageServices_Services] FOREIGN KEY ([ServiceID]) REFERENCES [Services] ([ServiceID]);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251027160940_AddedMailDomainQuotas'
+)
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20251027160940_AddedMailDomainQuotas', N'9.0.9');
 END;
 
 COMMIT;

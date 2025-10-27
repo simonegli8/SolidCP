@@ -107,8 +107,8 @@ namespace SolidCP.EnterpriseServer.Data
 		}
 #endif
 	}
-
-	public class SqliteDbContext : GenericDbContext<SqliteProvider>
+	
+	public class SqliteDbContext : GenericDbContext<SqliteProvider>, IMigratableDbContext
 	{
 #if NetCore
 
@@ -131,12 +131,18 @@ namespace SolidCP.EnterpriseServer.Data
 		public SqliteDbContext(string connectionString, bool initSeedData = false) :
 			base(new DbOptions<Context.DbContextBase>(DbType.Sqlite, connectionString, initSeedData))
 		{ }
+
+		public void Migrate() => Database.Migrate();
 #elif NetFX
 		public SqliteDbContext(Data.DbContext context) : base(context)
 		{
 			DbType = DbType.Sqlite;
 			InitSeedData = context.InitSeedData;
 		}
+
+		public void Migrate() => throw new NotSupportedException();
+#else
+		public void Migrate() => throw new NotSupportedException();
 #endif
 	}
 

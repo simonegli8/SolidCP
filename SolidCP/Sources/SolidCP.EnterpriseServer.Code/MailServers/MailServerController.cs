@@ -30,6 +30,13 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE)  ARISING  IN  ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using MySqlX.XDevAPI.Common;
+using SolidCP.EnterpriseServer;
+using SolidCP.EnterpriseServer.Base;
+using SolidCP.EnterpriseServer.Code.MailServers;
+using SolidCP.Providers;
+using SolidCP.Providers.Mail;
+using SolidCP.Server.Client;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -39,12 +46,7 @@ using System.IO;
 //using System.Web.Script.Serialization;
 using System.Xml;
 using System.Xml.Serialization;
-using SolidCP.EnterpriseServer;
-using SolidCP.EnterpriseServer.Base;
-using SolidCP.EnterpriseServer.Code.MailServers;
-using SolidCP.Providers;
-using SolidCP.Providers.Mail;
-using SolidCP.Server.Client;
+using System.Linq;
 
 namespace SolidCP.EnterpriseServer
 {
@@ -117,6 +119,21 @@ namespace SolidCP.EnterpriseServer
 			if (quota.QuotaExhausted)
 				return BusinessErrorCodes.ERROR_MAIL_ACCOUNTS_RESOURCE_QUOTA_LIMIT;
 
+			// check mail accounts per domain quota
+			string domainName = item.Name.Substring(item.Name.IndexOf("@") + 1);
+			QuotaValueInfo accountsPerDoaminQuota = PackageController.GetPackageQuota(item.PackageId, Quotas.MAIL_ACCOUNTS_PER_DOMAIN);
+			if (quota.QuotaAllocatedValue >= 0)
+			{
+				var domainAccounts = Database.GetMailAccountsCountForDomain(item.PackageId, domainName);
+				if (domainAccounts >= quota.QuotaAllocatedValue)
+				{
+					return BusinessErrorCodes.ERROR_MAIL_ACCOUNTS_RESOURCE_QUOTA_LIMIT;
+				}
+			}
+
+			return BusinessErrorCodes.ERROR_MAIL_ACCOUNTS_RESOURCE_QUOTA_LIMIT;
+
+
 			// check if mail resource is available
 			int serviceId = PackageController.GetPackageServiceId(item.PackageId, ResourceGroups.Mail);
 			if (serviceId == 0)
@@ -143,7 +160,6 @@ namespace SolidCP.EnterpriseServer
 					return BusinessErrorCodes.ERROR_MAIL_ACCOUNTS_SERVICE_ITEM_EXISTS;
 
 				// add domain if not exists
-				string domainName = item.Name.Substring(item.Name.IndexOf("@") + 1);
 				int domainResult = AddMailDomain(item.PackageId, serviceId, domainName);
 				if (domainResult < 0)
 					return domainResult;
@@ -1095,8 +1111,13 @@ namespace SolidCP.EnterpriseServer
 			if (PackageController.GetPackageItemByName(item.PackageId, item.Name, typeof(MailDomain)) != null)
 				return 0; // OK, domain already exists
 
-            //Get mailPolicy settings
-            UserInfo user = PackageController.GetPackageOwner(item.PackageId);
+			// check quota
+			QuotaValueInfo quota = PackageController.GetPackageQuota(item.PackageId, Quotas.MAIL_DOMAINS);
+			if (quota.QuotaExhausted)
+				return BusinessErrorCodes.ERROR_MAIL_DOMAINS_RESOURCE_QUOTA_LIMIT;
+
+			//Get mailPolicy settings
+			UserInfo user = PackageController.GetPackageOwner(item.PackageId);
 			UserSettings mailPolicy = UserController.GetUserSettings(user.UserId, UserSettings.MAIL_POLICY);
 
             PackageContext cntx = PackageController.GetPackageContext(item.PackageId);

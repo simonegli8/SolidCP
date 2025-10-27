@@ -4,87 +4,77 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SolidCP.EnterpriseServer.Data;
 
 #nullable disable
 
-namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
+namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
 {
-    [DbContext(typeof(PostgreSqlDbContext))]
-    [Migration("20250621163238_InitialCreate")]
+    [DbContext(typeof(SqliteDbContext))]
+    [Migration("20251027161257_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasDefaultSchema("public")
-                .HasAnnotation("ProductVersion", "9.0.6")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
-
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.AccessToken", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
                     b.Property<Guid>("AccessTokenGuid")
-                        .HasColumnType("uuid");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("AccountId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("AccountID");
 
                     b.Property<DateTime>("ExpirationDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("ItemId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("SmsResponse")
                         .HasMaxLength(100)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("TokenType")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id")
                         .HasName("PK__AccessTo__3214EC27DEAEF66E");
 
                     b.HasIndex(new[] { "AccountId" }, "AccessTokensIdx_AccountID");
 
-                    b.ToTable("AccessTokens", "public");
+                    b.ToTable("AccessTokens");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.AdditionalGroup", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ID");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("GroupName")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("UserID");
 
                     b.HasKey("Id")
                         .HasName("PK__Addition__3214EC27E665DDE2");
 
-                    b.ToTable("AdditionalGroups", "public");
+                    b.ToTable("AdditionalGroups");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.AuditLog", b =>
@@ -92,58 +82,58 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                     b.Property<string>("RecordId")
                         .HasMaxLength(32)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(32)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnName("RecordID");
 
                     b.Property<string>("ExecutionLog")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("FinishDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("ItemId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ItemID");
 
                     b.Property<string>("ItemName")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("PackageId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PackageID");
 
                     b.Property<int>("SeverityId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("SeverityID");
 
                     b.Property<string>("SourceName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TaskName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("UserId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("UserID");
 
                     b.Property<string>("Username")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("RecordId")
                         .HasName("PK_Log");
 
-                    b.ToTable("AuditLog", "public");
+                    b.ToTable("AuditLog");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.AuditLogSource", b =>
@@ -151,11 +141,11 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                     b.Property<string>("SourceName")
                         .HasMaxLength(100)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("SourceName");
 
-                    b.ToTable("AuditLogSources", "public");
+                    b.ToTable("AuditLogSources");
 
                     b.HasData(
                         new
@@ -317,23 +307,23 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                     b.Property<string>("SourceName")
                         .HasMaxLength(100)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(1);
 
                     b.Property<string>("TaskName")
                         .HasMaxLength(100)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(2);
 
                     b.Property<string>("TaskDescription")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("SourceName", "TaskName")
                         .HasName("PK_LogActions");
 
-                    b.ToTable("AuditLogTasks", "public");
+                    b.ToTable("AuditLogTasks");
 
                     b.HasData(
                         new
@@ -2170,113 +2160,109 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
                     b.Property<bool?>("Completed")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("EffectiveUserId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("EffectiveUserID");
 
                     b.Property<DateTime?>("FinishDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid>("Guid")
-                        .HasColumnType("uuid");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("IndicatorCurrent")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("IndicatorMaximum")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("ItemId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ItemID");
 
                     b.Property<string>("ItemName")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("MaximumExecutionTime")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool?>("NotifyOnComplete")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("PackageId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PackageID");
 
                     b.Property<int>("ScheduleId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ScheduleID");
 
                     b.Property<int>("Severity")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Source")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("TaskId")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("TaskID");
 
                     b.Property<string>("TaskName")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("UserID");
 
                     b.HasKey("Id")
                         .HasName("PK__Backgrou__3214EC273A1145AC");
 
-                    b.ToTable("BackgroundTasks", "public");
+                    b.ToTable("BackgroundTasks");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.BackgroundTaskLog", b =>
                 {
                     b.Property<int>("LogId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("LogID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LogId"));
-
                     b.Property<DateTime?>("Date")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ExceptionStackTrace")
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("InnerTaskStart")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("Severity")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("TaskId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("TaskID");
 
                     b.Property<string>("Text")
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("TextIdent")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("XmlParameters")
                         .HasColumnType("TEXT");
@@ -2286,52 +2272,48 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex(new[] { "TaskId" }, "BackgroundTaskLogsIdx_TaskID");
 
-                    b.ToTable("BackgroundTaskLogs", "public");
+                    b.ToTable("BackgroundTaskLogs");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.BackgroundTaskParameter", b =>
                 {
                     b.Property<int>("ParameterId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ParameterID");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ParameterId"));
 
                     b.Property<string>("Name")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.Property<string>("SerializerValue")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("TaskId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("TaskID");
 
                     b.Property<string>("TypeName")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ParameterId")
                         .HasName("PK__Backgrou__F80C629777BF580B");
 
                     b.HasIndex(new[] { "TaskId" }, "BackgroundTaskParametersIdx_TaskID");
 
-                    b.ToTable("BackgroundTaskParameters", "public");
+                    b.ToTable("BackgroundTaskParameters");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.BackgroundTaskStack", b =>
                 {
                     b.Property<int>("TaskStackId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("TaskStackID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TaskStackId"));
-
                     b.Property<int>("TaskId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("TaskID");
 
                     b.HasKey("TaskStackId")
@@ -2339,223 +2321,211 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex(new[] { "TaskId" }, "BackgroundTaskStackIdx_TaskID");
 
-                    b.ToTable("BackgroundTaskStack", "public");
+                    b.ToTable("BackgroundTaskStack");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.BlackBerryUser", b =>
                 {
                     b.Property<int>("BlackBerryUserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("BlackBerryUserId"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("AccountId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("BlackBerryUserId");
 
                     b.HasIndex(new[] { "AccountId" }, "BlackBerryUsersIdx_AccountId");
 
-                    b.ToTable("BlackBerryUsers", "public");
+                    b.ToTable("BlackBerryUsers");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.Cluster", b =>
                 {
                     b.Property<int>("ClusterId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ClusterID");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ClusterId"));
 
                     b.Property<string>("ClusterName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ClusterId");
 
-                    b.ToTable("Clusters", "public");
+                    b.ToTable("Clusters");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.Comment", b =>
                 {
                     b.Property<int>("CommentId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("CommentID");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CommentId"));
 
                     b.Property<string>("CommentText")
                         .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("ItemId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ItemID");
 
                     b.Property<string>("ItemTypeId")
                         .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(50)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnName("ItemTypeID");
 
                     b.Property<int?>("SeverityId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("SeverityID");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("UserID");
 
                     b.HasKey("CommentId");
 
                     b.HasIndex(new[] { "UserId" }, "CommentsIdx_UserID");
 
-                    b.ToTable("Comments", "public");
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.CrmUser", b =>
                 {
                     b.Property<int>("CrmUserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("CRMUserID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CrmUserId"));
-
                     b.Property<int>("AccountId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("AccountID");
 
                     b.Property<Guid?>("BusinessUnitId")
-                        .HasColumnType("uuid")
+                        .HasColumnType("TEXT")
                         .HasColumnName("BusinessUnitID");
 
                     b.Property<int?>("CalType")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("CALType");
 
                     b.Property<DateTime>("ChangedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid?>("CrmUserGuid")
-                        .HasColumnType("uuid")
+                        .HasColumnType("TEXT")
                         .HasColumnName("CRMUserGuid");
 
                     b.HasKey("CrmUserId");
 
                     b.HasIndex(new[] { "AccountId" }, "CRMUsersIdx_AccountID");
 
-                    b.ToTable("CRMUsers", "public");
+                    b.ToTable("CRMUsers");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.DmzIpAddress", b =>
                 {
                     b.Property<int>("DmzAddressId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("DmzAddressID");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("DmzAddressId"));
 
                     b.Property<string>("IpAddress")
                         .IsRequired()
                         .HasMaxLength(15)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(15)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnName("IPAddress");
 
                     b.Property<bool>("IsPrimary")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("ItemId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ItemID");
 
                     b.HasKey("DmzAddressId");
 
                     b.HasIndex(new[] { "ItemId" }, "DmzIPAddressesIdx_ItemID");
 
-                    b.ToTable("DmzIPAddresses", "public");
+                    b.ToTable("DmzIPAddresses");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.Domain", b =>
                 {
                     b.Property<int>("DomainId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("DomainID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("DomainId"));
-
                     b.Property<DateTime?>("CreationDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("DomainItemId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("DomainName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.Property<DateTime?>("ExpirationDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("HostingAllowed")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
 
                     b.Property<bool>("IsDomainPointer")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsPreviewDomain")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
 
                     b.Property<bool>("IsSubDomain")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
 
                     b.Property<DateTime?>("LastUpdateDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("MailDomainId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("MailDomainID");
 
                     b.Property<int>("PackageId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PackageID");
 
                     b.Property<string>("RegistrarName")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("WebSiteId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("WebSiteID");
 
                     b.Property<int?>("ZoneItemId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ZoneItemID");
 
                     b.HasKey("DomainId");
@@ -2568,107 +2538,101 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex(new[] { "ZoneItemId" }, "DomainsIdx_ZoneItemID");
 
-                    b.ToTable("Domains", "public");
+                    b.ToTable("Domains");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.DomainDnsRecord", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
                     b.Property<DateTime?>("Date")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("DnsServer")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("DomainId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("RecordType")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Value")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id")
                         .HasName("PK__DomainDn__3214EC27A6FC0498");
 
                     b.HasIndex(new[] { "DomainId" }, "DomainDnsRecordsIdx_DomainId");
 
-                    b.ToTable("DomainDnsRecords", "public");
+                    b.ToTable("DomainDnsRecords");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.EnterpriseFolder", b =>
                 {
                     b.Property<int>("EnterpriseFolderId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("EnterpriseFolderID");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("EnterpriseFolderId"));
 
                     b.Property<string>("Domain")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.Property<string>("FolderName")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("FolderQuota")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(0);
 
                     b.Property<string>("HomeFolder")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("ItemId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ItemID");
 
                     b.Property<string>("LocationDrive")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("StorageSpaceFolderId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("EnterpriseFolderId");
 
                     b.HasIndex(new[] { "StorageSpaceFolderId" }, "EnterpriseFoldersIdx_StorageSpaceFolderId");
 
-                    b.ToTable("EnterpriseFolders", "public");
+                    b.ToTable("EnterpriseFolders");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.EnterpriseFoldersOwaPermission", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
                     b.Property<int>("AccountId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("AccountID");
 
                     b.Property<int>("FolderId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("FolderID");
 
                     b.Property<int>("ItemId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ItemID");
 
                     b.HasKey("Id")
@@ -2678,83 +2642,81 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex(new[] { "FolderId" }, "EnterpriseFoldersOwaPermissionsIdx_FolderID");
 
-                    b.ToTable("EnterpriseFoldersOwaPermissions", "public");
+                    b.ToTable("EnterpriseFoldersOwaPermissions");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.ExchangeAccount", b =>
                 {
                     b.Property<int>("AccountId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("AccountID");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AccountId"));
 
                     b.Property<string>("AccountName")
                         .IsRequired()
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("AccountType")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("ArchivingMailboxPlanId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool?>("EnableArchiving")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("ExchangeDisclaimerId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsVip")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(false)
                         .HasColumnName("IsVIP");
 
                     b.Property<int>("ItemId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ItemID");
 
                     b.Property<int?>("LevelId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("LevelID");
 
                     b.Property<bool?>("MailEnabledPublicFolder")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("MailboxManagerActions")
                         .HasMaxLength(200)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("MailboxPlanId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("PrimaryEmailAddress")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("SamAccountName")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("SubscriberNumber")
                         .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("UserPrincipalName")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("AccountId");
 
@@ -2765,26 +2727,24 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                     b.HasIndex(new[] { "AccountName" }, "IX_ExchangeAccounts_UniqueAccountName")
                         .IsUnique();
 
-                    b.ToTable("ExchangeAccounts", "public");
+                    b.ToTable("ExchangeAccounts");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.ExchangeAccountEmailAddress", b =>
                 {
                     b.Property<int>("AddressId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("AddressID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AddressId"));
-
                     b.Property<int>("AccountId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("AccountID");
 
                     b.Property<string>("EmailAddress")
                         .IsRequired()
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("AddressId");
 
@@ -2793,182 +2753,176 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                     b.HasIndex(new[] { "EmailAddress" }, "IX_ExchangeAccountEmailAddresses_UniqueEmail")
                         .IsUnique();
 
-                    b.ToTable("ExchangeAccountEmailAddresses", "public");
+                    b.ToTable("ExchangeAccountEmailAddresses");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.ExchangeDeletedAccount", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
                     b.Property<int>("AccountId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("AccountID");
 
                     b.Property<DateTime>("ExpirationDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("FileName")
                         .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("FolderName")
                         .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("OriginAt")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("OriginAT");
 
                     b.Property<string>("StoragePath")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id")
                         .HasName("PK__Exchange__3214EC27EF1C22C1");
 
-                    b.ToTable("ExchangeDeletedAccounts", "public");
+                    b.ToTable("ExchangeDeletedAccounts");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.ExchangeDisclaimer", b =>
                 {
                     b.Property<int>("ExchangeDisclaimerId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ExchangeDisclaimerId"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("DisclaimerName")
                         .IsRequired()
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.Property<string>("DisclaimerText")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("ItemId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ItemID");
 
                     b.HasKey("ExchangeDisclaimerId");
 
-                    b.ToTable("ExchangeDisclaimers", "public");
+                    b.ToTable("ExchangeDisclaimers");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.ExchangeMailboxPlan", b =>
                 {
                     b.Property<int>("MailboxPlanId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MailboxPlanId"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool?>("AllowLitigationHold")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("ArchiveSizeMb")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ArchiveSizeMB");
 
                     b.Property<int?>("ArchiveWarningPct")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool?>("Archiving")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("EnableActiveSync")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool?>("EnableArchiving")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool?>("EnableAutoReply")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool?>("EnableForceArchiveDeletion")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("EnableImap")
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("EnableIMAP");
 
                     b.Property<bool>("EnableMapi")
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("EnableMAPI");
 
                     b.Property<bool>("EnableOwa")
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("EnableOWA");
 
                     b.Property<bool>("EnablePop")
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("EnablePOP");
 
                     b.Property<bool>("HideFromAddressBook")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsDefault")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool?>("IsForJournaling")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("IssueWarningPct")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("ItemId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ItemID");
 
                     b.Property<int>("KeepDeletedItemsDays")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("LitigationHoldMsg")
                         .HasMaxLength(512)
-                        .HasColumnType("character varying(512)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("LitigationHoldUrl")
                         .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("MailboxPlan")
                         .IsRequired()
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.Property<int?>("MailboxPlanType")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("MailboxSizeMb")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("MailboxSizeMB");
 
                     b.Property<int>("MaxReceiveMessageSizeKb")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("MaxReceiveMessageSizeKB");
 
                     b.Property<int>("MaxRecipients")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("MaxSendMessageSizeKb")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("MaxSendMessageSizeKB");
 
                     b.Property<int>("ProhibitSendPct")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("ProhibitSendReceivePct")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("RecoverableItemsSpace")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("RecoverableItemsWarningPct")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("MailboxPlanId");
 
@@ -2977,53 +2931,51 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                     b.HasIndex(new[] { "MailboxPlanId" }, "IX_ExchangeMailboxPlans")
                         .IsUnique();
 
-                    b.ToTable("ExchangeMailboxPlans", "public");
+                    b.ToTable("ExchangeMailboxPlans");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.ExchangeMailboxPlanRetentionPolicyTag", b =>
                 {
                     b.Property<int>("PlanTagId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PlanTagID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PlanTagId"));
-
                     b.Property<int>("MailboxPlanId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("TagId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("TagID");
 
                     b.HasKey("PlanTagId")
                         .HasName("PK__Exchange__E467073C50CD805B");
 
-                    b.ToTable("ExchangeMailboxPlanRetentionPolicyTags", "public");
+                    b.ToTable("ExchangeMailboxPlanRetentionPolicyTags");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.ExchangeOrganization", b =>
                 {
                     b.Property<int>("ItemId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ItemID");
 
                     b.Property<int?>("ExchangeMailboxPlanId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ExchangeMailboxPlanID");
 
                     b.Property<int?>("LyncUserPlanId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("LyncUserPlanID");
 
                     b.Property<string>("OrganizationId")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("character varying(128)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnName("OrganizationID");
 
                     b.Property<int?>("SfBuserPlanId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("SfBUserPlanID");
 
                     b.HasKey("ItemId");
@@ -3031,35 +2983,33 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                     b.HasIndex(new[] { "OrganizationId" }, "IX_ExchangeOrganizations_UniqueOrg")
                         .IsUnique();
 
-                    b.ToTable("ExchangeOrganizations", "public");
+                    b.ToTable("ExchangeOrganizations");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.ExchangeOrganizationDomain", b =>
                 {
                     b.Property<int>("OrganizationDomainId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("OrganizationDomainID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OrganizationDomainId"));
-
                     b.Property<int?>("DomainId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("DomainID");
 
                     b.Property<int>("DomainTypeId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(0)
                         .HasColumnName("DomainTypeID");
 
                     b.Property<bool?>("IsHost")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
 
                     b.Property<int>("ItemId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ItemID");
 
                     b.HasKey("OrganizationDomainId");
@@ -3069,50 +3019,48 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                     b.HasIndex(new[] { "DomainId" }, "IX_ExchangeOrganizationDomains_UniqueDomain")
                         .IsUnique();
 
-                    b.ToTable("ExchangeOrganizationDomains", "public");
+                    b.ToTable("ExchangeOrganizationDomains");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.ExchangeOrganizationSetting", b =>
                 {
                     b.Property<int>("ItemId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnOrder(1);
 
                     b.Property<string>("SettingsName")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnOrder(2);
 
                     b.Property<string>("Xml")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ItemId", "SettingsName");
 
                     b.HasIndex(new[] { "ItemId" }, "ExchangeOrganizationSettingsIdx_ItemId");
 
-                    b.ToTable("ExchangeOrganizationSettings", "public");
+                    b.ToTable("ExchangeOrganizationSettings");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.ExchangeOrganizationSsFolder", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("ItemId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("StorageSpaceFolderId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(100)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.HasKey("Id")
                         .HasName("PK__Exchange__3214EC072DDBA072");
@@ -3121,94 +3069,90 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex(new[] { "StorageSpaceFolderId" }, "ExchangeOrganizationSsFoldersIdx_StorageSpaceFolderId");
 
-                    b.ToTable("ExchangeOrganizationSsFolders", "public");
+                    b.ToTable("ExchangeOrganizationSsFolders");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.ExchangeRetentionPolicyTag", b =>
                 {
                     b.Property<int>("TagId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("TagID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TagId"));
-
                     b.Property<int>("AgeLimitForRetention")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("ItemId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ItemID");
 
                     b.Property<int>("RetentionAction")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("TagName")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.Property<int>("TagType")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("TagId")
                         .HasName("PK__Exchange__657CFA4C02667D37");
 
-                    b.ToTable("ExchangeRetentionPolicyTags", "public");
+                    b.ToTable("ExchangeRetentionPolicyTags");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.GlobalDnsRecord", b =>
                 {
                     b.Property<int>("RecordId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("RecordID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RecordId"));
-
                     b.Property<int?>("IpAddressId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("IPAddressID");
 
                     b.Property<int>("MXPriority")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("MXPriority");
 
                     b.Property<int?>("PackageId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PackageID");
 
                     b.Property<string>("RecordData")
                         .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("RecordName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("RecordType")
                         .IsRequired()
                         .HasMaxLength(10)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(10)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.Property<int?>("ServerId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ServerID");
 
                     b.Property<int?>("ServiceId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ServiceID");
 
                     b.Property<int?>("SrvPort")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("SrvPriority")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("SrvWeight")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("RecordId");
 
@@ -3220,26 +3164,24 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex(new[] { "ServiceId" }, "GlobalDnsRecordsIdx_ServiceID");
 
-                    b.ToTable("GlobalDnsRecords", "public");
+                    b.ToTable("GlobalDnsRecords");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.HostingPlan", b =>
                 {
                     b.Property<int>("PlanId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PlanID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PlanId"));
-
                     b.Property<bool>("Available")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool?>("IsAddon")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("PackageId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PackageID");
 
                     b.Property<string>("PlanDescription")
@@ -3248,26 +3190,26 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                     b.Property<string>("PlanName")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.Property<int?>("RecurrenceLength")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("RecurrenceUnit")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<decimal?>("RecurringPrice")
-                        .HasColumnType("numeric");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("ServerId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ServerID");
 
                     b.Property<decimal?>("SetupPrice")
-                        .HasColumnType("numeric");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("UserId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("UserID");
 
                     b.HasKey("PlanId");
@@ -3278,65 +3220,63 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex(new[] { "UserId" }, "HostingPlansIdx_UserID");
 
-                    b.ToTable("HostingPlans", "public");
+                    b.ToTable("HostingPlans");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.HostingPlanQuota", b =>
                 {
                     b.Property<int>("PlanId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PlanID")
                         .HasColumnOrder(1);
 
                     b.Property<int>("QuotaId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("QuotaID")
                         .HasColumnOrder(2);
 
                     b.Property<int>("QuotaValue")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("PlanId", "QuotaId")
                         .HasName("PK_HostingPlanQuotas_1");
 
                     b.HasIndex("QuotaId");
 
-                    b.ToTable("HostingPlanQuotas", "public");
+                    b.ToTable("HostingPlanQuotas");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.HostingPlanResource", b =>
                 {
                     b.Property<int>("PlanId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PlanID")
                         .HasColumnOrder(1);
 
                     b.Property<int>("GroupId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("GroupID")
                         .HasColumnOrder(2);
 
                     b.Property<bool?>("CalculateBandwidth")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool?>("CalculateDiskSpace")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("PlanId", "GroupId");
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("HostingPlanResources", "public");
+                    b.ToTable("HostingPlanResources");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.IpAddress", b =>
                 {
                     b.Property<int>("AddressId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("AddressID");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AddressId"));
 
                     b.Property<string>("Comments")
                         .HasColumnType("TEXT");
@@ -3344,159 +3284,155 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                     b.Property<string>("DefaultGateway")
                         .HasMaxLength(15)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(15)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.Property<string>("ExternalIp")
                         .IsRequired()
                         .HasMaxLength(24)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(24)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnName("ExternalIP");
 
                     b.Property<string>("InternalIp")
                         .HasMaxLength(24)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(24)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnName("InternalIP");
 
                     b.Property<int?>("PoolId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PoolID");
 
                     b.Property<int?>("ServerId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ServerID");
 
                     b.Property<string>("SubnetMask")
                         .HasMaxLength(15)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(15)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.Property<int?>("Vlan")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("VLAN");
 
                     b.HasKey("AddressId");
 
                     b.HasIndex(new[] { "ServerId" }, "IPAddressesIdx_ServerID");
 
-                    b.ToTable("IPAddresses", "public");
+                    b.ToTable("IPAddresses");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.LyncUser", b =>
                 {
                     b.Property<int>("LyncUserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("LyncUserID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LyncUserId"));
-
                     b.Property<int>("AccountId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("AccountID");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("LyncUserPlanId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("LyncUserPlanID");
 
                     b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("SipAddress")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.HasKey("LyncUserId");
 
                     b.HasIndex(new[] { "LyncUserPlanId" }, "LyncUsersIdx_LyncUserPlanID");
 
-                    b.ToTable("LyncUsers", "public");
+                    b.ToTable("LyncUsers");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.LyncUserPlan", b =>
                 {
                     b.Property<int>("LyncUserPlanId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LyncUserPlanId"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("AllowOrganizeMeetingsWithExternalAnonymous")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
 
                     b.Property<string>("ArchivePolicy")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.Property<bool>("Conferencing")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("EnterpriseVoice")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("Federation")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IM")
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("IM");
 
                     b.Property<bool>("IsDefault")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("ItemId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ItemID");
 
                     b.Property<string>("LyncUserPlanName")
                         .IsRequired()
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.Property<int?>("LyncUserPlanType")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("Mobility")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("MobilityEnableOutsideVoice")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("PublicIMConnectivity")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(false)
                         .HasColumnName("PublicIMConnectivity");
 
                     b.Property<bool>("RemoteUserAccess")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
 
                     b.Property<string>("ServerUri")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("ServerURI");
 
                     b.Property<int?>("Telephony")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("TelephonyDialPlanPolicy")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.Property<string>("TelephonyVoicePolicy")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.Property<int>("VoicePolicy")
-                        .HasColumnType("integer");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.HasKey("LyncUserPlanId");
 
@@ -3505,59 +3441,55 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex(new[] { "ItemId" }, "LyncUserPlansIdx_ItemID");
 
-                    b.ToTable("LyncUserPlans", "public");
+                    b.ToTable("LyncUserPlans");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.OcsUser", b =>
                 {
                     b.Property<int>("OcsuserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("OCSUserID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OcsuserId"));
-
                     b.Property<int>("AccountId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("AccountID");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("InstanceId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnName("InstanceID");
 
                     b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("OcsuserId");
 
-                    b.ToTable("OCSUsers", "public");
+                    b.ToTable("OCSUsers");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.Package", b =>
                 {
                     b.Property<int>("PackageId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PackageID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PackageId"));
-
                     b.Property<DateTime?>("BandwidthUpdated")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("DefaultTopPackage")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
 
                     b.Property<bool>("OverrideQuotas")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
 
                     b.Property<string>("PackageComments")
@@ -3565,33 +3497,33 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.Property<string>("PackageName")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("ParentPackageId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ParentPackageID");
 
                     b.Property<int?>("PlanId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PlanID");
 
                     b.Property<DateTime?>("PurchaseDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("ServerId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ServerID");
 
                     b.Property<int>("StatusId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("StatusID");
 
                     b.Property<DateTime>("StatusIdChangeDate")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("TEXT")
                         .HasColumnName("StatusIDchangeDate");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("UserID");
 
                     b.HasKey("PackageId");
@@ -3604,7 +3536,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex(new[] { "UserId" }, "PackageIndex_UserID");
 
-                    b.ToTable("Packages", "public");
+                    b.ToTable("Packages");
 
                     b.HasData(
                         new
@@ -3624,30 +3556,28 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                 {
                     b.Property<int>("PackageAddonId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PackageAddonID");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PackageAddonId"));
 
                     b.Property<string>("Comments")
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("PackageId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PackageID");
 
                     b.Property<int?>("PlanId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PlanID");
 
                     b.Property<DateTime?>("PurchaseDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("Quantity")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("StatusId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("StatusID");
 
                     b.HasKey("PackageAddonId");
@@ -3656,35 +3586,33 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex(new[] { "PlanId" }, "PackageAddonsIdx_PlanID");
 
-                    b.ToTable("PackageAddons", "public");
+                    b.ToTable("PackageAddons");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.PackageIpAddress", b =>
                 {
                     b.Property<int>("PackageAddressId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PackageAddressID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PackageAddressId"));
-
                     b.Property<int>("AddressId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("AddressID");
 
                     b.Property<bool?>("IsPrimary")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("ItemId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ItemID");
 
                     b.Property<int?>("OrgId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("OrgID");
 
                     b.Property<int>("PackageId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PackageID");
 
                     b.HasKey("PackageAddressId");
@@ -3695,66 +3623,66 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex(new[] { "PackageId" }, "PackageIPAddressesIdx_PackageID");
 
-                    b.ToTable("PackageIPAddresses", "public");
+                    b.ToTable("PackageIPAddresses");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.PackageQuota", b =>
                 {
                     b.Property<int>("PackageId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PackageID")
                         .HasColumnOrder(1);
 
                     b.Property<int>("QuotaId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("QuotaID")
                         .HasColumnOrder(2);
 
                     b.Property<int>("QuotaValue")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("PackageId", "QuotaId");
 
                     b.HasIndex("QuotaId");
 
-                    b.ToTable("PackageQuotas", "public");
+                    b.ToTable("PackageQuotas");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.PackageResource", b =>
                 {
                     b.Property<int>("PackageId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PackageID")
                         .HasColumnOrder(1);
 
                     b.Property<int>("GroupId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("GroupID")
                         .HasColumnOrder(2);
 
                     b.Property<bool>("CalculateBandwidth")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("CalculateDiskspace")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("PackageId", "GroupId")
                         .HasName("PK_PackageResources_1");
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("PackageResources", "public");
+                    b.ToTable("PackageResources");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.PackageService", b =>
                 {
                     b.Property<int>("PackageId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PackageID")
                         .HasColumnOrder(1);
 
                     b.Property<int>("ServiceId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ServiceID")
                         .HasColumnOrder(2);
 
@@ -3762,24 +3690,24 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("PackageServices", "public");
+                    b.ToTable("PackageServices");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.PackageSetting", b =>
                 {
                     b.Property<int>("PackageId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PackageID")
                         .HasColumnOrder(1);
 
                     b.Property<string>("SettingsName")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnOrder(2);
 
                     b.Property<string>("PropertyName")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnOrder(3);
 
                     b.Property<string>("PropertyValue")
@@ -3787,29 +3715,27 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasKey("PackageId", "SettingsName", "PropertyName");
 
-                    b.ToTable("PackageSettings", "public");
+                    b.ToTable("PackageSettings");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.PackageVlan", b =>
                 {
                     b.Property<int>("PackageVlanId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PackageVlanID");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PackageVlanId"));
 
                     b.Property<bool>("IsDmz")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
 
                     b.Property<int>("PackageId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PackageID");
 
                     b.Property<int>("VlanId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("VlanID");
 
                     b.HasKey("PackageVlanId")
@@ -3819,69 +3745,69 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex(new[] { "VlanId" }, "PackageVLANsIdx_VlanID");
 
-                    b.ToTable("PackageVLANs", "public");
+                    b.ToTable("PackageVLANs");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.PackagesBandwidth", b =>
                 {
                     b.Property<int>("PackageId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PackageID")
                         .HasColumnOrder(1);
 
                     b.Property<int>("GroupId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("GroupID")
                         .HasColumnOrder(2);
 
                     b.Property<DateTime>("LogDate")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(3);
 
                     b.Property<long>("BytesReceived")
-                        .HasColumnType("bigint");
+                        .HasColumnType("INTEGER");
 
                     b.Property<long>("BytesSent")
-                        .HasColumnType("bigint");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("PackageId", "GroupId", "LogDate");
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("PackagesBandwidth", "public");
+                    b.ToTable("PackagesBandwidth");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.PackagesDiskspace", b =>
                 {
                     b.Property<int>("PackageId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PackageID")
                         .HasColumnOrder(1);
 
                     b.Property<int>("GroupId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("GroupID")
                         .HasColumnOrder(2);
 
                     b.Property<long>("DiskSpace")
-                        .HasColumnType("bigint");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("PackageId", "GroupId");
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("PackagesDiskspace", "public");
+                    b.ToTable("PackagesDiskspace");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.PackagesTreeCache", b =>
                 {
                     b.Property<int>("ParentPackageId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ParentPackageID")
                         .HasColumnOrder(1);
 
                     b.Property<int>("PackageId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PackageID")
                         .HasColumnOrder(2);
 
@@ -3889,7 +3815,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex("PackageId");
 
-                    b.ToTable("PackagesTreeCache", "public");
+                    b.ToTable("PackagesTreeCache");
 
                     b.HasData(
                         new
@@ -3903,95 +3829,91 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                 {
                     b.Property<int>("PrivateAddressId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PrivateAddressID");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PrivateAddressId"));
 
                     b.Property<string>("IpAddress")
                         .IsRequired()
                         .HasMaxLength(15)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(15)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnName("IPAddress");
 
                     b.Property<bool>("IsPrimary")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("ItemId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ItemID");
 
                     b.HasKey("PrivateAddressId");
 
                     b.HasIndex(new[] { "ItemId" }, "PrivateIPAddressesIdx_ItemID");
 
-                    b.ToTable("PrivateIPAddresses", "public");
+                    b.ToTable("PrivateIPAddresses");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.PrivateNetworkVlan", b =>
                 {
                     b.Property<int>("VlanId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("VlanID");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("VlanId"));
 
                     b.Property<string>("Comments")
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("ServerId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ServerID");
 
                     b.Property<int>("Vlan")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("VlanId")
                         .HasName("PK__PrivateN__8348135581B53618");
 
                     b.HasIndex(new[] { "ServerId" }, "PrivateNetworkVLANsIdx_ServerID");
 
-                    b.ToTable("PrivateNetworkVLANs", "public");
+                    b.ToTable("PrivateNetworkVLANs");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.Provider", b =>
                 {
                     b.Property<int>("ProviderId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ProviderID");
 
                     b.Property<bool?>("DisableAutoDiscovery")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("EditorControl")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("GroupId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("GroupID");
 
                     b.Property<string>("ProviderName")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderType")
                         .HasMaxLength(400)
-                        .HasColumnType("character varying(400)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ProviderId")
                         .HasName("PK_ServiceTypes");
 
                     b.HasIndex(new[] { "GroupId" }, "ProvidersIdx_GroupID");
 
-                    b.ToTable("Providers", "public");
+                    b.ToTable("Providers");
 
                     b.HasData(
                         new
@@ -4491,16 +4413,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 3,
                             ProviderName = "MSFTP100",
                             ProviderType = "SolidCP.Providers.FTP.MsFTP100, SolidCP.Providers.FTP.IIs100"
-                        },
-                        new
-                        {
-                            ProviderId = 135,
-                            DisableAutoDiscovery = true,
-                            DisplayName = "Web Application Engines",
-                            EditorControl = "HeliconZoo",
-                            GroupId = 42,
-                            ProviderName = "HeliconZoo",
-                            ProviderType = "SolidCP.Providers.Web.HeliconZoo.HeliconZoo, SolidCP.Providers.Web.HeliconZoo"
                         },
                         new
                         {
@@ -5320,46 +5232,46 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.Quota", b =>
                 {
                     b.Property<int>("QuotaId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("QuotaID");
 
                     b.Property<int>("GroupId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("GroupID");
 
                     b.Property<bool?>("HideQuota")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("ItemTypeId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ItemTypeID");
 
                     b.Property<int?>("PerOrganization")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("QuotaDescription")
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("QuotaName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
-                    b.Property<int>("QuotaOrder")
+                    b.Property<double>("QuotaOrder")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(1);
+                        .HasColumnType("REAL")
+                        .HasDefaultValue(1.0);
 
                     b.Property<int>("QuotaTypeId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(2)
                         .HasColumnName("QuotaTypeID");
 
                     b.Property<bool?>("ServiceQuota")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
 
                     b.HasKey("QuotaId");
@@ -5368,7 +5280,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex(new[] { "ItemTypeId" }, "QuotasIdx_ItemTypeID");
 
-                    b.ToTable("Quotas", "public");
+                    b.ToTable("Quotas");
 
                     b.HasData(
                         new
@@ -5378,7 +5290,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 7,
                             QuotaDescription = "Databases",
                             QuotaName = "MySQL4.Databases",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = true
                         },
@@ -5389,7 +5301,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 5,
                             QuotaDescription = "Databases",
                             QuotaName = "MsSQL2000.Databases",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = true
                         },
@@ -5400,7 +5312,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 9,
                             QuotaDescription = "FTP Accounts",
                             QuotaName = "FTP.Accounts",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = true
                         },
@@ -5411,7 +5323,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 14,
                             QuotaDescription = "Statistics Sites",
                             QuotaName = "Stats.Sites",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = true
                         },
@@ -5422,7 +5334,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 10,
                             QuotaDescription = "Web Sites",
                             QuotaName = "Web.Sites",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = true
                         },
@@ -5433,7 +5345,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 15,
                             QuotaDescription = "Mail Accounts",
                             QuotaName = "Mail.Accounts",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = true
                         },
@@ -5444,7 +5356,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 6,
                             QuotaDescription = "Users",
                             QuotaName = "MsSQL2000.Users",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5455,7 +5367,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 16,
                             QuotaDescription = "Mail Forwardings",
                             QuotaName = "Mail.Forwardings",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5466,7 +5378,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 8,
                             QuotaDescription = "Users",
                             QuotaName = "MySQL4.Users",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5477,7 +5389,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 17,
                             QuotaDescription = "Mail Lists",
                             QuotaName = "Mail.Lists",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5488,7 +5400,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 18,
                             QuotaDescription = "Mail Groups",
                             QuotaName = "Mail.Groups",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5498,7 +5410,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "ASP.NET 1.1",
                             QuotaName = "Web.AspNet11",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5508,7 +5420,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "ASP.NET 2.0",
                             QuotaName = "Web.AspNet20",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5518,7 +5430,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "ASP",
                             QuotaName = "Web.Asp",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5528,7 +5440,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "PHP 4.x",
                             QuotaName = "Web.Php4",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5538,7 +5450,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "PHP 5.x",
                             QuotaName = "Web.Php5",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5548,7 +5460,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "Perl",
                             QuotaName = "Web.Perl",
-                            QuotaOrder = 7,
+                            QuotaOrder = 7.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5558,7 +5470,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "Python",
                             QuotaName = "Web.Python",
-                            QuotaOrder = 8,
+                            QuotaOrder = 8.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5568,7 +5480,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "Virtual Directories",
                             QuotaName = "Web.VirtualDirs",
-                            QuotaOrder = 9,
+                            QuotaOrder = 9.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5578,7 +5490,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "FrontPage",
                             QuotaName = "Web.FrontPage",
-                            QuotaOrder = 10,
+                            QuotaOrder = 10.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5588,7 +5500,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "Custom Security Settings",
                             QuotaName = "Web.Security",
-                            QuotaOrder = 11,
+                            QuotaOrder = 11.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5598,7 +5510,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "Custom Default Documents",
                             QuotaName = "Web.DefaultDocs",
-                            QuotaOrder = 12,
+                            QuotaOrder = 12.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5608,7 +5520,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "Dedicated Application Pools",
                             QuotaName = "Web.AppPools",
-                            QuotaOrder = 13,
+                            QuotaOrder = 13.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5618,7 +5530,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "Custom Headers",
                             QuotaName = "Web.Headers",
-                            QuotaOrder = 14,
+                            QuotaOrder = 14.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5628,7 +5540,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "Custom Errors",
                             QuotaName = "Web.Errors",
-                            QuotaOrder = 15,
+                            QuotaOrder = 15.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5638,7 +5550,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "Custom MIME Types",
                             QuotaName = "Web.Mime",
-                            QuotaOrder = 16,
+                            QuotaOrder = 16.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5648,7 +5560,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 4,
                             QuotaDescription = "Max Mailbox Size",
                             QuotaName = "Mail.MaxBoxSize",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -5658,7 +5570,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 5,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MsSQL2000.MaxDatabaseSize",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -5668,7 +5580,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 5,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MsSQL2000.Backup",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5678,7 +5590,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 5,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MsSQL2000.Restore",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5688,7 +5600,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 5,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MsSQL2000.Truncate",
-                            QuotaOrder = 7,
+                            QuotaOrder = 7.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5698,7 +5610,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 6,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MySQL4.Backup",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5709,7 +5621,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 20,
                             QuotaDescription = "ODBC DSNs",
                             QuotaName = "OS.ODBC",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5719,7 +5631,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 7,
                             QuotaDescription = "DNS Editor",
                             QuotaName = "DNS.Editor",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5729,7 +5641,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 4,
                             QuotaDescription = "Max Group Recipients",
                             QuotaName = "Mail.MaxGroupMembers",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -5739,7 +5651,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 4,
                             QuotaDescription = "Max List Recipients",
                             QuotaName = "Mail.MaxListMembers",
-                            QuotaOrder = 7,
+                            QuotaOrder = 7.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -5749,7 +5661,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 1,
                             QuotaDescription = "Bandwidth, MB",
                             QuotaName = "OS.Bandwidth",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5759,7 +5671,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 1,
                             QuotaDescription = "Disk space, MB",
                             QuotaName = "OS.Diskspace",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5769,7 +5681,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 1,
                             QuotaDescription = "Domains",
                             QuotaName = "OS.Domains",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5779,7 +5691,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 1,
                             QuotaDescription = "Sub-Domains",
                             QuotaName = "OS.SubDomains",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5789,7 +5701,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 1,
                             QuotaDescription = "File Manager",
                             QuotaName = "OS.FileManager",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5799,7 +5711,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "CGI-BIN Folder",
                             QuotaName = "Web.CgiBin",
-                            QuotaOrder = 8,
+                            QuotaOrder = 8.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5809,7 +5721,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "Secured Folders",
                             QuotaName = "Web.SecuredFolders",
-                            QuotaOrder = 8,
+                            QuotaOrder = 8.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5820,7 +5732,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 25,
                             QuotaDescription = "Shared SSL Folders",
                             QuotaName = "Web.SharedSSL",
-                            QuotaOrder = 8,
+                            QuotaOrder = 8.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5830,7 +5742,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "Web Sites Redirection",
                             QuotaName = "Web.Redirections",
-                            QuotaOrder = 8,
+                            QuotaOrder = 8.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5840,7 +5752,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "Changing Sites Root Folders",
                             QuotaName = "Web.HomeFolders",
-                            QuotaOrder = 8,
+                            QuotaOrder = 8.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5851,7 +5763,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 21,
                             QuotaDescription = "Databases",
                             QuotaName = "MsSQL2005.Databases",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5862,7 +5774,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 22,
                             QuotaDescription = "Users",
                             QuotaName = "MsSQL2005.Users",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5872,7 +5784,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 10,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MsSQL2005.MaxDatabaseSize",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -5882,7 +5794,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 10,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MsSQL2005.Backup",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5892,7 +5804,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 10,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MsSQL2005.Restore",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5902,7 +5814,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 10,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MsSQL2005.Truncate",
-                            QuotaOrder = 7,
+                            QuotaOrder = 7.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5913,7 +5825,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 23,
                             QuotaDescription = "Databases",
                             QuotaName = "MySQL5.Databases",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5924,7 +5836,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 24,
                             QuotaDescription = "Users",
                             QuotaName = "MySQL5.Users",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5934,7 +5846,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 11,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MySQL5.Backup",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5944,7 +5856,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 1,
                             QuotaDescription = "Scheduled Tasks",
                             QuotaName = "OS.ScheduledTasks",
-                            QuotaOrder = 9,
+                            QuotaOrder = 9.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5954,7 +5866,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 1,
                             QuotaDescription = "Interval Tasks Allowed",
                             QuotaName = "OS.ScheduledIntervalTasks",
-                            QuotaOrder = 10,
+                            QuotaOrder = 10.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5964,7 +5876,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 1,
                             QuotaDescription = "Minimum Tasks Interval, minutes",
                             QuotaName = "OS.MinimumTaskInterval",
-                            QuotaOrder = 11,
+                            QuotaOrder = 11.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -5974,7 +5886,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 1,
                             QuotaDescription = "Applications Installer",
                             QuotaName = "OS.AppInstaller",
-                            QuotaOrder = 7,
+                            QuotaOrder = 7.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5984,7 +5896,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 1,
                             QuotaDescription = "Extra Application Packs",
                             QuotaName = "OS.ExtraApplications",
-                            QuotaOrder = 8,
+                            QuotaOrder = 8.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5995,7 +5907,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Organization Disk Space, MB",
                             QuotaName = "Exchange2007.DiskSpace",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6006,7 +5918,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Mailboxes per Organization",
                             QuotaName = "Exchange2007.Mailboxes",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6017,7 +5929,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Contacts per Organization",
                             QuotaName = "Exchange2007.Contacts",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6028,7 +5940,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Distribution Lists per Organization",
                             QuotaName = "Exchange2007.DistributionLists",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6039,7 +5951,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Public Folders per Organization",
                             QuotaName = "Exchange2007.PublicFolders",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6049,7 +5961,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 12,
                             QuotaDescription = "POP3 Access",
                             QuotaName = "Exchange2007.POP3Allowed",
-                            QuotaOrder = 9,
+                            QuotaOrder = 9.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6059,7 +5971,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 12,
                             QuotaDescription = "IMAP Access",
                             QuotaName = "Exchange2007.IMAPAllowed",
-                            QuotaOrder = 11,
+                            QuotaOrder = 11.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6069,7 +5981,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 12,
                             QuotaDescription = "OWA/HTTP Access",
                             QuotaName = "Exchange2007.OWAAllowed",
-                            QuotaOrder = 13,
+                            QuotaOrder = 13.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6079,7 +5991,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 12,
                             QuotaDescription = "MAPI Access",
                             QuotaName = "Exchange2007.MAPIAllowed",
-                            QuotaOrder = 15,
+                            QuotaOrder = 15.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6089,7 +6001,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 12,
                             QuotaDescription = "ActiveSync Access",
                             QuotaName = "Exchange2007.ActiveSyncAllowed",
-                            QuotaOrder = 17,
+                            QuotaOrder = 17.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6099,7 +6011,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 12,
                             QuotaDescription = "Mail Enabled Public Folders Allowed",
                             QuotaName = "Exchange2007.MailEnabledPublicFolders",
-                            QuotaOrder = 8,
+                            QuotaOrder = 8.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6109,17 +6021,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "ColdFusion",
                             QuotaName = "Web.ColdFusion",
-                            QuotaOrder = 17,
-                            QuotaTypeId = 1,
-                            ServiceQuota = false
-                        },
-                        new
-                        {
-                            QuotaId = 95,
-                            GroupId = 2,
-                            QuotaDescription = "Web Application Gallery",
-                            QuotaName = "Web.WebAppGallery",
-                            QuotaOrder = 1,
+                            QuotaOrder = 17.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6129,7 +6031,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "ColdFusion Virtual Directories",
                             QuotaName = "Web.CFVirtualDirectories",
-                            QuotaOrder = 18,
+                            QuotaOrder = 18.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6139,7 +6041,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "Remote web management allowed",
                             QuotaName = "Web.RemoteManagement",
-                            QuotaOrder = 20,
+                            QuotaOrder = 20.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6149,7 +6051,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "Dedicated IP Addresses",
                             QuotaName = "Web.IPAddresses",
-                            QuotaOrder = 19,
+                            QuotaOrder = 19.0,
                             QuotaTypeId = 2,
                             ServiceQuota = true
                         },
@@ -6159,7 +6061,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 4,
                             QuotaDescription = "Disable Mailbox Size Edit",
                             QuotaName = "Mail.DisableSizeEdit",
-                            QuotaOrder = 8,
+                            QuotaOrder = 8.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6169,7 +6071,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 6,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MySQL4.MaxDatabaseSize",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6179,7 +6081,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 6,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MySQL4.Restore",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6189,7 +6091,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 6,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MySQL4.Truncate",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6199,7 +6101,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 11,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MySQL5.MaxDatabaseSize",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6209,7 +6111,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 11,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MySQL5.Restore",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6219,7 +6121,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 11,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MySQL5.Truncate",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6230,7 +6132,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 75,
                             QuotaDescription = "Databases",
                             QuotaName = "MySQL8.Databases",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6241,7 +6143,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 76,
                             QuotaDescription = "Users",
                             QuotaName = "MySQL8.Users",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6251,7 +6153,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 90,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MySQL8.Backup",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6261,7 +6163,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 90,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MySQL8.MaxDatabaseSize",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6271,7 +6173,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 90,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MySQL8.Restore",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6281,7 +6183,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 90,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MySQL8.Truncate",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6292,7 +6194,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 75,
                             QuotaDescription = "Databases",
                             QuotaName = "MySQL9.Databases",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6303,7 +6205,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 76,
                             QuotaDescription = "Users",
                             QuotaName = "MySQL9.Users",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6313,7 +6215,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 91,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MySQL9.Backup",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6323,7 +6225,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 91,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MySQL9.MaxDatabaseSize",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6333,7 +6235,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 91,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MySQL9.Restore",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6343,7 +6245,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 91,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MySQL9.Truncate",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6355,7 +6257,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "SharePoint Site Collections",
                             QuotaName = "HostedSharePoint.Sites",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6365,7 +6267,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 10,
                             QuotaDescription = "Max Log Size",
                             QuotaName = "MsSQL2005.MaxLogSize",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6375,7 +6277,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 5,
                             QuotaDescription = "Max Log Size",
                             QuotaName = "MsSQL2000.MaxLogSize",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6386,7 +6288,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 29,
                             QuotaDescription = "Organizations",
                             QuotaName = "HostedSolution.Organizations",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6398,7 +6300,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Users",
                             QuotaName = "HostedSolution.Users",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6409,7 +6311,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Domains per Organizations",
                             QuotaName = "HostedSolution.Domains",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6419,7 +6321,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 20,
                             QuotaDescription = "Max site storage, MB",
                             QuotaName = "HostedSharePoint.MaxStorage",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6430,7 +6332,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Full licenses per organization",
                             QuotaName = "HostedCRM.Users",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6440,7 +6342,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 21,
                             QuotaDescription = "CRM Organization",
                             QuotaName = "HostedCRM.Organization",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6451,7 +6353,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 31,
                             QuotaDescription = "Databases",
                             QuotaName = "MsSQL2008.Databases",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6462,7 +6364,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 32,
                             QuotaDescription = "Users",
                             QuotaName = "MsSQL2008.Users",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6472,7 +6374,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 22,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MsSQL2008.MaxDatabaseSize",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6482,7 +6384,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 22,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MsSQL2008.Backup",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6492,7 +6394,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 22,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MsSQL2008.Restore",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6502,7 +6404,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 22,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MsSQL2008.Truncate",
-                            QuotaOrder = 7,
+                            QuotaOrder = 7.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6512,7 +6414,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 22,
                             QuotaDescription = "Max Log Size",
                             QuotaName = "MsSQL2008.MaxLogSize",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6523,7 +6425,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 37,
                             QuotaDescription = "Databases",
                             QuotaName = "MsSQL2012.Databases",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6534,7 +6436,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 38,
                             QuotaDescription = "Users",
                             QuotaName = "MsSQL2012.Users",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6545,7 +6447,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             HideQuota = true,
                             QuotaDescription = "Domain Pointers",
                             QuotaName = "OS.DomainPointers",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6555,7 +6457,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 23,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MsSQL2012.MaxDatabaseSize",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6565,7 +6467,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 23,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MsSQL2012.Backup",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6575,7 +6477,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 23,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MsSQL2012.Restore",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6585,7 +6487,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 23,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MsSQL2012.Truncate",
-                            QuotaOrder = 7,
+                            QuotaOrder = 7.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6595,7 +6497,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 23,
                             QuotaDescription = "Max Log Size",
                             QuotaName = "MsSQL2012.MaxLogSize",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6605,7 +6507,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 13,
                             QuotaDescription = "Allow to Change UserPrincipalName",
                             QuotaName = "HostedSolution.AllowChangeUPN",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6616,7 +6518,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 33,
                             QuotaDescription = "Number of VPS",
                             QuotaName = "VPS.ServersNumber",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6626,7 +6528,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 30,
                             QuotaDescription = "Allow user to create VPS",
                             QuotaName = "VPS.ManagingAllowed",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6636,7 +6538,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 30,
                             QuotaDescription = "Number of CPU cores",
                             QuotaName = "VPS.CpuNumber",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6646,7 +6548,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 30,
                             QuotaDescription = "Boot from CD allowed",
                             QuotaName = "VPS.BootCdAllowed",
-                            QuotaOrder = 7,
+                            QuotaOrder = 7.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6656,7 +6558,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 30,
                             QuotaDescription = "Boot from CD",
                             QuotaName = "VPS.BootCdEnabled",
-                            QuotaOrder = 8,
+                            QuotaOrder = 8.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6666,7 +6568,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 30,
                             QuotaDescription = "RAM size, MB",
                             QuotaName = "VPS.Ram",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6676,7 +6578,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 30,
                             QuotaDescription = "Hard Drive size, GB",
                             QuotaName = "VPS.Hdd",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6686,7 +6588,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 30,
                             QuotaDescription = "DVD drive",
                             QuotaName = "VPS.DvdEnabled",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6696,7 +6598,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 30,
                             QuotaDescription = "External Network",
                             QuotaName = "VPS.ExternalNetworkEnabled",
-                            QuotaOrder = 10,
+                            QuotaOrder = 10.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6706,7 +6608,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 30,
                             QuotaDescription = "Number of External IP addresses",
                             QuotaName = "VPS.ExternalIPAddressesNumber",
-                            QuotaOrder = 11,
+                            QuotaOrder = 11.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6716,7 +6618,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 30,
                             QuotaDescription = "Private Network",
                             QuotaName = "VPS.PrivateNetworkEnabled",
-                            QuotaOrder = 13,
+                            QuotaOrder = 13.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6726,7 +6628,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 30,
                             QuotaDescription = "Number of Private IP addresses per VPS",
                             QuotaName = "VPS.PrivateIPAddressesNumber",
-                            QuotaOrder = 14,
+                            QuotaOrder = 14.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6736,7 +6638,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 30,
                             QuotaDescription = "Number of Snaphots",
                             QuotaName = "VPS.SnapshotsNumber",
-                            QuotaOrder = 9,
+                            QuotaOrder = 9.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6746,7 +6648,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 30,
                             QuotaDescription = "Allow user to Start, Turn off and Shutdown VPS",
                             QuotaName = "VPS.StartShutdownAllowed",
-                            QuotaOrder = 15,
+                            QuotaOrder = 15.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6756,7 +6658,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 30,
                             QuotaDescription = "Allow user to Pause, Resume VPS",
                             QuotaName = "VPS.PauseResumeAllowed",
-                            QuotaOrder = 16,
+                            QuotaOrder = 16.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6766,7 +6668,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 30,
                             QuotaDescription = "Allow user to Reboot VPS",
                             QuotaName = "VPS.RebootAllowed",
-                            QuotaOrder = 17,
+                            QuotaOrder = 17.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6776,7 +6678,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 30,
                             QuotaDescription = "Allow user to Reset VPS",
                             QuotaName = "VPS.ResetAlowed",
-                            QuotaOrder = 18,
+                            QuotaOrder = 18.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6786,7 +6688,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 30,
                             QuotaDescription = "Allow user to Re-install VPS",
                             QuotaName = "VPS.ReinstallAllowed",
-                            QuotaOrder = 19,
+                            QuotaOrder = 19.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6796,7 +6698,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 30,
                             QuotaDescription = "Monthly bandwidth, GB",
                             QuotaName = "VPS.Bandwidth",
-                            QuotaOrder = 12,
+                            QuotaOrder = 12.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6806,7 +6708,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 31,
                             PerOrganization = 1,
                             QuotaName = "BlackBerry.Users",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6816,7 +6718,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 32,
                             PerOrganization = 1,
                             QuotaName = "OCS.Users",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6825,7 +6727,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             QuotaId = 321,
                             GroupId = 32,
                             QuotaName = "OCS.Federation",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6834,7 +6736,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             QuotaId = 322,
                             GroupId = 32,
                             QuotaName = "OCS.FederationByDefault",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6843,7 +6745,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             QuotaId = 323,
                             GroupId = 32,
                             QuotaName = "OCS.PublicIMConnectivity",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6852,7 +6754,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             QuotaId = 324,
                             GroupId = 32,
                             QuotaName = "OCS.PublicIMConnectivityByDefault",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6861,7 +6763,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             QuotaId = 325,
                             GroupId = 32,
                             QuotaName = "OCS.ArchiveIMConversation",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6870,7 +6772,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             QuotaId = 326,
                             GroupId = 32,
                             QuotaName = "OCS.ArchiveIMConvervationByDefault",
-                            QuotaOrder = 7,
+                            QuotaOrder = 7.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6879,7 +6781,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             QuotaId = 327,
                             GroupId = 32,
                             QuotaName = "OCS.ArchiveFederatedIMConversation",
-                            QuotaOrder = 8,
+                            QuotaOrder = 8.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6888,7 +6790,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             QuotaId = 328,
                             GroupId = 32,
                             QuotaName = "OCS.ArchiveFederatedIMConversationByDefault",
-                            QuotaOrder = 9,
+                            QuotaOrder = 9.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6897,7 +6799,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             QuotaId = 329,
                             GroupId = 32,
                             QuotaName = "OCS.PresenceAllowed",
-                            QuotaOrder = 10,
+                            QuotaOrder = 10.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6906,7 +6808,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             QuotaId = 330,
                             GroupId = 32,
                             QuotaName = "OCS.PresenceAllowedByDefault",
-                            QuotaOrder = 10,
+                            QuotaOrder = 10.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6916,7 +6818,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "ASP.NET 4.0",
                             QuotaName = "Web.AspNet40",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6926,7 +6828,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "SSL",
                             QuotaName = "Web.SSL",
-                            QuotaOrder = 21,
+                            QuotaOrder = 21.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6936,7 +6838,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "Allow IP Address Mode Switch",
                             QuotaName = "Web.AllowIPAddressModeSwitch",
-                            QuotaOrder = 22,
+                            QuotaOrder = 22.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6946,7 +6848,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "Enable Hostname Support",
                             QuotaName = "Web.EnableHostNameSupport",
-                            QuotaOrder = 23,
+                            QuotaOrder = 23.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6956,7 +6858,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "htaccess",
                             QuotaName = "Web.Htaccess",
-                            QuotaOrder = 9,
+                            QuotaOrder = 9.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6967,7 +6869,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 35,
                             QuotaDescription = "Number of VPS",
                             QuotaName = "VPSForPC.ServersNumber",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6977,7 +6879,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 40,
                             QuotaDescription = "Allow user to create VPS",
                             QuotaName = "VPSForPC.ManagingAllowed",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6987,7 +6889,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 40,
                             QuotaDescription = "Number of CPU cores",
                             QuotaName = "VPSForPC.CpuNumber",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6997,7 +6899,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 40,
                             QuotaDescription = "Boot from CD allowed",
                             QuotaName = "VPSForPC.BootCdAllowed",
-                            QuotaOrder = 7,
+                            QuotaOrder = 7.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7007,7 +6909,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 40,
                             QuotaDescription = "Boot from CD",
                             QuotaName = "VPSForPC.BootCdEnabled",
-                            QuotaOrder = 7,
+                            QuotaOrder = 7.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7017,7 +6919,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 40,
                             QuotaDescription = "RAM size, MB",
                             QuotaName = "VPSForPC.Ram",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7027,7 +6929,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 40,
                             QuotaDescription = "Hard Drive size, GB",
                             QuotaName = "VPSForPC.Hdd",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7037,7 +6939,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 40,
                             QuotaDescription = "DVD drive",
                             QuotaName = "VPSForPC.DvdEnabled",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7047,7 +6949,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 40,
                             QuotaDescription = "External Network",
                             QuotaName = "VPSForPC.ExternalNetworkEnabled",
-                            QuotaOrder = 10,
+                            QuotaOrder = 10.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7057,7 +6959,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 40,
                             QuotaDescription = "Number of External IP addresses",
                             QuotaName = "VPSForPC.ExternalIPAddressesNumber",
-                            QuotaOrder = 11,
+                            QuotaOrder = 11.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7067,7 +6969,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 40,
                             QuotaDescription = "Private Network",
                             QuotaName = "VPSForPC.PrivateNetworkEnabled",
-                            QuotaOrder = 13,
+                            QuotaOrder = 13.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7077,7 +6979,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 40,
                             QuotaDescription = "Number of Private IP addresses per VPS",
                             QuotaName = "VPSForPC.PrivateIPAddressesNumber",
-                            QuotaOrder = 14,
+                            QuotaOrder = 14.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7087,7 +6989,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 40,
                             QuotaDescription = "Number of Snaphots",
                             QuotaName = "VPSForPC.SnapshotsNumber",
-                            QuotaOrder = 9,
+                            QuotaOrder = 9.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7097,7 +6999,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 40,
                             QuotaDescription = "Allow user to Start, Turn off and Shutdown VPS",
                             QuotaName = "VPSForPC.StartShutdownAllowed",
-                            QuotaOrder = 15,
+                            QuotaOrder = 15.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7107,7 +7009,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 40,
                             QuotaDescription = "Allow user to Pause, Resume VPS",
                             QuotaName = "VPSForPC.PauseResumeAllowed",
-                            QuotaOrder = 16,
+                            QuotaOrder = 16.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7117,7 +7019,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 40,
                             QuotaDescription = "Allow user to Reboot VPS",
                             QuotaName = "VPSForPC.RebootAllowed",
-                            QuotaOrder = 17,
+                            QuotaOrder = 17.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7127,7 +7029,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 40,
                             QuotaDescription = "Allow user to Reset VPS",
                             QuotaName = "VPSForPC.ResetAlowed",
-                            QuotaOrder = 18,
+                            QuotaOrder = 18.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7137,7 +7039,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 40,
                             QuotaDescription = "Allow user to Re-install VPS",
                             QuotaName = "VPSForPC.ReinstallAllowed",
-                            QuotaOrder = 19,
+                            QuotaOrder = 19.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7147,7 +7049,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 40,
                             QuotaDescription = "Monthly bandwidth, GB",
                             QuotaName = "VPSForPC.Bandwidth",
-                            QuotaOrder = 12,
+                            QuotaOrder = 12.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7157,7 +7059,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 12,
                             QuotaDescription = "Keep Deleted Items (days)",
                             QuotaName = "Exchange2007.KeepDeletedItemsDays",
-                            QuotaOrder = 19,
+                            QuotaOrder = 19.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7167,7 +7069,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 12,
                             QuotaDescription = "Maximum Recipients",
                             QuotaName = "Exchange2007.MaxRecipients",
-                            QuotaOrder = 20,
+                            QuotaOrder = 20.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7177,7 +7079,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 12,
                             QuotaDescription = "Maximum Send Message Size (Kb)",
                             QuotaName = "Exchange2007.MaxSendMessageSizeKB",
-                            QuotaOrder = 21,
+                            QuotaOrder = 21.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7187,7 +7089,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 12,
                             QuotaDescription = "Maximum Receive Message Size (Kb)",
                             QuotaName = "Exchange2007.MaxReceiveMessageSizeKB",
-                            QuotaOrder = 22,
+                            QuotaOrder = 22.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7197,7 +7099,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 12,
                             QuotaDescription = "Is Consumer Organization",
                             QuotaName = "Exchange2007.IsConsumer",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7207,7 +7109,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 12,
                             QuotaDescription = "Enable Plans Editing",
                             QuotaName = "Exchange2007.EnablePlansEditing",
-                            QuotaOrder = 23,
+                            QuotaOrder = 23.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7218,7 +7120,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Users",
                             QuotaName = "Lync.Users",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7228,7 +7130,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 41,
                             QuotaDescription = "Allow Federation",
                             QuotaName = "Lync.Federation",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7238,7 +7140,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 41,
                             QuotaDescription = "Allow Conferencing",
                             QuotaName = "Lync.Conferencing",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7248,7 +7150,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 41,
                             QuotaDescription = "Maximum Conference Particiapants",
                             QuotaName = "Lync.MaxParticipants",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7258,7 +7160,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 41,
                             QuotaDescription = "Allow Video in Conference",
                             QuotaName = "Lync.AllowVideo",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7268,7 +7170,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 41,
                             QuotaDescription = "Allow EnterpriseVoice",
                             QuotaName = "Lync.EnterpriseVoice",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7278,7 +7180,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 41,
                             QuotaDescription = "Number of Enterprise Voice Users",
                             QuotaName = "Lync.EVUsers",
-                            QuotaOrder = 7,
+                            QuotaOrder = 7.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7288,7 +7190,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 41,
                             QuotaDescription = "Allow National Calls",
                             QuotaName = "Lync.EVNational",
-                            QuotaOrder = 8,
+                            QuotaOrder = 8.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7298,7 +7200,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 41,
                             QuotaDescription = "Allow Mobile Calls",
                             QuotaName = "Lync.EVMobile",
-                            QuotaOrder = 9,
+                            QuotaOrder = 9.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7308,7 +7210,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 41,
                             QuotaDescription = "Allow International Calls",
                             QuotaName = "Lync.EVInternational",
-                            QuotaOrder = 10,
+                            QuotaOrder = 10.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7318,7 +7220,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 41,
                             QuotaDescription = "Enable Plans Editing",
                             QuotaName = "Lync.EnablePlansEditing",
-                            QuotaOrder = 11,
+                            QuotaOrder = 11.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7328,7 +7230,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 41,
                             QuotaDescription = "Phone Numbers",
                             QuotaName = "Lync.PhoneNumbers",
-                            QuotaOrder = 12,
+                            QuotaOrder = 12.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7338,7 +7240,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 20,
                             QuotaDescription = "Use shared SSL Root",
                             QuotaName = "HostedSharePoint.UseSharedSSL",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7348,7 +7250,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 1,
                             QuotaDescription = "Not allow Tenants to Delete Top Level Domains",
                             QuotaName = "OS.NotAllowTenantDeleteDomains",
-                            QuotaOrder = 13,
+                            QuotaOrder = 13.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7358,7 +7260,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 1,
                             QuotaDescription = "Not allow Tenants to Create Top Level Domains",
                             QuotaName = "OS.NotAllowTenantCreateDomains",
-                            QuotaOrder = 12,
+                            QuotaOrder = 12.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7368,7 +7270,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 2,
                             QuotaDescription = "Application Pools Restart",
                             QuotaName = "Web.AppPoolsRestart",
-                            QuotaOrder = 13,
+                            QuotaOrder = 13.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7378,7 +7280,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 12,
                             QuotaDescription = "Allow Litigation Hold",
                             QuotaName = "Exchange2007.AllowLitigationHold",
-                            QuotaOrder = 24,
+                            QuotaOrder = 24.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7389,7 +7291,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Recoverable Items Space",
                             QuotaName = "Exchange2007.RecoverableItemsSpace",
-                            QuotaOrder = 25,
+                            QuotaOrder = 25.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7399,7 +7301,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 12,
                             QuotaDescription = "Disclaimers Allowed",
                             QuotaName = "Exchange2007.DisclaimersAllowed",
-                            QuotaOrder = 26,
+                            QuotaOrder = 26.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7410,7 +7312,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Security Groups",
                             QuotaName = "HostedSolution.SecurityGroups",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7420,7 +7322,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 12,
                             QuotaDescription = "Allow Retention Policy",
                             QuotaName = "Exchange2013.AllowRetentionPolicy",
-                            QuotaOrder = 27,
+                            QuotaOrder = 27.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7431,7 +7333,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Archiving storage, MB",
                             QuotaName = "Exchange2013.ArchivingStorage",
-                            QuotaOrder = 29,
+                            QuotaOrder = 29.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7442,7 +7344,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Archiving Mailboxes per Organization",
                             QuotaName = "Exchange2013.ArchivingMailboxes",
-                            QuotaOrder = 28,
+                            QuotaOrder = 28.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7453,7 +7355,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Resource Mailboxes per Organization",
                             QuotaName = "Exchange2013.ResourceMailboxes",
-                            QuotaOrder = 31,
+                            QuotaOrder = 31.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7464,7 +7366,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Shared Mailboxes per Organization",
                             QuotaName = "Exchange2013.SharedMailboxes",
-                            QuotaOrder = 30,
+                            QuotaOrder = 30.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7475,7 +7377,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Disk Storage Space (Mb)",
                             QuotaName = "EnterpriseStorage.DiskStorageSpace",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7486,7 +7388,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Number of Root Folders",
                             QuotaName = "EnterpriseStorage.Folders",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7496,7 +7398,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 61,
                             QuotaDescription = "Enable Spam Filter",
                             QuotaName = "Filters.Enable",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7506,7 +7408,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 61,
                             QuotaDescription = "Enable Per-Mailbox Login",
                             QuotaName = "Filters.EnableEmailUsers",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7517,7 +7419,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Remote Desktop Users",
                             QuotaName = "RDS.Users",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7528,7 +7430,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Remote Desktop Servers",
                             QuotaName = "RDS.Servers",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7538,7 +7440,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 45,
                             QuotaDescription = "Disable user from adding server",
                             QuotaName = "RDS.DisableUserAddServer",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7548,7 +7450,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 45,
                             QuotaDescription = "Disable user from removing server",
                             QuotaName = "RDS.DisableUserDeleteServer",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7558,7 +7460,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 21,
                             QuotaDescription = "Max Database Size, MB",
                             QuotaName = "HostedCRM.MaxDatabaseSize",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7569,7 +7471,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Limited licenses per organization",
                             QuotaName = "HostedCRM.LimitedUsers",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7580,7 +7482,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "ESS licenses per organization",
                             QuotaName = "HostedCRM.ESSUsers",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7590,7 +7492,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 24,
                             QuotaDescription = "CRM Organization",
                             QuotaName = "HostedCRM2013.Organization",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7600,7 +7502,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 24,
                             QuotaDescription = "Max Database Size, MB",
                             QuotaName = "HostedCRM2013.MaxDatabaseSize",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7611,7 +7513,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Essential licenses per organization",
                             QuotaName = "HostedCRM2013.EssentialUsers",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7622,7 +7524,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Basic licenses per organization",
                             QuotaName = "HostedCRM2013.BasicUsers",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7633,7 +7535,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Professional licenses per organization",
                             QuotaName = "HostedCRM2013.ProfessionalUsers",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7643,7 +7545,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 45,
                             QuotaDescription = "Use Drive Maps",
                             QuotaName = "EnterpriseStorage.DriveMaps",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7654,7 +7556,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 39,
                             QuotaDescription = "Databases",
                             QuotaName = "MsSQL2014.Databases",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7665,7 +7567,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 40,
                             QuotaDescription = "Users",
                             QuotaName = "MsSQL2014.Users",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7675,7 +7577,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 46,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MsSQL2014.MaxDatabaseSize",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7685,7 +7587,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 46,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MsSQL2014.Backup",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7695,7 +7597,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 46,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MsSQL2014.Restore",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7705,7 +7607,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 46,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MsSQL2014.Truncate",
-                            QuotaOrder = 7,
+                            QuotaOrder = 7.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7715,7 +7617,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 46,
                             QuotaDescription = "Max Log Size",
                             QuotaName = "MsSQL2014.MaxLogSize",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7726,7 +7628,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Remote Desktop Servers",
                             QuotaName = "RDS.Collections",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7737,7 +7639,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Deleted Users",
                             QuotaName = "HostedSolution.DeletedUsers",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7748,7 +7650,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Deleted Users Backup Storage Space, Mb",
                             QuotaName = "HostedSolution.DeletedUsersBackupStorageSpace",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7760,7 +7662,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "SharePoint Site Collections",
                             QuotaName = "HostedSharePointEnterprise.Sites",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7770,7 +7672,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 73,
                             QuotaDescription = "Max site storage, MB",
                             QuotaName = "HostedSharePointEnterprise.MaxStorage",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7780,7 +7682,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 73,
                             QuotaDescription = "Use shared SSL Root",
                             QuotaName = "HostedSharePointEnterprise.UseSharedSSL",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7791,7 +7693,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 41,
                             QuotaDescription = "Number of VPS",
                             QuotaName = "VPS2012.ServersNumber",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7801,7 +7703,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "Allow user to create VPS",
                             QuotaName = "VPS2012.ManagingAllowed",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7811,7 +7713,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "Number of CPU cores",
                             QuotaName = "VPS2012.CpuNumber",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7821,7 +7723,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "Boot from CD allowed",
                             QuotaName = "VPS2012.BootCdAllowed",
-                            QuotaOrder = 7,
+                            QuotaOrder = 7.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7831,7 +7733,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "Boot from CD",
                             QuotaName = "VPS2012.BootCdEnabled",
-                            QuotaOrder = 8,
+                            QuotaOrder = 8.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7841,7 +7743,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "RAM size, MB",
                             QuotaName = "VPS2012.Ram",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7851,7 +7753,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "Hard Drive size, GB",
                             QuotaName = "VPS2012.Hdd",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7861,7 +7763,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "DVD drive",
                             QuotaName = "VPS2012.DvdEnabled",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7871,7 +7773,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "External Network",
                             QuotaName = "VPS2012.ExternalNetworkEnabled",
-                            QuotaOrder = 10,
+                            QuotaOrder = 10.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7881,7 +7783,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "Number of External IP addresses",
                             QuotaName = "VPS2012.ExternalIPAddressesNumber",
-                            QuotaOrder = 11,
+                            QuotaOrder = 11.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7891,7 +7793,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "Private Network",
                             QuotaName = "VPS2012.PrivateNetworkEnabled",
-                            QuotaOrder = 13,
+                            QuotaOrder = 13.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7901,7 +7803,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "Number of Private IP addresses per VPS",
                             QuotaName = "VPS2012.PrivateIPAddressesNumber",
-                            QuotaOrder = 14,
+                            QuotaOrder = 14.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7911,7 +7813,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "Number of Snaphots",
                             QuotaName = "VPS2012.SnapshotsNumber",
-                            QuotaOrder = 9,
+                            QuotaOrder = 9.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7921,7 +7823,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "Allow user to Start, Turn off and Shutdown VPS",
                             QuotaName = "VPS2012.StartShutdownAllowed",
-                            QuotaOrder = 15,
+                            QuotaOrder = 15.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7931,7 +7833,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "Allow user to Pause, Resume VPS",
                             QuotaName = "VPS2012.PauseResumeAllowed",
-                            QuotaOrder = 16,
+                            QuotaOrder = 16.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7941,7 +7843,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "Allow user to Reboot VPS",
                             QuotaName = "VPS2012.RebootAllowed",
-                            QuotaOrder = 17,
+                            QuotaOrder = 17.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7951,7 +7853,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "Allow user to Reset VPS",
                             QuotaName = "VPS2012.ResetAlowed",
-                            QuotaOrder = 18,
+                            QuotaOrder = 18.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7961,7 +7863,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "Allow user to Re-install VPS",
                             QuotaName = "VPS2012.ReinstallAllowed",
-                            QuotaOrder = 19,
+                            QuotaOrder = 19.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7971,7 +7873,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "Monthly bandwidth, GB",
                             QuotaName = "VPS2012.Bandwidth",
-                            QuotaOrder = 12,
+                            QuotaOrder = 12.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7981,7 +7883,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "Allow user to Replication",
                             QuotaName = "VPS2012.ReplicationEnabled",
-                            QuotaOrder = 20,
+                            QuotaOrder = 20.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7992,7 +7894,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 202,
                             QuotaDescription = "Databases",
                             QuotaName = "MariaDB.Databases",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8003,7 +7905,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 203,
                             QuotaDescription = "Users",
                             QuotaName = "MariaDB.Users",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8013,7 +7915,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 50,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MariaDB.MaxDatabaseSize",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8023,7 +7925,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 50,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MariaDB.Backup",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8033,7 +7935,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 50,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MariaDB.Restore",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8043,7 +7945,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 50,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MariaDB.Truncate",
-                            QuotaOrder = 7,
+                            QuotaOrder = 7.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8053,7 +7955,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 50,
                             QuotaDescription = "Max Log Size",
                             QuotaName = "MariaDB.MaxLogSize",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8063,7 +7965,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 52,
                             QuotaDescription = "Phone Numbers",
                             QuotaName = "SfB.PhoneNumbers",
-                            QuotaOrder = 12,
+                            QuotaOrder = 12.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8074,7 +7976,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Users",
                             QuotaName = "SfB.Users",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8084,7 +7986,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 52,
                             QuotaDescription = "Allow Federation",
                             QuotaName = "SfB.Federation",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8094,7 +7996,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 52,
                             QuotaDescription = "Allow Conferencing",
                             QuotaName = "SfB.Conferencing",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8104,7 +8006,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 52,
                             QuotaDescription = "Maximum Conference Particiapants",
                             QuotaName = "SfB.MaxParticipants",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8114,7 +8016,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 52,
                             QuotaDescription = "Allow Video in Conference",
                             QuotaName = "SfB.AllowVideo",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8124,7 +8026,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 52,
                             QuotaDescription = "Allow EnterpriseVoice",
                             QuotaName = "SfB.EnterpriseVoice",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8134,7 +8036,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 52,
                             QuotaDescription = "Number of Enterprise Voice Users",
                             QuotaName = "SfB.EVUsers",
-                            QuotaOrder = 7,
+                            QuotaOrder = 7.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8144,7 +8046,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 52,
                             QuotaDescription = "Allow National Calls",
                             QuotaName = "SfB.EVNational",
-                            QuotaOrder = 8,
+                            QuotaOrder = 8.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8154,7 +8056,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 52,
                             QuotaDescription = "Allow Mobile Calls",
                             QuotaName = "SfB.EVMobile",
-                            QuotaOrder = 9,
+                            QuotaOrder = 9.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8164,7 +8066,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 52,
                             QuotaDescription = "Allow International Calls",
                             QuotaName = "SfB.EVInternational",
-                            QuotaOrder = 10,
+                            QuotaOrder = 10.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8174,7 +8076,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 52,
                             QuotaDescription = "Enable Plans Editing",
                             QuotaName = "SfB.EnablePlansEditing",
-                            QuotaOrder = 11,
+                            QuotaOrder = 11.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8185,7 +8087,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 41,
                             QuotaDescription = "Number of VPS",
                             QuotaName = "PROXMOX.ServersNumber",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8195,7 +8097,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 167,
                             QuotaDescription = "Allow user to create VPS",
                             QuotaName = "PROXMOX.ManagingAllowed",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8205,7 +8107,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 167,
                             QuotaDescription = "Number of CPU cores",
                             QuotaName = "PROXMOX.CpuNumber",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8215,7 +8117,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 167,
                             QuotaDescription = "Boot from CD allowed",
                             QuotaName = "PROXMOX.BootCdAllowed",
-                            QuotaOrder = 7,
+                            QuotaOrder = 7.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8225,7 +8127,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 167,
                             QuotaDescription = "Boot from CD",
                             QuotaName = "PROXMOX.BootCdEnabled",
-                            QuotaOrder = 8,
+                            QuotaOrder = 8.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8235,7 +8137,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 167,
                             QuotaDescription = "RAM size, MB",
                             QuotaName = "PROXMOX.Ram",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8245,7 +8147,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 167,
                             QuotaDescription = "Hard Drive size, GB",
                             QuotaName = "PROXMOX.Hdd",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8255,7 +8157,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 167,
                             QuotaDescription = "DVD drive",
                             QuotaName = "PROXMOX.DvdEnabled",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8265,7 +8167,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 167,
                             QuotaDescription = "External Network",
                             QuotaName = "PROXMOX.ExternalNetworkEnabled",
-                            QuotaOrder = 10,
+                            QuotaOrder = 10.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8275,7 +8177,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 167,
                             QuotaDescription = "Number of External IP addresses",
                             QuotaName = "PROXMOX.ExternalIPAddressesNumber",
-                            QuotaOrder = 11,
+                            QuotaOrder = 11.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8285,7 +8187,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 167,
                             QuotaDescription = "Private Network",
                             QuotaName = "PROXMOX.PrivateNetworkEnabled",
-                            QuotaOrder = 13,
+                            QuotaOrder = 13.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8295,7 +8197,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 167,
                             QuotaDescription = "Number of Private IP addresses per VPS",
                             QuotaName = "PROXMOX.PrivateIPAddressesNumber",
-                            QuotaOrder = 14,
+                            QuotaOrder = 14.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8305,7 +8207,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 167,
                             QuotaDescription = "Number of Snaphots",
                             QuotaName = "PROXMOX.SnapshotsNumber",
-                            QuotaOrder = 9,
+                            QuotaOrder = 9.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8315,7 +8217,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 167,
                             QuotaDescription = "Allow user to Start, Turn off and Shutdown VPS",
                             QuotaName = "PROXMOX.StartShutdownAllowed",
-                            QuotaOrder = 15,
+                            QuotaOrder = 15.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8325,7 +8227,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 167,
                             QuotaDescription = "Allow user to Pause, Resume VPS",
                             QuotaName = "PROXMOX.PauseResumeAllowed",
-                            QuotaOrder = 16,
+                            QuotaOrder = 16.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8335,7 +8237,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 167,
                             QuotaDescription = "Allow user to Reboot VPS",
                             QuotaName = "PROXMOX.RebootAllowed",
-                            QuotaOrder = 17,
+                            QuotaOrder = 17.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8345,7 +8247,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 167,
                             QuotaDescription = "Allow user to Reset VPS",
                             QuotaName = "PROXMOX.ResetAlowed",
-                            QuotaOrder = 18,
+                            QuotaOrder = 18.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8355,7 +8257,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 167,
                             QuotaDescription = "Allow user to Re-install VPS",
                             QuotaName = "PROXMOX.ReinstallAllowed",
-                            QuotaOrder = 19,
+                            QuotaOrder = 19.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8365,7 +8267,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 167,
                             QuotaDescription = "Monthly bandwidth, GB",
                             QuotaName = "PROXMOX.Bandwidth",
-                            QuotaOrder = 12,
+                            QuotaOrder = 12.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8375,7 +8277,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 167,
                             QuotaDescription = "Allow user to Replication",
                             QuotaName = "PROXMOX.ReplicationEnabled",
-                            QuotaOrder = 20,
+                            QuotaOrder = 20.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8386,7 +8288,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 71,
                             QuotaDescription = "Databases",
                             QuotaName = "MsSQL2016.Databases",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8397,7 +8299,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 72,
                             QuotaDescription = "Users",
                             QuotaName = "MsSQL2016.Users",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8407,7 +8309,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 71,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MsSQL2016.MaxDatabaseSize",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8417,7 +8319,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 71,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MsSQL2016.Backup",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8427,7 +8329,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 71,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MsSQL2016.Restore",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8437,7 +8339,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 71,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MsSQL2016.Truncate",
-                            QuotaOrder = 7,
+                            QuotaOrder = 7.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8447,7 +8349,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 71,
                             QuotaDescription = "Max Log Size",
                             QuotaName = "MsSQL2016.MaxLogSize",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8458,7 +8360,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 73,
                             QuotaDescription = "Databases",
                             QuotaName = "MsSQL2017.Databases",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8469,7 +8371,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 74,
                             QuotaDescription = "Users",
                             QuotaName = "MsSQL2017.Users",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8479,7 +8381,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 72,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MsSQL2017.MaxDatabaseSize",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8489,7 +8391,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 72,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MsSQL2017.Backup",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8499,7 +8401,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 72,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MsSQL2017.Restore",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8509,7 +8411,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 72,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MsSQL2017.Truncate",
-                            QuotaOrder = 7,
+                            QuotaOrder = 7.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8519,7 +8421,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 72,
                             QuotaDescription = "Max Log Size",
                             QuotaName = "MsSQL2017.MaxLogSize",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8530,7 +8432,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 77,
                             QuotaDescription = "Databases",
                             QuotaName = "MsSQL2019.Databases",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8541,7 +8443,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 78,
                             QuotaDescription = "Users",
                             QuotaName = "MsSQL2019.Users",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8551,7 +8453,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 74,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MsSQL2019.MaxDatabaseSize",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8561,7 +8463,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 74,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MsSQL2019.Backup",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8571,7 +8473,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 74,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MsSQL2019.Restore",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8581,7 +8483,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 74,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MsSQL2019.Truncate",
-                            QuotaOrder = 7,
+                            QuotaOrder = 7.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8591,7 +8493,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 74,
                             QuotaDescription = "Max Log Size",
                             QuotaName = "MsSQL2019.MaxLogSize",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8601,7 +8503,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "Number of Private Network VLANs",
                             QuotaName = "VPS2012.PrivateVLANsNumber",
-                            QuotaOrder = 14,
+                            QuotaOrder = 14.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8611,7 +8513,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 12,
                             QuotaDescription = "Automatic Replies via SolidCP Allowed",
                             QuotaName = "Exchange2013.AutoReply",
-                            QuotaOrder = 32,
+                            QuotaOrder = 32.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8621,7 +8523,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "Additional Hard Drives per VPS",
                             QuotaName = "VPS2012.AdditionalVhdCount",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8632,7 +8534,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             PerOrganization = 1,
                             QuotaDescription = "Journaling Mailboxes per Organization",
                             QuotaName = "Exchange2013.JournalingMailboxes",
-                            QuotaOrder = 31,
+                            QuotaOrder = 31.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8643,7 +8545,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 79,
                             QuotaDescription = "Databases",
                             QuotaName = "MsSQL2022.Databases",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8654,7 +8556,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 80,
                             QuotaDescription = "Users",
                             QuotaName = "MsSQL2022.Users",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8664,7 +8566,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 75,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MsSQL2022.MaxDatabaseSize",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8674,7 +8576,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 75,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MsSQL2022.Backup",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8684,7 +8586,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 75,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MsSQL2022.Restore",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8694,7 +8596,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 75,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MsSQL2022.Truncate",
-                            QuotaOrder = 7,
+                            QuotaOrder = 7.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8704,7 +8606,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 75,
                             QuotaDescription = "Max Log Size",
                             QuotaName = "MsSQL2022.MaxLogSize",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8714,7 +8616,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "DMZ Network",
                             QuotaName = "VPS2012.DMZNetworkEnabled",
-                            QuotaOrder = 22,
+                            QuotaOrder = 22.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8724,7 +8626,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "Number of DMZ IP addresses per VPS",
                             QuotaName = "VPS2012.DMZIPAddressesNumber",
-                            QuotaOrder = 23,
+                            QuotaOrder = 23.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8734,7 +8636,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 33,
                             QuotaDescription = "Number of DMZ Network VLANs",
                             QuotaName = "VPS2012.DMZVLANsNumber",
-                            QuotaOrder = 24,
+                            QuotaOrder = 24.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8744,7 +8646,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 7,
                             QuotaDescription = "Allow editing TTL in DNS Editor",
                             QuotaName = "DNS.EditTTL",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8755,7 +8657,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             HideQuota = true,
                             QuotaDescription = "Allow changes to access controls",
                             QuotaName = "Mail.AllowAccessControls",
-                            QuotaOrder = 9,
+                            QuotaOrder = 9.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8766,7 +8668,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 79,
                             QuotaDescription = "Databases",
                             QuotaName = "MsSQL2025.Databases",
-                            QuotaOrder = 1,
+                            QuotaOrder = 1.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8777,7 +8679,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 80,
                             QuotaDescription = "Users",
                             QuotaName = "MsSQL2025.Users",
-                            QuotaOrder = 2,
+                            QuotaOrder = 2.0,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8787,7 +8689,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 76,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MsSQL2025.MaxDatabaseSize",
-                            QuotaOrder = 3,
+                            QuotaOrder = 3.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8797,7 +8699,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 76,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MsSQL2025.Backup",
-                            QuotaOrder = 5,
+                            QuotaOrder = 5.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8807,7 +8709,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 76,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MsSQL2025.Restore",
-                            QuotaOrder = 6,
+                            QuotaOrder = 6.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8817,7 +8719,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 76,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MsSQL2025.Truncate",
-                            QuotaOrder = 7,
+                            QuotaOrder = 7.0,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8827,9 +8729,30 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             GroupId = 76,
                             QuotaDescription = "Max Log Size",
                             QuotaName = "MsSQL2025.MaxLogSize",
-                            QuotaOrder = 4,
+                            QuotaOrder = 4.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
+                        },
+                        new
+                        {
+                            QuotaId = 770,
+                            GroupId = 4,
+                            ItemTypeId = 11,
+                            QuotaDescription = "Mail Domains",
+                            QuotaName = "Mail.Domains",
+                            QuotaOrder = 2.1000000000000001,
+                            QuotaTypeId = 2,
+                            ServiceQuota = true
+                        },
+                        new
+                        {
+                            QuotaId = 771,
+                            GroupId = 4,
+                            QuotaDescription = "Mail Accounts per Domain",
+                            QuotaName = "Mail.Accounts.per.Domains",
+                            QuotaOrder = 2.2000000000000002,
+                            QuotaTypeId = 2,
+                            ServiceQuota = true
                         });
                 });
 
@@ -8837,156 +8760,148 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ID");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("ExpiryDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("FileName")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Hash")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("ServiceId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("ValidFrom")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("RDSCertificates", "public");
+                    b.ToTable("RDSCertificates");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.RdsCollection", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ID");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("ItemId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ItemID");
 
                     b.Property<string>("Name")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.HasKey("Id")
                         .HasName("PK__RDSColle__3214EC27346D361D");
 
-                    b.ToTable("RDSCollections", "public");
+                    b.ToTable("RDSCollections");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.RdsCollectionSetting", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
                     b.Property<int?>("ActiveSessionLimitMin")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool?>("AuthenticateUsingNla")
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("AuthenticateUsingNLA");
 
                     b.Property<bool?>("AutomaticReconnectionEnabled")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("BrokenConnectionAction")
                         .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ClientDeviceRedirectionOptions")
                         .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool?>("ClientPrinterAsDefault")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool?>("ClientPrinterRedirected")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("DisconnectedSessionLimitMin")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("EncryptionLevel")
                         .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("IdleSessionLimitMin")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("MaxRedirectedMonitors")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool?>("RdEasyPrintDriverEnabled")
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("RDEasyPrintDriverEnabled");
 
                     b.Property<int>("RdsCollectionId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("RDSCollectionId");
 
                     b.Property<string>("SecurityLayer")
                         .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool?>("TemporaryFoldersDeletedOnExit")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool?>("TemporaryFoldersPerSession")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.HasIndex(new[] { "RdsCollectionId" }, "RDSCollectionSettingsIdx_RDSCollectionId");
 
-                    b.ToTable("RDSCollectionSettings", "public");
+                    b.ToTable("RDSCollectionSettings");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.RdsCollectionUser", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
                     b.Property<int>("AccountId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("AccountID");
 
                     b.Property<int>("RdsCollectionId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("RDSCollectionId");
 
                     b.HasKey("Id")
@@ -8996,76 +8911,72 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex(new[] { "RdsCollectionId" }, "RDSCollectionUsersIdx_RDSCollectionId");
 
-                    b.ToTable("RDSCollectionUsers", "public");
+                    b.ToTable("RDSCollectionUsers");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.RdsMessage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("MessageText")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("RdsCollectionId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("RDSCollectionId");
 
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("character(250)")
+                        .HasColumnType("TEXT")
                         .IsFixedLength();
 
                     b.HasKey("Id");
 
                     b.HasIndex(new[] { "RdsCollectionId" }, "RDSMessagesIdx_RDSCollectionId");
 
-                    b.ToTable("RDSMessages", "public");
+                    b.ToTable("RDSMessages");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.RdsServer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ID");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("ConnectionEnabled")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(true);
 
                     b.Property<int?>("Controller")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("FqdName")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("ItemId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ItemID");
 
                     b.Property<string>("Name")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("RdsCollectionId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("RDSCollectionId");
 
                     b.HasKey("Id")
@@ -9073,65 +8984,65 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex(new[] { "RdsCollectionId" }, "RDSServersIdx_RDSCollectionId");
 
-                    b.ToTable("RDSServers", "public");
+                    b.ToTable("RDSServers");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.RdsServerSetting", b =>
                 {
                     b.Property<int>("RdsServerId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnOrder(1);
 
                     b.Property<string>("SettingsName")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnOrder(2);
 
                     b.Property<string>("PropertyName")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnOrder(3);
 
                     b.Property<bool>("ApplyAdministrators")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("ApplyUsers")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("PropertyValue")
                         .HasColumnType("TEXT");
 
                     b.HasKey("RdsServerId", "SettingsName", "PropertyName");
 
-                    b.ToTable("RDSServerSettings", "public");
+                    b.ToTable("RDSServerSettings");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.ResourceGroup", b =>
                 {
                     b.Property<int>("GroupId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("GroupID");
 
                     b.Property<string>("GroupController")
                         .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("GroupName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.Property<int>("GroupOrder")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(1);
 
                     b.Property<bool?>("ShowGroup")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("GroupId");
 
-                    b.ToTable("ResourceGroups", "public");
+                    b.ToTable("ResourceGroups");
 
                     b.HasData(
                         new
@@ -9310,14 +9221,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                         },
                         new
                         {
-                            GroupId = 42,
-                            GroupController = "SolidCP.EnterpriseServer.HeliconZooController",
-                            GroupName = "HeliconZoo",
-                            GroupOrder = 2,
-                            ShowGroup = true
-                        },
-                        new
-                        {
                             GroupId = 44,
                             GroupController = "SolidCP.EnterpriseServer.EnterpriseStorageController",
                             GroupName = "EnterpriseStorage",
@@ -9453,45 +9356,43 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                 {
                     b.Property<int>("RecordId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("RecordID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RecordId"));
-
                     b.Property<int>("GroupId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("GroupID");
 
                     b.Property<int?>("MXPriority")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("MXPriority");
 
                     b.Property<string>("RecordData")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("RecordName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("RecordOrder")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(1);
 
                     b.Property<string>("RecordType")
                         .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.HasKey("RecordId");
 
                     b.HasIndex(new[] { "GroupId" }, "ResourceGroupDnsRecordsIdx_GroupID");
 
-                    b.ToTable("ResourceGroupDnsRecords", "public");
+                    b.ToTable("ResourceGroupDnsRecords");
 
                     b.HasData(
                         new
@@ -9660,64 +9561,62 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                 {
                     b.Property<int>("ScheduleId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ScheduleID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ScheduleId"));
-
                     b.Property<bool>("Enabled")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("FromTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("HistoriesNumber")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("Interval")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("LastRun")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("MaxExecutionTime")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("NextRun")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("PackageId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PackageID");
 
                     b.Property<string>("PriorityId")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("PriorityID");
 
                     b.Property<string>("ScheduleName")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ScheduleTypeId")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnName("ScheduleTypeID");
 
                     b.Property<DateTime?>("StartTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TaskId")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("TaskID");
 
                     b.Property<DateTime?>("ToTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("WeekMonthDay")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("ScheduleId");
 
@@ -9725,7 +9624,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex(new[] { "TaskId" }, "ScheduleIdx_TaskID");
 
-                    b.ToTable("Schedule", "public");
+                    b.ToTable("Schedule");
 
                     b.HasData(
                         new
@@ -9769,23 +9668,23 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.ScheduleParameter", b =>
                 {
                     b.Property<int>("ScheduleId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ScheduleID")
                         .HasColumnOrder(1);
 
                     b.Property<string>("ParameterId")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnName("ParameterID")
                         .HasColumnOrder(2);
 
                     b.Property<string>("ParameterValue")
                         .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ScheduleId", "ParameterId");
 
-                    b.ToTable("ScheduleParameters", "public");
+                    b.ToTable("ScheduleParameters");
 
                     b.HasData(
                         new
@@ -9806,21 +9705,21 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                 {
                     b.Property<string>("TaskId")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("TaskID");
 
                     b.Property<int>("RoleId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("RoleID");
 
                     b.Property<string>("TaskType")
                         .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("TaskId");
 
-                    b.ToTable("ScheduleTasks", "public");
+                    b.ToTable("ScheduleTasks");
 
                     b.HasData(
                         new
@@ -9973,33 +9872,33 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                 {
                     b.Property<string>("TaskId")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("TaskID")
                         .HasColumnOrder(1);
 
                     b.Property<string>("ParameterId")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnName("ParameterID")
                         .HasColumnOrder(2);
 
                     b.Property<string>("DataTypeId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("DataTypeID");
 
                     b.Property<string>("DefaultValue")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("ParameterOrder")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(0);
 
                     b.HasKey("TaskId", "ParameterId");
 
-                    b.ToTable("ScheduleTaskParameters", "public");
+                    b.ToTable("ScheduleTaskParameters");
 
                     b.HasData(
                         new
@@ -10780,31 +10679,31 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                 {
                     b.Property<string>("ConfigurationId")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnName("ConfigurationID")
                         .HasColumnOrder(2);
 
                     b.Property<string>("TaskId")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("TaskID")
                         .HasColumnOrder(1);
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Environment")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ConfigurationId", "TaskId");
 
                     b.HasIndex("TaskId");
 
-                    b.ToTable("ScheduleTaskViewConfiguration", "public");
+                    b.ToTable("ScheduleTaskViewConfiguration");
 
                     b.HasData(
                         new
@@ -10974,44 +10873,42 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                 {
                     b.Property<int>("ServerId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ServerID");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ServerId"));
 
                     b.Property<string>("ADAuthenticationType")
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(50)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnName("ADAuthenticationType");
 
                     b.Property<bool?>("ADEnabled")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(false)
                         .HasColumnName("ADEnabled");
 
                     b.Property<string>("ADParentDomain")
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ADParentDomainController")
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ADPassword")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("ADPassword");
 
                     b.Property<string>("ADRootDomain")
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("ADRootDomain");
 
                     b.Property<string>("ADUsername")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("ADUsername");
 
                     b.Property<string>("Comments")
@@ -11019,85 +10916,83 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.Property<string>("InstantDomainAlias")
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool?>("IsCore")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("OSPlatform")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(0)
                         .HasColumnName("OSPlatform");
 
                     b.Property<string>("Password")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("PasswordIsSHA256")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(false)
                         .HasColumnName("PasswordIsSHA256");
 
                     b.Property<int?>("PrimaryGroupId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PrimaryGroupID");
 
                     b.Property<string>("ServerName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ServerUrl")
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
+                        .HasColumnType("TEXT")
                         .HasDefaultValue("");
 
                     b.Property<bool>("VirtualServer")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
 
                     b.HasKey("ServerId");
 
                     b.HasIndex(new[] { "PrimaryGroupId" }, "ServersIdx_PrimaryGroupID");
 
-                    b.ToTable("Servers", "public");
+                    b.ToTable("Servers");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.Service", b =>
                 {
                     b.Property<int>("ServiceId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ServiceID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ServiceId"));
-
                     b.Property<int?>("ClusterId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ClusterID");
 
                     b.Property<string>("Comments")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ProviderId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ProviderID");
 
                     b.Property<int>("ServerId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ServerID");
 
                     b.Property<string>("ServiceName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("ServiceQuotaValue")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("ServiceId");
 
@@ -11107,29 +11002,29 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex(new[] { "ServerId" }, "ServicesIdx_ServerID");
 
-                    b.ToTable("Services", "public");
+                    b.ToTable("Services");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.ServiceDefaultProperty", b =>
                 {
                     b.Property<int>("ProviderId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ProviderID")
                         .HasColumnOrder(1);
 
                     b.Property<string>("PropertyName")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnOrder(2);
 
                     b.Property<string>("PropertyValue")
                         .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ProviderId", "PropertyName")
                         .HasName("PK_ServiceDefaultProperties_1");
 
-                    b.ToTable("ServiceDefaultProperties", "public");
+                    b.ToTable("ServiceDefaultProperties");
 
                     b.HasData(
                         new
@@ -13994,28 +13889,26 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                 {
                     b.Property<int>("ItemId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ItemID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ItemId"));
-
                     b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ItemName")
                         .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("ItemTypeId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ItemTypeID");
 
                     b.Property<int?>("PackageId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("PackageID");
 
                     b.Property<int?>("ServiceId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ServiceID");
 
                     b.HasKey("ItemId");
@@ -14026,82 +13919,82 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex(new[] { "ServiceId" }, "ServiceItemsIdx_ServiceID");
 
-                    b.ToTable("ServiceItems", "public");
+                    b.ToTable("ServiceItems");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.ServiceItemProperty", b =>
                 {
                     b.Property<int>("ItemId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ItemID")
                         .HasColumnOrder(1);
 
                     b.Property<string>("PropertyName")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnOrder(2);
 
                     b.Property<string>("PropertyValue")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ItemId", "PropertyName");
 
-                    b.ToTable("ServiceItemProperties", "public");
+                    b.ToTable("ServiceItemProperties");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.ServiceItemType", b =>
                 {
                     b.Property<int>("ItemTypeId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ItemTypeID");
 
                     b.Property<bool>("Backupable")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(true);
 
                     b.Property<bool?>("CalculateBandwidth")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool?>("CalculateDiskspace")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool?>("Disposable")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("GroupId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("GroupID");
 
                     b.Property<bool>("Importable")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(true);
 
                     b.Property<bool?>("Searchable")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool?>("Suspendable")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("TypeName")
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("TypeOrder")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(1);
 
                     b.HasKey("ItemTypeId");
 
                     b.HasIndex(new[] { "GroupId" }, "ServiceItemTypesIdx_GroupID");
 
-                    b.ToTable("ServiceItemTypes", "public");
+                    b.ToTable("ServiceItemTypes");
 
                     b.HasData(
                         new
@@ -14944,153 +14837,147 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.ServiceProperty", b =>
                 {
                     b.Property<int>("ServiceId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ServiceID")
                         .HasColumnOrder(1);
 
                     b.Property<string>("PropertyName")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnOrder(2);
 
                     b.Property<string>("PropertyValue")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.HasKey("ServiceId", "PropertyName")
                         .HasName("PK_ServiceProperties_1");
 
-                    b.ToTable("ServiceProperties", "public");
+                    b.ToTable("ServiceProperties");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.SfBUser", b =>
                 {
                     b.Property<int>("SfBUserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("SfBUserID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SfBUserId"));
-
                     b.Property<int>("AccountId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("AccountID");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("SfBUserPlanId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("SfBUserPlanID");
 
                     b.Property<string>("SipAddress")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("SfBUserId");
 
-                    b.ToTable("SfBUsers", "public");
+                    b.ToTable("SfBUsers");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.SfBUserPlan", b =>
                 {
                     b.Property<int>("SfBUserPlanId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("SfBUserPlanId");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SfBUserPlanId"));
 
                     b.Property<bool>("AllowOrganizeMeetingsWithExternalAnonymous")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
 
                     b.Property<string>("ArchivePolicy")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.Property<bool>("Conferencing")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("EnterpriseVoice")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("Federation")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IM")
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("IM");
 
                     b.Property<bool>("IsDefault")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("ItemId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ItemID");
 
                     b.Property<bool>("Mobility")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("MobilityEnableOutsideVoice")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("PublicIMConnectivity")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(false)
                         .HasColumnName("PublicIMConnectivity");
 
                     b.Property<bool>("RemoteUserAccess")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
 
                     b.Property<string>("ServerUri")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("ServerURI");
 
                     b.Property<string>("SfBUserPlanName")
                         .IsRequired()
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("SfBUserPlanName");
 
                     b.Property<int?>("SfBUserPlanType")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("SfBUserPlanType");
 
                     b.Property<int?>("Telephony")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("TelephonyDialPlanPolicy")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.Property<string>("TelephonyVoicePolicy")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.Property<int>("VoicePolicy")
-                        .HasColumnType("integer");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.HasKey("SfBUserPlanId");
 
-                    b.ToTable("SfBUserPlans", "public");
+                    b.ToTable("SfBUserPlans");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.SslCertificate", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ID");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Certificate")
                         .HasColumnType("TEXT");
@@ -15100,104 +14987,102 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                         .HasColumnName("CSR");
 
                     b.Property<int?>("CsrLength")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("CSRLength");
 
                     b.Property<string>("DistinguishedName")
                         .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("ExpiryDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("FriendlyName")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Hash")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Hostname")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool?>("Installed")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool?>("IsRenewal")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Pfx")
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("PreviousId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("SerialNumber")
                         .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("SiteId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("SiteID");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("UserID");
 
                     b.Property<DateTime?>("ValidFrom")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("SSLCertificates", "public");
+                    b.ToTable("SSLCertificates");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.StorageSpace", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<long>("FsrmQuotaSizeBytes")
-                        .HasColumnType("bigint");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("FsrmQuotaType")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsDisabled")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
 
                     b.Property<bool>("IsShared")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("LevelId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(300)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Path")
                         .IsRequired()
                         .IsUnicode(false)
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("ServerId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("ServiceId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("UncPath")
                         .IsUnicode(false)
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id")
                         .HasName("PK__StorageS__3214EC07B8B9A6D1");
@@ -15206,88 +15091,82 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex(new[] { "ServiceId" }, "StorageSpacesIdx_ServiceId");
 
-                    b.ToTable("StorageSpaces", "public");
+                    b.ToTable("StorageSpaces");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.StorageSpaceFolder", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<long>("FsrmQuotaSizeBytes")
-                        .HasColumnType("bigint");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("FsrmQuotaType")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsShared")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(300)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Path")
                         .IsRequired()
                         .IsUnicode(false)
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("StorageSpaceId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("UncPath")
                         .IsUnicode(false)
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id")
                         .HasName("PK__StorageS__3214EC07AC0C9EB6");
 
                     b.HasIndex(new[] { "StorageSpaceId" }, "StorageSpaceFoldersIdx_StorageSpaceId");
 
-                    b.ToTable("StorageSpaceFolders", "public");
+                    b.ToTable("StorageSpaceFolders");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.StorageSpaceLevel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id")
                         .HasName("PK__StorageS__3214EC07B8D82363");
 
-                    b.ToTable("StorageSpaceLevels", "public");
+                    b.ToTable("StorageSpaceLevels");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.StorageSpaceLevelResourceGroup", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("GroupId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("LevelId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id")
                         .HasName("PK__StorageS__3214EC07EBEBED98");
@@ -15296,43 +15175,41 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex(new[] { "LevelId" }, "StorageSpaceLevelResourceGroupsIdx_LevelId");
 
-                    b.ToTable("StorageSpaceLevelResourceGroups", "public");
+                    b.ToTable("StorageSpaceLevelResourceGroups");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.SupportServiceLevel", b =>
                 {
                     b.Property<int>("LevelId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("LevelID");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LevelId"));
 
                     b.Property<string>("LevelDescription")
                         .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("LevelName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("LevelId")
                         .HasName("PK__SupportS__09F03C065BA08AFB");
 
-                    b.ToTable("SupportServiceLevels", "public");
+                    b.ToTable("SupportServiceLevels");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.SystemSetting", b =>
                 {
                     b.Property<string>("SettingsName")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnOrder(1);
 
                     b.Property<string>("PropertyName")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnOrder(2);
 
                     b.Property<string>("PropertyValue")
@@ -15340,7 +15217,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasKey("SettingsName", "PropertyName");
 
-                    b.ToTable("SystemSettings", "public");
+                    b.ToTable("SystemSettings");
 
                     b.HasData(
                         new
@@ -15397,64 +15274,60 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                 {
                     b.Property<int>("Key")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Key"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Id")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("Level")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("Scope")
-                        .HasColumnType("uuid");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Key");
 
                     b.HasIndex("Created", "Scope", "Level");
 
-                    b.ToTable("TempIds", "public");
+                    b.ToTable("TempIds");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.Theme", b =>
                 {
                     b.Property<int>("ThemeId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ThemeID");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ThemeId"));
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("DisplayOrder")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("Enabled")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("LTRName")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("LTRName");
 
                     b.Property<string>("RTLName")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("RTLName");
 
                     b.HasKey("ThemeId");
 
-                    b.ToTable("Themes", "public");
+                    b.ToTable("Themes");
 
                     b.HasData(
                         new
@@ -15472,35 +15345,33 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                 {
                     b.Property<int>("ThemeSettingId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ThemeSettingID");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ThemeSettingId"));
 
                     b.Property<string>("PropertyName")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.Property<string>("PropertyValue")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("SettingsName")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.Property<int>("ThemeId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ThemeID");
 
                     b.HasKey("ThemeSettingId");
 
                     b.HasIndex(new[] { "ThemeId" }, "ThemeSettingsIdx_ThemeID");
 
-                    b.ToTable("ThemeSettings", "public");
+                    b.ToTable("ThemeSettings");
 
                     b.HasData(
                         new
@@ -15669,143 +15540,141 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("UserID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserId"));
-
                     b.Property<string>("AdditionalParams")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Address")
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("Changed")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("City")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Comments")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CompanyName")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Country")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool?>("EcommerceEnabled")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Email")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("FailedLogins")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Fax")
                         .HasMaxLength(30)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(30)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("FirstName")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool?>("HtmlMail")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(true);
 
                     b.Property<string>("InstantMessenger")
                         .HasMaxLength(100)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("IsDemo")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
 
                     b.Property<bool>("IsPeer")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
 
                     b.Property<string>("LastName")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("LoginStatusId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("MfaMode")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(0);
 
                     b.Property<int?>("OneTimePasswordState")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("OwnerId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("OwnerID");
 
                     b.Property<string>("Password")
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PinSecret")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PrimaryPhone")
                         .HasMaxLength(30)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(30)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("RoleId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("RoleID");
 
                     b.Property<string>("SecondaryEmail")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("SecondaryPhone")
                         .HasMaxLength(30)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(30)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("State")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("StatusId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("StatusID");
 
                     b.Property<string>("SubscriberNumber")
                         .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Username")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Zip")
                         .HasMaxLength(20)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(20)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("UserId");
 
@@ -15814,7 +15683,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex(new[] { "OwnerId" }, "UsersIdx_OwnerID");
 
-                    b.ToTable("Users", "public");
+                    b.ToTable("Users");
 
                     b.HasData(
                         new
@@ -15851,18 +15720,18 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.UserSetting", b =>
                 {
                     b.Property<int>("UserId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("UserID")
                         .HasColumnOrder(1);
 
                     b.Property<string>("SettingsName")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnOrder(2);
 
                     b.Property<string>("PropertyName")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                        .HasColumnType("TEXT COLLATE NOCASE")
                         .HasColumnOrder(3);
 
                     b.Property<string>("PropertyValue")
@@ -15870,7 +15739,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasKey("UserId", "SettingsName", "PropertyName");
 
-                    b.ToTable("UserSettings", "public");
+                    b.ToTable("UserSettings");
 
                     b.HasData(
                         new
@@ -16760,7 +16629,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             UserId = 1,
                             SettingsName = "WebPolicy",
                             PropertyName = "PublishingProfile",
-                            PropertyValue = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<publishData>\r\n<ad:if test=\"#WebSite.WebDeploySitePublishingEnabled#\">\r\n	<publishProfile\r\n		profileName=\"#WebSite.Name# - Web Deploy\"\r\n		publishMethod=\"MSDeploy\"\r\n		publishUrl=\"#WebSite[\"WmSvcServiceUrl\"]#:#WebSite[\"WmSvcServicePort\"]#\"\r\n		msdeploySite=\"#WebSite.Name#\"\r\n		userName=\"#WebSite.WebDeployPublishingAccount#\"\r\n		userPWD=\"#WebSite.WebDeployPublishingPassword#\"\r\n		destinationAppUrl=\"http://#WebSite.Name#/\"\r\n		<ad:if test=\"#Not(IsNull(MsSqlDatabase)) and Not(IsNull(MsSqlUser))#\">SQLServerDBConnectionString=\"server=#MsSqlServerExternalAddress#;database=#MsSqlDatabase.Name#;uid=#MsSqlUser.Name#;pwd=#MsSqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MySqlDatabase)) and Not(IsNull(MySqlUser))#\">mySQLDBConnectionString=\"server=#MySqlAddress#;database=#MySqlDatabase.Name#;uid=#MySqlUser.Name#;pwd=#MySqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MariaDBDatabase)) and Not(IsNull(MariaDBUser))#\">MariaDBDBConnectionString=\"server=#MariaDBAddress#;database=#MariaDBDatabase.Name#;uid=#MariaDBUser.Name#;pwd=#MariaDBUser.Password#\"</ad:if>\r\n		hostingProviderForumLink=\"https://solidcp.com/support\"\r\n		controlPanelLink=\"https://panel.solidcp.com/\"\r\n	/>\r\n</ad:if>\r\n<ad:if test=\"#IsDefined(\"FtpAccount\")#\">\r\n	<publishProfile\r\n		profileName=\"#WebSite.Name# - FTP\"\r\n		publishMethod=\"FTP\"\r\n		publishUrl=\"ftp://#FtpServiceAddress#\"\r\n		ftpPassiveMode=\"True\"\r\n		userName=\"#FtpAccount.Name#\"\r\n		userPWD=\"#FtpAccount.Password#\"\r\n		destinationAppUrl=\"http://#WebSite.Name#/\"\r\n		<ad:if test=\"#Not(IsNull(MsSqlDatabase)) and Not(IsNull(MsSqlUser))#\">SQLServerDBConnectionString=\"server=#MsSqlServerExternalAddress#;database=#MsSqlDatabase.Name#;uid=#MsSqlUser.Name#;pwd=#MsSqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MySqlDatabase)) and Not(IsNull(MySqlUser))#\">mySQLDBConnectionString=\"server=#MySqlAddress#;database=#MySqlDatabase.Name#;uid=#MySqlUser.Name#;pwd=#MySqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MariaDBDatabase)) and Not(IsNull(MariaDBUser))#\">MariaDBDBConnectionString=\"server=#MariaDBAddress#;database=#MariaDBDatabase.Name#;uid=#MariaDBUser.Name#;pwd=#MariaDBUser.Password#\"</ad:if>\r\n		hostingProviderForumLink=\"https://solidcp.com/support\"\r\n		controlPanelLink=\"https://panel.solidcp.com/\"\r\n    />\r\n</ad:if>\r\n</publishData>\r\n\r\n<!--\r\nControl Panel:\r\nUsername: #User.Username#\r\nPassword: #User.Password#\r\n\r\nTechnical Contact:\r\nsupport@solidcp.com\r\n-->"
+                            PropertyValue = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<publishData>\r\n<ad:if test=\"#WebSite.WebDeploySitePublishingEnabled#\">\r\n	<publishProfile\r\n		profileName=\"#WebSite.Name# - Web Deploy\"\r\n		publishMethod=\"MSDeploy\"\r\n		publishUrl=\"#WebSite[\"WmSvcServiceUrl\"]#:#WebSite[\"WmSvcServicePort\"]#\"\r\n		msdeploySite=\"#WebSite.Name#\"\r\n		userName=\"#WebSite.WebDeployPublishingAccount#\"\r\n		userPWD=\"#WebSite.WebDeployPublishingPassword#\"\r\n		destinationAppUrl=\"http://#WebSite.Name#/\"\r\n		<ad:if test=\"#Not(IsNull(MsSqlDatabase)) and Not(IsNull(MsSqlUser))#\">SQLServerDBConnectionString=\"server=#MsSqlServerExternalAddress#;Initial Catalog=#MsSqlDatabase.Name#;uid=#MsSqlUser.Name#;pwd=#MsSqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MySqlDatabase)) and Not(IsNull(MySqlUser))#\">mySQLDBConnectionString=\"server=#MySqlAddress#;database=#MySqlDatabase.Name#;uid=#MySqlUser.Name#;pwd=#MySqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MariaDBDatabase)) and Not(IsNull(MariaDBUser))#\">MariaDBDBConnectionString=\"server=#MariaDBAddress#;database=#MariaDBDatabase.Name#;uid=#MariaDBUser.Name#;pwd=#MariaDBUser.Password#\"</ad:if>\r\n		hostingProviderForumLink=\"https://solidcp.com/support\"\r\n		controlPanelLink=\"https://panel.solidcp.com/\"\r\n	/>\r\n</ad:if>\r\n<ad:if test=\"#IsDefined(\"FtpAccount\")#\">\r\n	<publishProfile\r\n		profileName=\"#WebSite.Name# - FTP\"\r\n		publishMethod=\"FTP\"\r\n		publishUrl=\"ftp://#FtpServiceAddress#\"\r\n		ftpPassiveMode=\"True\"\r\n		userName=\"#FtpAccount.Name#\"\r\n		userPWD=\"#FtpAccount.Password#\"\r\n		destinationAppUrl=\"http://#WebSite.Name#/\"\r\n		<ad:if test=\"#Not(IsNull(MsSqlDatabase)) and Not(IsNull(MsSqlUser))#\">SQLServerDBConnectionString=\"server=#MsSqlServerExternalAddress#;Initial Catalog=#MsSqlDatabase.Name#;uid=#MsSqlUser.Name#;pwd=#MsSqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MySqlDatabase)) and Not(IsNull(MySqlUser))#\">mySQLDBConnectionString=\"server=#MySqlAddress#;database=#MySqlDatabase.Name#;uid=#MySqlUser.Name#;pwd=#MySqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MariaDBDatabase)) and Not(IsNull(MariaDBUser))#\">MariaDBDBConnectionString=\"server=#MariaDBAddress#;database=#MariaDBDatabase.Name#;uid=#MariaDBUser.Name#;pwd=#MariaDBUser.Password#\"</ad:if>\r\n		hostingProviderForumLink=\"https://solidcp.com/support\"\r\n		controlPanelLink=\"https://panel.solidcp.com/\"\r\n    />\r\n</ad:if>\r\n</publishData>\r\n\r\n<!--\r\nControl Panel:\r\nUsername: #User.Username#\r\nPassword: #User.Password#\r\n\r\nTechnical Contact:\r\nsupport@solidcp.com\r\n-->"
                         },
                         new
                         {
@@ -16825,14 +16694,14 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                     b.Property<string>("DatabaseVersion")
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("BuildDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("DatabaseVersion");
 
-                    b.ToTable("Versions", "public");
+                    b.ToTable("Versions");
 
                     b.HasData(
                         new
@@ -16881,23 +16750,21 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                 {
                     b.Property<int>("VirtualGroupId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("VirtualGroupID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("VirtualGroupId"));
-
                     b.Property<bool?>("BindDistributionToPrimary")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("DistributionType")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("GroupId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("GroupID");
 
                     b.Property<int>("ServerId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ServerID");
 
                     b.HasKey("VirtualGroupId");
@@ -16906,24 +16773,22 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex(new[] { "ServerId" }, "VirtualGroupsIdx_ServerID");
 
-                    b.ToTable("VirtualGroups", "public");
+                    b.ToTable("VirtualGroups");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.VirtualService", b =>
                 {
                     b.Property<int>("VirtualServiceId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("VirtualServiceID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("VirtualServiceId"));
-
                     b.Property<int>("ServerId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ServerID");
 
                     b.Property<int>("ServiceId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ServiceID");
 
                     b.HasKey("VirtualServiceId");
@@ -16932,68 +16797,64 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
 
                     b.HasIndex(new[] { "ServiceId" }, "VirtualServicesIdx_ServiceID");
 
-                    b.ToTable("VirtualServices", "public");
+                    b.ToTable("VirtualServices");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.WebDavAccessToken", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
                     b.Property<Guid>("AccessToken")
-                        .HasColumnType("uuid");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("AccountId")
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("AccountID");
 
                     b.Property<string>("AuthData")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("ExpirationDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("FilePath")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("ItemId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id")
                         .HasName("PK__WebDavAc__3214EC2708781F08");
 
                     b.HasIndex(new[] { "AccountId" }, "WebDavAccessTokensIdx_AccountID");
 
-                    b.ToTable("WebDavAccessTokens", "public");
+                    b.ToTable("WebDavAccessTokens");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.WebDavPortalUsersSetting", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("ID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
                     b.Property<int>("AccountId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Settings")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id")
                         .HasName("PK__WebDavPo__3214EC278AF5195E");
 
                     b.HasIndex(new[] { "AccountId" }, "WebDavPortalUsersSettingsIdx_AccountId");
 
-                    b.ToTable("WebDavPortalUsersSettings", "public");
+                    b.ToTable("WebDavPortalUsersSettings");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.AccessToken", b =>
@@ -17508,14 +17369,14 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                     b.HasOne("SolidCP.EnterpriseServer.Data.Entities.Package", null)
                         .WithMany()
                         .HasForeignKey("PackageId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientNoAction)
                         .IsRequired()
                         .HasConstraintName("FK_PackageServices_Packages");
 
                     b.HasOne("SolidCP.EnterpriseServer.Data.Entities.Service", null)
                         .WithMany()
                         .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientNoAction)
                         .IsRequired()
                         .HasConstraintName("FK_PackageServices_Services");
                 });
