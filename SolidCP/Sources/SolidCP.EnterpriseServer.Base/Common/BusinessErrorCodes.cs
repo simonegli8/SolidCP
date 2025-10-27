@@ -159,7 +159,6 @@ namespace SolidCP.EnterpriseServer
 
 		public const int ERROR_MAIL_ACCOUNT_MAX_MAILBOX_SIZE_LIMIT = -725;
 		public const int ERROR_MAIL_ACCOUNT_PASSWORD_NOT_COMPLEXITY = -726;
-		public const int ERROR_MAIL_DOMAINS_RESOURCE_QUOTA_LIMIT = -727;
 		#endregion
 
 		#region FTP

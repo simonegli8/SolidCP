@@ -4585,7 +4585,7 @@ VALUES (766, 76, NULL, NULL, NULL, 'Max Log Size', 'MsSQL2025.MaxLogSize', 4.0, 
 SELECT changes();
 
 INSERT INTO "Quotas" ("QuotaID", "GroupID", "HideQuota", "ItemTypeID", "PerOrganization", "QuotaDescription", "QuotaName", "QuotaOrder", "QuotaTypeID", "ServiceQuota")
-VALUES (771, 4, NULL, NULL, NULL, 'Mail Accounts per Domain', 'Mail.Accounts.per.Domains', 2.2000000000000002, 2, 1);
+VALUES (771, 4, NULL, NULL, NULL, 'Mail Accounts per Domain', 'Mail.Accounts.per.Domain', 1.2000000000000002, 2, 1);
 SELECT changes();
 
 
@@ -6124,7 +6124,7 @@ VALUES (761, 76, NULL, 80, NULL, 'Users', 'MsSQL2025.Users', 2.0, 2, 0);
 SELECT changes();
 
 INSERT INTO "Quotas" ("QuotaID", "GroupID", "HideQuota", "ItemTypeID", "PerOrganization", "QuotaDescription", "QuotaName", "QuotaOrder", "QuotaTypeID", "ServiceQuota")
-VALUES (770, 4, NULL, 11, NULL, 'Mail Domains', 'Mail.Domains', 2.1000000000000001, 2, 1);
+VALUES (770, 4, NULL, 11, NULL, 'Mail Domains', 'Mail.Domains', 1.1000000000000001, 2, 1);
 SELECT changes();
 
 

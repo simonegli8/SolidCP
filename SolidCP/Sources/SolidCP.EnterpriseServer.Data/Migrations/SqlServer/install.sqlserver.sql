@@ -43921,8 +43921,8 @@ BEGIN
     IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'QuotaID', N'GroupID', N'HideQuota', N'ItemTypeID', N'PerOrganization', N'QuotaDescription', N'QuotaName', N'QuotaOrder', N'QuotaTypeID', N'ServiceQuota') AND [object_id] = OBJECT_ID(N'[Quotas]'))
         SET IDENTITY_INSERT [Quotas] ON;
     EXEC(N'INSERT INTO [Quotas] ([QuotaID], [GroupID], [HideQuota], [ItemTypeID], [PerOrganization], [QuotaDescription], [QuotaName], [QuotaOrder], [QuotaTypeID], [ServiceQuota])
-    VALUES (770, 4, NULL, 11, NULL, N''Mail Domains'', N''Mail.Domains'', 2.1000000000000001E0, 2, CAST(1 AS bit)),
-    (771, 4, NULL, NULL, NULL, N''Mail Accounts per Domain'', N''Mail.Accounts.per.Domains'', 2.2000000000000002E0, 2, CAST(1 AS bit))');
+    VALUES (770, 4, NULL, 11, NULL, N''Mail Domains'', N''Mail.Domains'', 1.1000000000000001E0, 2, CAST(1 AS bit)),
+    (771, 4, NULL, NULL, NULL, N''Mail Accounts per Domain'', N''Mail.Accounts.per.Domain'', 1.2000000000000002E0, 2, CAST(1 AS bit))');
     IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'QuotaID', N'GroupID', N'HideQuota', N'ItemTypeID', N'PerOrganization', N'QuotaDescription', N'QuotaName', N'QuotaOrder', N'QuotaTypeID', N'ServiceQuota') AND [object_id] = OBJECT_ID(N'[Quotas]'))
         SET IDENTITY_INSERT [Quotas] OFF;
 END;

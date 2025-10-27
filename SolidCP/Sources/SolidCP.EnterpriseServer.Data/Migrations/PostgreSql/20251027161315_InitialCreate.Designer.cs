@@ -8818,7 +8818,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             ItemTypeId = 11,
                             QuotaDescription = "Mail Domains",
                             QuotaName = "Mail.Domains",
-                            QuotaOrder = 2.1000000000000001,
+                            QuotaOrder = 1.1000000000000001,
                             QuotaTypeId = 2,
                             ServiceQuota = true
                         },
@@ -8827,8 +8827,8 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.PostgreSql
                             QuotaId = 771,
                             GroupId = 4,
                             QuotaDescription = "Mail Accounts per Domain",
-                            QuotaName = "Mail.Accounts.per.Domains",
-                            QuotaOrder = 2.2000000000000002,
+                            QuotaName = "Mail.Accounts.per.Domain",
+                            QuotaOrder = 1.2000000000000002,
                             QuotaTypeId = 2,
                             ServiceQuota = true
                         });

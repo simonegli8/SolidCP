@@ -122,17 +122,14 @@ namespace SolidCP.EnterpriseServer
 			// check mail accounts per domain quota
 			string domainName = item.Name.Substring(item.Name.IndexOf("@") + 1);
 			QuotaValueInfo accountsPerDoaminQuota = PackageController.GetPackageQuota(item.PackageId, Quotas.MAIL_ACCOUNTS_PER_DOMAIN);
-			if (quota.QuotaAllocatedValue >= 0)
+			if (accountsPerDoaminQuota.QuotaAllocatedValue >= 0)
 			{
 				var domainAccounts = Database.GetMailAccountsCountForDomain(item.PackageId, domainName);
-				if (domainAccounts >= quota.QuotaAllocatedValue)
+				if (domainAccounts >= accountsPerDoaminQuota.QuotaAllocatedValue)
 				{
 					return BusinessErrorCodes.ERROR_MAIL_ACCOUNTS_RESOURCE_QUOTA_LIMIT;
 				}
 			}
-
-			return BusinessErrorCodes.ERROR_MAIL_ACCOUNTS_RESOURCE_QUOTA_LIMIT;
-
 
 			// check if mail resource is available
 			int serviceId = PackageController.GetPackageServiceId(item.PackageId, ResourceGroups.Mail);
@@ -1114,7 +1111,7 @@ namespace SolidCP.EnterpriseServer
 			// check quota
 			QuotaValueInfo quota = PackageController.GetPackageQuota(item.PackageId, Quotas.MAIL_DOMAINS);
 			if (quota.QuotaExhausted)
-				return BusinessErrorCodes.ERROR_MAIL_DOMAINS_RESOURCE_QUOTA_LIMIT;
+				return BusinessErrorCodes.ERROR_MAIL_LICENSE_DOMAIN_QUOTA;
 
 			//Get mailPolicy settings
 			UserInfo user = PackageController.GetPackageOwner(item.PackageId);

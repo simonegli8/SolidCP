@@ -2416,8 +2416,8 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 columns: new[] { "QuotaID", "GroupID", "HideQuota", "ItemTypeID", "PerOrganization", "QuotaDescription", "QuotaName", "QuotaOrder", "QuotaTypeID", "ServiceQuota" },
                 values: new object[,]
                 {
-                    { 770, 4, null, 11, null, "Mail Domains", "Mail.Domains", 2.1000000000000001, 2, true },
-                    { 771, 4, null, null, null, "Mail Accounts per Domain", "Mail.Accounts.per.Domains", 2.2000000000000002, 2, true }
+                    { 770, 4, null, 11, null, "Mail Domains", "Mail.Domains", 1.1000000000000001, 2, true },
+                    { 771, 4, null, null, null, "Mail Accounts per Domain", "Mail.Accounts.per.Domain", 1.2000000000000002, 2, true }
                 });
 
             migrationBuilder.UpdateData(

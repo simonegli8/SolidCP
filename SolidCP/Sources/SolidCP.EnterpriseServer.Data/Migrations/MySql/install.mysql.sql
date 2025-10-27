@@ -3301,7 +3301,7 @@ BEGIN
     (764, 76, NULL, NULL, NULL, 'Database Restores', 'MsSQL2025.Restore', 6.0, 1, FALSE),
     (765, 76, NULL, NULL, NULL, 'Database Truncate', 'MsSQL2025.Truncate', 7.0, 1, FALSE),
     (766, 76, NULL, NULL, NULL, 'Max Log Size', 'MsSQL2025.MaxLogSize', 4.0, 3, FALSE),
-    (771, 4, NULL, NULL, NULL, 'Mail Accounts per Domain', 'Mail.Accounts.per.Domains', 2.2000000000000002, 2, TRUE);
+    (771, 4, NULL, NULL, NULL, 'Mail Accounts per Domain', 'Mail.Accounts.per.Domain', 1.2000000000000002, 2, TRUE);
 
     END IF;
 END //
@@ -4008,7 +4008,7 @@ BEGIN
     (733, 75, NULL, 80, NULL, 'Users', 'MsSQL2022.Users', 2.0, 2, FALSE),
     (760, 76, NULL, 79, NULL, 'Databases', 'MsSQL2025.Databases', 1.0, 2, FALSE),
     (761, 76, NULL, 80, NULL, 'Users', 'MsSQL2025.Users', 2.0, 2, FALSE),
-    (770, 4, NULL, 11, NULL, 'Mail Domains', 'Mail.Domains', 2.1000000000000001, 2, TRUE);
+    (770, 4, NULL, 11, NULL, 'Mail Domains', 'Mail.Domains', 1.1000000000000001, 2, TRUE);
 
     END IF;
 END //

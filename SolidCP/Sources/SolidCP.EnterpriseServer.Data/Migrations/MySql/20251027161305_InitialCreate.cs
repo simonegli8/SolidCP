@@ -3458,7 +3458,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                     { 764, 76, null, null, null, "Database Restores", "MsSQL2025.Restore", 6.0, 1, false },
                     { 765, 76, null, null, null, "Database Truncate", "MsSQL2025.Truncate", 7.0, 1, false },
                     { 766, 76, null, null, null, "Max Log Size", "MsSQL2025.MaxLogSize", 4.0, 3, false },
-                    { 771, 4, null, null, null, "Mail Accounts per Domain", "Mail.Accounts.per.Domains", 2.2000000000000002, 2, true }
+                    { 771, 4, null, null, null, "Mail Accounts per Domain", "Mail.Accounts.per.Domain", 1.2000000000000002, 2, true }
                 });
 
             migrationBuilder.InsertData(
@@ -3977,7 +3977,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                     { 733, 75, null, 80, null, "Users", "MsSQL2022.Users", 2.0, 2, false },
                     { 760, 76, null, 79, null, "Databases", "MsSQL2025.Databases", 1.0, 2, false },
                     { 761, 76, null, 80, null, "Users", "MsSQL2025.Users", 2.0, 2, false },
-                    { 770, 4, null, 11, null, "Mail Domains", "Mail.Domains", 2.1000000000000001, 2, true }
+                    { 770, 4, null, 11, null, "Mail Domains", "Mail.Domains", 1.1000000000000001, 2, true }
                 });
 
             migrationBuilder.InsertData(
