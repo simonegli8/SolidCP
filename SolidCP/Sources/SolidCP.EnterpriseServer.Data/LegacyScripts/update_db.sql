@@ -22441,3 +22441,116 @@ CREATE PROCEDURE [dbo].[GetSchedulesPaged]
 
     END
 GO
+
+-- Fix bug in GetNestedPackagesPaged
+IF EXISTS (SELECT * FROM SYS.OBJECTS WHERE type = 'P' AND name = 'GetNestedPackagesPaged')
+DROP PROCEDURE GetNestedPackagesPaged
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[GetNestedPackagesPaged]
+    (
+    	@ActorID int,
+    	@PackageID int,
+    	@FilterColumn nvarchar(50) = '',
+    	@FilterValue nvarchar(50) = '',
+    	@StatusID int,
+    	@PlanID int,
+    	@ServerID int,
+    	@SortColumn nvarchar(50),
+    	@StartRow int,
+    	@MaximumRows int
+    )
+    AS
+    BEGIN
+
+    IF dbo.CheckActorPackageRights(@ActorID, @PackageID) = 0
+    BEGIN
+        RAISERROR('You are not allowed to access this package', 16, 1)
+        RETURN
+    END
+
+    -- build query and run it to the temporary table
+    DECLARE @sql nvarchar(2000)
+
+    SET @sql = '
+    DECLARE @EndRow int
+    SET @EndRow = @StartRow + @MaximumRows
+    DECLARE @Packages TABLE
+    (
+    	ItemPosition int IDENTITY(1,1),
+    	PackageID int
+    )
+    INSERT INTO @Packages (PackageID)
+    SELECT
+    	P.PackageID
+    FROM Packages AS P
+    INNER JOIN UsersDetailed AS U ON P.UserID = U.UserID
+    INNER JOIN Servers AS S ON P.ServerID = S.ServerID
+    INNER JOIN HostingPlans AS HP ON P.PlanID = HP.PlanID
+    WHERE
+    	P.ParentPackageID = @PackageID
+    	AND ((@StatusID = 0) OR (@StatusID > 0 AND P.StatusID = @StatusID))
+    	AND ((@PlanID = 0) OR (@PlanID > 0 AND P.PlanID = @PlanID))
+    	AND ((@ServerID = 0) OR (@ServerID > 0 AND P.ServerID = @ServerID)) '
+
+    IF @FilterValue <> ''
+    BEGIN
+    	IF @FilterColumn <> ''
+    		SET @sql = @sql + ' AND ' + @FilterColumn + ' LIKE @FilterValue '
+    	ELSE
+    		SET @sql = @sql + '
+    			AND (Username LIKE @FilterValue
+    			OR FullName LIKE @FilterValue
+    			OR Email LIKE @FilterValue) '
+    END
+
+    IF @SortColumn <> '' AND @SortColumn IS NOT NULL
+    SET @sql = @sql + ' ORDER BY ' + @SortColumn + ' '
+    ELSE
+    SET @sql = @sql + ' ORDER BY P.PackageName '
+
+    SET @sql = @sql + ' SELECT COUNT(PackageID) FROM @Packages;
+    SELECT
+    	P.PackageID,
+    	P.PackageName,
+    	P.StatusID,
+    	P.PurchaseDate,    
+      	P.StatusIDchangeDate,
+
+    	dbo.GetItemComments(P.PackageID, ''PACKAGE'', @ActorID) AS Comments,
+
+    	-- server
+    	P.ServerID,
+    	ISNULL(S.ServerName, ''None'') AS ServerName,
+    	ISNULL(S.Comments, '''') AS ServerComments,
+    	ISNULL(S.VirtualServer, 1) AS VirtualServer,
+
+    	-- hosting plan
+    	P.PlanID,
+    	HP.PlanName,
+
+    	-- user
+    	P.UserID,
+    	U.Username,
+    	U.FirstName,
+    	U.LastName,
+    	U.FullName,
+    	U.RoleID,
+    	U.Email
+    FROM @Packages AS TP
+    INNER JOIN Packages AS P ON TP.PackageID = P.PackageID
+    INNER JOIN UsersDetailed AS U ON P.UserID = U.UserID
+    INNER JOIN Servers AS S ON P.ServerID = S.ServerID
+    INNER JOIN HostingPlans AS HP ON P.PlanID = HP.PlanID
+    WHERE TP.ItemPosition BETWEEN @StartRow AND @EndRow'
+
+    exec sp_executesql @sql, N'@StartRow int, @MaximumRows int, @PackageID int, @FilterValue nvarchar(50), @ActorID int, @StatusID int, @PlanID int, @ServerID int',
+    @StartRow, @MaximumRows, @PackageID, @FilterValue, @ActorID, @StatusID, @PlanID, @ServerID
+
+    RETURN
+    END
+GO

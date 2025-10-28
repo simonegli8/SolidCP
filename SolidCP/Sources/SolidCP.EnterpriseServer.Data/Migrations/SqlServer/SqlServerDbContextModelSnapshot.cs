@@ -8850,7 +8850,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 4,
                             QuotaDescription = "Mail Accounts per Domain",
                             QuotaName = "Mail.Accounts.per.Domain",
-                            QuotaOrder = 1.2000000000000002,
+                            QuotaOrder = 1.2,
                             QuotaTypeId = 2,
                             ServiceQuota = true
                         });

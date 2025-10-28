@@ -213,7 +213,7 @@
       <Folder Include="Migrations\Sqlite\" />
     </ItemGroup>
 
-    <Target Name="CopySQLite" BeforeTargets="CopyFilesToOutputDirectory"  Condition="'$(TargetFramework)' == 'net8.0' OR '$(TargetFramework)' == 'net9.0'">
+    <Target Name="CopySQLite" BeforeTargets="CopyFilesToOutputDirectory" Condition="'$(TargetFramework)' == 'net8.0' OR '$(TargetFramework)' == 'net9.0'">
         <ItemGroup>
             <x64SQLiteFiles Include="$(PkgSQLitePCLRaw_lib_e_sqlite3)\runtimes\win-x64\native\*.dll" />
             <x86SQLiteFiles Include="$(PkgSQLitePCLRaw_lib_e_sqlite3)\runtimes\win-x86\native\*.dll" />

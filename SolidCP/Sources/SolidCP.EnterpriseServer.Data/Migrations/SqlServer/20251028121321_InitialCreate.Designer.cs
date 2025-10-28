@@ -12,8 +12,8 @@ using SolidCP.EnterpriseServer.Data;
 namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
 {
     [DbContext(typeof(SqlServerDbContext))]
-    [Migration("20251027160940_AddedMailDomainQuotas")]
-    partial class AddedMailDomainQuotas
+    [Migration("20251028121321_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -8853,7 +8853,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 4,
                             QuotaDescription = "Mail Accounts per Domain",
                             QuotaName = "Mail.Accounts.per.Domain",
-                            QuotaOrder = 1.2000000000000002,
+                            QuotaOrder = 1.2,
                             QuotaTypeId = 2,
                             ServiceQuota = true
                         });
