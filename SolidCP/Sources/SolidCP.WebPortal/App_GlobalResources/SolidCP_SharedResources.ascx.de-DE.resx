@@ -1365,6 +1365,9 @@
   <data name="Error.STATS_UPDATE_STAT" xml:space="preserve">
     <value>Fehler beim Aktualisieren der erweiterten Statistikseite</value>
   </data>
+  <data name="Error.SERVER_DISCOVER_SERVICES" xml:space="preserve">
+    <value>Fehler beim Suchen nach Software</value>
+  </data>
   <data name="Error.109" xml:space="preserve">
     <value>Benutzer mit angegebenem Benutzernamen wurde nicht gefunden</value>
   </data>
@@ -2007,12 +2010,6 @@
   <data name="Quota.MySQL5.MaxDatabaseSize" xml:space="preserve">
     <value>Max. Datenbankgröße [MB]</value>
   </data>
-  <data name="Quota.MySQL4.MaxDatabaseSize" xml:space="preserve">
-    <value>Max. Datenbankgröße [MB]</value>
-  </data>
-  <data name="Quota.MySQL5.Restore" xml:space="preserve">
-    <value>Datenbankwiederherstellungen</value>
-  </data>
   <data name="Quota.MySQL8.Backup" xml:space="preserve">
     <value>Datenbanksicherungen</value>
   </data>
@@ -2022,9 +2019,6 @@
   <data name="Quota.MySQL8.MaxDatabaseSize" xml:space="preserve">
     <value>Max. Datenbankgröße [MB]</value>
   </data>
-  <data name="Quota.MySQL8.Restore" xml:space="preserve">
-    <value>Datenbankwiederherstellungen</value>
-  </data>
   <data name="Quota.MySQL9.Backup" xml:space="preserve">
     <value>Datenbanksicherungen</value>
   </data>
@@ -2033,6 +2027,15 @@
   </data>
   <data name="Quota.MySQL9.MaxDatabaseSize" xml:space="preserve">
     <value>Max. Datenbankgröße [MB]</value>
+  </data>
+  <data name="Quota.MySQL4.MaxDatabaseSize" xml:space="preserve">
+    <value>Max. Datenbankgröße [MB]</value>
+  </data>
+  <data name="Quota.MySQL5.Restore" xml:space="preserve">
+    <value>Datenbankwiederherstellungen</value>
+  </data>
+  <data name="Quota.MySQL8.Restore" xml:space="preserve">
+    <value>Datenbankwiederherstellungen</value>
   </data>
   <data name="Quota.MySQL9.Restore" xml:space="preserve">
     <value>Datenbankwiederherstellungen</value>
@@ -2897,6 +2900,12 @@
   </data>
   <data name="AuditLogTask.REMOTE_DESKTOP_SERVICES_SET_RDS_SERVER_NEW_CONNECTIONS_ALLOWED" xml:space="preserve">
     <value>RDS - neue Verbindungen Einstellen</value>
+  </data>
+  <data name="AuditLogTask.VPS2012_CREATE" xml:space="preserve">
+    <value>VPS erstellen</value>
+  </data>
+  <data name="AuditLogTask.VPS2012_REINSTALL" xml:space="preserve">
+    <value>VPS neu installieren</value>
   </data>
   <data name="AuditLogTask.HOSTING_SPACE_ADD" xml:space="preserve">
     <value>Hinzufügen</value>
@@ -4767,6 +4776,9 @@
   <data name="Error.VPS_LOAD_VM_META_ITEM" xml:space="preserve">
     <value>Virtuelle Maschinen-Meta-Item kann nicht geladen werden</value>
   </data>
+  <data name="Error.VPS_LOAD_PVEVM_ITEM" xml:space="preserve">
+    <value>Fehler beim Laden der virtellen Maschineninformationen</value>
+  </data>
   <data name="Warning.VPS_CHANGE_VM_CONFIGURATION_SNAPSHOT" xml:space="preserve">
     <value>Konfigurationsänderungen können nur vorgenommen werden, wenn keine Snapshots erstellt wurden</value>
   </data>
@@ -5502,9 +5514,6 @@
   <data name="Error.WAG_INSTALL_GENERIC_MODULE_ERROR" xml:space="preserve">
     <value>Web Applikations-Installation fehlgeschlagen</value>
   </data>
-  <data name="Quota.Web.CFVirtualDirectories" xml:space="preserve">
-    <value>ColdFusion-virtuelle Verzeichnisse</value>
-  </data>
   <data name="Quota.OS.DomainPointers" xml:space="preserve">
     <value>Domänen-Aliasse</value>
   </data>
@@ -5871,11 +5880,11 @@
   <data name="ResourceGroup.Proxmox" xml:space="preserve">
     <value>Virtual Proxmox Servers</value>
   </data>
-  <data name="AuditLogSource.Proxmox" xml:space="preserve">
-    <value>Virtual Proxmox Servers</value>
-  </data>
   <data name="ResourceGroup.VPS2012" xml:space="preserve">
     <value>Hyper-V</value>
+  </data>
+  <data name="AuditLogSource.Proxmox" xml:space="preserve">
+    <value>Virtual Proxmox Servers</value>
   </data>
   <data name="AuditLogSource.VPS2012" xml:space="preserve">
     <value>Hyper-V</value>
@@ -5895,11 +5904,11 @@
   <data name="Quota.VPS2012.DvdEnabled" xml:space="preserve">
     <value>DVD-Laufwerk</value>
   </data>
-  <data name="Quota.VPS2012.PrivateVLANsNumber" xml:space="preserve">
-    <value>Anzahl Privates Netzwerk VLANs</value>
-  </data>
   <data name="Quota.VPS2012.ExternalIPAddressesNumber" xml:space="preserve">
     <value>Anzahl externer IP-Adressen</value>
+  </data>
+  <data name="Quota.VPS2012.PrivateVLANsNumber" xml:space="preserve">
+    <value>Anzahl Privates Netzwerk VLANs</value>
   </data>
   <data name="Quota.VPS2012.ExternalNetworkEnabled" xml:space="preserve">
     <value>Externes Netzwerk</value>
@@ -6867,17 +6876,14 @@
   <data name="Quota.Filters.Enable" xml:space="preserve">
     <value>Spam-Filter aktivieren</value>
   </data>
-  <data name="ResourceGroup.SpamExperts" xml:space="preserve">
-    <value>SpamExperts Email Filter</value>
-  </data>
-  <data name="TaskActivity.VPS_CREATE_CREATE_VM_ATTEMPT" xml:space="preserve">
-    <value>Creating Virtual Machine object attempt - {0}</value>
+  <data name="Warning.VPS_CHANGE_HDD_SIZE" xml:space="preserve">
+    <value>Sie können die Festplattengröße nicht reduzieren! Bitte wenden Sie sich mit Ihren Anliegen an den technischen Support.</value>
   </data>
   <data name="TaskActivity.VPS_CREATE_VHD_MAX_IOPS" xml:space="preserve">
     <value>Maximum VHD IOPS: {0} </value>
   </data>
-  <data name="Warning.VPS_CHANGE_HDD_SIZE" xml:space="preserve">
-    <value>Sie können die Festplattengröße nicht reduzieren! Bitte wenden Sie sich mit Ihren Anliegen an den technischen Support.</value>
+  <data name="TaskActivity.VPS_CREATE_CREATE_VM_ATTEMPT" xml:space="preserve">
+    <value>Creating Virtual Machine object attempt - {0}</value>
   </data>
   <data name="Error.PinSendError" xml:space="preserve">
     <value>Fehler beim Senden des Pins</value>
@@ -6924,9 +6930,6 @@
   <data name="AuditLogTask.VPS2012_CHANGE_STATE" xml:space="preserve">
     <value>VPS-Status ändern</value>
   </data>
-  <data name="AuditLogTask.VPS2012_CREATE" xml:space="preserve">
-    <value>VPS erstellen</value>
-  </data>
   <data name="AuditLogTask.VPS2012_DELETE" xml:space="preserve">
     <value>VPS löschen</value>
   </data>
@@ -6950,9 +6953,6 @@
   </data>
   <data name="AuditLogTask.VPS2012_INSERT_DVD_DISK" xml:space="preserve">
     <value>DVD-Disk einlegen...</value>
-  </data>
-  <data name="AuditLogTask.VPS2012_REINSTALL" xml:space="preserve">
-    <value>VPS neu installieren</value>
   </data>
   <data name="AuditLogTask.VPS2012_RENAME_SNAPSHOT" xml:space="preserve">
     <value>VPS-Snapshot umbenennen</value>
@@ -7071,10 +7071,16 @@
   <data name="Quota.PROXMOX.StartShutdownAllowed" xml:space="preserve">
     <value>Erlaube VPS zu Starten, Auszuschalten und Herunterzufahren</value>
   </data>
-  <data name="Error.VPS_LOAD_PVEVM_ITEM" xml:space="preserve">
-    <value>Fehler beim Laden der virtellen Maschineninformationen</value>
+  <data name="Quota.Web.CFVirtualDirectories" xml:space="preserve">
+    <value>ColdFusion-virtuelle Verzeichnisse</value>
   </data>
-  <data name="Error.SERVER_DISCOVER_SERVICES" xml:space="preserve">
-    <value>Fehler beim Suchen nach Software</value>
+  <data name="ResourceGroup.SpamExperts" xml:space="preserve">
+    <value>SpamExperts Email Filter</value>
+  </data>
+  <data name="Quota.Mail.Accounts.per.Domain" xml:space="preserve">
+    <value>E-Mail-Konten pro Domäne</value>
+  </data>
+  <data name="Quota.Mail.Domains" xml:space="preserve">
+    <value>E-Mail-Domänen</value>
   </data>
 </root>

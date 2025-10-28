@@ -5681,7 +5681,7 @@
     <value>Database service is not available</value>
   </data>
   <data name="WebAppGallery.DatabaseUserCannotAccessDatabase" xml:space="preserve">
-    <value>Database user '{1}' cannot access selected database</value>f
+    <value>f</value>
   </data>
   <data name="WebAppGallery.DatabaseUserCreationError" xml:space="preserve">
     <value>Cannot create database user account</value>
@@ -7164,5 +7164,11 @@
   </data>
   <data name="ResourceGroup.MsSQL2025" xml:space="preserve">
     <value>SQL Server 2025</value>
+  </data>
+  <data name="Quota.Mail.Accounts.per.Domain" xml:space="preserve">
+    <value>Mail Accounts per Domain</value>
+  </data>
+  <data name="Quota.Mail.Domains" xml:space="preserve">
+    <value>Mail Domains</value>
   </data>
 </root>

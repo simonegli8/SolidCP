@@ -1977,22 +1977,22 @@
   <data name="Quota.MsSQL2019.Users" xml:space="preserve">
     <value>المستخدمون</value>
   </data>
-	<data name="Quota.MsSQL2022.Backup" xml:space="preserve">
+  <data name="Quota.MsSQL2022.Backup" xml:space="preserve">
     <value>النسخ الاحتياطي لقاعدة البيانات</value>
   </data>
-	<data name="Quota.MsSQL2022.Databases" xml:space="preserve">
+  <data name="Quota.MsSQL2022.Databases" xml:space="preserve">
     <value>قواعد بيانات</value>
   </data>
-	<data name="Quota.MsSQL2022.MaxDatabaseSize" xml:space="preserve">
+  <data name="Quota.MsSQL2022.MaxDatabaseSize" xml:space="preserve">
     <value>الحد الأقصى لحجم قاعدة البيانات ، ميجا بايت</value>
   </data>
-	<data name="Quota.MsSQL2022.Restore" xml:space="preserve">
+  <data name="Quota.MsSQL2022.Restore" xml:space="preserve">
     <value>استعادة قاعدة البيانات</value>
   </data>
-	<data name="Quota.MsSQL2022.Truncate" xml:space="preserve">
+  <data name="Quota.MsSQL2022.Truncate" xml:space="preserve">
     <value>اقتطاع قاعدة البيانات</value>
   </data>
-	<data name="Quota.MsSQL2022.Users" xml:space="preserve">
+  <data name="Quota.MsSQL2022.Users" xml:space="preserve">
     <value>المستخدمون</value>
   </data>
   <data name="Quota.MySQL5.Backup" xml:space="preserve">
@@ -2124,7 +2124,7 @@
   <data name="ResourceGroup.MsSQL2019" xml:space="preserve">
     <value>خادم SQL 2019</value>
   </data>
-	<data name="ResourceGroup.MsSQL2022" xml:space="preserve">
+  <data name="ResourceGroup.MsSQL2022" xml:space="preserve">
     <value>خادم SQL 2022</value>
   </data>
   <data name="ResourceGroup.MailFilters" xml:space="preserve">
@@ -2349,10 +2349,10 @@
   <data name="ServiceItemType.MsSQL2019User" xml:space="preserve">
     <value>مستخدم MS SQL 2019</value>
   </data>
-	<data name="ServiceItemType.MsSQL2022Database" xml:space="preserve">
+  <data name="ServiceItemType.MsSQL2022Database" xml:space="preserve">
     <value>قاعدة بيانات MS SQL 2022</value>
   </data>
-	<data name="ServiceItemType.MsSQL2022User" xml:space="preserve">
+  <data name="ServiceItemType.MsSQL2022User" xml:space="preserve">
     <value>مستخدم MS SQL 2022</value>
   </data>
   <data name="ServiceItemType.MySQL4Database" xml:space="preserve">
@@ -2876,6 +2876,12 @@
   </data>
   <data name="AuditLogTask.REMOTE_DESKTOP_SERVICES_SET_RDS_SERVER_NEW_CONNECTIONS_ALLOWED" xml:space="preserve">
     <value>تعيين اتصال جديد RDS مسموح به</value>
+  </data>
+  <data name="AuditLogTask.VPS2012_CREATE" xml:space="preserve">
+    <value>قم بإنشاء VPS</value>
+  </data>
+  <data name="AuditLogTask.VPS2012_REINSTALL" xml:space="preserve">
+    <value>أعد تثبيت VPS</value>
   </data>
   <data name="AuditLogTask.HOSTING_SPACE_ADD" xml:space="preserve">
     <value>أضف</value>
@@ -3846,7 +3852,7 @@
   <data name="Quota.MsSQL2019.MaxLogSize" xml:space="preserve">
     <value>الحد الأقصى لحجم السجل ، ميجا بايت</value>
   </data>
-	<data name="Quota.MsSQL2022.MaxLogSize" xml:space="preserve">
+  <data name="Quota.MsSQL2022.MaxLogSize" xml:space="preserve">
     <value>الحد الأقصى لحجم السجل ، ميجا بايت</value>
   </data>
   <data name="Error.EXCHANGE_UPDATE_MAILBOX_PERMISSIONS" xml:space="preserve">
@@ -5541,7 +5547,7 @@
   <data name="ReportResourceGroup.MsSQL2019" xml:space="preserve">
     <value>خادم SQL 2019</value>
   </data>
-	<data name="ReportResourceGroup.MsSQL2022" xml:space="preserve">
+  <data name="ReportResourceGroup.MsSQL2022" xml:space="preserve">
     <value>خادم SQL 2022</value>
   </data>
   <data name="WebAppGallery.ApplicationInstallationError" xml:space="preserve">
@@ -6846,9 +6852,6 @@
   <data name="AuditLogTask.VPS2012_CHANGE_STATE" xml:space="preserve">
     <value>قم بتغيير حالة VPS</value>
   </data>
-  <data name="AuditLogTask.VPS2012_CREATE" xml:space="preserve">
-    <value>قم بإنشاء VPS</value>
-  </data>
   <data name="AuditLogTask.VPS2012_DELETE" xml:space="preserve">
     <value>حذف VPS</value>
   </data>
@@ -6869,9 +6872,6 @@
   </data>
   <data name="AuditLogTask.VPS2012_INSERT_DVD_DISK" xml:space="preserve">
     <value>أدخل قرص DVD</value>
-  </data>
-  <data name="AuditLogTask.VPS2012_REINSTALL" xml:space="preserve">
-    <value>أعد تثبيت VPS</value>
   </data>
   <data name="AuditLogTask.VPS2012_RENAME_SNAPSHOT" xml:space="preserve">
     <value>أعد تسمية لقطة VPS</value>
@@ -6914,5 +6914,11 @@
   </data>
   <data name="TaskActivity.VPS2012_SET_PRIMARY_PRIVATE_IP" xml:space="preserve">
     <value>تعيين عنوان IP الأساسي الخاص</value>
+  </data>
+  <data name="Quota.Mail.Accounts.per.Domain" xml:space="preserve">
+    <value>حسابات البريد الإلكتروني لكل نطاق</value>
+  </data>
+  <data name="Quota.Mail.Domains" xml:space="preserve">
+    <value>نطاقات البريد</value>
   </data>
 </root>
