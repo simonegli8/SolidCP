@@ -105,5 +105,11 @@ namespace SolidCP.EnterpriseServer
 		[WebMethod]
 		public int SetUseEntityFramework(bool useEntityFramework) => SystemController.SetUseEntityFramework(useEntityFramework);
 
+		[WebMethod]
+		public void SetHostBillIntegration(bool enabled, string hostbillurl) => SystemController.SetHostBillIntegration(enabled, hostbillurl);
+
+		[WebMethod]
+		public string GetHostBillIntegration() => SystemController.GetHostBillIntegration();
+
 	}
 }

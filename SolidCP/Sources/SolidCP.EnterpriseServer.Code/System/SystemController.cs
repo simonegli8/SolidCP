@@ -37,232 +37,298 @@ using System.Collections.Specialized;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SolidCP.EnterpriseServer
+namespace SolidCP.EnterpriseServer;
+
+public class SystemController : ControllerBase
 {
-	public class SystemController: ControllerBase
+	public SystemController() : this(null) { }
+	public SystemController(ControllerBase provider) : base(provider) { }
+
+	public SystemSettings GetSystemSettings(string settingsName)
 	{
-		public SystemController() : this(null) { }
-		public SystemController(ControllerBase provider): base(provider) { }
+		// check account
+		int accountCheck = SecurityContext.CheckAccount(DemandAccount.IsAdmin | DemandAccount.IsActive);
+		if (accountCheck < 0)
+			return null;
 
-		public SystemSettings GetSystemSettings(string settingsName)
+		bool isDemoAccount = (SecurityContext.CheckAccount(DemandAccount.NotDemo) < 0);
+
+		return GetSystemSettingsInternal(settingsName, !isDemoAccount);
+	}
+
+	public SystemSettings GetSystemSettingsActive(string settingsName, bool decrypt)
+	{
+		// check account
+		int accountCheck = SecurityContext.CheckAccount(DemandAccount.IsActive);
+		if (accountCheck < 0)
+			return null;
+
+		bool isDemoAccount = (SecurityContext.CheckAccount(DemandAccount.NotDemo) < 0);
+
+		return GetSystemSettingsInternal(settingsName, decrypt && isDemoAccount);
+	}
+
+	internal SystemSettings GetSystemSettingsInternal(string settingsName, bool decryptPassword)
+	{
+		// create settings object
+		SystemSettings settings = new SystemSettings();
+
+		// get service settings
+		IDataReader reader = null;
+
+		try
 		{
-			// check account
-            int accountCheck = SecurityContext.CheckAccount(DemandAccount.IsAdmin | DemandAccount.IsActive);
-			if (accountCheck < 0)
-				return null;
-
-			bool isDemoAccount = (SecurityContext.CheckAccount(DemandAccount.NotDemo) < 0);
-
-			return GetSystemSettingsInternal(settingsName, !isDemoAccount);
-		}
-
-        public SystemSettings GetSystemSettingsActive(string settingsName, bool decrypt)
-        {
-            // check account
-            int accountCheck = SecurityContext.CheckAccount(DemandAccount.IsActive);
-            if (accountCheck < 0)
-                return null;
-
-            bool isDemoAccount = (SecurityContext.CheckAccount(DemandAccount.NotDemo) < 0);
-
-            return GetSystemSettingsInternal(settingsName, decrypt && isDemoAccount);
-        }
-
-		internal SystemSettings GetSystemSettingsInternal(string settingsName, bool decryptPassword)
-		{
-			// create settings object
-			SystemSettings settings = new SystemSettings();
-			
 			// get service settings
-			IDataReader reader = null;
+			reader = Database.GetSystemSettings(settingsName);
 
-			try
+			while (reader.Read())
 			{
-				// get service settings
-				reader = Database.GetSystemSettings(settingsName);
+				string name = (string)reader["PropertyName"];
+				string val = (string)reader["PropertyValue"];
 
-				while (reader.Read())
-				{
-					string name = (string)reader["PropertyName"];
-					string val = (string)reader["PropertyValue"];
+				if (name.ToLower().IndexOf("password") != -1 && decryptPassword)
+					val = CryptoUtils.Decrypt(val);
 
-					if (name.ToLower().IndexOf("password") != -1 && decryptPassword)
-						val = CryptoUtils.Decrypt(val);
-
-					settings[name] = val;
-				}
+				settings[name] = val;
 			}
-			finally
+		}
+		finally
+		{
+			if (reader != null)
 			{
-				if (reader != null)
-				{
-					if (!reader.IsClosed) reader.Close();
-					reader.Dispose();
-				}
+				if (!reader.IsClosed) reader.Close();
+				reader.Dispose();
 			}
-
-			return settings;
 		}
 
-		public int SetSystemSettings(string settingsName, SystemSettings settings)
+		return settings;
+	}
+
+	public int SetSystemSettings(string settingsName, SystemSettings settings)
+	{
+		// check account
+		int accountCheck = SecurityContext.CheckAccount(DemandAccount.NotDemo | DemandAccount.IsAdmin
+			| DemandAccount.IsActive);
+		if (accountCheck < 0) return accountCheck;
+
+		XmlDocument xmldoc = new XmlDocument();
+		XmlElement root = xmldoc.CreateElement("properties");
+
+		foreach (string[] pair in settings.SettingsArray)
+		{
+			string name = pair[0];
+			string val = pair[1];
+
+			if (name.ToLower().IndexOf("password") != -1)
+				val = CryptoUtils.Encrypt(val);
+
+			XmlElement property = xmldoc.CreateElement("property");
+
+			property.SetAttribute("name", name);
+			property.SetAttribute("value", val);
+
+			root.AppendChild(property);
+		}
+
+		Database.SetSystemSettings(settingsName, root.OuterXml);
+
+		return 0;
+	}
+
+	public bool GetSystemSetupMode()
+	{
+		var scpaSystemSettings = GetSystemSettings(SystemSettings.SETUP_SETTINGS);
+		// Flag either not found or empty
+		if (String.IsNullOrEmpty(scpaSystemSettings["EnabledSCPA"]))
+		{
+			return false;
+		}
+		//
+		return true;
+	}
+
+	public int SetupControlPanelAccounts(string passwordA, string passwordB, string ip)
+	{
+		try
+		{
+			TaskManager.StartTask("SYSTEM", "COMPLETE_SCPA");
+			//
+			TaskManager.WriteParameter("Password A", passwordA);
+			TaskManager.WriteParameter("Password B", passwordB);
+			TaskManager.WriteParameter("IP Address", ip);
+			//
+			var enabledScpaMode = GetSystemSetupMode();
+			//
+			if (enabledScpaMode == false)
+			{
+				//
+				TaskManager.WriteWarning("Attempt to execute SCPA procedure for an uknown reason");
+				//
+				return BusinessErrorCodes.FAILED_EXECUTE_SERVICE_OPERATION;
+			}
+
+			// Entering the security context into Supervisor mode
+			SecurityContext.SetThreadSupervisorPrincipal();
+			//
+			var accountA = UserController.GetUserInternally("serveradmin");
+			var accountB = UserController.GetUserInternally("admin");
+			//
+			var resultCodeA = UserController.ChangeUserPassword(accountA.UserId, passwordA);
+			//
+			if (resultCodeA < 0)
+			{
+				TaskManager.WriteParameter("Result Code A", resultCodeA);
+				//
+				return resultCodeA;
+			}
+			//
+			var resultCodeB = UserController.ChangeUserPassword(accountB.UserId, passwordB);
+			//
+			if (resultCodeB < 0)
+			{
+				TaskManager.WriteParameter("Result Code B", resultCodeB);
+				//
+				return resultCodeB;
+			}
+			// Disable SCPA mode
+			SetSystemSettings(SystemSettings.SETUP_SETTINGS, SystemSettings.Empty);
+			// Operation has succeeded
+			return 0;
+		}
+		catch (Exception ex)
+		{
+			TaskManager.WriteError(ex);
+			//
+			return BusinessErrorCodes.FAILED_EXECUTE_SERVICE_OPERATION;
+		}
+		finally
+		{
+			TaskManager.CompleteTask();
+		}
+	}
+
+	public bool CheckIsTwilioEnabled()
+	{
+		var settings = SystemController.GetSystemSettingsActive(SystemSettings.TWILIO_SETTINGS, false);
+
+		return settings != null
+			&& !string.IsNullOrEmpty(settings.GetValueOrDefault(SystemSettings.TWILIO_ACCOUNTSID_KEY, string.Empty))
+			&& !string.IsNullOrEmpty(settings.GetValueOrDefault(SystemSettings.TWILIO_AUTHTOKEN_KEY, string.Empty))
+			&& !string.IsNullOrEmpty(settings.GetValueOrDefault(SystemSettings.TWILIO_PHONEFROM_KEY, string.Empty));
+	}
+
+	//Theme options
+	public DataSet GetThemes()
+	{
+		return Database.GetThemes();
+	}
+
+	public DataSet GetThemeSettings(int ThemeID)
+	{
+		return Database.GetThemeSettings(ThemeID);
+	}
+
+	public DataSet GetThemeSetting(int ThemeID, string SettingsName)
+	{
+		return Database.GetThemeSetting(ThemeID, SettingsName);
+	}
+
+	public Data.DbType GetDatabaseType() => Database.DbType;
+
+	public bool GetUseEntityFramework()
+	{
+		return Database.UseEntityFramework;
+	}
+
+	public int SetUseEntityFramework(bool useEntityFramework)
+	{
+		if (Database.IsSqlServer)
 		{
 			// check account
 			int accountCheck = SecurityContext.CheckAccount(DemandAccount.NotDemo | DemandAccount.IsAdmin
 				| DemandAccount.IsActive);
 			if (accountCheck < 0) return accountCheck;
 
-			XmlDocument xmldoc = new XmlDocument();
-			XmlElement root = xmldoc.CreateElement("properties");
+			SystemSettings settings = new SystemSettings();
 
-			foreach (string[] pair in settings.SettingsArray)
+			// authentication settings
+			settings = new SystemSettings();
+			settings[SystemSettings.ALWAYS_USE_ENTITYFRAMEWORK] = useEntityFramework ? "True" : "False";
+
+			int result = SetSystemSettings(SystemSettings.DEBUG_SETTINGS, settings);
+
+			Database.AlwaysUseEntityFramework = useEntityFramework;
+
+			return result;
+		}
+
+		return 0;
+	}
+
+	static readonly object HostBillServerCacheLock = new object();
+	static HostBillServer HostBillServerCache = null;
+	public void SetHostBillIntegration(HostBillServerInfo hostbill)
+	{
+		lock (HostBillServerCacheLock)
+		{
+			string url, id, key;
+			if (!hostbill.Enabled) url = id = key = null;
+			else
 			{
-				string name = pair[0];
-				string val = pair[1];
-
-				if (name.ToLower().IndexOf("password") != -1)
-					val = CryptoUtils.Encrypt(val);
-
-				XmlElement property = xmldoc.CreateElement("property");
-
-				property.SetAttribute("name", name);
-				property.SetAttribute("value", val);
-
-				root.AppendChild(property);
+				url = hostbill.Url;
+				id = hostbill.Id;
+				key = hostbill.Key;
 			}
-
-			Database.SetSystemSettings(settingsName, root.OuterXml);
-
-			return 0;
-		}
-
-		public bool GetSystemSetupMode()
-		{
-			var scpaSystemSettings = GetSystemSettings(SystemSettings.SETUP_SETTINGS);
-			// Flag either not found or empty
-			if (String.IsNullOrEmpty(scpaSystemSettings["EnabledSCPA"]))
+			SystemSettings settings = new SystemSettings();
+			settings = new SystemSettings();
+			settings[nameof(hostbill.Url)] = url;
+			if (hostbill.Enabled)
 			{
-				return false;
+				settings[nameof(hostbill.Id)] = id;
+				settings[nameof(hostbill.Key)] = key;
 			}
-			//
-			return true;
+			int result = SetSystemSettings(SystemSettings.HOSTBILL_INTEGRATION, settings);
+			HostBillServerCache = new HostBillServer() { Enabled = hostbill.Enabled, Id = id, Key = key, Url = url };
 		}
+	}
 
-		public int SetupControlPanelAccounts(string passwordA, string passwordB, string ip)
+	public HostBillServerInfo GetHostBillIntegration()
+	{
+		lock (HostBillServerCacheLock)
 		{
-			try
+			if (HostBillServerCache != null) return HostBillServerCache;
+			var settings = GetSystemSettings(SystemSettings.HOSTBILL_INTEGRATION);
+			var server = new HostBillServer();
+			server.Url = settings[nameof(server.Url)];
+			server.Enabled = !string.IsNullOrEmpty(server.Url);
+			if (!server.Enabled) server.Id = server.Key = null;
+			else
 			{
-				TaskManager.StartTask("SYSTEM", "COMPLETE_SCPA");
-				//
-				TaskManager.WriteParameter("Password A", passwordA);
-				TaskManager.WriteParameter("Password B", passwordB);
-				TaskManager.WriteParameter("IP Address", ip);
-				//
-				var enabledScpaMode = GetSystemSetupMode();
-				//
-				if (enabledScpaMode == false)
-				{
-					//
-					TaskManager.WriteWarning("Attempt to execute SCPA procedure for an uknown reason");
-					//
-					return BusinessErrorCodes.FAILED_EXECUTE_SERVICE_OPERATION;
-				}
-
-				// Entering the security context into Supervisor mode
-				SecurityContext.SetThreadSupervisorPrincipal();
-				//
-				var accountA = UserController.GetUserInternally("serveradmin");
-				var accountB = UserController.GetUserInternally("admin");
-				//
-				var resultCodeA = UserController.ChangeUserPassword(accountA.UserId, passwordA);
-				//
-				if (resultCodeA < 0)
-				{
-					TaskManager.WriteParameter("Result Code A", resultCodeA);
-					//
-					return resultCodeA;
-				}
-				//
-				var resultCodeB = UserController.ChangeUserPassword(accountB.UserId, passwordB);
-				//
-				if (resultCodeB < 0)
-				{
-					TaskManager.WriteParameter("Result Code B", resultCodeB);
-					//
-					return resultCodeB;
-				}
-				// Disable SCPA mode
-				SetSystemSettings(SystemSettings.SETUP_SETTINGS, SystemSettings.Empty);
-				// Operation has succeeded
-				return 0;
+				server.Id = settings[nameof(server.Id)];
+				server.Key = settings[nameof(server.Key)];
 			}
-			catch (Exception ex)
-			{
-				TaskManager.WriteError(ex);
-				//
-				return BusinessErrorCodes.FAILED_EXECUTE_SERVICE_OPERATION;
-			}
-			finally
-			{
-				TaskManager.CompleteTask();
-			}
+			HostBillServerCache = server;
+			return server;
 		}
+	}
 
-        public bool CheckIsTwilioEnabled()
-        {
-            var settings = SystemController.GetSystemSettingsActive(SystemSettings.TWILIO_SETTINGS, false);
+	public void SyncHostBillUsers()
+	{
+	}
 
-            return settings != null
-                && !string.IsNullOrEmpty(settings.GetValueOrDefault(SystemSettings.TWILIO_ACCOUNTSID_KEY, string.Empty))
-                && !string.IsNullOrEmpty(settings.GetValueOrDefault(SystemSettings.TWILIO_AUTHTOKEN_KEY, string.Empty))
-                && !string.IsNullOrEmpty(settings.GetValueOrDefault(SystemSettings.TWILIO_PHONEFROM_KEY, string.Empty));
-        }
+	public HostBillUserInfo GetHostBillUser(string username)
+	{
+		var server = GetHostBillIntegration();
+		if (!server.Enabled) return null;
+	}
 
-		//Theme options
-		public DataSet GetThemes()
-		{
-			return Database.GetThemes();
-		}
+	public void CreateHostBillUser(HostBillServerInfo user) { }
 
-		public DataSet GetThemeSettings(int ThemeID)
-		{
-			return Database.GetThemeSettings(ThemeID);
-		}
+	public int LoginHostBillUser(string username, string password)
+	{
+		var server = GetHostBillIntegration();
+		if (!server.Enabled) return BusinessErrorCodes.ERROR_USER_NOT_FOUND;
 
-		public DataSet GetThemeSetting(int ThemeID, string SettingsName)
-		{
-			return Database.GetThemeSetting(ThemeID, SettingsName);
-		}
-
-		public Data.DbType GetDatabaseType() => Database.DbType;
-
-		public bool GetUseEntityFramework()
-		{
-			return Database.UseEntityFramework;
-		}
-
-		public int SetUseEntityFramework(bool useEntityFramework)
-		{
-			if (Database.IsSqlServer)
-			{
-				// check account
-				int accountCheck = SecurityContext.CheckAccount(DemandAccount.NotDemo | DemandAccount.IsAdmin
-					| DemandAccount.IsActive);
-				if (accountCheck < 0) return accountCheck;
-
-				SystemSettings settings = new SystemSettings();
-
-				// authentication settings
-				settings = new SystemSettings();
-				settings[SystemSettings.ALWAYS_USE_ENTITYFRAMEWORK] = useEntityFramework ? "True" : "False";
-
-				int result = SetSystemSettings(SystemSettings.DEBUG_SETTINGS, settings);
-
-				Database.AlwaysUseEntityFramework = useEntityFramework;
-
-				return result;
-			}
-
-			return 0;
-		}
+		var user = GetHostBillUser(username);
 	}
 }

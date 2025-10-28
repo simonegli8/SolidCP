@@ -83,7 +83,9 @@ namespace SolidCP.EnterpriseServer
 		// Always use EntityFramework
 		public const string ALWAYS_USE_ENTITYFRAMEWORK = "AlwaysUseEntityFramework";
 
-        public static readonly SystemSettings Empty = new SystemSettings { SettingsArray = new string[][] {} };
+		public const string HOSTBILL_INTEGRATION = "HostBillIntegration";
+
+		public static readonly SystemSettings Empty = new SystemSettings { SettingsArray = new string[][] {} };
 
 		NameValueCollection settingsHash = null;
 

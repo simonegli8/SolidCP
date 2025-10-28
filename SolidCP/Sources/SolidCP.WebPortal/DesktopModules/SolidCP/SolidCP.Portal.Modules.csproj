@@ -86,6 +86,7 @@
         <Compile Include="ApplyEnableHardQuotaFeature.ascx.designer.cs">
             <DependentUpon>ApplyEnableHardQuotaFeature.ascx</DependentUpon>
         </Compile>
+        <Compile Include="Code\Helpers\HostBillHelper.cs" />
         <Compile Include="ScheduleTaskControls\CheckWebsitesSslView.ascx.cs" />
         <Compile Include="ScheduleTaskControls\CheckWebsitesSslView.ascx.designer.cs" />
         <Compile Include="SpaceServerUsage.ascx.cs" />
@@ -148,7 +149,7 @@
             <DependentUpon>EditBlackBerryUser.ascx</DependentUpon>
         </Compile>
         <Compile Include="Code\AssemblyInfo.cs" />
-        <Compile Include="Code\DbHelper.cs" />
+        <Compile Include="Code\Helpers\DbHelper.cs" />
         <Compile Include="Code\Framework\ISchedulerTaskView.cs" />
         <Compile Include="Code\Framework\WebPortalPageTitleProvider.cs" />
         <Compile Include="Code\Framework\WebPortalThemeProvider.cs" />
