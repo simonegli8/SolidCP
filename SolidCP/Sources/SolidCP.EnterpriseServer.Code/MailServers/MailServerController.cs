@@ -119,18 +119,6 @@ namespace SolidCP.EnterpriseServer
 			if (quota.QuotaExhausted)
 				return BusinessErrorCodes.ERROR_MAIL_ACCOUNTS_RESOURCE_QUOTA_LIMIT;
 
-			// check mail accounts per domain quota
-			string domainName = item.Name.Substring(item.Name.IndexOf("@") + 1);
-			QuotaValueInfo accountsPerDoaminQuota = PackageController.GetPackageQuota(item.PackageId, Quotas.MAIL_ACCOUNTS_PER_DOMAIN);
-			if (accountsPerDoaminQuota.QuotaAllocatedValue >= 0)
-			{
-				var domainAccounts = Database.GetMailAccountsCountForDomain(item.PackageId, domainName);
-				if (domainAccounts >= accountsPerDoaminQuota.QuotaAllocatedValue)
-				{
-					return BusinessErrorCodes.ERROR_MAIL_ACCOUNTS_RESOURCE_QUOTA_LIMIT;
-				}
-			}
-
 			// check if mail resource is available
 			int serviceId = PackageController.GetPackageServiceId(item.PackageId, ResourceGroups.Mail);
 			if (serviceId == 0)
