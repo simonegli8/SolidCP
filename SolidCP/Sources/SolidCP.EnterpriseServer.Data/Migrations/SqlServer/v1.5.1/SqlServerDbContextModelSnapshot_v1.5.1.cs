@@ -3,7 +3,6 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SolidCP.EnterpriseServer.Data;
 
@@ -12,11 +11,9 @@ using SolidCP.EnterpriseServer.Data;
 namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
 {
     [DbContext(typeof(SqlServerDbContext))]
-    [Migration("20251028121321_InitialCreate")]
-    partial class InitialCreate
+    partial class SqlServerDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,7 +53,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__AccessTo__3214EC27DEAEF66E");
+                        .HasName("PK_AccessToken");
 
                     b.HasIndex(new[] { "AccountId" }, "AccessTokensIdx_AccountID");
 
@@ -81,7 +78,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnName("UserID");
 
                     b.HasKey("Id")
-                        .HasName("PK__Addition__3214EC27E665DDE2");
+                        .HasName("PK_AdditionalGroup");
 
                     b.ToTable("AdditionalGroups");
                 });
@@ -2241,7 +2238,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnName("UserID");
 
                     b.HasKey("Id")
-                        .HasName("PK__Backgrou__3214EC273A1145AC");
+                        .HasName("PK_BackgroundTask");
 
                     b.ToTable("BackgroundTasks");
                 });
@@ -2281,7 +2278,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnType("ntext");
 
                     b.HasKey("LogId")
-                        .HasName("PK__Backgrou__5E5499A86067A6E5");
+                        .HasName("PK_BackgroundTaskLog");
 
                     b.HasIndex(new[] { "TaskId" }, "BackgroundTaskLogsIdx_TaskID");
 
@@ -2313,7 +2310,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnType("nvarchar(255)");
 
                     b.HasKey("ParameterId")
-                        .HasName("PK__Backgrou__F80C629777BF580B");
+                        .HasName("PK_BackgroundTaskParameter");
 
                     b.HasIndex(new[] { "TaskId" }, "BackgroundTaskParametersIdx_TaskID");
 
@@ -2334,7 +2331,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnName("TaskID");
 
                     b.HasKey("TaskStackId")
-                        .HasName("PK__Backgrou__5E44466FB8A5F217");
+                        .HasName("PK_BackgroundTaskStack");
 
                     b.HasIndex(new[] { "TaskId" }, "BackgroundTaskStackIdx_TaskID");
 
@@ -2526,22 +2523,16 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnType("datetime");
 
                     b.Property<bool>("HostingAllowed")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDomainPointer")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsPreviewDomain")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsSubDomain")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdateDate")
                         .HasColumnType("datetime");
@@ -2605,7 +2596,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id")
-                        .HasName("PK__DomainDn__3214EC27A6FC0498");
+                        .HasName("PK_DomainDnsRecord");
 
                     b.HasIndex(new[] { "DomainId" }, "DomainDnsRecordsIdx_DomainId");
 
@@ -2679,7 +2670,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnName("ItemID");
 
                     b.HasKey("Id")
-                        .HasName("PK__Enterpri__3214EC27D1B48691");
+                        .HasName("PK_EnterpriseFoldersOwaPermission");
 
                     b.HasIndex(new[] { "AccountId" }, "EnterpriseFoldersOwaPermissionsIdx_AccountID");
 
@@ -2725,9 +2716,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnType("int");
 
                     b.Property<bool>("IsVip")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
-                        .HasDefaultValue(false)
                         .HasColumnName("IsVIP");
 
                     b.Property<int>("ItemId")
@@ -2838,7 +2827,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Exchange__3214EC27EF1C22C1");
+                        .HasName("PK_ExchangeDeletedAccount");
 
                     b.ToTable("ExchangeDeletedAccounts");
                 });
@@ -3006,7 +2995,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnName("TagID");
 
                     b.HasKey("PlanTagId")
-                        .HasName("PK__Exchange__E467073C50CD805B");
+                        .HasName("PK_ExchangeMailboxPlanRetentionPolicyTag");
 
                     b.ToTable("ExchangeMailboxPlanRetentionPolicyTags");
                 });
@@ -3057,9 +3046,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnName("DomainID");
 
                     b.Property<int>("DomainTypeId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasDefaultValue(0)
                         .HasColumnName("DomainTypeID");
 
                     b.Property<bool?>("IsHost")
@@ -3125,7 +3112,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnType("varchar(100)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Exchange__3214EC072DDBA072");
+                        .HasName("PK_ExchangeOrganizationSsFolder");
 
                     b.HasIndex(new[] { "ItemId" }, "ExchangeOrganizationSsFoldersIdx_ItemId");
 
@@ -3161,7 +3148,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnType("int");
 
                     b.HasKey("TagId")
-                        .HasName("PK__Exchange__657CFA4C02667D37");
+                        .HasName("PK_ExchangeRetentionPolicyTag");
 
                     b.ToTable("ExchangeRetentionPolicyTags");
                 });
@@ -3220,7 +3207,8 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     b.Property<int?>("SrvWeight")
                         .HasColumnType("int");
 
-                    b.HasKey("RecordId");
+                    b.HasKey("RecordId")
+                        .HasName("PK_GlobalDnsRecord");
 
                     b.HasIndex(new[] { "IpAddressId" }, "GlobalDnsRecordsIdx_IPAddressID");
 
@@ -3307,7 +3295,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnType("int");
 
                     b.HasKey("PlanId", "QuotaId")
-                        .HasName("PK_HostingPlanQuotas_1");
+                        .HasName("PK_HostingPlanQuota");
 
                     b.HasIndex("QuotaId");
 
@@ -3640,7 +3628,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PackageComments = "",
                             PackageName = "System",
                             StatusId = 1,
-                            StatusIdChangeDate = new DateTime(2024, 10, 12, 19, 29, 19, 927, DateTimeKind.Utc),
+                            StatusIdChangeDate = new DateTime(2024, 12, 17, 12, 54, 59, 933, DateTimeKind.Utc),
                             UserId = 1
                         });
                 });
@@ -3764,7 +3752,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnType("bit");
 
                     b.HasKey("PackageId", "GroupId")
-                        .HasName("PK_PackageResources_1");
+                        .HasName("PK_PackageResources");
 
                     b.HasIndex("GroupId");
 
@@ -3838,7 +3826,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnName("VlanID");
 
                     b.HasKey("PackageVlanId")
-                        .HasName("PK__PackageV__A9AABBF9C0C25CB3");
+                        .HasName("PK_PackageVlan");
 
                     b.HasIndex(new[] { "PackageId" }, "PackageVLANsIdx_PackageID");
 
@@ -3974,7 +3962,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnType("int");
 
                     b.HasKey("VlanId")
-                        .HasName("PK__PrivateN__8348135581B53618");
+                        .HasName("PK_PrivateNetworkVlan");
 
                     b.HasIndex(new[] { "ServerId" }, "PrivateNetworkVLANsIdx_ServerID");
 
@@ -4012,7 +4000,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnType("nvarchar(400)");
 
                     b.HasKey("ProviderId")
-                        .HasName("PK_ServiceTypes");
+                        .HasName("PK_Provider");
 
                     b.HasIndex(new[] { "GroupId" }, "ProvidersIdx_GroupID");
 
@@ -4394,6 +4382,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         new
                         {
                             ProviderId = 91,
+                            DisableAutoDiscovery = true,
                             DisplayName = "Hosted Microsoft Exchange Server 2013",
                             EditorControl = "Exchange",
                             GroupId = 12,
@@ -4516,6 +4505,16 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 3,
                             ProviderName = "MSFTP100",
                             ProviderType = "SolidCP.Providers.FTP.MsFTP100, SolidCP.Providers.FTP.IIs100"
+                        },
+                        new
+                        {
+                            ProviderId = 135,
+                            DisableAutoDiscovery = true,
+                            DisplayName = "Web Application Engines",
+                            EditorControl = "HeliconZoo",
+                            GroupId = 42,
+                            ProviderName = "HeliconZoo",
+                            ProviderType = "SolidCP.Providers.Web.HeliconZoo.HeliconZoo, SolidCP.Providers.Web.HeliconZoo"
                         },
                         new
                         {
@@ -4668,51 +4667,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         },
                         new
                         {
-                            ProviderId = 305,
-                            DisplayName = "MySQL Server 8.1",
-                            EditorControl = "MySQL",
-                            GroupId = 90,
-                            ProviderName = "MySQL",
-                            ProviderType = "SolidCP.Providers.Database.MySqlServer81, SolidCP.Providers.Database.MySQL"
-                        },
-                        new
-                        {
-                            ProviderId = 306,
-                            DisplayName = "MySQL Server 8.2",
-                            EditorControl = "MySQL",
-                            GroupId = 90,
-                            ProviderName = "MySQL",
-                            ProviderType = "SolidCP.Providers.Database.MySqlServer82, SolidCP.Providers.Database.MySQL"
-                        },
-                        new
-                        {
-                            ProviderId = 307,
-                            DisplayName = "MySQL Server 8.3",
-                            EditorControl = "MySQL",
-                            GroupId = 90,
-                            ProviderName = "MySQL",
-                            ProviderType = "SolidCP.Providers.Database.MySqlServer83, SolidCP.Providers.Database.MySQL"
-                        },
-                        new
-                        {
-                            ProviderId = 308,
-                            DisplayName = "MySQL Server 8.4",
-                            EditorControl = "MySQL",
-                            GroupId = 90,
-                            ProviderName = "MySQL",
-                            ProviderType = "SolidCP.Providers.Database.MySqlServer84, SolidCP.Providers.Database.MySQL"
-                        },
-                        new
-                        {
-                            ProviderId = 320,
-                            DisplayName = "MySQL Server 9.0",
-                            EditorControl = "MySQL",
-                            GroupId = 90,
-                            ProviderName = "MySQL",
-                            ProviderType = "SolidCP.Providers.Database.MySqlServer90, SolidCP.Providers.Database.MySQL"
-                        },
-                        new
-                        {
                             ProviderId = 350,
                             DisableAutoDiscovery = true,
                             DisplayName = "Microsoft Hyper-V 2012 R2",
@@ -4745,21 +4699,11 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         {
                             ProviderId = 370,
                             DisableAutoDiscovery = true,
-                            DisplayName = "Proxmox Virtualization (remote)",
-                            EditorControl = "Proxmox",
-                            GroupId = 167,
-                            ProviderName = "Proxmox (remote)",
-                            ProviderType = "SolidCP.Providers.Virtualization.Proxmoxvps, SolidCP.Providers.Virtualization.Proxmoxvps"
-                        },
-                        new
-                        {
-                            ProviderId = 371,
-                            DisableAutoDiscovery = false,
                             DisplayName = "Proxmox Virtualization",
                             EditorControl = "Proxmox",
                             GroupId = 167,
                             ProviderName = "Proxmox",
-                            ProviderType = "SolidCP.Providers.Virtualization.ProxmoxvpsLocal, SolidCP.Providers.Virtualization.Proxmoxvps"
+                            ProviderType = "SolidCP.Providers.Virtualization.Proxmoxvps, SolidCP.Providers.Virtualization.Proxmoxvps"
                         },
                         new
                         {
@@ -4782,16 +4726,8 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         },
                         new
                         {
-                            ProviderId = 500,
-                            DisplayName = "Unix System",
-                            EditorControl = "Unix",
-                            GroupId = 1,
-                            ProviderName = "UnixSystem",
-                            ProviderType = "SolidCP.Providers.OS.Unix, SolidCP.Providers.OS.Unix"
-                        },
-                        new
-                        {
                             ProviderId = 600,
+                            DisableAutoDiscovery = true,
                             DisplayName = "Enterprise Storage Windows 2012",
                             EditorControl = "EnterpriseStorage",
                             GroupId = 44,
@@ -4801,6 +4737,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         new
                         {
                             ProviderId = 700,
+                            DisableAutoDiscovery = true,
                             DisplayName = "Storage Spaces Windows 2012",
                             EditorControl = "StorageSpaceServices",
                             GroupId = 49,
@@ -4944,7 +4881,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             EditorControl = "RDS",
                             GroupId = 45,
                             ProviderName = "RemoteDesktopServices2022",
-                            ProviderType = "SolidCP.Providers.RemoteDesktopServices.Windows2022,SolidCP.Providers.RemoteDesktopServices.Windows2022"
+                            ProviderType = "SolidCP.Providers.RemoteDesktopServices.Windows2019,SolidCP.Providers.RemoteDesktopServices.Windows2019"
                         },
                         new
                         {
@@ -4954,7 +4891,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             EditorControl = "RDS",
                             GroupId = 45,
                             ProviderName = "RemoteDesktopServices2025",
-                            ProviderType = "SolidCP.Providers.RemoteDesktopServices.Windows2025,SolidCP.Providers.RemoteDesktopServices.Windows2025"
+                            ProviderType = "SolidCP.Providers.RemoteDesktopServices.Windows2025,SolidCP.Providers.RemoteDesktopServices.Windows2019"
                         },
                         new
                         {
@@ -4986,6 +4923,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         new
                         {
                             ProviderId = 1570,
+                            DisableAutoDiscovery = true,
                             DisplayName = "MariaDB 10.3",
                             EditorControl = "MariaDB",
                             GroupId = 50,
@@ -4995,6 +4933,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         new
                         {
                             ProviderId = 1571,
+                            DisableAutoDiscovery = true,
                             DisplayName = "MariaDB 10.4",
                             EditorControl = "MariaDB",
                             GroupId = 50,
@@ -5004,137 +4943,12 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         new
                         {
                             ProviderId = 1572,
+                            DisableAutoDiscovery = true,
                             DisplayName = "MariaDB 10.5",
                             EditorControl = "MariaDB",
                             GroupId = 50,
                             ProviderName = "MariaDB",
                             ProviderType = "SolidCP.Providers.Database.MariaDB105, SolidCP.Providers.Database.MariaDB"
-                        },
-                        new
-                        {
-                            ProviderId = 1573,
-                            DisplayName = "MariaDB 10.6",
-                            EditorControl = "MariaDB",
-                            GroupId = 50,
-                            ProviderName = "MariaDB",
-                            ProviderType = "SolidCP.Providers.Database.MariaDB106, SolidCP.Providers.Database.MariaDB"
-                        },
-                        new
-                        {
-                            ProviderId = 1574,
-                            DisplayName = "MariaDB 10.7",
-                            EditorControl = "MariaDB",
-                            GroupId = 50,
-                            ProviderName = "MariaDB",
-                            ProviderType = "SolidCP.Providers.Database.MariaDB107, SolidCP.Providers.Database.MariaDB"
-                        },
-                        new
-                        {
-                            ProviderId = 1575,
-                            DisplayName = "MariaDB 10.8",
-                            EditorControl = "MariaDB",
-                            GroupId = 50,
-                            ProviderName = "MariaDB",
-                            ProviderType = "SolidCP.Providers.Database.MariaDB108, SolidCP.Providers.Database.MariaDB"
-                        },
-                        new
-                        {
-                            ProviderId = 1576,
-                            DisplayName = "MariaDB 10.9",
-                            EditorControl = "MariaDB",
-                            GroupId = 50,
-                            ProviderName = "MariaDB",
-                            ProviderType = "SolidCP.Providers.Database.MariaDB109, SolidCP.Providers.Database.MariaDB"
-                        },
-                        new
-                        {
-                            ProviderId = 1577,
-                            DisplayName = "MariaDB 10.10",
-                            EditorControl = "MariaDB",
-                            GroupId = 50,
-                            ProviderName = "MariaDB",
-                            ProviderType = "SolidCP.Providers.Database.MariaDB1010, SolidCP.Providers.Database.MariaDB"
-                        },
-                        new
-                        {
-                            ProviderId = 1578,
-                            DisplayName = "MariaDB 10.11",
-                            EditorControl = "MariaDB",
-                            GroupId = 50,
-                            ProviderName = "MariaDB",
-                            ProviderType = "SolidCP.Providers.Database.MariaDB1011, SolidCP.Providers.Database.MariaDB"
-                        },
-                        new
-                        {
-                            ProviderId = 1579,
-                            DisplayName = "MariaDB 11.0",
-                            EditorControl = "MariaDB",
-                            GroupId = 50,
-                            ProviderName = "MariaDB",
-                            ProviderType = "SolidCP.Providers.Database.MariaDB110, SolidCP.Providers.Database.MariaDB"
-                        },
-                        new
-                        {
-                            ProviderId = 1580,
-                            DisplayName = "MariaDB 11.1",
-                            EditorControl = "MariaDB",
-                            GroupId = 50,
-                            ProviderName = "MariaDB",
-                            ProviderType = "SolidCP.Providers.Database.MariaDB111, SolidCP.Providers.Database.MariaDB"
-                        },
-                        new
-                        {
-                            ProviderId = 1581,
-                            DisplayName = "MariaDB 11.2",
-                            EditorControl = "MariaDB",
-                            GroupId = 50,
-                            ProviderName = "MariaDB",
-                            ProviderType = "SolidCP.Providers.Database.MariaDB112, SolidCP.Providers.Database.MariaDB"
-                        },
-                        new
-                        {
-                            ProviderId = 1582,
-                            DisplayName = "MariaDB 11.3",
-                            EditorControl = "MariaDB",
-                            GroupId = 50,
-                            ProviderName = "MariaDB",
-                            ProviderType = "SolidCP.Providers.Database.MariaDB113, SolidCP.Providers.Database.MariaDB"
-                        },
-                        new
-                        {
-                            ProviderId = 1583,
-                            DisplayName = "MariaDB 11.4",
-                            EditorControl = "MariaDB",
-                            GroupId = 50,
-                            ProviderName = "MariaDB",
-                            ProviderType = "SolidCP.Providers.Database.MariaDB114, SolidCP.Providers.Database.MariaDB"
-                        },
-                        new
-                        {
-                            ProviderId = 1584,
-                            DisplayName = "MariaDB 11.5",
-                            EditorControl = "MariaDB",
-                            GroupId = 50,
-                            ProviderName = "MariaDB",
-                            ProviderType = "SolidCP.Providers.Database.MariaDB115, SolidCP.Providers.Database.MariaDB"
-                        },
-                        new
-                        {
-                            ProviderId = 1585,
-                            DisplayName = "MariaDB 11.6",
-                            EditorControl = "MariaDB",
-                            GroupId = 50,
-                            ProviderName = "MariaDB",
-                            ProviderType = "SolidCP.Providers.Database.MariaDB116, SolidCP.Providers.Database.MariaDB"
-                        },
-                        new
-                        {
-                            ProviderId = 1586,
-                            DisplayName = "MariaDB 11.7",
-                            EditorControl = "MariaDB",
-                            GroupId = 50,
-                            ProviderName = "MariaDB",
-                            ProviderType = "SolidCP.Providers.Database.MariaDB117, SolidCP.Providers.Database.MariaDB"
                         },
                         new
                         {
@@ -5186,6 +5000,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         new
                         {
                             ProviderId = 1704,
+                            DisableAutoDiscovery = true,
                             DisplayName = "Microsoft SQL Server 2017",
                             EditorControl = "MSSQL",
                             GroupId = 72,
@@ -5195,6 +5010,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         new
                         {
                             ProviderId = 1705,
+                            DisableAutoDiscovery = true,
                             DisplayName = "Microsoft SQL Server 2019",
                             EditorControl = "MSSQL",
                             GroupId = 74,
@@ -5209,15 +5025,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 75,
                             ProviderName = "MsSQL",
                             ProviderType = "SolidCP.Providers.Database.MsSqlServer2022, SolidCP.Providers.Database.SqlServer"
-                        },
-                        new
-                        {
-                            ProviderId = 1707,
-                            DisplayName = "Microsoft SQL Server 2025",
-                            EditorControl = "MSSQL",
-                            GroupId = 76,
-                            ProviderName = "MsSQL",
-                            ProviderType = "SolidCP.Providers.Database.MsSqlServer2025, SolidCP.Providers.Database.SqlServer"
                         },
                         new
                         {
@@ -5269,6 +5076,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         new
                         {
                             ProviderId = 1804,
+                            DisableAutoDiscovery = true,
                             DisplayName = "Windows Server 2025",
                             EditorControl = "Windows2012",
                             GroupId = 1,
@@ -5311,24 +5119,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 7,
                             ProviderName = "SimpleDNS",
                             ProviderType = "SolidCP.Providers.DNS.SimpleDNS9, SolidCP.Providers.DNS.SimpleDNS90"
-                        },
-                        new
-                        {
-                            ProviderId = 1910,
-                            DisplayName = "vsftpd FTP Server 3",
-                            EditorControl = "vsftpd",
-                            GroupId = 3,
-                            ProviderName = "vsftpd",
-                            ProviderType = "SolidCP.Providers.FTP.VsFtp3, SolidCP.Providers.FTP.VsFtp"
-                        },
-                        new
-                        {
-                            ProviderId = 1911,
-                            DisplayName = "Apache Web Server 2.4",
-                            EditorControl = "Apache",
-                            GroupId = 2,
-                            ProviderName = "Apache",
-                            ProviderType = "SolidCP.Providers.Web.Apache24, SolidCP.Providers.Web.Apache"
                         });
                 });
 
@@ -5361,10 +5151,10 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<double>("QuotaOrder")
+                    b.Property<int>("QuotaOrder")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("float")
-                        .HasDefaultValue(1.0);
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
 
                     b.Property<int>("QuotaTypeId")
                         .ValueGeneratedOnAdd()
@@ -5393,7 +5183,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 7,
                             QuotaDescription = "Databases",
                             QuotaName = "MySQL4.Databases",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = true
                         },
@@ -5404,7 +5194,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 5,
                             QuotaDescription = "Databases",
                             QuotaName = "MsSQL2000.Databases",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = true
                         },
@@ -5415,7 +5205,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 9,
                             QuotaDescription = "FTP Accounts",
                             QuotaName = "FTP.Accounts",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = true
                         },
@@ -5426,7 +5216,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 14,
                             QuotaDescription = "Statistics Sites",
                             QuotaName = "Stats.Sites",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = true
                         },
@@ -5437,7 +5227,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 10,
                             QuotaDescription = "Web Sites",
                             QuotaName = "Web.Sites",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = true
                         },
@@ -5448,7 +5238,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 15,
                             QuotaDescription = "Mail Accounts",
                             QuotaName = "Mail.Accounts",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = true
                         },
@@ -5459,7 +5249,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 6,
                             QuotaDescription = "Users",
                             QuotaName = "MsSQL2000.Users",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5470,7 +5260,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 16,
                             QuotaDescription = "Mail Forwardings",
                             QuotaName = "Mail.Forwardings",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5481,7 +5271,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 8,
                             QuotaDescription = "Users",
                             QuotaName = "MySQL4.Users",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5492,7 +5282,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 17,
                             QuotaDescription = "Mail Lists",
                             QuotaName = "Mail.Lists",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5503,7 +5293,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 18,
                             QuotaDescription = "Mail Groups",
                             QuotaName = "Mail.Groups",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5513,7 +5303,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "ASP.NET 1.1",
                             QuotaName = "Web.AspNet11",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5523,7 +5313,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "ASP.NET 2.0",
                             QuotaName = "Web.AspNet20",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5533,7 +5323,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "ASP",
                             QuotaName = "Web.Asp",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5543,7 +5333,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "PHP 4.x",
                             QuotaName = "Web.Php4",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5553,7 +5343,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "PHP 5.x",
                             QuotaName = "Web.Php5",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5563,7 +5353,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "Perl",
                             QuotaName = "Web.Perl",
-                            QuotaOrder = 7.0,
+                            QuotaOrder = 7,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5573,7 +5363,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "Python",
                             QuotaName = "Web.Python",
-                            QuotaOrder = 8.0,
+                            QuotaOrder = 8,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5583,7 +5373,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "Virtual Directories",
                             QuotaName = "Web.VirtualDirs",
-                            QuotaOrder = 9.0,
+                            QuotaOrder = 9,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5593,7 +5383,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "FrontPage",
                             QuotaName = "Web.FrontPage",
-                            QuotaOrder = 10.0,
+                            QuotaOrder = 10,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5603,7 +5393,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "Custom Security Settings",
                             QuotaName = "Web.Security",
-                            QuotaOrder = 11.0,
+                            QuotaOrder = 11,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5613,7 +5403,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "Custom Default Documents",
                             QuotaName = "Web.DefaultDocs",
-                            QuotaOrder = 12.0,
+                            QuotaOrder = 12,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5623,7 +5413,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "Dedicated Application Pools",
                             QuotaName = "Web.AppPools",
-                            QuotaOrder = 13.0,
+                            QuotaOrder = 13,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5633,7 +5423,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "Custom Headers",
                             QuotaName = "Web.Headers",
-                            QuotaOrder = 14.0,
+                            QuotaOrder = 14,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5643,7 +5433,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "Custom Errors",
                             QuotaName = "Web.Errors",
-                            QuotaOrder = 15.0,
+                            QuotaOrder = 15,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5653,7 +5443,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "Custom MIME Types",
                             QuotaName = "Web.Mime",
-                            QuotaOrder = 16.0,
+                            QuotaOrder = 16,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5663,7 +5453,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 4,
                             QuotaDescription = "Max Mailbox Size",
                             QuotaName = "Mail.MaxBoxSize",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -5673,7 +5463,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 5,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MsSQL2000.MaxDatabaseSize",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -5683,7 +5473,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 5,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MsSQL2000.Backup",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5693,7 +5483,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 5,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MsSQL2000.Restore",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5703,7 +5493,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 5,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MsSQL2000.Truncate",
-                            QuotaOrder = 7.0,
+                            QuotaOrder = 7,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5713,7 +5503,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 6,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MySQL4.Backup",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5724,7 +5514,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 20,
                             QuotaDescription = "ODBC DSNs",
                             QuotaName = "OS.ODBC",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5734,7 +5524,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 7,
                             QuotaDescription = "DNS Editor",
                             QuotaName = "DNS.Editor",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5744,7 +5534,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 4,
                             QuotaDescription = "Max Group Recipients",
                             QuotaName = "Mail.MaxGroupMembers",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -5754,7 +5544,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 4,
                             QuotaDescription = "Max List Recipients",
                             QuotaName = "Mail.MaxListMembers",
-                            QuotaOrder = 7.0,
+                            QuotaOrder = 7,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -5764,7 +5554,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 1,
                             QuotaDescription = "Bandwidth, MB",
                             QuotaName = "OS.Bandwidth",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5774,7 +5564,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 1,
                             QuotaDescription = "Disk space, MB",
                             QuotaName = "OS.Diskspace",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5784,7 +5574,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 1,
                             QuotaDescription = "Domains",
                             QuotaName = "OS.Domains",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5794,7 +5584,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 1,
                             QuotaDescription = "Sub-Domains",
                             QuotaName = "OS.SubDomains",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5804,7 +5594,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 1,
                             QuotaDescription = "File Manager",
                             QuotaName = "OS.FileManager",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5814,7 +5604,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "CGI-BIN Folder",
                             QuotaName = "Web.CgiBin",
-                            QuotaOrder = 8.0,
+                            QuotaOrder = 8,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5824,7 +5614,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "Secured Folders",
                             QuotaName = "Web.SecuredFolders",
-                            QuotaOrder = 8.0,
+                            QuotaOrder = 8,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5835,7 +5625,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 25,
                             QuotaDescription = "Shared SSL Folders",
                             QuotaName = "Web.SharedSSL",
-                            QuotaOrder = 8.0,
+                            QuotaOrder = 8,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5845,7 +5635,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "Web Sites Redirection",
                             QuotaName = "Web.Redirections",
-                            QuotaOrder = 8.0,
+                            QuotaOrder = 8,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5855,7 +5645,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "Changing Sites Root Folders",
                             QuotaName = "Web.HomeFolders",
-                            QuotaOrder = 8.0,
+                            QuotaOrder = 8,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5866,7 +5656,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 21,
                             QuotaDescription = "Databases",
                             QuotaName = "MsSQL2005.Databases",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5877,7 +5667,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 22,
                             QuotaDescription = "Users",
                             QuotaName = "MsSQL2005.Users",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5887,7 +5677,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 10,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MsSQL2005.MaxDatabaseSize",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -5897,7 +5687,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 10,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MsSQL2005.Backup",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5907,7 +5697,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 10,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MsSQL2005.Restore",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5917,7 +5707,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 10,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MsSQL2005.Truncate",
-                            QuotaOrder = 7.0,
+                            QuotaOrder = 7,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5928,7 +5718,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 23,
                             QuotaDescription = "Databases",
                             QuotaName = "MySQL5.Databases",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5939,7 +5729,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 24,
                             QuotaDescription = "Users",
                             QuotaName = "MySQL5.Users",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5949,7 +5739,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 11,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MySQL5.Backup",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5959,7 +5749,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 1,
                             QuotaDescription = "Scheduled Tasks",
                             QuotaName = "OS.ScheduledTasks",
-                            QuotaOrder = 9.0,
+                            QuotaOrder = 9,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -5969,7 +5759,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 1,
                             QuotaDescription = "Interval Tasks Allowed",
                             QuotaName = "OS.ScheduledIntervalTasks",
-                            QuotaOrder = 10.0,
+                            QuotaOrder = 10,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5979,7 +5769,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 1,
                             QuotaDescription = "Minimum Tasks Interval, minutes",
                             QuotaName = "OS.MinimumTaskInterval",
-                            QuotaOrder = 11.0,
+                            QuotaOrder = 11,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -5989,7 +5779,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 1,
                             QuotaDescription = "Applications Installer",
                             QuotaName = "OS.AppInstaller",
-                            QuotaOrder = 7.0,
+                            QuotaOrder = 7,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -5999,7 +5789,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 1,
                             QuotaDescription = "Extra Application Packs",
                             QuotaName = "OS.ExtraApplications",
-                            QuotaOrder = 8.0,
+                            QuotaOrder = 8,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6010,7 +5800,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Organization Disk Space, MB",
                             QuotaName = "Exchange2007.DiskSpace",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6021,7 +5811,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Mailboxes per Organization",
                             QuotaName = "Exchange2007.Mailboxes",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6032,7 +5822,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Contacts per Organization",
                             QuotaName = "Exchange2007.Contacts",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6043,7 +5833,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Distribution Lists per Organization",
                             QuotaName = "Exchange2007.DistributionLists",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6054,7 +5844,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Public Folders per Organization",
                             QuotaName = "Exchange2007.PublicFolders",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6064,7 +5854,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 12,
                             QuotaDescription = "POP3 Access",
                             QuotaName = "Exchange2007.POP3Allowed",
-                            QuotaOrder = 9.0,
+                            QuotaOrder = 9,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6074,7 +5864,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 12,
                             QuotaDescription = "IMAP Access",
                             QuotaName = "Exchange2007.IMAPAllowed",
-                            QuotaOrder = 11.0,
+                            QuotaOrder = 11,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6084,7 +5874,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 12,
                             QuotaDescription = "OWA/HTTP Access",
                             QuotaName = "Exchange2007.OWAAllowed",
-                            QuotaOrder = 13.0,
+                            QuotaOrder = 13,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6094,7 +5884,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 12,
                             QuotaDescription = "MAPI Access",
                             QuotaName = "Exchange2007.MAPIAllowed",
-                            QuotaOrder = 15.0,
+                            QuotaOrder = 15,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6104,7 +5894,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 12,
                             QuotaDescription = "ActiveSync Access",
                             QuotaName = "Exchange2007.ActiveSyncAllowed",
-                            QuotaOrder = 17.0,
+                            QuotaOrder = 17,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6114,7 +5904,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 12,
                             QuotaDescription = "Mail Enabled Public Folders Allowed",
                             QuotaName = "Exchange2007.MailEnabledPublicFolders",
-                            QuotaOrder = 8.0,
+                            QuotaOrder = 8,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6124,7 +5914,17 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "ColdFusion",
                             QuotaName = "Web.ColdFusion",
-                            QuotaOrder = 17.0,
+                            QuotaOrder = 17,
+                            QuotaTypeId = 1,
+                            ServiceQuota = false
+                        },
+                        new
+                        {
+                            QuotaId = 95,
+                            GroupId = 2,
+                            QuotaDescription = "Web Application Gallery",
+                            QuotaName = "Web.WebAppGallery",
+                            QuotaOrder = 1,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6134,7 +5934,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "ColdFusion Virtual Directories",
                             QuotaName = "Web.CFVirtualDirectories",
-                            QuotaOrder = 18.0,
+                            QuotaOrder = 18,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6144,7 +5944,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "Remote web management allowed",
                             QuotaName = "Web.RemoteManagement",
-                            QuotaOrder = 20.0,
+                            QuotaOrder = 20,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6154,7 +5954,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "Dedicated IP Addresses",
                             QuotaName = "Web.IPAddresses",
-                            QuotaOrder = 19.0,
+                            QuotaOrder = 19,
                             QuotaTypeId = 2,
                             ServiceQuota = true
                         },
@@ -6164,7 +5964,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 4,
                             QuotaDescription = "Disable Mailbox Size Edit",
                             QuotaName = "Mail.DisableSizeEdit",
-                            QuotaOrder = 8.0,
+                            QuotaOrder = 8,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6174,7 +5974,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 6,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MySQL4.MaxDatabaseSize",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6184,7 +5984,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 6,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MySQL4.Restore",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6194,7 +5994,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 6,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MySQL4.Truncate",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6204,7 +6004,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 11,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MySQL5.MaxDatabaseSize",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6214,7 +6014,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 11,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MySQL5.Restore",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6224,7 +6024,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 11,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MySQL5.Truncate",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6235,7 +6035,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 75,
                             QuotaDescription = "Databases",
                             QuotaName = "MySQL8.Databases",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6246,7 +6046,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 76,
                             QuotaDescription = "Users",
                             QuotaName = "MySQL8.Users",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6256,7 +6056,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 90,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MySQL8.Backup",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6266,7 +6066,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 90,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MySQL8.MaxDatabaseSize",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6276,7 +6076,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 90,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MySQL8.Restore",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6286,69 +6086,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 90,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MySQL8.Truncate",
-                            QuotaOrder = 6.0,
-                            QuotaTypeId = 1,
-                            ServiceQuota = false
-                        },
-                        new
-                        {
-                            QuotaId = 120,
-                            GroupId = 91,
-                            ItemTypeId = 75,
-                            QuotaDescription = "Databases",
-                            QuotaName = "MySQL9.Databases",
-                            QuotaOrder = 1.0,
-                            QuotaTypeId = 2,
-                            ServiceQuota = false
-                        },
-                        new
-                        {
-                            QuotaId = 121,
-                            GroupId = 91,
-                            ItemTypeId = 76,
-                            QuotaDescription = "Users",
-                            QuotaName = "MySQL9.Users",
-                            QuotaOrder = 2.0,
-                            QuotaTypeId = 2,
-                            ServiceQuota = false
-                        },
-                        new
-                        {
-                            QuotaId = 122,
-                            GroupId = 91,
-                            QuotaDescription = "Database Backups",
-                            QuotaName = "MySQL9.Backup",
-                            QuotaOrder = 4.0,
-                            QuotaTypeId = 1,
-                            ServiceQuota = false
-                        },
-                        new
-                        {
-                            QuotaId = 123,
-                            GroupId = 91,
-                            QuotaDescription = "Max Database Size",
-                            QuotaName = "MySQL9.MaxDatabaseSize",
-                            QuotaOrder = 3.0,
-                            QuotaTypeId = 3,
-                            ServiceQuota = false
-                        },
-                        new
-                        {
-                            QuotaId = 124,
-                            GroupId = 91,
-                            QuotaDescription = "Database Restores",
-                            QuotaName = "MySQL9.Restore",
-                            QuotaOrder = 5.0,
-                            QuotaTypeId = 1,
-                            ServiceQuota = false
-                        },
-                        new
-                        {
-                            QuotaId = 125,
-                            GroupId = 91,
-                            QuotaDescription = "Database Truncate",
-                            QuotaName = "MySQL9.Truncate",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6360,7 +6098,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "SharePoint Site Collections",
                             QuotaName = "HostedSharePoint.Sites",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6370,7 +6108,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 10,
                             QuotaDescription = "Max Log Size",
                             QuotaName = "MsSQL2005.MaxLogSize",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6380,7 +6118,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 5,
                             QuotaDescription = "Max Log Size",
                             QuotaName = "MsSQL2000.MaxLogSize",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6391,7 +6129,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 29,
                             QuotaDescription = "Organizations",
                             QuotaName = "HostedSolution.Organizations",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6403,7 +6141,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Users",
                             QuotaName = "HostedSolution.Users",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6414,7 +6152,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Domains per Organizations",
                             QuotaName = "HostedSolution.Domains",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6424,7 +6162,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 20,
                             QuotaDescription = "Max site storage, MB",
                             QuotaName = "HostedSharePoint.MaxStorage",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6435,7 +6173,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Full licenses per organization",
                             QuotaName = "HostedCRM.Users",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6445,7 +6183,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 21,
                             QuotaDescription = "CRM Organization",
                             QuotaName = "HostedCRM.Organization",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6456,7 +6194,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 31,
                             QuotaDescription = "Databases",
                             QuotaName = "MsSQL2008.Databases",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6467,7 +6205,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 32,
                             QuotaDescription = "Users",
                             QuotaName = "MsSQL2008.Users",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6477,7 +6215,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 22,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MsSQL2008.MaxDatabaseSize",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6487,7 +6225,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 22,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MsSQL2008.Backup",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6497,7 +6235,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 22,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MsSQL2008.Restore",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6507,7 +6245,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 22,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MsSQL2008.Truncate",
-                            QuotaOrder = 7.0,
+                            QuotaOrder = 7,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6517,7 +6255,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 22,
                             QuotaDescription = "Max Log Size",
                             QuotaName = "MsSQL2008.MaxLogSize",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6528,7 +6266,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 37,
                             QuotaDescription = "Databases",
                             QuotaName = "MsSQL2012.Databases",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6539,7 +6277,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 38,
                             QuotaDescription = "Users",
                             QuotaName = "MsSQL2012.Users",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6550,7 +6288,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             HideQuota = true,
                             QuotaDescription = "Domain Pointers",
                             QuotaName = "OS.DomainPointers",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6560,7 +6298,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 23,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MsSQL2012.MaxDatabaseSize",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6570,7 +6308,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 23,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MsSQL2012.Backup",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6580,7 +6318,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 23,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MsSQL2012.Restore",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6590,7 +6328,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 23,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MsSQL2012.Truncate",
-                            QuotaOrder = 7.0,
+                            QuotaOrder = 7,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6600,7 +6338,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 23,
                             QuotaDescription = "Max Log Size",
                             QuotaName = "MsSQL2012.MaxLogSize",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6610,7 +6348,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 13,
                             QuotaDescription = "Allow to Change UserPrincipalName",
                             QuotaName = "HostedSolution.AllowChangeUPN",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6621,7 +6359,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 33,
                             QuotaDescription = "Number of VPS",
                             QuotaName = "VPS.ServersNumber",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6631,7 +6369,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 30,
                             QuotaDescription = "Allow user to create VPS",
                             QuotaName = "VPS.ManagingAllowed",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6641,7 +6379,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 30,
                             QuotaDescription = "Number of CPU cores",
                             QuotaName = "VPS.CpuNumber",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6651,7 +6389,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 30,
                             QuotaDescription = "Boot from CD allowed",
                             QuotaName = "VPS.BootCdAllowed",
-                            QuotaOrder = 7.0,
+                            QuotaOrder = 7,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6661,7 +6399,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 30,
                             QuotaDescription = "Boot from CD",
                             QuotaName = "VPS.BootCdEnabled",
-                            QuotaOrder = 8.0,
+                            QuotaOrder = 8,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6671,7 +6409,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 30,
                             QuotaDescription = "RAM size, MB",
                             QuotaName = "VPS.Ram",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6681,7 +6419,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 30,
                             QuotaDescription = "Hard Drive size, GB",
                             QuotaName = "VPS.Hdd",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6691,7 +6429,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 30,
                             QuotaDescription = "DVD drive",
                             QuotaName = "VPS.DvdEnabled",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6701,7 +6439,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 30,
                             QuotaDescription = "External Network",
                             QuotaName = "VPS.ExternalNetworkEnabled",
-                            QuotaOrder = 10.0,
+                            QuotaOrder = 10,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6711,7 +6449,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 30,
                             QuotaDescription = "Number of External IP addresses",
                             QuotaName = "VPS.ExternalIPAddressesNumber",
-                            QuotaOrder = 11.0,
+                            QuotaOrder = 11,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6721,7 +6459,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 30,
                             QuotaDescription = "Private Network",
                             QuotaName = "VPS.PrivateNetworkEnabled",
-                            QuotaOrder = 13.0,
+                            QuotaOrder = 13,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6731,7 +6469,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 30,
                             QuotaDescription = "Number of Private IP addresses per VPS",
                             QuotaName = "VPS.PrivateIPAddressesNumber",
-                            QuotaOrder = 14.0,
+                            QuotaOrder = 14,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6741,7 +6479,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 30,
                             QuotaDescription = "Number of Snaphots",
                             QuotaName = "VPS.SnapshotsNumber",
-                            QuotaOrder = 9.0,
+                            QuotaOrder = 9,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -6751,7 +6489,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 30,
                             QuotaDescription = "Allow user to Start, Turn off and Shutdown VPS",
                             QuotaName = "VPS.StartShutdownAllowed",
-                            QuotaOrder = 15.0,
+                            QuotaOrder = 15,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6761,7 +6499,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 30,
                             QuotaDescription = "Allow user to Pause, Resume VPS",
                             QuotaName = "VPS.PauseResumeAllowed",
-                            QuotaOrder = 16.0,
+                            QuotaOrder = 16,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6771,7 +6509,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 30,
                             QuotaDescription = "Allow user to Reboot VPS",
                             QuotaName = "VPS.RebootAllowed",
-                            QuotaOrder = 17.0,
+                            QuotaOrder = 17,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6781,7 +6519,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 30,
                             QuotaDescription = "Allow user to Reset VPS",
                             QuotaName = "VPS.ResetAlowed",
-                            QuotaOrder = 18.0,
+                            QuotaOrder = 18,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6791,7 +6529,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 30,
                             QuotaDescription = "Allow user to Re-install VPS",
                             QuotaName = "VPS.ReinstallAllowed",
-                            QuotaOrder = 19.0,
+                            QuotaOrder = 19,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6801,7 +6539,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 30,
                             QuotaDescription = "Monthly bandwidth, GB",
                             QuotaName = "VPS.Bandwidth",
-                            QuotaOrder = 12.0,
+                            QuotaOrder = 12,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6811,7 +6549,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 31,
                             PerOrganization = 1,
                             QuotaName = "BlackBerry.Users",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6821,7 +6559,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 32,
                             PerOrganization = 1,
                             QuotaName = "OCS.Users",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6830,7 +6568,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             QuotaId = 321,
                             GroupId = 32,
                             QuotaName = "OCS.Federation",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6839,7 +6577,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             QuotaId = 322,
                             GroupId = 32,
                             QuotaName = "OCS.FederationByDefault",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6848,7 +6586,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             QuotaId = 323,
                             GroupId = 32,
                             QuotaName = "OCS.PublicIMConnectivity",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6857,7 +6595,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             QuotaId = 324,
                             GroupId = 32,
                             QuotaName = "OCS.PublicIMConnectivityByDefault",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6866,7 +6604,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             QuotaId = 325,
                             GroupId = 32,
                             QuotaName = "OCS.ArchiveIMConversation",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6875,7 +6613,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             QuotaId = 326,
                             GroupId = 32,
                             QuotaName = "OCS.ArchiveIMConvervationByDefault",
-                            QuotaOrder = 7.0,
+                            QuotaOrder = 7,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6884,7 +6622,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             QuotaId = 327,
                             GroupId = 32,
                             QuotaName = "OCS.ArchiveFederatedIMConversation",
-                            QuotaOrder = 8.0,
+                            QuotaOrder = 8,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6893,7 +6631,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             QuotaId = 328,
                             GroupId = 32,
                             QuotaName = "OCS.ArchiveFederatedIMConversationByDefault",
-                            QuotaOrder = 9.0,
+                            QuotaOrder = 9,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6902,7 +6640,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             QuotaId = 329,
                             GroupId = 32,
                             QuotaName = "OCS.PresenceAllowed",
-                            QuotaOrder = 10.0,
+                            QuotaOrder = 10,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6911,7 +6649,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             QuotaId = 330,
                             GroupId = 32,
                             QuotaName = "OCS.PresenceAllowedByDefault",
-                            QuotaOrder = 10.0,
+                            QuotaOrder = 10,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6921,7 +6659,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "ASP.NET 4.0",
                             QuotaName = "Web.AspNet40",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6931,7 +6669,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "SSL",
                             QuotaName = "Web.SSL",
-                            QuotaOrder = 21.0,
+                            QuotaOrder = 21,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6941,7 +6679,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "Allow IP Address Mode Switch",
                             QuotaName = "Web.AllowIPAddressModeSwitch",
-                            QuotaOrder = 22.0,
+                            QuotaOrder = 22,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6951,7 +6689,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "Enable Hostname Support",
                             QuotaName = "Web.EnableHostNameSupport",
-                            QuotaOrder = 23.0,
+                            QuotaOrder = 23,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6961,7 +6699,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "htaccess",
                             QuotaName = "Web.Htaccess",
-                            QuotaOrder = 9.0,
+                            QuotaOrder = 9,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6972,7 +6710,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 35,
                             QuotaDescription = "Number of VPS",
                             QuotaName = "VPSForPC.ServersNumber",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -6982,7 +6720,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 40,
                             QuotaDescription = "Allow user to create VPS",
                             QuotaName = "VPSForPC.ManagingAllowed",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -6992,7 +6730,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 40,
                             QuotaDescription = "Number of CPU cores",
                             QuotaName = "VPSForPC.CpuNumber",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7002,7 +6740,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 40,
                             QuotaDescription = "Boot from CD allowed",
                             QuotaName = "VPSForPC.BootCdAllowed",
-                            QuotaOrder = 7.0,
+                            QuotaOrder = 7,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7012,7 +6750,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 40,
                             QuotaDescription = "Boot from CD",
                             QuotaName = "VPSForPC.BootCdEnabled",
-                            QuotaOrder = 7.0,
+                            QuotaOrder = 7,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7022,7 +6760,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 40,
                             QuotaDescription = "RAM size, MB",
                             QuotaName = "VPSForPC.Ram",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7032,7 +6770,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 40,
                             QuotaDescription = "Hard Drive size, GB",
                             QuotaName = "VPSForPC.Hdd",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7042,7 +6780,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 40,
                             QuotaDescription = "DVD drive",
                             QuotaName = "VPSForPC.DvdEnabled",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7052,7 +6790,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 40,
                             QuotaDescription = "External Network",
                             QuotaName = "VPSForPC.ExternalNetworkEnabled",
-                            QuotaOrder = 10.0,
+                            QuotaOrder = 10,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7062,7 +6800,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 40,
                             QuotaDescription = "Number of External IP addresses",
                             QuotaName = "VPSForPC.ExternalIPAddressesNumber",
-                            QuotaOrder = 11.0,
+                            QuotaOrder = 11,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7072,7 +6810,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 40,
                             QuotaDescription = "Private Network",
                             QuotaName = "VPSForPC.PrivateNetworkEnabled",
-                            QuotaOrder = 13.0,
+                            QuotaOrder = 13,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7082,7 +6820,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 40,
                             QuotaDescription = "Number of Private IP addresses per VPS",
                             QuotaName = "VPSForPC.PrivateIPAddressesNumber",
-                            QuotaOrder = 14.0,
+                            QuotaOrder = 14,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7092,7 +6830,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 40,
                             QuotaDescription = "Number of Snaphots",
                             QuotaName = "VPSForPC.SnapshotsNumber",
-                            QuotaOrder = 9.0,
+                            QuotaOrder = 9,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7102,7 +6840,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 40,
                             QuotaDescription = "Allow user to Start, Turn off and Shutdown VPS",
                             QuotaName = "VPSForPC.StartShutdownAllowed",
-                            QuotaOrder = 15.0,
+                            QuotaOrder = 15,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7112,7 +6850,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 40,
                             QuotaDescription = "Allow user to Pause, Resume VPS",
                             QuotaName = "VPSForPC.PauseResumeAllowed",
-                            QuotaOrder = 16.0,
+                            QuotaOrder = 16,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7122,7 +6860,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 40,
                             QuotaDescription = "Allow user to Reboot VPS",
                             QuotaName = "VPSForPC.RebootAllowed",
-                            QuotaOrder = 17.0,
+                            QuotaOrder = 17,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7132,7 +6870,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 40,
                             QuotaDescription = "Allow user to Reset VPS",
                             QuotaName = "VPSForPC.ResetAlowed",
-                            QuotaOrder = 18.0,
+                            QuotaOrder = 18,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7142,7 +6880,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 40,
                             QuotaDescription = "Allow user to Re-install VPS",
                             QuotaName = "VPSForPC.ReinstallAllowed",
-                            QuotaOrder = 19.0,
+                            QuotaOrder = 19,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7152,7 +6890,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 40,
                             QuotaDescription = "Monthly bandwidth, GB",
                             QuotaName = "VPSForPC.Bandwidth",
-                            QuotaOrder = 12.0,
+                            QuotaOrder = 12,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7162,7 +6900,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 12,
                             QuotaDescription = "Keep Deleted Items (days)",
                             QuotaName = "Exchange2007.KeepDeletedItemsDays",
-                            QuotaOrder = 19.0,
+                            QuotaOrder = 19,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7172,7 +6910,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 12,
                             QuotaDescription = "Maximum Recipients",
                             QuotaName = "Exchange2007.MaxRecipients",
-                            QuotaOrder = 20.0,
+                            QuotaOrder = 20,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7182,7 +6920,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 12,
                             QuotaDescription = "Maximum Send Message Size (Kb)",
                             QuotaName = "Exchange2007.MaxSendMessageSizeKB",
-                            QuotaOrder = 21.0,
+                            QuotaOrder = 21,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7192,7 +6930,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 12,
                             QuotaDescription = "Maximum Receive Message Size (Kb)",
                             QuotaName = "Exchange2007.MaxReceiveMessageSizeKB",
-                            QuotaOrder = 22.0,
+                            QuotaOrder = 22,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7202,7 +6940,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 12,
                             QuotaDescription = "Is Consumer Organization",
                             QuotaName = "Exchange2007.IsConsumer",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7212,7 +6950,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 12,
                             QuotaDescription = "Enable Plans Editing",
                             QuotaName = "Exchange2007.EnablePlansEditing",
-                            QuotaOrder = 23.0,
+                            QuotaOrder = 23,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7223,7 +6961,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Users",
                             QuotaName = "Lync.Users",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7233,7 +6971,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 41,
                             QuotaDescription = "Allow Federation",
                             QuotaName = "Lync.Federation",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7243,7 +6981,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 41,
                             QuotaDescription = "Allow Conferencing",
                             QuotaName = "Lync.Conferencing",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7253,7 +6991,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 41,
                             QuotaDescription = "Maximum Conference Particiapants",
                             QuotaName = "Lync.MaxParticipants",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7263,7 +7001,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 41,
                             QuotaDescription = "Allow Video in Conference",
                             QuotaName = "Lync.AllowVideo",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7273,7 +7011,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 41,
                             QuotaDescription = "Allow EnterpriseVoice",
                             QuotaName = "Lync.EnterpriseVoice",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7283,7 +7021,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 41,
                             QuotaDescription = "Number of Enterprise Voice Users",
                             QuotaName = "Lync.EVUsers",
-                            QuotaOrder = 7.0,
+                            QuotaOrder = 7,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7293,7 +7031,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 41,
                             QuotaDescription = "Allow National Calls",
                             QuotaName = "Lync.EVNational",
-                            QuotaOrder = 8.0,
+                            QuotaOrder = 8,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7303,7 +7041,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 41,
                             QuotaDescription = "Allow Mobile Calls",
                             QuotaName = "Lync.EVMobile",
-                            QuotaOrder = 9.0,
+                            QuotaOrder = 9,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7313,7 +7051,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 41,
                             QuotaDescription = "Allow International Calls",
                             QuotaName = "Lync.EVInternational",
-                            QuotaOrder = 10.0,
+                            QuotaOrder = 10,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7323,18 +7061,8 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 41,
                             QuotaDescription = "Enable Plans Editing",
                             QuotaName = "Lync.EnablePlansEditing",
-                            QuotaOrder = 11.0,
+                            QuotaOrder = 11,
                             QuotaTypeId = 1,
-                            ServiceQuota = false
-                        },
-                        new
-                        {
-                            QuotaId = 381,
-                            GroupId = 41,
-                            QuotaDescription = "Phone Numbers",
-                            QuotaName = "Lync.PhoneNumbers",
-                            QuotaOrder = 12.0,
-                            QuotaTypeId = 2,
                             ServiceQuota = false
                         },
                         new
@@ -7343,7 +7071,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 20,
                             QuotaDescription = "Use shared SSL Root",
                             QuotaName = "HostedSharePoint.UseSharedSSL",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7353,7 +7081,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 1,
                             QuotaDescription = "Not allow Tenants to Delete Top Level Domains",
                             QuotaName = "OS.NotAllowTenantDeleteDomains",
-                            QuotaOrder = 13.0,
+                            QuotaOrder = 13,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7363,7 +7091,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 1,
                             QuotaDescription = "Not allow Tenants to Create Top Level Domains",
                             QuotaName = "OS.NotAllowTenantCreateDomains",
-                            QuotaOrder = 12.0,
+                            QuotaOrder = 12,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7373,7 +7101,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 2,
                             QuotaDescription = "Application Pools Restart",
                             QuotaName = "Web.AppPoolsRestart",
-                            QuotaOrder = 13.0,
+                            QuotaOrder = 13,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7383,7 +7111,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 12,
                             QuotaDescription = "Allow Litigation Hold",
                             QuotaName = "Exchange2007.AllowLitigationHold",
-                            QuotaOrder = 24.0,
+                            QuotaOrder = 24,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7394,7 +7122,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Recoverable Items Space",
                             QuotaName = "Exchange2007.RecoverableItemsSpace",
-                            QuotaOrder = 25.0,
+                            QuotaOrder = 25,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7404,7 +7132,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 12,
                             QuotaDescription = "Disclaimers Allowed",
                             QuotaName = "Exchange2007.DisclaimersAllowed",
-                            QuotaOrder = 26.0,
+                            QuotaOrder = 26,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7415,7 +7143,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Security Groups",
                             QuotaName = "HostedSolution.SecurityGroups",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7425,7 +7153,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 12,
                             QuotaDescription = "Allow Retention Policy",
                             QuotaName = "Exchange2013.AllowRetentionPolicy",
-                            QuotaOrder = 27.0,
+                            QuotaOrder = 27,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7436,7 +7164,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Archiving storage, MB",
                             QuotaName = "Exchange2013.ArchivingStorage",
-                            QuotaOrder = 29.0,
+                            QuotaOrder = 29,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7447,7 +7175,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Archiving Mailboxes per Organization",
                             QuotaName = "Exchange2013.ArchivingMailboxes",
-                            QuotaOrder = 28.0,
+                            QuotaOrder = 28,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7458,7 +7186,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Resource Mailboxes per Organization",
                             QuotaName = "Exchange2013.ResourceMailboxes",
-                            QuotaOrder = 31.0,
+                            QuotaOrder = 31,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7469,7 +7197,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Shared Mailboxes per Organization",
                             QuotaName = "Exchange2013.SharedMailboxes",
-                            QuotaOrder = 30.0,
+                            QuotaOrder = 30,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7480,7 +7208,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Disk Storage Space (Mb)",
                             QuotaName = "EnterpriseStorage.DiskStorageSpace",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7491,7 +7219,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Number of Root Folders",
                             QuotaName = "EnterpriseStorage.Folders",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7501,7 +7229,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 61,
                             QuotaDescription = "Enable Spam Filter",
                             QuotaName = "Filters.Enable",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7511,7 +7239,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 61,
                             QuotaDescription = "Enable Per-Mailbox Login",
                             QuotaName = "Filters.EnableEmailUsers",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7522,7 +7250,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Remote Desktop Users",
                             QuotaName = "RDS.Users",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7533,7 +7261,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Remote Desktop Servers",
                             QuotaName = "RDS.Servers",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7543,7 +7271,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 45,
                             QuotaDescription = "Disable user from adding server",
                             QuotaName = "RDS.DisableUserAddServer",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7553,7 +7281,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 45,
                             QuotaDescription = "Disable user from removing server",
                             QuotaName = "RDS.DisableUserDeleteServer",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7563,7 +7291,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 21,
                             QuotaDescription = "Max Database Size, MB",
                             QuotaName = "HostedCRM.MaxDatabaseSize",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7574,7 +7302,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Limited licenses per organization",
                             QuotaName = "HostedCRM.LimitedUsers",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7585,7 +7313,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "ESS licenses per organization",
                             QuotaName = "HostedCRM.ESSUsers",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7595,7 +7323,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 24,
                             QuotaDescription = "CRM Organization",
                             QuotaName = "HostedCRM2013.Organization",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7605,7 +7333,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 24,
                             QuotaDescription = "Max Database Size, MB",
                             QuotaName = "HostedCRM2013.MaxDatabaseSize",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7616,7 +7344,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Essential licenses per organization",
                             QuotaName = "HostedCRM2013.EssentialUsers",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7627,7 +7355,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Basic licenses per organization",
                             QuotaName = "HostedCRM2013.BasicUsers",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7638,7 +7366,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Professional licenses per organization",
                             QuotaName = "HostedCRM2013.ProfessionalUsers",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7648,7 +7376,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 45,
                             QuotaDescription = "Use Drive Maps",
                             QuotaName = "EnterpriseStorage.DriveMaps",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7659,7 +7387,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 39,
                             QuotaDescription = "Databases",
                             QuotaName = "MsSQL2014.Databases",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7670,7 +7398,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 40,
                             QuotaDescription = "Users",
                             QuotaName = "MsSQL2014.Users",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7680,7 +7408,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 46,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MsSQL2014.MaxDatabaseSize",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7690,7 +7418,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 46,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MsSQL2014.Backup",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7700,7 +7428,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 46,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MsSQL2014.Restore",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7710,7 +7438,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 46,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MsSQL2014.Truncate",
-                            QuotaOrder = 7.0,
+                            QuotaOrder = 7,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7720,7 +7448,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 46,
                             QuotaDescription = "Max Log Size",
                             QuotaName = "MsSQL2014.MaxLogSize",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7731,7 +7459,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Remote Desktop Servers",
                             QuotaName = "RDS.Collections",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7742,7 +7470,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Deleted Users",
                             QuotaName = "HostedSolution.DeletedUsers",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7753,7 +7481,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Deleted Users Backup Storage Space, Mb",
                             QuotaName = "HostedSolution.DeletedUsersBackupStorageSpace",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7765,7 +7493,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "SharePoint Site Collections",
                             QuotaName = "HostedSharePointEnterprise.Sites",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7775,7 +7503,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 73,
                             QuotaDescription = "Max site storage, MB",
                             QuotaName = "HostedSharePointEnterprise.MaxStorage",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7785,7 +7513,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 73,
                             QuotaDescription = "Use shared SSL Root",
                             QuotaName = "HostedSharePointEnterprise.UseSharedSSL",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7796,7 +7524,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 41,
                             QuotaDescription = "Number of VPS",
                             QuotaName = "VPS2012.ServersNumber",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7806,7 +7534,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "Allow user to create VPS",
                             QuotaName = "VPS2012.ManagingAllowed",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7816,7 +7544,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "Number of CPU cores",
                             QuotaName = "VPS2012.CpuNumber",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7826,7 +7554,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "Boot from CD allowed",
                             QuotaName = "VPS2012.BootCdAllowed",
-                            QuotaOrder = 7.0,
+                            QuotaOrder = 7,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7836,7 +7564,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "Boot from CD",
                             QuotaName = "VPS2012.BootCdEnabled",
-                            QuotaOrder = 8.0,
+                            QuotaOrder = 8,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7846,7 +7574,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "RAM size, MB",
                             QuotaName = "VPS2012.Ram",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7856,7 +7584,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "Hard Drive size, GB",
                             QuotaName = "VPS2012.Hdd",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7866,7 +7594,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "DVD drive",
                             QuotaName = "VPS2012.DvdEnabled",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7876,7 +7604,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "External Network",
                             QuotaName = "VPS2012.ExternalNetworkEnabled",
-                            QuotaOrder = 10.0,
+                            QuotaOrder = 10,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7886,7 +7614,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "Number of External IP addresses",
                             QuotaName = "VPS2012.ExternalIPAddressesNumber",
-                            QuotaOrder = 11.0,
+                            QuotaOrder = 11,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7896,7 +7624,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "Private Network",
                             QuotaName = "VPS2012.PrivateNetworkEnabled",
-                            QuotaOrder = 13.0,
+                            QuotaOrder = 13,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7906,7 +7634,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "Number of Private IP addresses per VPS",
                             QuotaName = "VPS2012.PrivateIPAddressesNumber",
-                            QuotaOrder = 14.0,
+                            QuotaOrder = 14,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7916,7 +7644,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "Number of Snaphots",
                             QuotaName = "VPS2012.SnapshotsNumber",
-                            QuotaOrder = 9.0,
+                            QuotaOrder = 9,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -7926,7 +7654,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "Allow user to Start, Turn off and Shutdown VPS",
                             QuotaName = "VPS2012.StartShutdownAllowed",
-                            QuotaOrder = 15.0,
+                            QuotaOrder = 15,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7936,7 +7664,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "Allow user to Pause, Resume VPS",
                             QuotaName = "VPS2012.PauseResumeAllowed",
-                            QuotaOrder = 16.0,
+                            QuotaOrder = 16,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7946,7 +7674,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "Allow user to Reboot VPS",
                             QuotaName = "VPS2012.RebootAllowed",
-                            QuotaOrder = 17.0,
+                            QuotaOrder = 17,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7956,7 +7684,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "Allow user to Reset VPS",
                             QuotaName = "VPS2012.ResetAlowed",
-                            QuotaOrder = 18.0,
+                            QuotaOrder = 18,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7966,7 +7694,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "Allow user to Re-install VPS",
                             QuotaName = "VPS2012.ReinstallAllowed",
-                            QuotaOrder = 19.0,
+                            QuotaOrder = 19,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7976,7 +7704,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "Monthly bandwidth, GB",
                             QuotaName = "VPS2012.Bandwidth",
-                            QuotaOrder = 12.0,
+                            QuotaOrder = 12,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -7986,7 +7714,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "Allow user to Replication",
                             QuotaName = "VPS2012.ReplicationEnabled",
-                            QuotaOrder = 20.0,
+                            QuotaOrder = 20,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -7997,7 +7725,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 202,
                             QuotaDescription = "Databases",
                             QuotaName = "MariaDB.Databases",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8008,7 +7736,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 203,
                             QuotaDescription = "Users",
                             QuotaName = "MariaDB.Users",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8018,7 +7746,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 50,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MariaDB.MaxDatabaseSize",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8028,7 +7756,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 50,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MariaDB.Backup",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8038,7 +7766,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 50,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MariaDB.Restore",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8048,7 +7776,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 50,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MariaDB.Truncate",
-                            QuotaOrder = 7.0,
+                            QuotaOrder = 7,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8058,7 +7786,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 50,
                             QuotaDescription = "Max Log Size",
                             QuotaName = "MariaDB.MaxLogSize",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8068,7 +7796,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 52,
                             QuotaDescription = "Phone Numbers",
                             QuotaName = "SfB.PhoneNumbers",
-                            QuotaOrder = 12.0,
+                            QuotaOrder = 12,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8079,7 +7807,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Users",
                             QuotaName = "SfB.Users",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8089,7 +7817,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 52,
                             QuotaDescription = "Allow Federation",
                             QuotaName = "SfB.Federation",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8099,7 +7827,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 52,
                             QuotaDescription = "Allow Conferencing",
                             QuotaName = "SfB.Conferencing",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8109,7 +7837,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 52,
                             QuotaDescription = "Maximum Conference Particiapants",
                             QuotaName = "SfB.MaxParticipants",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8119,7 +7847,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 52,
                             QuotaDescription = "Allow Video in Conference",
                             QuotaName = "SfB.AllowVideo",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8129,7 +7857,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 52,
                             QuotaDescription = "Allow EnterpriseVoice",
                             QuotaName = "SfB.EnterpriseVoice",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8139,7 +7867,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 52,
                             QuotaDescription = "Number of Enterprise Voice Users",
                             QuotaName = "SfB.EVUsers",
-                            QuotaOrder = 7.0,
+                            QuotaOrder = 7,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8149,7 +7877,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 52,
                             QuotaDescription = "Allow National Calls",
                             QuotaName = "SfB.EVNational",
-                            QuotaOrder = 8.0,
+                            QuotaOrder = 8,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8159,7 +7887,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 52,
                             QuotaDescription = "Allow Mobile Calls",
                             QuotaName = "SfB.EVMobile",
-                            QuotaOrder = 9.0,
+                            QuotaOrder = 9,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8169,7 +7897,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 52,
                             QuotaDescription = "Allow International Calls",
                             QuotaName = "SfB.EVInternational",
-                            QuotaOrder = 10.0,
+                            QuotaOrder = 10,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8179,7 +7907,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 52,
                             QuotaDescription = "Enable Plans Editing",
                             QuotaName = "SfB.EnablePlansEditing",
-                            QuotaOrder = 11.0,
+                            QuotaOrder = 11,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8190,7 +7918,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 41,
                             QuotaDescription = "Number of VPS",
                             QuotaName = "PROXMOX.ServersNumber",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8200,7 +7928,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 167,
                             QuotaDescription = "Allow user to create VPS",
                             QuotaName = "PROXMOX.ManagingAllowed",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8210,7 +7938,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 167,
                             QuotaDescription = "Number of CPU cores",
                             QuotaName = "PROXMOX.CpuNumber",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8220,7 +7948,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 167,
                             QuotaDescription = "Boot from CD allowed",
                             QuotaName = "PROXMOX.BootCdAllowed",
-                            QuotaOrder = 7.0,
+                            QuotaOrder = 7,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8230,7 +7958,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 167,
                             QuotaDescription = "Boot from CD",
                             QuotaName = "PROXMOX.BootCdEnabled",
-                            QuotaOrder = 8.0,
+                            QuotaOrder = 8,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8240,7 +7968,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 167,
                             QuotaDescription = "RAM size, MB",
                             QuotaName = "PROXMOX.Ram",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8250,7 +7978,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 167,
                             QuotaDescription = "Hard Drive size, GB",
                             QuotaName = "PROXMOX.Hdd",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8260,7 +7988,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 167,
                             QuotaDescription = "DVD drive",
                             QuotaName = "PROXMOX.DvdEnabled",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8270,7 +7998,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 167,
                             QuotaDescription = "External Network",
                             QuotaName = "PROXMOX.ExternalNetworkEnabled",
-                            QuotaOrder = 10.0,
+                            QuotaOrder = 10,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8280,7 +8008,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 167,
                             QuotaDescription = "Number of External IP addresses",
                             QuotaName = "PROXMOX.ExternalIPAddressesNumber",
-                            QuotaOrder = 11.0,
+                            QuotaOrder = 11,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8290,7 +8018,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 167,
                             QuotaDescription = "Private Network",
                             QuotaName = "PROXMOX.PrivateNetworkEnabled",
-                            QuotaOrder = 13.0,
+                            QuotaOrder = 13,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8300,7 +8028,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 167,
                             QuotaDescription = "Number of Private IP addresses per VPS",
                             QuotaName = "PROXMOX.PrivateIPAddressesNumber",
-                            QuotaOrder = 14.0,
+                            QuotaOrder = 14,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8310,7 +8038,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 167,
                             QuotaDescription = "Number of Snaphots",
                             QuotaName = "PROXMOX.SnapshotsNumber",
-                            QuotaOrder = 9.0,
+                            QuotaOrder = 9,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8320,7 +8048,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 167,
                             QuotaDescription = "Allow user to Start, Turn off and Shutdown VPS",
                             QuotaName = "PROXMOX.StartShutdownAllowed",
-                            QuotaOrder = 15.0,
+                            QuotaOrder = 15,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8330,7 +8058,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 167,
                             QuotaDescription = "Allow user to Pause, Resume VPS",
                             QuotaName = "PROXMOX.PauseResumeAllowed",
-                            QuotaOrder = 16.0,
+                            QuotaOrder = 16,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8340,7 +8068,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 167,
                             QuotaDescription = "Allow user to Reboot VPS",
                             QuotaName = "PROXMOX.RebootAllowed",
-                            QuotaOrder = 17.0,
+                            QuotaOrder = 17,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8350,7 +8078,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 167,
                             QuotaDescription = "Allow user to Reset VPS",
                             QuotaName = "PROXMOX.ResetAlowed",
-                            QuotaOrder = 18.0,
+                            QuotaOrder = 18,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8360,7 +8088,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 167,
                             QuotaDescription = "Allow user to Re-install VPS",
                             QuotaName = "PROXMOX.ReinstallAllowed",
-                            QuotaOrder = 19.0,
+                            QuotaOrder = 19,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8370,7 +8098,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 167,
                             QuotaDescription = "Monthly bandwidth, GB",
                             QuotaName = "PROXMOX.Bandwidth",
-                            QuotaOrder = 12.0,
+                            QuotaOrder = 12,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8380,7 +8108,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 167,
                             QuotaDescription = "Allow user to Replication",
                             QuotaName = "PROXMOX.ReplicationEnabled",
-                            QuotaOrder = 20.0,
+                            QuotaOrder = 20,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8388,10 +8116,10 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         {
                             QuotaId = 701,
                             GroupId = 71,
-                            ItemTypeId = 71,
+                            ItemTypeId = 39,
                             QuotaDescription = "Databases",
                             QuotaName = "MsSQL2016.Databases",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8399,10 +8127,10 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         {
                             QuotaId = 702,
                             GroupId = 71,
-                            ItemTypeId = 72,
+                            ItemTypeId = 40,
                             QuotaDescription = "Users",
                             QuotaName = "MsSQL2016.Users",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8412,7 +8140,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 71,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MsSQL2016.MaxDatabaseSize",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8422,7 +8150,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 71,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MsSQL2016.Backup",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8432,7 +8160,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 71,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MsSQL2016.Restore",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8442,7 +8170,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 71,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MsSQL2016.Truncate",
-                            QuotaOrder = 7.0,
+                            QuotaOrder = 7,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8452,7 +8180,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 71,
                             QuotaDescription = "Max Log Size",
                             QuotaName = "MsSQL2016.MaxLogSize",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8463,7 +8191,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 73,
                             QuotaDescription = "Databases",
                             QuotaName = "MsSQL2017.Databases",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8474,7 +8202,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 74,
                             QuotaDescription = "Users",
                             QuotaName = "MsSQL2017.Users",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8484,7 +8212,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 72,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MsSQL2017.MaxDatabaseSize",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8494,7 +8222,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 72,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MsSQL2017.Backup",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8504,7 +8232,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 72,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MsSQL2017.Restore",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8514,7 +8242,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 72,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MsSQL2017.Truncate",
-                            QuotaOrder = 7.0,
+                            QuotaOrder = 7,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8524,7 +8252,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 72,
                             QuotaDescription = "Max Log Size",
                             QuotaName = "MsSQL2017.MaxLogSize",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8535,7 +8263,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 77,
                             QuotaDescription = "Databases",
                             QuotaName = "MsSQL2019.Databases",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8546,7 +8274,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 78,
                             QuotaDescription = "Users",
                             QuotaName = "MsSQL2019.Users",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8556,7 +8284,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 74,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MsSQL2019.MaxDatabaseSize",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8566,7 +8294,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 74,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MsSQL2019.Backup",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8576,7 +8304,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 74,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MsSQL2019.Restore",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8586,7 +8314,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 74,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MsSQL2019.Truncate",
-                            QuotaOrder = 7.0,
+                            QuotaOrder = 7,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8596,7 +8324,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 74,
                             QuotaDescription = "Max Log Size",
                             QuotaName = "MsSQL2019.MaxLogSize",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8606,7 +8334,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "Number of Private Network VLANs",
                             QuotaName = "VPS2012.PrivateVLANsNumber",
-                            QuotaOrder = 14.0,
+                            QuotaOrder = 14,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8616,7 +8344,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 12,
                             QuotaDescription = "Automatic Replies via SolidCP Allowed",
                             QuotaName = "Exchange2013.AutoReply",
-                            QuotaOrder = 32.0,
+                            QuotaOrder = 32,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8626,7 +8354,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "Additional Hard Drives per VPS",
                             QuotaName = "VPS2012.AdditionalVhdCount",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8637,7 +8365,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PerOrganization = 1,
                             QuotaDescription = "Journaling Mailboxes per Organization",
                             QuotaName = "Exchange2013.JournalingMailboxes",
-                            QuotaOrder = 31.0,
+                            QuotaOrder = 31,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8648,7 +8376,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 79,
                             QuotaDescription = "Databases",
                             QuotaName = "MsSQL2022.Databases",
-                            QuotaOrder = 1.0,
+                            QuotaOrder = 1,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8659,7 +8387,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ItemTypeId = 80,
                             QuotaDescription = "Users",
                             QuotaName = "MsSQL2022.Users",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8669,7 +8397,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 75,
                             QuotaDescription = "Max Database Size",
                             QuotaName = "MsSQL2022.MaxDatabaseSize",
-                            QuotaOrder = 3.0,
+                            QuotaOrder = 3,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8679,7 +8407,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 75,
                             QuotaDescription = "Database Backups",
                             QuotaName = "MsSQL2022.Backup",
-                            QuotaOrder = 5.0,
+                            QuotaOrder = 5,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8689,7 +8417,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 75,
                             QuotaDescription = "Database Restores",
                             QuotaName = "MsSQL2022.Restore",
-                            QuotaOrder = 6.0,
+                            QuotaOrder = 6,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8699,7 +8427,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 75,
                             QuotaDescription = "Database Truncate",
                             QuotaName = "MsSQL2022.Truncate",
-                            QuotaOrder = 7.0,
+                            QuotaOrder = 7,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8709,7 +8437,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 75,
                             QuotaDescription = "Max Log Size",
                             QuotaName = "MsSQL2022.MaxLogSize",
-                            QuotaOrder = 4.0,
+                            QuotaOrder = 4,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8719,7 +8447,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "DMZ Network",
                             QuotaName = "VPS2012.DMZNetworkEnabled",
-                            QuotaOrder = 22.0,
+                            QuotaOrder = 22,
                             QuotaTypeId = 1,
                             ServiceQuota = false
                         },
@@ -8729,7 +8457,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "Number of DMZ IP addresses per VPS",
                             QuotaName = "VPS2012.DMZIPAddressesNumber",
-                            QuotaOrder = 23.0,
+                            QuotaOrder = 23,
                             QuotaTypeId = 3,
                             ServiceQuota = false
                         },
@@ -8739,7 +8467,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 33,
                             QuotaDescription = "Number of DMZ Network VLANs",
                             QuotaName = "VPS2012.DMZVLANsNumber",
-                            QuotaOrder = 24.0,
+                            QuotaOrder = 24,
                             QuotaTypeId = 2,
                             ServiceQuota = false
                         },
@@ -8749,113 +8477,9 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 7,
                             QuotaDescription = "Allow editing TTL in DNS Editor",
                             QuotaName = "DNS.EditTTL",
-                            QuotaOrder = 2.0,
+                            QuotaOrder = 2,
                             QuotaTypeId = 1,
                             ServiceQuota = false
-                        },
-                        new
-                        {
-                            QuotaId = 754,
-                            GroupId = 4,
-                            HideQuota = true,
-                            QuotaDescription = "Allow changes to access controls",
-                            QuotaName = "Mail.AllowAccessControls",
-                            QuotaOrder = 9.0,
-                            QuotaTypeId = 1,
-                            ServiceQuota = false
-                        },
-                        new
-                        {
-                            QuotaId = 760,
-                            GroupId = 76,
-                            ItemTypeId = 79,
-                            QuotaDescription = "Databases",
-                            QuotaName = "MsSQL2025.Databases",
-                            QuotaOrder = 1.0,
-                            QuotaTypeId = 2,
-                            ServiceQuota = false
-                        },
-                        new
-                        {
-                            QuotaId = 761,
-                            GroupId = 76,
-                            ItemTypeId = 80,
-                            QuotaDescription = "Users",
-                            QuotaName = "MsSQL2025.Users",
-                            QuotaOrder = 2.0,
-                            QuotaTypeId = 2,
-                            ServiceQuota = false
-                        },
-                        new
-                        {
-                            QuotaId = 762,
-                            GroupId = 76,
-                            QuotaDescription = "Max Database Size",
-                            QuotaName = "MsSQL2025.MaxDatabaseSize",
-                            QuotaOrder = 3.0,
-                            QuotaTypeId = 3,
-                            ServiceQuota = false
-                        },
-                        new
-                        {
-                            QuotaId = 763,
-                            GroupId = 76,
-                            QuotaDescription = "Database Backups",
-                            QuotaName = "MsSQL2025.Backup",
-                            QuotaOrder = 5.0,
-                            QuotaTypeId = 1,
-                            ServiceQuota = false
-                        },
-                        new
-                        {
-                            QuotaId = 764,
-                            GroupId = 76,
-                            QuotaDescription = "Database Restores",
-                            QuotaName = "MsSQL2025.Restore",
-                            QuotaOrder = 6.0,
-                            QuotaTypeId = 1,
-                            ServiceQuota = false
-                        },
-                        new
-                        {
-                            QuotaId = 765,
-                            GroupId = 76,
-                            QuotaDescription = "Database Truncate",
-                            QuotaName = "MsSQL2025.Truncate",
-                            QuotaOrder = 7.0,
-                            QuotaTypeId = 1,
-                            ServiceQuota = false
-                        },
-                        new
-                        {
-                            QuotaId = 766,
-                            GroupId = 76,
-                            QuotaDescription = "Max Log Size",
-                            QuotaName = "MsSQL2025.MaxLogSize",
-                            QuotaOrder = 4.0,
-                            QuotaTypeId = 3,
-                            ServiceQuota = false
-                        },
-                        new
-                        {
-                            QuotaId = 770,
-                            GroupId = 4,
-                            ItemTypeId = 11,
-                            QuotaDescription = "Mail Domains",
-                            QuotaName = "Mail.Domains",
-                            QuotaOrder = 1.1000000000000001,
-                            QuotaTypeId = 2,
-                            ServiceQuota = true
-                        },
-                        new
-                        {
-                            QuotaId = 771,
-                            GroupId = 4,
-                            QuotaDescription = "Mail Accounts per Domain",
-                            QuotaName = "Mail.Accounts.per.Domain",
-                            QuotaOrder = 1.2,
-                            QuotaTypeId = 2,
-                            ServiceQuota = true
                         });
                 });
 
@@ -8922,7 +8546,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id")
-                        .HasName("PK__RDSColle__3214EC27346D361D");
+                        .HasName("PK_RdsCollection");
 
                     b.ToTable("RDSCollections");
                 });
@@ -9016,7 +8640,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnName("RDSCollectionId");
 
                     b.HasKey("Id")
-                        .HasName("PK__RDSColle__3214EC2780141EF7");
+                        .HasName("PK_RdsCollectionUser");
 
                     b.HasIndex(new[] { "AccountId" }, "RDSCollectionUsersIdx_AccountID");
 
@@ -9095,7 +8719,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnName("RDSCollectionId");
 
                     b.HasKey("Id")
-                        .HasName("PK__RDSServe__3214EC27DBEBD4B5");
+                        .HasName("PK_RdsServer");
 
                     b.HasIndex(new[] { "RdsCollectionId" }, "RDSServersIdx_RDSCollectionId");
 
@@ -9336,6 +8960,14 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         },
                         new
                         {
+                            GroupId = 42,
+                            GroupController = "SolidCP.EnterpriseServer.HeliconZooController",
+                            GroupName = "HeliconZoo",
+                            GroupOrder = 2,
+                            ShowGroup = true
+                        },
+                        new
+                        {
                             GroupId = 44,
                             GroupController = "SolidCP.EnterpriseServer.EnterpriseStorageController",
                             GroupName = "EnterpriseStorage",
@@ -9436,25 +9068,9 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         },
                         new
                         {
-                            GroupId = 76,
-                            GroupController = "SolidCP.EnterpriseServer.DatabaseServerController",
-                            GroupName = "MsSQL2025",
-                            GroupOrder = 10,
-                            ShowGroup = true
-                        },
-                        new
-                        {
                             GroupId = 90,
                             GroupController = "SolidCP.EnterpriseServer.DatabaseServerController",
                             GroupName = "MySQL8",
-                            GroupOrder = 12,
-                            ShowGroup = true
-                        },
-                        new
-                        {
-                            GroupId = 91,
-                            GroupController = "SolidCP.EnterpriseServer.DatabaseServerController",
-                            GroupName = "MySQL9",
                             GroupOrder = 12,
                             ShowGroup = true
                         },
@@ -9750,36 +9366,36 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         {
                             ScheduleId = 1,
                             Enabled = true,
-                            FromTime = new DateTime(2000, 1, 1, 12, 0, 0, 0, DateTimeKind.Utc),
+                            FromTime = new DateTime(2000, 1, 1, 11, 0, 0, 0, DateTimeKind.Utc),
                             HistoriesNumber = 7,
                             Interval = 0,
                             MaxExecutionTime = 3600,
-                            NextRun = new DateTime(2010, 7, 16, 14, 53, 2, 470, DateTimeKind.Utc),
+                            NextRun = new DateTime(2010, 7, 16, 12, 53, 2, 470, DateTimeKind.Utc),
                             PackageId = 1,
                             PriorityId = "Normal",
                             ScheduleName = "Calculate Disk Space",
                             ScheduleTypeId = "Daily",
-                            StartTime = new DateTime(2000, 1, 1, 12, 30, 0, 0, DateTimeKind.Utc),
+                            StartTime = new DateTime(2000, 1, 1, 11, 30, 0, 0, DateTimeKind.Utc),
                             TaskId = "SCHEDULE_TASK_CALCULATE_PACKAGES_DISKSPACE",
-                            ToTime = new DateTime(2000, 1, 1, 12, 0, 0, 0, DateTimeKind.Utc),
+                            ToTime = new DateTime(2000, 1, 1, 11, 0, 0, 0, DateTimeKind.Utc),
                             WeekMonthDay = 1
                         },
                         new
                         {
                             ScheduleId = 2,
                             Enabled = true,
-                            FromTime = new DateTime(2000, 1, 1, 12, 0, 0, 0, DateTimeKind.Utc),
+                            FromTime = new DateTime(2000, 1, 1, 11, 0, 0, 0, DateTimeKind.Utc),
                             HistoriesNumber = 7,
                             Interval = 0,
                             MaxExecutionTime = 3600,
-                            NextRun = new DateTime(2010, 7, 16, 14, 53, 2, 477, DateTimeKind.Utc),
+                            NextRun = new DateTime(2010, 7, 16, 12, 53, 2, 477, DateTimeKind.Utc),
                             PackageId = 1,
                             PriorityId = "Normal",
                             ScheduleName = "Calculate Bandwidth",
                             ScheduleTypeId = "Daily",
-                            StartTime = new DateTime(2000, 1, 1, 12, 0, 0, 0, DateTimeKind.Utc),
+                            StartTime = new DateTime(2000, 1, 1, 11, 0, 0, 0, DateTimeKind.Utc),
                             TaskId = "SCHEDULE_TASK_CALCULATE_PACKAGES_BANDWIDTH",
-                            ToTime = new DateTime(2000, 1, 1, 12, 0, 0, 0, DateTimeKind.Utc),
+                            ToTime = new DateTime(2000, 1, 1, 11, 0, 0, 0, DateTimeKind.Utc),
                             WeekMonthDay = 1
                         });
                 });
@@ -9978,12 +9594,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             TaskId = "SCHEDULE_TASK_ZIP_FILES",
                             RoleId = 3,
                             TaskType = "SolidCP.EnterpriseServer.ZipFilesTask, SolidCP.EnterpriseServer.Code"
-                        },
-                        new
-                        {
-                            TaskId = "SCHEDULE_TASK_CHECK_WEBSITES_SSL",
-                            RoleId = 3,
-                            TaskType = "SolidCP.EnterpriseServer.CheckWebsitesSslTask, SolidCP.EnterpriseServer.Code"
                         });
                 });
 
@@ -10703,94 +10313,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             DataTypeId = "String",
                             DefaultValue = "\\archive.zip",
                             ParameterOrder = 2
-                        },
-                        new
-                        {
-                            TaskId = "SCHEDULE_TASK_CHECK_WEBSITES_SSL",
-                            ParameterId = "SEND_MAIL_TO_CUSTOMER",
-                            DataTypeId = "Boolean",
-                            DefaultValue = "true",
-                            ParameterOrder = 1
-                        },
-                        new
-                        {
-                            TaskId = "SCHEDULE_TASK_CHECK_WEBSITES_SSL",
-                            ParameterId = "SEND_BCC",
-                            DataTypeId = "Boolean",
-                            DefaultValue = "false",
-                            ParameterOrder = 2
-                        },
-                        new
-                        {
-                            TaskId = "SCHEDULE_TASK_CHECK_WEBSITES_SSL",
-                            ParameterId = "BCC_MAIL",
-                            DataTypeId = "String",
-                            DefaultValue = "admin@mydomain.com",
-                            ParameterOrder = 3
-                        },
-                        new
-                        {
-                            TaskId = "SCHEDULE_TASK_CHECK_WEBSITES_SSL",
-                            ParameterId = "EXPIRATION_MAIL_SUBJECT",
-                            DataTypeId = "String",
-                            DefaultValue = "Website certificate expiration notice",
-                            ParameterOrder = 4
-                        },
-                        new
-                        {
-                            TaskId = "SCHEDULE_TASK_CHECK_WEBSITES_SSL",
-                            ParameterId = "EXPIRATION_MAIL_BODY",
-                            DataTypeId = "MultiString",
-                            DefaultValue = "Hello, <br>Your certificate for the [domain] will expire in [expires_in_days] days (on [expires_on_date]).",
-                            ParameterOrder = 5
-                        },
-                        new
-                        {
-                            TaskId = "SCHEDULE_TASK_CHECK_WEBSITES_SSL",
-                            ParameterId = "SEND_30_DAYS_BEFORE_EXPIRATION",
-                            DataTypeId = "Boolean",
-                            DefaultValue = "true",
-                            ParameterOrder = 6
-                        },
-                        new
-                        {
-                            TaskId = "SCHEDULE_TASK_CHECK_WEBSITES_SSL",
-                            ParameterId = "SEND_14_DAYS_BEFORE_EXPIRATION",
-                            DataTypeId = "Boolean",
-                            DefaultValue = "true",
-                            ParameterOrder = 7
-                        },
-                        new
-                        {
-                            TaskId = "SCHEDULE_TASK_CHECK_WEBSITES_SSL",
-                            ParameterId = "SEND_TODAY_EXPIRED",
-                            DataTypeId = "Boolean",
-                            DefaultValue = "true",
-                            ParameterOrder = 8
-                        },
-                        new
-                        {
-                            TaskId = "SCHEDULE_TASK_CHECK_WEBSITES_SSL",
-                            ParameterId = "SEND_SSL_ERROR",
-                            DataTypeId = "Boolean",
-                            DefaultValue = "false",
-                            ParameterOrder = 9
-                        },
-                        new
-                        {
-                            TaskId = "SCHEDULE_TASK_CHECK_WEBSITES_SSL",
-                            ParameterId = "ERROR_MAIL_SUBJECT",
-                            DataTypeId = "String",
-                            DefaultValue = "Certificate error or website is unavailable",
-                            ParameterOrder = 10
-                        },
-                        new
-                        {
-                            TaskId = "SCHEDULE_TASK_CHECK_WEBSITES_SSL",
-                            ParameterId = "ERROR_MAIL_BODY",
-                            DataTypeId = "MultiString",
-                            DefaultValue = "Hello, <br>we cannot verify the SSL certificate for the domain [domain]. <br><br>Error message: [error] <br><br>Please check if the website is available.",
-                            ParameterOrder = 11
                         });
                 });
 
@@ -10978,13 +10500,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             TaskId = "SCHEDULE_TASK_ZIP_FILES",
                             Description = "~/DesktopModules/SolidCP/ScheduleTaskControls/ZipFiles.ascx",
                             Environment = "ASP.NET"
-                        },
-                        new
-                        {
-                            ConfigurationId = "ASP_NET",
-                            TaskId = "SCHEDULE_TASK_CHECK_WEBSITES_SSL",
-                            Description = "~/DesktopModules/SolidCP/ScheduleTaskControls/CheckWebsitesSslView.ascx",
-                            Environment = "ASP.NET"
                         });
                 });
 
@@ -11039,24 +10554,9 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<bool?>("IsCore")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("OSPlatform")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0)
-                        .HasColumnName("OSPlatform");
-
                     b.Property<string>("Password")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("PasswordIsSHA256")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasColumnName("PasswordIsSHA256");
 
                     b.Property<int?>("PrimaryGroupId")
                         .HasColumnType("int")
@@ -11069,8 +10569,8 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
 
                     b.Property<string>("ServerUrl")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasDefaultValue("");
 
                     b.Property<bool>("VirtualServer")
@@ -11145,7 +10645,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnType("nvarchar(1000)");
 
                     b.HasKey("ProviderId", "PropertyName")
-                        .HasName("PK_ServiceDefaultProperties_1");
+                        .HasName("PK_ServiceDefaultProperties");
 
                     b.ToTable("ServiceDefaultProperties");
 
@@ -11761,6 +11261,78 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ProviderId = 22,
                             PropertyName = "AdminUsername",
                             PropertyValue = "Administrator"
+                        },
+                        new
+                        {
+                            ProviderId = 24,
+                            PropertyName = "BindConfigPath",
+                            PropertyValue = "c:\\BIND\\dns\\etc\\named.conf"
+                        },
+                        new
+                        {
+                            ProviderId = 24,
+                            PropertyName = "BindReloadBatch",
+                            PropertyValue = "c:\\BIND\\dns\\reload.bat"
+                        },
+                        new
+                        {
+                            ProviderId = 24,
+                            PropertyName = "ExpireLimit",
+                            PropertyValue = "1209600"
+                        },
+                        new
+                        {
+                            ProviderId = 24,
+                            PropertyName = "MinimumTTL",
+                            PropertyValue = "86400"
+                        },
+                        new
+                        {
+                            ProviderId = 24,
+                            PropertyName = "NameServers",
+                            PropertyValue = "ns1.yourdomain.com;ns2.yourdomain.com"
+                        },
+                        new
+                        {
+                            ProviderId = 24,
+                            PropertyName = "RecordDefaultTTL",
+                            PropertyValue = "86400"
+                        },
+                        new
+                        {
+                            ProviderId = 24,
+                            PropertyName = "RecordMinimumTTL",
+                            PropertyValue = "3600"
+                        },
+                        new
+                        {
+                            ProviderId = 24,
+                            PropertyName = "RefreshInterval",
+                            PropertyValue = "3600"
+                        },
+                        new
+                        {
+                            ProviderId = 24,
+                            PropertyName = "ResponsiblePerson",
+                            PropertyValue = "hostmaster.[DOMAIN_NAME]"
+                        },
+                        new
+                        {
+                            ProviderId = 24,
+                            PropertyName = "RetryDelay",
+                            PropertyValue = "600"
+                        },
+                        new
+                        {
+                            ProviderId = 24,
+                            PropertyName = "ZoneFileNameTemplate",
+                            PropertyValue = "db.[domain_name].txt"
+                        },
+                        new
+                        {
+                            ProviderId = 24,
+                            PropertyName = "ZonesFolderPath",
+                            PropertyValue = "c:\\BIND\\dns\\zones"
                         },
                         new
                         {
@@ -13006,186 +12578,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         },
                         new
                         {
-                            ProviderId = 305,
-                            PropertyName = "ExternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 305,
-                            PropertyName = "InstallFolder",
-                            PropertyValue = "%PROGRAMFILES%\\MySQL\\MySQL Server 8.0"
-                        },
-                        new
-                        {
-                            ProviderId = 305,
-                            PropertyName = "InternalAddress",
-                            PropertyValue = "localhost,3306"
-                        },
-                        new
-                        {
-                            ProviderId = 305,
-                            PropertyName = "RootLogin",
-                            PropertyValue = "root"
-                        },
-                        new
-                        {
-                            ProviderId = 305,
-                            PropertyName = "RootPassword",
-                            PropertyValue = ""
-                        },
-                        new
-                        {
-                            ProviderId = 305,
-                            PropertyName = "sslmode",
-                            PropertyValue = "True"
-                        },
-                        new
-                        {
-                            ProviderId = 306,
-                            PropertyName = "ExternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 306,
-                            PropertyName = "InstallFolder",
-                            PropertyValue = "%PROGRAMFILES%\\MySQL\\MySQL Server 8.0"
-                        },
-                        new
-                        {
-                            ProviderId = 306,
-                            PropertyName = "InternalAddress",
-                            PropertyValue = "localhost,3306"
-                        },
-                        new
-                        {
-                            ProviderId = 306,
-                            PropertyName = "RootLogin",
-                            PropertyValue = "root"
-                        },
-                        new
-                        {
-                            ProviderId = 306,
-                            PropertyName = "RootPassword",
-                            PropertyValue = ""
-                        },
-                        new
-                        {
-                            ProviderId = 306,
-                            PropertyName = "sslmode",
-                            PropertyValue = "True"
-                        },
-                        new
-                        {
-                            ProviderId = 307,
-                            PropertyName = "ExternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 307,
-                            PropertyName = "InstallFolder",
-                            PropertyValue = "%PROGRAMFILES%\\MySQL\\MySQL Server 8.0"
-                        },
-                        new
-                        {
-                            ProviderId = 307,
-                            PropertyName = "InternalAddress",
-                            PropertyValue = "localhost,3306"
-                        },
-                        new
-                        {
-                            ProviderId = 307,
-                            PropertyName = "RootLogin",
-                            PropertyValue = "root"
-                        },
-                        new
-                        {
-                            ProviderId = 307,
-                            PropertyName = "RootPassword",
-                            PropertyValue = ""
-                        },
-                        new
-                        {
-                            ProviderId = 307,
-                            PropertyName = "sslmode",
-                            PropertyValue = "True"
-                        },
-                        new
-                        {
-                            ProviderId = 308,
-                            PropertyName = "ExternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 308,
-                            PropertyName = "InstallFolder",
-                            PropertyValue = "%PROGRAMFILES%\\MySQL\\MySQL Server 8.0"
-                        },
-                        new
-                        {
-                            ProviderId = 308,
-                            PropertyName = "InternalAddress",
-                            PropertyValue = "localhost,3306"
-                        },
-                        new
-                        {
-                            ProviderId = 308,
-                            PropertyName = "RootLogin",
-                            PropertyValue = "root"
-                        },
-                        new
-                        {
-                            ProviderId = 308,
-                            PropertyName = "RootPassword",
-                            PropertyValue = ""
-                        },
-                        new
-                        {
-                            ProviderId = 308,
-                            PropertyName = "sslmode",
-                            PropertyValue = "True"
-                        },
-                        new
-                        {
-                            ProviderId = 320,
-                            PropertyName = "ExternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 320,
-                            PropertyName = "InstallFolder",
-                            PropertyValue = "%PROGRAMFILES%\\MySQL\\MySQL Server 9.0"
-                        },
-                        new
-                        {
-                            ProviderId = 320,
-                            PropertyName = "InternalAddress",
-                            PropertyValue = "localhost,3306"
-                        },
-                        new
-                        {
-                            ProviderId = 320,
-                            PropertyName = "RootLogin",
-                            PropertyValue = "root"
-                        },
-                        new
-                        {
-                            ProviderId = 320,
-                            PropertyName = "RootPassword",
-                            PropertyValue = ""
-                        },
-                        new
-                        {
-                            ProviderId = 320,
-                            PropertyName = "sslmode",
-                            PropertyValue = "True"
-                        },
-                        new
-                        {
                             ProviderId = 410,
                             PropertyName = "admode",
                             PropertyValue = "False"
@@ -13237,18 +12629,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ProviderId = 410,
                             PropertyName = "retrydelay",
                             PropertyValue = "600"
-                        },
-                        new
-                        {
-                            ProviderId = 500,
-                            PropertyName = "LogDir",
-                            PropertyValue = "/var/log"
-                        },
-                        new
-                        {
-                            ProviderId = 500,
-                            PropertyName = "UsersHome",
-                            PropertyValue = "/var/www/HostingSpaces"
                         },
                         new
                         {
@@ -13367,426 +12747,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         new
                         {
                             ProviderId = 1572,
-                            PropertyName = "RootPassword",
-                            PropertyValue = ""
-                        },
-                        new
-                        {
-                            ProviderId = 1573,
-                            PropertyName = "ExternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1573,
-                            PropertyName = "InstallFolder",
-                            PropertyValue = "%PROGRAMFILES%\\MariaDB 10.6"
-                        },
-                        new
-                        {
-                            ProviderId = 1573,
-                            PropertyName = "InternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1573,
-                            PropertyName = "RootLogin",
-                            PropertyValue = "root"
-                        },
-                        new
-                        {
-                            ProviderId = 1573,
-                            PropertyName = "RootPassword",
-                            PropertyValue = ""
-                        },
-                        new
-                        {
-                            ProviderId = 1574,
-                            PropertyName = "ExternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1574,
-                            PropertyName = "InstallFolder",
-                            PropertyValue = "%PROGRAMFILES%\\MariaDB 10.7"
-                        },
-                        new
-                        {
-                            ProviderId = 1574,
-                            PropertyName = "InternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1574,
-                            PropertyName = "RootLogin",
-                            PropertyValue = "root"
-                        },
-                        new
-                        {
-                            ProviderId = 1574,
-                            PropertyName = "RootPassword",
-                            PropertyValue = ""
-                        },
-                        new
-                        {
-                            ProviderId = 1575,
-                            PropertyName = "ExternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1575,
-                            PropertyName = "InstallFolder",
-                            PropertyValue = "%PROGRAMFILES%\\MariaDB 10.8"
-                        },
-                        new
-                        {
-                            ProviderId = 1575,
-                            PropertyName = "InternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1575,
-                            PropertyName = "RootLogin",
-                            PropertyValue = "root"
-                        },
-                        new
-                        {
-                            ProviderId = 1575,
-                            PropertyName = "RootPassword",
-                            PropertyValue = ""
-                        },
-                        new
-                        {
-                            ProviderId = 1576,
-                            PropertyName = "ExternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1576,
-                            PropertyName = "InstallFolder",
-                            PropertyValue = "%PROGRAMFILES%\\MariaDB 10.9"
-                        },
-                        new
-                        {
-                            ProviderId = 1576,
-                            PropertyName = "InternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1576,
-                            PropertyName = "RootLogin",
-                            PropertyValue = "root"
-                        },
-                        new
-                        {
-                            ProviderId = 1576,
-                            PropertyName = "RootPassword",
-                            PropertyValue = ""
-                        },
-                        new
-                        {
-                            ProviderId = 1577,
-                            PropertyName = "ExternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1577,
-                            PropertyName = "InstallFolder",
-                            PropertyValue = "%PROGRAMFILES%\\MariaDB 10.10"
-                        },
-                        new
-                        {
-                            ProviderId = 1577,
-                            PropertyName = "InternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1577,
-                            PropertyName = "RootLogin",
-                            PropertyValue = "root"
-                        },
-                        new
-                        {
-                            ProviderId = 1577,
-                            PropertyName = "RootPassword",
-                            PropertyValue = ""
-                        },
-                        new
-                        {
-                            ProviderId = 1578,
-                            PropertyName = "ExternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1578,
-                            PropertyName = "InstallFolder",
-                            PropertyValue = "%PROGRAMFILES%\\MariaDB 10.11"
-                        },
-                        new
-                        {
-                            ProviderId = 1578,
-                            PropertyName = "InternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1578,
-                            PropertyName = "RootLogin",
-                            PropertyValue = "root"
-                        },
-                        new
-                        {
-                            ProviderId = 1578,
-                            PropertyName = "RootPassword",
-                            PropertyValue = ""
-                        },
-                        new
-                        {
-                            ProviderId = 1579,
-                            PropertyName = "ExternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1579,
-                            PropertyName = "InstallFolder",
-                            PropertyValue = "%PROGRAMFILES%\\MariaDB 11.0"
-                        },
-                        new
-                        {
-                            ProviderId = 1579,
-                            PropertyName = "InternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1579,
-                            PropertyName = "RootLogin",
-                            PropertyValue = "root"
-                        },
-                        new
-                        {
-                            ProviderId = 1579,
-                            PropertyName = "RootPassword",
-                            PropertyValue = ""
-                        },
-                        new
-                        {
-                            ProviderId = 1580,
-                            PropertyName = "ExternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1580,
-                            PropertyName = "InstallFolder",
-                            PropertyValue = "%PROGRAMFILES%\\MariaDB 11.1"
-                        },
-                        new
-                        {
-                            ProviderId = 1580,
-                            PropertyName = "InternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1580,
-                            PropertyName = "RootLogin",
-                            PropertyValue = "root"
-                        },
-                        new
-                        {
-                            ProviderId = 1580,
-                            PropertyName = "RootPassword",
-                            PropertyValue = ""
-                        },
-                        new
-                        {
-                            ProviderId = 1581,
-                            PropertyName = "ExternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1581,
-                            PropertyName = "InstallFolder",
-                            PropertyValue = "%PROGRAMFILES%\\MariaDB 11.2"
-                        },
-                        new
-                        {
-                            ProviderId = 1581,
-                            PropertyName = "InternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1581,
-                            PropertyName = "RootLogin",
-                            PropertyValue = "root"
-                        },
-                        new
-                        {
-                            ProviderId = 1581,
-                            PropertyName = "RootPassword",
-                            PropertyValue = ""
-                        },
-                        new
-                        {
-                            ProviderId = 1582,
-                            PropertyName = "ExternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1582,
-                            PropertyName = "InstallFolder",
-                            PropertyValue = "%PROGRAMFILES%\\MariaDB 11.3"
-                        },
-                        new
-                        {
-                            ProviderId = 1582,
-                            PropertyName = "InternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1582,
-                            PropertyName = "RootLogin",
-                            PropertyValue = "root"
-                        },
-                        new
-                        {
-                            ProviderId = 1582,
-                            PropertyName = "RootPassword",
-                            PropertyValue = ""
-                        },
-                        new
-                        {
-                            ProviderId = 1583,
-                            PropertyName = "ExternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1583,
-                            PropertyName = "InstallFolder",
-                            PropertyValue = "%PROGRAMFILES%\\MariaDB 11.4"
-                        },
-                        new
-                        {
-                            ProviderId = 1583,
-                            PropertyName = "InternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1583,
-                            PropertyName = "RootLogin",
-                            PropertyValue = "root"
-                        },
-                        new
-                        {
-                            ProviderId = 1583,
-                            PropertyName = "RootPassword",
-                            PropertyValue = ""
-                        },
-                        new
-                        {
-                            ProviderId = 1584,
-                            PropertyName = "ExternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1584,
-                            PropertyName = "InstallFolder",
-                            PropertyValue = "%PROGRAMFILES%\\MariaDB 11.5"
-                        },
-                        new
-                        {
-                            ProviderId = 1584,
-                            PropertyName = "InternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1584,
-                            PropertyName = "RootLogin",
-                            PropertyValue = "root"
-                        },
-                        new
-                        {
-                            ProviderId = 1584,
-                            PropertyName = "RootPassword",
-                            PropertyValue = ""
-                        },
-                        new
-                        {
-                            ProviderId = 1585,
-                            PropertyName = "ExternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1585,
-                            PropertyName = "InstallFolder",
-                            PropertyValue = "%PROGRAMFILES%\\MariaDB 11.6"
-                        },
-                        new
-                        {
-                            ProviderId = 1585,
-                            PropertyName = "InternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1585,
-                            PropertyName = "RootLogin",
-                            PropertyValue = "root"
-                        },
-                        new
-                        {
-                            ProviderId = 1585,
-                            PropertyName = "RootPassword",
-                            PropertyValue = ""
-                        },
-                        new
-                        {
-                            ProviderId = 1586,
-                            PropertyName = "ExternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1586,
-                            PropertyName = "InstallFolder",
-                            PropertyValue = "%PROGRAMFILES%\\MariaDB 11.7"
-                        },
-                        new
-                        {
-                            ProviderId = 1586,
-                            PropertyName = "InternalAddress",
-                            PropertyValue = "localhost"
-                        },
-                        new
-                        {
-                            ProviderId = 1586,
-                            PropertyName = "RootLogin",
-                            PropertyValue = "root"
-                        },
-                        new
-                        {
-                            ProviderId = 1586,
                             PropertyName = "RootPassword",
                             PropertyValue = ""
                         },
@@ -13987,24 +12947,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ProviderId = 1903,
                             PropertyName = "SimpleDnsUrl",
                             PropertyValue = "http://127.0.0.1:8053"
-                        },
-                        new
-                        {
-                            ProviderId = 1910,
-                            PropertyName = "ConfigFile",
-                            PropertyValue = "/etc/vsftpd.conf"
-                        },
-                        new
-                        {
-                            ProviderId = 1911,
-                            PropertyName = "ConfigFile",
-                            PropertyValue = "/etc/apache2/apache2.conf"
-                        },
-                        new
-                        {
-                            ProviderId = 1911,
-                            PropertyName = "ConfigPath",
-                            PropertyValue = "/etc/apache2"
                         });
                 });
 
@@ -14809,36 +13751,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         },
                         new
                         {
-                            ItemTypeId = 90,
-                            Backupable = true,
-                            CalculateBandwidth = false,
-                            CalculateDiskspace = true,
-                            DisplayName = "MySQL9Database",
-                            Disposable = true,
-                            GroupId = 91,
-                            Importable = true,
-                            Searchable = true,
-                            Suspendable = false,
-                            TypeName = "SolidCP.Providers.Database.SqlDatabase, SolidCP.Providers.Base",
-                            TypeOrder = 20
-                        },
-                        new
-                        {
-                            ItemTypeId = 91,
-                            Backupable = true,
-                            CalculateBandwidth = false,
-                            CalculateDiskspace = false,
-                            DisplayName = "MySQL9User",
-                            Disposable = true,
-                            GroupId = 91,
-                            Importable = true,
-                            Searchable = true,
-                            Suspendable = false,
-                            TypeName = "SolidCP.Providers.Database.SqlUser, SolidCP.Providers.Base",
-                            TypeOrder = 21
-                        },
-                        new
-                        {
                             ItemTypeId = 143,
                             Backupable = false,
                             CalculateBandwidth = false,
@@ -14926,36 +13838,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             Suspendable = false,
                             TypeName = "SolidCP.Providers.SharePoint.SharePointEnterpriseSiteCollection, SolidCP.Providers.Base",
                             TypeOrder = 100
-                        },
-                        new
-                        {
-                            ItemTypeId = 205,
-                            Backupable = true,
-                            CalculateBandwidth = false,
-                            CalculateDiskspace = true,
-                            DisplayName = "MsSQL2025Database",
-                            Disposable = true,
-                            GroupId = 76,
-                            Importable = true,
-                            Searchable = true,
-                            Suspendable = false,
-                            TypeName = "SolidCP.Providers.Database.SqlDatabase, SolidCP.Providers.Base",
-                            TypeOrder = 1
-                        },
-                        new
-                        {
-                            ItemTypeId = 206,
-                            Backupable = true,
-                            CalculateBandwidth = false,
-                            CalculateDiskspace = false,
-                            DisplayName = "MsSQL2025User",
-                            Disposable = true,
-                            GroupId = 76,
-                            Importable = true,
-                            Searchable = true,
-                            Suspendable = false,
-                            TypeName = "SolidCP.Providers.Database.SqlUser, SolidCP.Providers.Base",
-                            TypeOrder = 1
                         });
                 });
 
@@ -14975,7 +13857,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ServiceId", "PropertyName")
-                        .HasName("PK_ServiceProperties_1");
+                        .HasName("PK_ServiceProperties");
 
                     b.ToTable("ServiceProperties");
                 });
@@ -15218,7 +14100,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnType("varchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__StorageS__3214EC07B8B9A6D1");
+                        .HasName("PK_StorageSpace");
 
                     b.HasIndex(new[] { "ServerId" }, "StorageSpacesIdx_ServerId");
 
@@ -15263,7 +14145,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnType("varchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__StorageS__3214EC07AC0C9EB6");
+                        .HasName("PK_StorageSpaceFolder");
 
                     b.HasIndex(new[] { "StorageSpaceId" }, "StorageSpaceFoldersIdx_StorageSpaceId");
 
@@ -15288,7 +14170,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnType("nvarchar(300)");
 
                     b.HasKey("Id")
-                        .HasName("PK__StorageS__3214EC07B8D82363");
+                        .HasName("PK_StorageSpaceLevel");
 
                     b.ToTable("StorageSpaceLevels");
                 });
@@ -15308,7 +14190,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__StorageS__3214EC07EBEBED98");
+                        .HasName("PK_StorageSpaceLevelResourceGroup");
 
                     b.HasIndex(new[] { "GroupId" }, "StorageSpaceLevelResourceGroupsIdx_GroupId");
 
@@ -15336,7 +14218,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("LevelId")
-                        .HasName("PK__SupportS__09F03C065BA08AFB");
+                        .HasName("PK_SupportServiceLevel");
 
                     b.ToTable("SupportServiceLevels");
                 });
@@ -15409,36 +14291,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             PropertyName = "SmtpUsername",
                             PropertyValue = "postmaster"
                         });
-                });
-
-            modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.TempId", b =>
-                {
-                    b.Property<int>("Key")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Key"));
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Level")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("Scope")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Key");
-
-                    b.HasIndex("Created", "Scope", "Level");
-
-                    b.ToTable("TempIds");
                 });
 
             modelBuilder.Entity("SolidCP.EnterpriseServer.Data.Entities.Theme", b =>
@@ -15918,7 +14770,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             UserId = 1,
                             SettingsName = "AccountSummaryLetter",
                             PropertyName = "HtmlBody",
-                            PropertyValue = "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n    <title>Account Summary Information</title>\r\n    <style type=\"text/css\">\r\n		.Summary { background-color: ##ffffff; padding: 5px; }\r\n		.Summary .Header { padding: 10px 0px 10px 10px; font-size: 16pt; background-color: ##E5F2FF; color: ##1F4978; border-bottom: solid 2px ##86B9F7; }\r\n        .Summary A { color: ##0153A4; }\r\n        .Summary { font-family: Tahoma; font-size: 9pt; }\r\n        .Summary H1 { font-size: 1.7em; color: ##1F4978; border-bottom: dotted 3px ##efefef; }\r\n        .Summary H2 { font-size: 1.3em; color: ##1F4978; }\r\n        .Summary TABLE { border: solid 1px ##e5e5e5; }\r\n        .Summary TH,\r\n        .Summary TD.Label { padding: 5px; font-size: 8pt; font-weight: bold; background-color: ##f5f5f5; }\r\n        .Summary TD { padding: 8px; font-size: 9pt; }\r\n        .Summary UL LI { font-size: 1.1em; font-weight: bold; }\r\n        .Summary UL UL LI { font-size: 0.9em; font-weight: normal; }\r\n    </style>\r\n</head>\r\n<body>\r\n<div class=\"Summary\">\r\n\r\n<a name=\"top\"></a>\r\n<div class=\"Header\">\r\n	Hosting Account Information\r\n</div>\r\n\r\n<ad:if test=\"#Signup#\">\r\n<p>\r\nHello #user.FirstName#,\r\n</p>\r\n\r\n<p>\r\nNew user account has been created and below you can find its summary information.\r\n</p>\r\n\r\n<h1>Control Panel URL</h1>\r\n<table>\r\n    <thead>\r\n        <tr>\r\n            <th>Control Panel URL</th>\r\n            <th>Username</th>\r\n            <th>Password</th>\r\n        </tr>\r\n    </thead>\r\n    <tbody>\r\n        <tr>\r\n            <td><a href=\"http://panel.HostingCompany.com\">http://panel.HostingCompany.com</a></td>\r\n            <td>#user.Username#</td>\r\n            <td>#user.Password#</td>\r\n        </tr>\r\n    </tbody>\r\n</table>\r\n</ad:if>\r\n\r\n<h1>Hosting Spaces</h1>\r\n<p>\r\n    The following hosting spaces have been created under your account:\r\n</p>\r\n<ad:foreach collection=\"#Spaces#\" var=\"Space\" index=\"i\">\r\n<h2>#Space.PackageName#</h2>\r\n<table>\r\n	<tbody>\r\n		<tr>\r\n			<td class=\"Label\">Hosting Plan:</td>\r\n			<td>\r\n				<ad:if test=\"#not(isnull(Plans[Space.PlanId]))#\">#Plans[Space.PlanId].PlanName#<ad:else>System</ad:if>\r\n			</td>\r\n		</tr>\r\n		<ad:if test=\"#not(isnull(Plans[Space.PlanId]))#\">\r\n		<tr>\r\n			<td class=\"Label\">Purchase Date:</td>\r\n			<td>\r\n# Space.PurchaseDate#\r\n			</td>\r\n		</tr>\r\n		<tr>\r\n			<td class=\"Label\">Disk Space, MB:</td>\r\n			<td><ad:NumericQuota space=\"#SpaceContexts[Space.PackageId]#\" quota=\"OS.Diskspace\" /></td>\r\n		</tr>\r\n		<tr>\r\n			<td class=\"Label\">Bandwidth, MB/Month:</td>\r\n			<td><ad:NumericQuota space=\"#SpaceContexts[Space.PackageId]#\" quota=\"OS.Bandwidth\" /></td>\r\n		</tr>\r\n		<tr>\r\n			<td class=\"Label\">Maximum Number of Domains:</td>\r\n			<td><ad:NumericQuota space=\"#SpaceContexts[Space.PackageId]#\" quota=\"OS.Domains\" /></td>\r\n		</tr>\r\n		<tr>\r\n			<td class=\"Label\">Maximum Number of Sub-Domains:</td>\r\n			<td><ad:NumericQuota space=\"#SpaceContexts[Space.PackageId]#\" quota=\"OS.SubDomains\" /></td>\r\n		</tr>\r\n		</ad:if>\r\n	</tbody>\r\n</table>\r\n</ad:foreach>\r\n\r\n<ad:if test=\"#Signup#\">\r\n<p>\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n</p>\r\n\r\n<p>\r\nBest regards,<br />\r\nSolidCP.<br />\r\nWeb Site: <a href=\"https://solidcp.com\">https://solidcp.com</a><br />\r\nE-Mail: <a href=\"mailto:support@solidcp.com\">support@solidcp.com</a>\r\n</p>\r\n</ad:if>\r\n\r\n<ad:template name=\"NumericQuota\">\r\n	<ad:if test=\"#space.Quotas.ContainsKey(quota)#\">\r\n		<ad:if test=\"#space.Quotas[quota].QuotaAllocatedValue isnot -1#\">#space.Quotas[quota].QuotaAllocatedValue#<ad:else>Unlimited</ad:if>\r\n	<ad:else>\r\n		0\r\n	</ad:if>\r\n</ad:template>\r\n\r\n</div>\r\n</body>\r\n</html>"
+                            PropertyValue = "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n    <title>Account Summary Information</title>\r\n    <style type=\"text/css\">\r\n		.Summary { background-color: ##ffffff; padding: 5px; }\r\n		.Summary .Header { padding: 10px 0px 10px 10px; font-size: 16pt; background-color: ##E5F2FF; color: ##1F4978; border-bottom: solid 2px ##86B9F7; }\r\n        .Summary A { color: ##0153A4; }\r\n        .Summary { font-family: Tahoma; font-size: 9pt; }\r\n        .Summary H1 { font-size: 1.7em; color: ##1F4978; border-bottom: dotted 3px ##efefef; }\r\n        .Summary H2 { font-size: 1.3em; color: ##1F4978; }\r\n        .Summary TABLE { border: solid 1px ##e5e5e5; }\r\n        .Summary TH,\r\n        .Summary TD.Label { padding: 5px; font-size: 8pt; font-weight: bold; background-color: ##f5f5f5; }\r\n        .Summary TD { padding: 8px; font-size: 9pt; }\r\n        .Summary UL LI { font-size: 1.1em; font-weight: bold; }\r\n        .Summary UL UL LI { font-size: 0.9em; font-weight: normal; }\r\n    </style>\r\n</head>\r\n<body>\r\n<div class=\"Summary\">\r\n\r\n<a name=\"top\"></a>\r\n<div class=\"Header\">\r\n	Hosting Account Information\r\n</div>\r\n\r\n<ad:if test=\"#Signup#\">\r\n<p>\r\nHello #user.FirstName#,\r\n</p>\r\n\r\n<p>\r\nNew user account has been created and below you can find its summary information.\r\n</p>\r\n\r\n<h1>Control Panel URL</h1>\r\n<table>\r\n    <thead>\r\n        <tr>\r\n            <th>Control Panel URL</th>\r\n            <th>Username</th>\r\n            <th>Password</th>\r\n        </tr>\r\n    </thead>\r\n    <tbody>\r\n        <tr>\r\n            <td><a href=\"http://panel.HostingCompany.com\">http://panel.HostingCompany.com</a></td>\r\n            <td>#user.Username#</td>\r\n            <td>#user.Password#</td>\r\n        </tr>\r\n    </tbody>\r\n</table>\r\n</ad:if>\r\n\r\n<h1>Hosting Spaces</h1>\r\n<p>\r\n    The following hosting spaces have been created under your account:\r\n</p>\r\n<ad:foreach collection=\"#Spaces#\" var=\"Space\" index=\"i\">\r\n<h2>#Space.PackageName#</h2>\r\n<table>\r\n	<tbody>\r\n		<tr>\r\n			<td class=\"Label\">Hosting Plan:</td>\r\n			<td>\r\n				<ad:if test=\"#not(isnull(Plans[Space.PlanId]))#\">#Plans[Space.PlanId].PlanName#<ad:else>System</ad:if>\r\n			</td>\r\n		</tr>\r\n		<ad:if test=\"#not(isnull(Plans[Space.PlanId]))#\">\r\n		<tr>\r\n			<td class=\"Label\">Purchase Date:</td>\r\n			<td>\r\n				#Space.PurchaseDate#\r\n			</td>\r\n		</tr>\r\n		<tr>\r\n			<td class=\"Label\">Disk Space, MB:</td>\r\n			<td><ad:NumericQuota space=\"#SpaceContexts[Space.PackageId]#\" quota=\"OS.Diskspace\" /></td>\r\n		</tr>\r\n		<tr>\r\n			<td class=\"Label\">Bandwidth, MB/Month:</td>\r\n			<td><ad:NumericQuota space=\"#SpaceContexts[Space.PackageId]#\" quota=\"OS.Bandwidth\" /></td>\r\n		</tr>\r\n		<tr>\r\n			<td class=\"Label\">Maximum Number of Domains:</td>\r\n			<td><ad:NumericQuota space=\"#SpaceContexts[Space.PackageId]#\" quota=\"OS.Domains\" /></td>\r\n		</tr>\r\n		<tr>\r\n			<td class=\"Label\">Maximum Number of Sub-Domains:</td>\r\n			<td><ad:NumericQuota space=\"#SpaceContexts[Space.PackageId]#\" quota=\"OS.SubDomains\" /></td>\r\n		</tr>\r\n		</ad:if>\r\n	</tbody>\r\n</table>\r\n</ad:foreach>\r\n\r\n<ad:if test=\"#Signup#\">\r\n<p>\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n</p>\r\n\r\n<p>\r\nBest regards,<br />\r\nSolidCP.<br />\r\nWeb Site: <a href=\"https://solidcp.com\">https://solidcp.com</a><br />\r\nE-Mail: <a href=\"mailto:support@solidcp.com\">support@solidcp.com</a>\r\n</p>\r\n</ad:if>\r\n\r\n<ad:template name=\"NumericQuota\">\r\n	<ad:if test=\"#space.Quotas.ContainsKey(quota)#\">\r\n		<ad:if test=\"#space.Quotas[quota].QuotaAllocatedValue isnot -1#\">#space.Quotas[quota].QuotaAllocatedValue#<ad:else>Unlimited</ad:if>\r\n	<ad:else>\r\n		0\r\n	</ad:if>\r\n</ad:template>\r\n\r\n</div>\r\n</body>\r\n</html>"
                         },
                         new
                         {
@@ -16086,7 +14938,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             UserId = 1,
                             SettingsName = "DomainLookupLetter",
                             PropertyName = "TextBody",
-                            PropertyValue = "=================================\r\n   MX and NS Changes Information\r\n=================================\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nPlease, find below details of MX and NS changes.\r\n\r\n\r\n<ad:foreach collection=\"#Domains#\" var=\"Domain\" index=\"i\">\r\n\r\n# Domain.DomainName# - #DomainUsers[Domain.PackageId].FirstName# #DomainUsers[Domain.PackageId].LastName#\r\n Registrar:      #iif(isnull(Domain.Registrar), \"\", Domain.Registrar)#\r\n ExpirationDate: #iif(isnull(Domain.ExpirationDate), \"\", Domain.ExpirationDate)#\r\n\r\n        <ad:foreach collection=\"#Domain.DnsChanges#\" var=\"DnsChange\" index=\"j\">\r\n            DNS:       #DnsChange.DnsServer#\r\n            Type:      #DnsChange.Type#\r\n	    Status:    #DnsChange.Status#\r\n            Old Value: #DnsChange.OldRecord.Value#\r\n            New Value: #DnsChange.NewRecord.Value#\r\n\r\n    	</ad:foreach>\r\n</ad:foreach>\r\n\r\n\r\n\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n\r\nBest regards\r\n"
+                            PropertyValue = "=================================\r\n   MX and NS Changes Information\r\n=================================\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nPlease, find below details of MX and NS changes.\r\n\r\n\r\n<ad:foreach collection=\"#Domains#\" var=\"Domain\" index=\"i\">\r\n\r\n #Domain.DomainName# - #DomainUsers[Domain.PackageId].FirstName# #DomainUsers[Domain.PackageId].LastName#\r\n Registrar:      #iif(isnull(Domain.Registrar), \"\", Domain.Registrar)#\r\n ExpirationDate: #iif(isnull(Domain.ExpirationDate), \"\", Domain.ExpirationDate)#\r\n\r\n        <ad:foreach collection=\"#Domain.DnsChanges#\" var=\"DnsChange\" index=\"j\">\r\n            DNS:       #DnsChange.DnsServer#\r\n            Type:      #DnsChange.Type#\r\n	    Status:    #DnsChange.Status#\r\n            Old Value: #DnsChange.OldRecord.Value#\r\n            New Value: #DnsChange.NewRecord.Value#\r\n\r\n    	</ad:foreach>\r\n</ad:foreach>\r\n\r\n\r\n\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n\r\nBest regards\r\n"
                         },
                         new
                         {
@@ -16261,7 +15113,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             UserId = 1,
                             SettingsName = "OrganizationUserPasswordRequestLetter",
                             PropertyName = "SMSBody",
-                            PropertyValue = "\r\nUser have been created. Password request url:\r\n# passwordResetLink#"
+                            PropertyValue = "\r\nUser have been created. Password request url:\r\n#passwordResetLink#"
                         },
                         new
                         {
@@ -16275,7 +15127,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             UserId = 1,
                             SettingsName = "OrganizationUserPasswordRequestLetter",
                             PropertyName = "TextBody",
-                            PropertyValue = "=========================================\r\n   Password request notification\r\n=========================================\r\n\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nYour account have been created. In order to create a password for your account, please follow next link:\r\n\r\n# passwordResetLink#\r\n\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n\r\nBest regards"
+                            PropertyValue = "=========================================\r\n   Password request notification\r\n=========================================\r\n\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nYour account have been created. In order to create a password for your account, please follow next link:\r\n\r\n#passwordResetLink#\r\n\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n\r\nBest regards"
                         },
                         new
                         {
@@ -16485,7 +15337,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             UserId = 1,
                             SettingsName = "UserPasswordExpirationLetter",
                             PropertyName = "TextBody",
-                            PropertyValue = "=========================================\r\n   Password expiration notification\r\n=========================================\r\n\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nYour password expiration date is #user.PasswordExpirationDateTime#. You can reset your own password by visiting the following page:\r\n\r\n# passwordResetLink#\r\n\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n\r\nBest regards"
+                            PropertyValue = "=========================================\r\n   Password expiration notification\r\n=========================================\r\n\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nYour password expiration date is #user.PasswordExpirationDateTime#. You can reset your own password by visiting the following page:\r\n\r\n#passwordResetLink#\r\n\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n\r\nBest regards"
                         },
                         new
                         {
@@ -16513,7 +15365,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             UserId = 1,
                             SettingsName = "UserPasswordResetLetter",
                             PropertyName = "PasswordResetLinkSmsBody",
-                            PropertyValue = "Password reset link:\r\n# passwordResetLink#\r\n"
+                            PropertyValue = "Password reset link:\r\n#passwordResetLink#\r\n"
                         },
                         new
                         {
@@ -16534,7 +15386,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             UserId = 1,
                             SettingsName = "UserPasswordResetLetter",
                             PropertyName = "TextBody",
-                            PropertyValue = "=========================================\r\n   Password reset notification\r\n=========================================\r\n\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nWe received a request to reset the password for your account. If you made this request, click the link below. If you did not make this request, you can ignore this email.\r\n\r\n# passwordResetLink#\r\n\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n\r\nBest regards"
+                            PropertyValue = "=========================================\r\n   Password reset notification\r\n=========================================\r\n\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nWe received a request to reset the password for your account. If you made this request, click the link below. If you did not make this request, you can ignore this email.\r\n\r\n#passwordResetLink#\r\n\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n\r\nBest regards"
                         },
                         new
                         {
@@ -16548,7 +15400,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             UserId = 1,
                             SettingsName = "UserPasswordResetPincodeLetter",
                             PropertyName = "HtmlBody",
-                            PropertyValue = "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n    <title>Password reset notification</title>\r\n    <style type=\"text/css\">\r\n		.Summary { background-color: ##ffffff; padding: 5px; }\r\n		.Summary .Header { padding: 10px 0px 10px 10px; font-size: 16pt; background-color: ##E5F2FF; color: ##1F4978; border-bottom: solid 2px ##86B9F7; }\r\n        .Summary A { color: ##0153A4; }\r\n        .Summary { font-family: Tahoma; font-size: 9pt; }\r\n        .Summary H1 { font-size: 1.7em; color: ##1F4978; border-bottom: dotted 3px ##efefef; }\r\n        .Summary H2 { font-size: 1.3em; color: ##1F4978; } \r\n        .Summary TABLE { border: solid 1px ##e5e5e5; }\r\n        .Summary TH,\r\n        .Summary TD.Label { padding: 5px; font-size: 8pt; font-weight: bold; background-color: ##f5f5f5; }\r\n        .Summary TD { padding: 8px; font-size: 9pt; }\r\n        .Summary UL LI { font-size: 1.1em; font-weight: bold; }\r\n        .Summary UL UL LI { font-size: 0.9em; font-weight: normal; }\r\n    </style>\r\n</head>\r\n<body>\r\n<div class=\"Summary\">\r\n<div class=\"Header\">\r\n<img src=\"#logoUrl#\">\r\n</div>\r\n<h1>Password reset notification</h1>\r\n\r\n<ad:if test=\"#user#\">\r\n<p>\r\nHello #user.FirstName#,\r\n</p>\r\n</ad:if>\r\n\r\n<p>\r\nWe received a request to reset the password for your account. Your password reset pincode:\r\n</p>\r\n\r\n# passwordResetPincode#\r\n\r\n<p>\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n</p>\r\n\r\n<p>\r\nBest regards\r\n</p>\r\n</div>\r\n</body>"
+                            PropertyValue = "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n    <title>Password reset notification</title>\r\n    <style type=\"text/css\">\r\n		.Summary { background-color: ##ffffff; padding: 5px; }\r\n		.Summary .Header { padding: 10px 0px 10px 10px; font-size: 16pt; background-color: ##E5F2FF; color: ##1F4978; border-bottom: solid 2px ##86B9F7; }\r\n        .Summary A { color: ##0153A4; }\r\n        .Summary { font-family: Tahoma; font-size: 9pt; }\r\n        .Summary H1 { font-size: 1.7em; color: ##1F4978; border-bottom: dotted 3px ##efefef; }\r\n        .Summary H2 { font-size: 1.3em; color: ##1F4978; } \r\n        .Summary TABLE { border: solid 1px ##e5e5e5; }\r\n        .Summary TH,\r\n        .Summary TD.Label { padding: 5px; font-size: 8pt; font-weight: bold; background-color: ##f5f5f5; }\r\n        .Summary TD { padding: 8px; font-size: 9pt; }\r\n        .Summary UL LI { font-size: 1.1em; font-weight: bold; }\r\n        .Summary UL UL LI { font-size: 0.9em; font-weight: normal; }\r\n    </style>\r\n</head>\r\n<body>\r\n<div class=\"Summary\">\r\n<div class=\"Header\">\r\n<img src=\"#logoUrl#\">\r\n</div>\r\n<h1>Password reset notification</h1>\r\n\r\n<ad:if test=\"#user#\">\r\n<p>\r\nHello #user.FirstName#,\r\n</p>\r\n</ad:if>\r\n\r\n<p>\r\nWe received a request to reset the password for your account. Your password reset pincode:\r\n</p>\r\n\r\n#passwordResetPincode#\r\n\r\n<p>\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n</p>\r\n\r\n<p>\r\nBest regards\r\n</p>\r\n</div>\r\n</body>"
                         },
                         new
                         {
@@ -16562,7 +15414,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             UserId = 1,
                             SettingsName = "UserPasswordResetPincodeLetter",
                             PropertyName = "PasswordResetPincodeSmsBody",
-                            PropertyValue = "\r\nYour password reset pincode:\r\n# passwordResetPincode#"
+                            PropertyValue = "\r\nYour password reset pincode:\r\n#passwordResetPincode#"
                         },
                         new
                         {
@@ -16583,7 +15435,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             UserId = 1,
                             SettingsName = "UserPasswordResetPincodeLetter",
                             PropertyName = "TextBody",
-                            PropertyValue = "=========================================\r\n   Password reset notification\r\n=========================================\r\n\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nWe received a request to reset the password for your account. Your password reset pincode:\r\n\r\n# passwordResetPincode#\r\n\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n\r\nBest regards"
+                            PropertyValue = "=========================================\r\n   Password reset notification\r\n=========================================\r\n\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nWe received a request to reset the password for your account. Your password reset pincode:\r\n\r\n#passwordResetPincode#\r\n\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n\r\nBest regards"
                         },
                         new
                         {
@@ -16625,7 +15477,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             UserId = 1,
                             SettingsName = "VerificationCodeLetter",
                             PropertyName = "TextBody",
-                            PropertyValue = "=================================\r\n   Verification code\r\n=================================\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nto complete the sign in, enter the verification code on the device.\r\n\r\nVerification code\r\n# verificationCode#\r\n\r\nBest regards,\r\n"
+                            PropertyValue = "=================================\r\n   Verification code\r\n=================================\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nto complete the sign in, enter the verification code on the device.\r\n\r\nVerification code\r\n#verificationCode#\r\n\r\nBest regards,\r\n"
                         },
                         new
                         {
@@ -16779,7 +15631,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             UserId = 1,
                             SettingsName = "WebPolicy",
                             PropertyName = "PublishingProfile",
-                            PropertyValue = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<publishData>\r\n<ad:if test=\"#WebSite.WebDeploySitePublishingEnabled#\">\r\n	<publishProfile\r\n		profileName=\"#WebSite.Name# - Web Deploy\"\r\n		publishMethod=\"MSDeploy\"\r\n		publishUrl=\"#WebSite[\"WmSvcServiceUrl\"]#:#WebSite[\"WmSvcServicePort\"]#\"\r\n		msdeploySite=\"#WebSite.Name#\"\r\n		userName=\"#WebSite.WebDeployPublishingAccount#\"\r\n		userPWD=\"#WebSite.WebDeployPublishingPassword#\"\r\n		destinationAppUrl=\"http://#WebSite.Name#/\"\r\n		<ad:if test=\"#Not(IsNull(MsSqlDatabase)) and Not(IsNull(MsSqlUser))#\">SQLServerDBConnectionString=\"server=#MsSqlServerExternalAddress#;Initial Catalog=#MsSqlDatabase.Name#;uid=#MsSqlUser.Name#;pwd=#MsSqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MySqlDatabase)) and Not(IsNull(MySqlUser))#\">mySQLDBConnectionString=\"server=#MySqlAddress#;database=#MySqlDatabase.Name#;uid=#MySqlUser.Name#;pwd=#MySqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MariaDBDatabase)) and Not(IsNull(MariaDBUser))#\">MariaDBDBConnectionString=\"server=#MariaDBAddress#;database=#MariaDBDatabase.Name#;uid=#MariaDBUser.Name#;pwd=#MariaDBUser.Password#\"</ad:if>\r\n		hostingProviderForumLink=\"https://solidcp.com/support\"\r\n		controlPanelLink=\"https://panel.solidcp.com/\"\r\n	/>\r\n</ad:if>\r\n<ad:if test=\"#IsDefined(\"FtpAccount\")#\">\r\n	<publishProfile\r\n		profileName=\"#WebSite.Name# - FTP\"\r\n		publishMethod=\"FTP\"\r\n		publishUrl=\"ftp://#FtpServiceAddress#\"\r\n		ftpPassiveMode=\"True\"\r\n		userName=\"#FtpAccount.Name#\"\r\n		userPWD=\"#FtpAccount.Password#\"\r\n		destinationAppUrl=\"http://#WebSite.Name#/\"\r\n		<ad:if test=\"#Not(IsNull(MsSqlDatabase)) and Not(IsNull(MsSqlUser))#\">SQLServerDBConnectionString=\"server=#MsSqlServerExternalAddress#;Initial Catalog=#MsSqlDatabase.Name#;uid=#MsSqlUser.Name#;pwd=#MsSqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MySqlDatabase)) and Not(IsNull(MySqlUser))#\">mySQLDBConnectionString=\"server=#MySqlAddress#;database=#MySqlDatabase.Name#;uid=#MySqlUser.Name#;pwd=#MySqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MariaDBDatabase)) and Not(IsNull(MariaDBUser))#\">MariaDBDBConnectionString=\"server=#MariaDBAddress#;database=#MariaDBDatabase.Name#;uid=#MariaDBUser.Name#;pwd=#MariaDBUser.Password#\"</ad:if>\r\n		hostingProviderForumLink=\"https://solidcp.com/support\"\r\n		controlPanelLink=\"https://panel.solidcp.com/\"\r\n    />\r\n</ad:if>\r\n</publishData>\r\n\r\n<!--\r\nControl Panel:\r\nUsername: #User.Username#\r\nPassword: #User.Password#\r\n\r\nTechnical Contact:\r\nsupport@solidcp.com\r\n-->"
+                            PropertyValue = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<publishData>\r\n<ad:if test=\"#WebSite.WebDeploySitePublishingEnabled#\">\r\n	<publishProfile\r\n		profileName=\"#WebSite.Name# - Web Deploy\"\r\n		publishMethod=\"MSDeploy\"\r\n		publishUrl=\"#WebSite[\"WmSvcServiceUrl\"]#:#WebSite[\"WmSvcServicePort\"]#\"\r\n		msdeploySite=\"#WebSite.Name#\"\r\n		userName=\"#WebSite.WebDeployPublishingAccount#\"\r\n		userPWD=\"#WebSite.WebDeployPublishingPassword#\"\r\n		destinationAppUrl=\"http://#WebSite.Name#/\"\r\n		<ad:if test=\"#Not(IsNull(MsSqlDatabase)) and Not(IsNull(MsSqlUser))#\">SQLServerDBConnectionString=\"server=#MsSqlServerExternalAddress#;database=#MsSqlDatabase.Name#;uid=#MsSqlUser.Name#;pwd=#MsSqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MySqlDatabase)) and Not(IsNull(MySqlUser))#\">mySQLDBConnectionString=\"server=#MySqlAddress#;database=#MySqlDatabase.Name#;uid=#MySqlUser.Name#;pwd=#MySqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MariaDBDatabase)) and Not(IsNull(MariaDBUser))#\">MariaDBDBConnectionString=\"server=#MariaDBAddress#;database=#MariaDBDatabase.Name#;uid=#MariaDBUser.Name#;pwd=#MariaDBUser.Password#\"</ad:if>\r\n		hostingProviderForumLink=\"https://solidcp.com/support\"\r\n		controlPanelLink=\"https://panel.solidcp.com/\"\r\n	/>\r\n</ad:if>\r\n<ad:if test=\"#IsDefined(\"FtpAccount\")#\">\r\n	<publishProfile\r\n		profileName=\"#WebSite.Name# - FTP\"\r\n		publishMethod=\"FTP\"\r\n		publishUrl=\"ftp://#FtpServiceAddress#\"\r\n		ftpPassiveMode=\"True\"\r\n		userName=\"#FtpAccount.Name#\"\r\n		userPWD=\"#FtpAccount.Password#\"\r\n		destinationAppUrl=\"http://#WebSite.Name#/\"\r\n		<ad:if test=\"#Not(IsNull(MsSqlDatabase)) and Not(IsNull(MsSqlUser))#\">SQLServerDBConnectionString=\"server=#MsSqlServerExternalAddress#;database=#MsSqlDatabase.Name#;uid=#MsSqlUser.Name#;pwd=#MsSqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MySqlDatabase)) and Not(IsNull(MySqlUser))#\">mySQLDBConnectionString=\"server=#MySqlAddress#;database=#MySqlDatabase.Name#;uid=#MySqlUser.Name#;pwd=#MySqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MariaDBDatabase)) and Not(IsNull(MariaDBUser))#\">MariaDBDBConnectionString=\"server=#MariaDBAddress#;database=#MariaDBDatabase.Name#;uid=#MariaDBUser.Name#;pwd=#MariaDBUser.Password#\"</ad:if>\r\n		hostingProviderForumLink=\"https://solidcp.com/support\"\r\n		controlPanelLink=\"https://panel.solidcp.com/\"\r\n    />\r\n</ad:if>\r\n</publishData>\r\n\r\n<!--\r\nControl Panel:\r\nUsername: #User.Username#\r\nPassword: #User.Password#\r\n\r\nTechnical Contact:\r\nsupport@solidcp.com\r\n-->"
                         },
                         new
                         {
@@ -16961,42 +15813,47 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         new
                         {
                             DatabaseVersion = "1.0",
-                            BuildDate = new DateTime(2010, 4, 10, 0, 0, 0, 0, DateTimeKind.Utc)
+                            BuildDate = new DateTime(2010, 4, 9, 22, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             DatabaseVersion = "1.0.1.0",
-                            BuildDate = new DateTime(2010, 7, 16, 12, 53, 3, 563, DateTimeKind.Utc)
+                            BuildDate = new DateTime(2010, 7, 16, 10, 53, 3, 563, DateTimeKind.Utc)
                         },
                         new
                         {
                             DatabaseVersion = "1.0.2.0",
-                            BuildDate = new DateTime(2010, 9, 3, 0, 0, 0, 0, DateTimeKind.Utc)
+                            BuildDate = new DateTime(2010, 9, 2, 22, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             DatabaseVersion = "1.1.0.9",
-                            BuildDate = new DateTime(2010, 11, 16, 0, 0, 0, 0, DateTimeKind.Utc)
+                            BuildDate = new DateTime(2010, 11, 15, 23, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             DatabaseVersion = "1.1.2.13",
-                            BuildDate = new DateTime(2011, 4, 15, 0, 0, 0, 0, DateTimeKind.Utc)
+                            BuildDate = new DateTime(2011, 4, 14, 22, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             DatabaseVersion = "1.2.0.38",
-                            BuildDate = new DateTime(2011, 7, 13, 0, 0, 0, 0, DateTimeKind.Utc)
+                            BuildDate = new DateTime(2011, 7, 12, 22, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             DatabaseVersion = "1.2.1.6",
-                            BuildDate = new DateTime(2012, 3, 29, 0, 0, 0, 0, DateTimeKind.Utc)
+                            BuildDate = new DateTime(2012, 3, 28, 22, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
-                            DatabaseVersion = "1.4.9",
-                            BuildDate = new DateTime(2024, 4, 20, 0, 0, 0, 0, DateTimeKind.Utc)
+                            DatabaseVersion = "1.5.1",
+                            BuildDate = new DateTime(2024, 12, 16, 23, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            DatabaseVersion = "2.0.0.228",
+                            BuildDate = new DateTime(2012, 12, 6, 23, 0, 0, 0, DateTimeKind.Utc)
                         });
                 });
 
@@ -17089,7 +15946,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__WebDavAc__3214EC2708781F08");
+                        .HasName("PK_WebDavAccessToken");
 
                     b.HasIndex(new[] { "AccountId" }, "WebDavAccessTokensIdx_AccountID");
 
@@ -17137,7 +15994,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .WithMany("BackgroundTaskLogs")
                         .HasForeignKey("TaskId")
                         .IsRequired()
-                        .HasConstraintName("FK__Backgroun__TaskI__7D8391DF");
+                        .HasConstraintName("FK_BackgroundTaskLog_Task");
 
                     b.Navigation("Task");
                 });
@@ -17148,7 +16005,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .WithMany("BackgroundTaskParameters")
                         .HasForeignKey("TaskId")
                         .IsRequired()
-                        .HasConstraintName("FK__Backgroun__TaskI__7AA72534");
+                        .HasConstraintName("FK_BackgrounTaskParameter_Task");
 
                     b.Navigation("Task");
                 });
@@ -17159,7 +16016,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         .WithMany("BackgroundTaskStacks")
                         .HasForeignKey("TaskId")
                         .IsRequired()
-                        .HasConstraintName("FK__Backgroun__TaskI__005FFE8A");
+                        .HasConstraintName("FK_BackgroundTaskStack_Task");
 
                     b.Navigation("Task");
                 });

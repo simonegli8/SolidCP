@@ -8,11 +8,21 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class v151 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql(@"
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251104195729_v1.5.1'
+) AND OBJECT_ID(N'[Versions]') IS NOT NULL
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20251104195729_v1.5.1', N'9.0.9');
+END;
+");
             migrationBuilder.CreateTable(
                 name: "AdditionalGroups",
                 columns: table => new
@@ -24,7 +34,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Addition__3214EC27E665DDE2", x => x.ID);
+                    table.PrimaryKey("PK_AdditionalGroup", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -101,7 +111,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Backgrou__3214EC273A1145AC", x => x.ID);
+                    table.PrimaryKey("PK_BackgroundTask", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -132,7 +142,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Exchange__3214EC27EF1C22C1", x => x.ID);
+                    table.PrimaryKey("PK_ExchangeDeletedAccount", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -161,7 +171,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Exchange__E467073C50CD805B", x => x.PlanTagID);
+                    table.PrimaryKey("PK_ExchangeMailboxPlanRetentionPolicyTag", x => x.PlanTagID);
                 });
 
             migrationBuilder.CreateTable(
@@ -178,7 +188,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Exchange__657CFA4C02667D37", x => x.TagID);
+                    table.PrimaryKey("PK_ExchangeRetentionPolicyTag", x => x.TagID);
                 });
 
             migrationBuilder.CreateTable(
@@ -242,7 +252,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__RDSColle__3214EC27346D361D", x => x.ID);
+                    table.PrimaryKey("PK_RdsCollection", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -376,7 +386,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__StorageS__3214EC07B8D82363", x => x.Id);
+                    table.PrimaryKey("PK_StorageSpaceLevel", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -390,7 +400,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__SupportS__09F03C065BA08AFB", x => x.LevelID);
+                    table.PrimaryKey("PK_SupportServiceLevel", x => x.LevelID);
                 });
 
             migrationBuilder.CreateTable(
@@ -404,23 +414,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SystemSettings", x => new { x.SettingsName, x.PropertyName });
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TempIds",
-                columns: table => new
-                {
-                    Key = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Scope = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Level = table.Column<int>(type: "int", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TempIds", x => x.Key);
                 });
 
             migrationBuilder.CreateTable(
@@ -535,9 +528,9 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Backgrou__5E5499A86067A6E5", x => x.LogID);
+                    table.PrimaryKey("PK_BackgroundTaskLog", x => x.LogID);
                     table.ForeignKey(
-                        name: "FK__Backgroun__TaskI__7D8391DF",
+                        name: "FK_BackgroundTaskLog_Task",
                         column: x => x.TaskID,
                         principalTable: "BackgroundTasks",
                         principalColumn: "ID");
@@ -556,9 +549,9 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Backgrou__F80C629777BF580B", x => x.ParameterID);
+                    table.PrimaryKey("PK_BackgroundTaskParameter", x => x.ParameterID);
                     table.ForeignKey(
-                        name: "FK__Backgroun__TaskI__7AA72534",
+                        name: "FK_BackgrounTaskParameter_Task",
                         column: x => x.TaskID,
                         principalTable: "BackgroundTasks",
                         principalColumn: "ID");
@@ -574,9 +567,9 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Backgrou__5E44466FB8A5F217", x => x.TaskStackID);
+                    table.PrimaryKey("PK_BackgroundTaskStack", x => x.TaskStackID);
                     table.ForeignKey(
-                        name: "FK__Backgroun__TaskI__005FFE8A",
+                        name: "FK_BackgroundTaskStack_Task",
                         column: x => x.TaskID,
                         principalTable: "BackgroundTasks",
                         principalColumn: "ID");
@@ -654,7 +647,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__RDSServe__3214EC27DBEBD4B5", x => x.ID);
+                    table.PrimaryKey("PK_RdsServer", x => x.ID);
                     table.ForeignKey(
                         name: "FK_RDSServers_RDSCollectionId",
                         column: x => x.RDSCollectionId,
@@ -676,7 +669,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ServiceTypes", x => x.ProviderID);
+                    table.PrimaryKey("PK_Provider", x => x.ProviderID);
                     table.ForeignKey(
                         name: "FK_Providers_ResourceGroups",
                         column: x => x.GroupID,
@@ -715,7 +708,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     ServerID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ServerName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    ServerUrl = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true, defaultValue: ""),
+                    ServerUrl = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true, defaultValue: ""),
                     Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Comments = table.Column<string>(type: "ntext", nullable: true),
                     VirtualServer = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
@@ -727,10 +720,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     ADAuthenticationType = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
                     ADEnabled = table.Column<bool>(type: "bit", nullable: true, defaultValue: false),
                     ADParentDomain = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    ADParentDomainController = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    OSPlatform = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    IsCore = table.Column<bool>(type: "bit", nullable: true),
-                    PasswordIsSHA256 = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                    ADParentDomainController = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -819,7 +809,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__StorageS__3214EC07EBEBED98", x => x.Id);
+                    table.PrimaryKey("PK_StorageSpaceLevelResourceGroup", x => x.Id);
                     table.ForeignKey(
                         name: "FK_StorageSpaceLevelResourceGroups_GroupId",
                         column: x => x.GroupId,
@@ -888,7 +878,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ServiceDefaultProperties_1", x => new { x.ProviderID, x.PropertyName });
+                    table.PrimaryKey("PK_ServiceDefaultProperties", x => new { x.ProviderID, x.PropertyName });
                     table.ForeignKey(
                         name: "FK_ServiceDefaultProperties_Providers",
                         column: x => x.ProviderID,
@@ -967,7 +957,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__PrivateN__8348135581B53618", x => x.VlanID);
+                    table.PrimaryKey("PK_PrivateNetworkVlan", x => x.VlanID);
                     table.ForeignKey(
                         name: "FK_ServerID",
                         column: x => x.ServerID,
@@ -1042,7 +1032,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 {
                     QuotaID = table.Column<int>(type: "int", nullable: false),
                     GroupID = table.Column<int>(type: "int", nullable: false),
-                    QuotaOrder = table.Column<double>(type: "float", nullable: false, defaultValue: 1.0),
+                    QuotaOrder = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
                     QuotaName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     QuotaDescription = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     QuotaTypeID = table.Column<int>(type: "int", nullable: false, defaultValue: 2),
@@ -1147,7 +1137,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ServiceProperties_1", x => new { x.ServiceID, x.PropertyName });
+                    table.PrimaryKey("PK_ServiceProperties", x => new { x.ServiceID, x.PropertyName });
                     table.ForeignKey(
                         name: "FK_ServiceProperties_Services",
                         column: x => x.ServiceID,
@@ -1175,7 +1165,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__StorageS__3214EC07B8B9A6D1", x => x.Id);
+                    table.PrimaryKey("PK_StorageSpace", x => x.Id);
                     table.ForeignKey(
                         name: "FK_StorageSpaces_ServerId",
                         column: x => x.ServerId,
@@ -1225,7 +1215,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_HostingPlanQuotas_1", x => new { x.PlanID, x.QuotaID });
+                    table.PrimaryKey("PK_HostingPlanQuota", x => new { x.PlanID, x.QuotaID });
                     table.ForeignKey(
                         name: "FK_HostingPlanQuotas_HostingPlans",
                         column: x => x.PlanID,
@@ -1259,7 +1249,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GlobalDnsRecords", x => x.RecordID);
+                    table.PrimaryKey("PK_GlobalDnsRecord", x => x.RecordID);
                     table.ForeignKey(
                         name: "FK_GlobalDnsRecords_IPAddresses",
                         column: x => x.IPAddressID,
@@ -1347,7 +1337,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PackageResources_1", x => new { x.PackageID, x.GroupID });
+                    table.PrimaryKey("PK_PackageResources", x => new { x.PackageID, x.GroupID });
                     table.ForeignKey(
                         name: "FK_PackageResources_Packages",
                         column: x => x.PackageID,
@@ -1464,7 +1454,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__PackageV__A9AABBF9C0C25CB3", x => x.PackageVlanID);
+                    table.PrimaryKey("PK_PackageVlan", x => x.PackageVlanID);
                     table.ForeignKey(
                         name: "FK_PackageID",
                         column: x => x.PackageID,
@@ -1565,7 +1555,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__StorageS__3214EC07AC0C9EB6", x => x.Id);
+                    table.PrimaryKey("PK_StorageSpaceFolder", x => x.Id);
                     table.ForeignKey(
                         name: "FK_StorageSpaceFolders_StorageSpaceId",
                         column: x => x.StorageSpaceId,
@@ -1623,11 +1613,11 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     PackageID = table.Column<int>(type: "int", nullable: false),
                     ZoneItemID = table.Column<int>(type: "int", nullable: true),
                     DomainName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    HostingAllowed = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    HostingAllowed = table.Column<bool>(type: "bit", nullable: false),
                     WebSiteID = table.Column<int>(type: "int", nullable: true),
                     MailDomainID = table.Column<int>(type: "int", nullable: true),
-                    IsSubDomain = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    IsPreviewDomain = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    IsSubDomain = table.Column<bool>(type: "bit", nullable: false),
+                    IsPreviewDomain = table.Column<bool>(type: "bit", nullable: false),
                     IsDomainPointer = table.Column<bool>(type: "bit", nullable: false),
                     DomainItemId = table.Column<int>(type: "int", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime", nullable: true),
@@ -1670,7 +1660,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     ItemID = table.Column<int>(type: "int", nullable: false),
                     DomainID = table.Column<int>(type: "int", nullable: true),
                     IsHost = table.Column<bool>(type: "bit", nullable: true, defaultValue: false),
-                    DomainTypeID = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
+                    DomainTypeID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1816,7 +1806,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__DomainDn__3214EC27A6FC0498", x => x.ID);
+                    table.PrimaryKey("PK_DomainDnsRecord", x => x.ID);
                     table.ForeignKey(
                         name: "FK_DomainDnsRecords_DomainId",
                         column: x => x.DomainId,
@@ -1904,7 +1894,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Exchange__3214EC072DDBA072", x => x.Id);
+                    table.PrimaryKey("PK_ExchangeOrganizationSsFolder", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ExchangeOrganizationSsFolders_ItemId",
                         column: x => x.ItemId,
@@ -1978,7 +1968,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     ArchivingMailboxPlanId = table.Column<int>(type: "int", nullable: true),
                     EnableArchiving = table.Column<bool>(type: "bit", nullable: true),
                     LevelID = table.Column<int>(type: "int", nullable: true),
-                    IsVIP = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                    IsVIP = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -2033,7 +2023,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__AccessTo__3214EC27DEAEF66E", x => x.ID);
+                    table.PrimaryKey("PK_AccessToken", x => x.ID);
                     table.ForeignKey(
                         name: "FK_AccessTokens_UserId",
                         column: x => x.AccountID,
@@ -2097,7 +2087,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Enterpri__3214EC27D1B48691", x => x.ID);
+                    table.PrimaryKey("PK_EnterpriseFoldersOwaPermission", x => x.ID);
                     table.ForeignKey(
                         name: "FK_EnterpriseFoldersOwaPermissions_AccountId",
                         column: x => x.AccountID,
@@ -2143,7 +2133,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__RDSColle__3214EC2780141EF7", x => x.ID);
+                    table.PrimaryKey("PK_RdsCollectionUser", x => x.ID);
                     table.ForeignKey(
                         name: "FK_RDSCollectionUsers_RDSCollectionId",
                         column: x => x.RDSCollectionId,
@@ -2173,7 +2163,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__WebDavAc__3214EC2708781F08", x => x.ID);
+                    table.PrimaryKey("PK_WebDavAccessToken", x => x.ID);
                     table.ForeignKey(
                         name: "FK_WebDavAccessTokens_UserId",
                         column: x => x.AccountID,
@@ -2587,6 +2577,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     { 33, null, "VPS2012", 20, true },
                     { 40, null, "VPSForPC", 20, true },
                     { 41, null, "Lync", 24, true },
+                    { 42, "SolidCP.EnterpriseServer.HeliconZooController", "HeliconZoo", 2, true },
                     { 44, "SolidCP.EnterpriseServer.EnterpriseStorageController", "EnterpriseStorage", 26, true },
                     { 45, null, "RDS", 27, true },
                     { 46, "SolidCP.EnterpriseServer.DatabaseServerController", "MsSQL2014", 10, true },
@@ -2600,9 +2591,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     { 73, "SolidCP.EnterpriseServer.HostedSharePointServerEntController", "Sharepoint Enterprise Server", 15, true },
                     { 74, "SolidCP.EnterpriseServer.DatabaseServerController", "MsSQL2019", 10, true },
                     { 75, "SolidCP.EnterpriseServer.DatabaseServerController", "MsSQL2022", 10, true },
-                    { 76, "SolidCP.EnterpriseServer.DatabaseServerController", "MsSQL2025", 10, true },
                     { 90, "SolidCP.EnterpriseServer.DatabaseServerController", "MySQL8", 12, true },
-                    { 91, "SolidCP.EnterpriseServer.DatabaseServerController", "MySQL9", 12, true },
                     { 167, null, "Proxmox", 20, true }
                 });
 
@@ -2620,7 +2609,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     { "SCHEDULE_TASK_CALCULATE_PACKAGES_DISKSPACE", 1, "SolidCP.EnterpriseServer.CalculatePackagesDiskspaceTask, SolidCP.EnterpriseServer.Code" },
                     { "SCHEDULE_TASK_CANCEL_OVERDUE_INVOICES", 0, "SolidCP.Ecommerce.EnterpriseServer.CancelOverdueInvoicesTask, SolidCP.EnterpriseServer.Code" },
                     { "SCHEDULE_TASK_CHECK_WEBSITE", 3, "SolidCP.EnterpriseServer.CheckWebSiteTask, SolidCP.EnterpriseServer.Code" },
-                    { "SCHEDULE_TASK_CHECK_WEBSITES_SSL", 3, "SolidCP.EnterpriseServer.CheckWebsitesSslTask, SolidCP.EnterpriseServer.Code" },
                     { "SCHEDULE_TASK_DELETE_EXCHANGE_ACCOUNTS", 3, "SolidCP.EnterpriseServer.DeleteExchangeAccountsTask, SolidCP.EnterpriseServer.Code" },
                     { "SCHEDULE_TASK_DOMAIN_EXPIRATION", 3, "SolidCP.EnterpriseServer.DomainExpirationTask, SolidCP.EnterpriseServer.Code" },
                     { "SCHEDULE_TASK_DOMAIN_LOOKUP", 1, "SolidCP.EnterpriseServer.DomainLookupViewTask, SolidCP.EnterpriseServer.Code" },
@@ -2694,20 +2682,21 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 columns: new[] { "DatabaseVersion", "BuildDate" },
                 values: new object[,]
                 {
-                    { "1.0", new DateTime(2010, 4, 10, 0, 0, 0, 0, DateTimeKind.Utc) },
-                    { "1.0.1.0", new DateTime(2010, 7, 16, 12, 53, 3, 563, DateTimeKind.Utc) },
-                    { "1.0.2.0", new DateTime(2010, 9, 3, 0, 0, 0, 0, DateTimeKind.Utc) },
-                    { "1.1.0.9", new DateTime(2010, 11, 16, 0, 0, 0, 0, DateTimeKind.Utc) },
-                    { "1.1.2.13", new DateTime(2011, 4, 15, 0, 0, 0, 0, DateTimeKind.Utc) },
-                    { "1.2.0.38", new DateTime(2011, 7, 13, 0, 0, 0, 0, DateTimeKind.Utc) },
-                    { "1.2.1.6", new DateTime(2012, 3, 29, 0, 0, 0, 0, DateTimeKind.Utc) },
-                    { "1.4.9", new DateTime(2024, 4, 20, 0, 0, 0, 0, DateTimeKind.Utc) }
+                    { "1.0", new DateTime(2010, 4, 9, 22, 0, 0, 0, DateTimeKind.Utc) },
+                    { "1.0.1.0", new DateTime(2010, 7, 16, 10, 53, 3, 563, DateTimeKind.Utc) },
+                    { "1.0.2.0", new DateTime(2010, 9, 2, 22, 0, 0, 0, DateTimeKind.Utc) },
+                    { "1.1.0.9", new DateTime(2010, 11, 15, 23, 0, 0, 0, DateTimeKind.Utc) },
+                    { "1.1.2.13", new DateTime(2011, 4, 14, 22, 0, 0, 0, DateTimeKind.Utc) },
+                    { "1.2.0.38", new DateTime(2011, 7, 12, 22, 0, 0, 0, DateTimeKind.Utc) },
+                    { "1.2.1.6", new DateTime(2012, 3, 28, 22, 0, 0, 0, DateTimeKind.Utc) },
+                    { "1.5.1", new DateTime(2024, 12, 16, 23, 0, 0, 0, DateTimeKind.Utc) },
+                    { "2.0.0.228", new DateTime(2012, 12, 6, 23, 0, 0, 0, DateTimeKind.Utc) }
                 });
 
             migrationBuilder.InsertData(
                 table: "Packages",
                 columns: new[] { "PackageID", "BandwidthUpdated", "PackageComments", "PackageName", "ParentPackageID", "PlanID", "PurchaseDate", "ServerID", "StatusID", "StatusIDchangeDate", "UserID" },
-                values: new object[] { 1, null, "", "System", null, null, null, null, 1, new DateTime(2024, 10, 12, 19, 29, 19, 927, DateTimeKind.Utc), 1 });
+                values: new object[] { 1, null, "", "System", null, null, null, null, 1, new DateTime(2024, 12, 17, 12, 54, 59, 933, DateTimeKind.Utc), 1 });
 
             migrationBuilder.InsertData(
                 table: "Providers",
@@ -2755,7 +2744,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     { 66, null, "SmarterMail 10.x +", "SmarterMail100", 4, "SmarterMail", "SolidCP.Providers.Mail.SmarterMail10, SolidCP.Providers.Mail.SmarterMail10" },
                     { 67, null, "SmarterMail 100.x +", "SmarterMail100x", 4, "SmarterMail", "SolidCP.Providers.Mail.SmarterMail100, SolidCP.Providers.Mail.SmarterMail100" },
                     { 90, null, "Hosted Microsoft Exchange Server 2010 SP2", "Exchange", 12, "Exchange2010SP2", "SolidCP.Providers.HostedSolution.Exchange2010SP2, SolidCP.Providers.HostedSolution" },
-                    { 91, null, "Hosted Microsoft Exchange Server 2013", "Exchange", 12, "Exchange2013", "SolidCP.Providers.HostedSolution.Exchange2013, SolidCP.Providers.HostedSolution.Exchange2013" },
+                    { 91, true, "Hosted Microsoft Exchange Server 2013", "Exchange", 12, "Exchange2013", "SolidCP.Providers.HostedSolution.Exchange2013, SolidCP.Providers.HostedSolution.Exchange2013" },
                     { 92, null, "Hosted Microsoft Exchange Server 2016", "Exchange", 12, "Exchange2016", "SolidCP.Providers.HostedSolution.Exchange2016, SolidCP.Providers.HostedSolution.Exchange2016" },
                     { 93, null, "Hosted Microsoft Exchange Server 2019", "Exchange", 12, "Exchange2016", "SolidCP.Providers.HostedSolution.Exchange2019, SolidCP.Providers.HostedSolution.Exchange2019" },
                     { 100, null, "Windows Server 2008", "Windows2008", 1, "Windows2008", "SolidCP.Providers.OS.Windows2008, SolidCP.Providers.OS.Windows2008" },
@@ -2769,6 +2758,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     { 111, null, "Windows Server 2016", "Windows2008", 1, "Windows2016", "SolidCP.Providers.OS.Windows2016, SolidCP.Providers.OS.Windows2016" },
                     { 112, null, "Internet Information Services 10.0", "IIS70", 2, "IIS100", "SolidCP.Providers.Web.IIs100, SolidCP.Providers.Web.IIs100" },
                     { 113, null, "Microsoft FTP Server 10.0", "MSFTP70", 3, "MSFTP100", "SolidCP.Providers.FTP.MsFTP100, SolidCP.Providers.FTP.IIs100" },
+                    { 135, true, "Web Application Engines", "HeliconZoo", 42, "HeliconZoo", "SolidCP.Providers.Web.HeliconZoo.HeliconZoo, SolidCP.Providers.Web.HeliconZoo" },
                     { 160, null, "IceWarp Mail Server", "IceWarp", 4, "IceWarp", "SolidCP.Providers.Mail.IceWarp, SolidCP.Providers.Mail.IceWarp" },
                     { 200, null, "Hosted Windows SharePoint Services 3.0", "HostedSharePoint30", 20, "HostedSharePoint30", "SolidCP.Providers.HostedSolution.HostedSharePointServer, SolidCP.Providers.HostedSolution" },
                     { 201, null, "Hosted MS CRM 4.0", "CRM", 21, "CRM", "SolidCP.Providers.HostedSolution.CRMProvider, SolidCP.Providers.HostedSolution" },
@@ -2785,21 +2775,14 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     { 302, null, "MySQL Server 5.6", "MySQL", 11, "MySQL", "SolidCP.Providers.Database.MySqlServer56, SolidCP.Providers.Database.MySQL" },
                     { 303, null, "MySQL Server 5.7", "MySQL", 11, "MySQL", "SolidCP.Providers.Database.MySqlServer57, SolidCP.Providers.Database.MySQL" },
                     { 304, null, "MySQL Server 8.0", "MySQL", 90, "MySQL", "SolidCP.Providers.Database.MySqlServer80, SolidCP.Providers.Database.MySQL" },
-                    { 305, null, "MySQL Server 8.1", "MySQL", 90, "MySQL", "SolidCP.Providers.Database.MySqlServer81, SolidCP.Providers.Database.MySQL" },
-                    { 306, null, "MySQL Server 8.2", "MySQL", 90, "MySQL", "SolidCP.Providers.Database.MySqlServer82, SolidCP.Providers.Database.MySQL" },
-                    { 307, null, "MySQL Server 8.3", "MySQL", 90, "MySQL", "SolidCP.Providers.Database.MySqlServer83, SolidCP.Providers.Database.MySQL" },
-                    { 308, null, "MySQL Server 8.4", "MySQL", 90, "MySQL", "SolidCP.Providers.Database.MySqlServer84, SolidCP.Providers.Database.MySQL" },
-                    { 320, null, "MySQL Server 9.0", "MySQL", 90, "MySQL", "SolidCP.Providers.Database.MySqlServer90, SolidCP.Providers.Database.MySQL" },
                     { 350, true, "Microsoft Hyper-V 2012 R2", "HyperV2012R2", 33, "HyperV2012R2", "SolidCP.Providers.Virtualization.HyperV2012R2, SolidCP.Providers.Virtualization.HyperV2012R2" },
                     { 351, true, "Microsoft Hyper-V Virtual Machine Management", "HyperVvmm", 33, "HyperVvmm", "SolidCP.Providers.Virtualization.HyperVvmm, SolidCP.Providers.Virtualization.HyperVvmm" },
                     { 352, true, "Microsoft Hyper-V 2016", "HyperV2012R2", 33, "HyperV2016", "SolidCP.Providers.Virtualization.HyperV2016, SolidCP.Providers.Virtualization.HyperV2016" },
-                    { 370, true, "Proxmox Virtualization (remote)", "Proxmox", 167, "Proxmox (remote)", "SolidCP.Providers.Virtualization.Proxmoxvps, SolidCP.Providers.Virtualization.Proxmoxvps" },
-                    { 371, false, "Proxmox Virtualization", "Proxmox", 167, "Proxmox", "SolidCP.Providers.Virtualization.ProxmoxvpsLocal, SolidCP.Providers.Virtualization.Proxmoxvps" },
+                    { 370, true, "Proxmox Virtualization", "Proxmox", 167, "Proxmox", "SolidCP.Providers.Virtualization.Proxmoxvps, SolidCP.Providers.Virtualization.Proxmoxvps" },
                     { 400, true, "Microsoft Hyper-V For Private Cloud", "HyperVForPrivateCloud", 40, "HyperVForPC", "SolidCP.Providers.VirtualizationForPC.HyperVForPC, SolidCP.Providers.VirtualizationForPC.HyperVForPC" },
                     { 410, null, "Microsoft DNS Server 2012+", "MSDNS", 7, "MSDNS.2012", "SolidCP.Providers.DNS.MsDNS2012, SolidCP.Providers.DNS.MsDNS2012" },
-                    { 500, null, "Unix System", "Unix", 1, "UnixSystem", "SolidCP.Providers.OS.Unix, SolidCP.Providers.OS.Unix" },
-                    { 600, null, "Enterprise Storage Windows 2012", "EnterpriseStorage", 44, "EnterpriseStorage2012", "SolidCP.Providers.EnterpriseStorage.Windows2012, SolidCP.Providers.EnterpriseStorage.Windows2012" },
-                    { 700, null, "Storage Spaces Windows 2012", "StorageSpaceServices", 49, "StorageSpace2012", "SolidCP.Providers.StorageSpaces.Windows2012, SolidCP.Providers.StorageSpaces.Windows2012" },
+                    { 600, true, "Enterprise Storage Windows 2012", "EnterpriseStorage", 44, "EnterpriseStorage2012", "SolidCP.Providers.EnterpriseStorage.Windows2012, SolidCP.Providers.EnterpriseStorage.Windows2012" },
+                    { 700, true, "Storage Spaces Windows 2012", "StorageSpaceServices", 49, "StorageSpace2012", "SolidCP.Providers.StorageSpaces.Windows2012, SolidCP.Providers.StorageSpaces.Windows2012" },
                     { 1201, null, "Hosted MS CRM 2011", "CRM2011", 21, "CRM", "SolidCP.Providers.HostedSolution.CRMProvider2011, SolidCP.Providers.HostedSolution.CRM2011" },
                     { 1202, null, "Hosted MS CRM 2013", "CRM2011", 24, "CRM", "SolidCP.Providers.HostedSolution.CRMProvider2013, SolidCP.Providers.HostedSolution.Crm2013" },
                     { 1203, null, "Microsoft SQL Server 2014", "MSSQL", 46, "MsSQL", "SolidCP.Providers.Database.MsSqlServer2014, SolidCP.Providers.Database.SqlServer" },
@@ -2814,49 +2797,32 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     { 1501, true, "Remote Desktop Services Windows 2012", "RDS", 45, "RemoteDesktopServices2012", "SolidCP.Providers.RemoteDesktopServices.Windows2012,SolidCP.Providers.RemoteDesktopServices.Windows2012" },
                     { 1502, true, "Remote Desktop Services Windows 2016", "RDS", 45, "RemoteDesktopServices2012", "SolidCP.Providers.RemoteDesktopServices.Windows2016,SolidCP.Providers.RemoteDesktopServices.Windows2016" },
                     { 1503, true, "Remote Desktop Services Windows 2019", "RDS", 45, "RemoteDesktopServices2019", "SolidCP.Providers.RemoteDesktopServices.Windows2019,SolidCP.Providers.RemoteDesktopServices.Windows2019" },
-                    { 1504, true, "Remote Desktop Services Windows 2022", "RDS", 45, "RemoteDesktopServices2022", "SolidCP.Providers.RemoteDesktopServices.Windows2022,SolidCP.Providers.RemoteDesktopServices.Windows2022" },
-                    { 1505, true, "Remote Desktop Services Windows 2025", "RDS", 45, "RemoteDesktopServices2025", "SolidCP.Providers.RemoteDesktopServices.Windows2025,SolidCP.Providers.RemoteDesktopServices.Windows2025" },
+                    { 1504, true, "Remote Desktop Services Windows 2022", "RDS", 45, "RemoteDesktopServices2022", "SolidCP.Providers.RemoteDesktopServices.Windows2019,SolidCP.Providers.RemoteDesktopServices.Windows2019" },
+                    { 1505, true, "Remote Desktop Services Windows 2025", "RDS", 45, "RemoteDesktopServices2025", "SolidCP.Providers.RemoteDesktopServices.Windows2025,SolidCP.Providers.RemoteDesktopServices.Windows2019" },
                     { 1550, null, "MariaDB 10.1", "MariaDB", 50, "MariaDB", "SolidCP.Providers.Database.MariaDB101, SolidCP.Providers.Database.MariaDB" },
                     { 1552, null, "Hosted SharePoint Enterprise 2013", "HostedSharePoint30", 73, "HostedSharePoint2013Ent", "SolidCP.Providers.HostedSolution.HostedSharePointServer2013Ent, SolidCP.Providers.HostedSolution.SharePoint2013Ent" },
                     { 1560, null, "MariaDB 10.2", "MariaDB", 50, "MariaDB", "SolidCP.Providers.Database.MariaDB102, SolidCP.Providers.Database.MariaDB" },
-                    { 1570, null, "MariaDB 10.3", "MariaDB", 50, "MariaDB", "SolidCP.Providers.Database.MariaDB103, SolidCP.Providers.Database.MariaDB" },
-                    { 1571, null, "MariaDB 10.4", "MariaDB", 50, "MariaDB", "SolidCP.Providers.Database.MariaDB104, SolidCP.Providers.Database.MariaDB" },
-                    { 1572, null, "MariaDB 10.5", "MariaDB", 50, "MariaDB", "SolidCP.Providers.Database.MariaDB105, SolidCP.Providers.Database.MariaDB" },
-                    { 1573, null, "MariaDB 10.6", "MariaDB", 50, "MariaDB", "SolidCP.Providers.Database.MariaDB106, SolidCP.Providers.Database.MariaDB" },
-                    { 1574, null, "MariaDB 10.7", "MariaDB", 50, "MariaDB", "SolidCP.Providers.Database.MariaDB107, SolidCP.Providers.Database.MariaDB" },
-                    { 1575, null, "MariaDB 10.8", "MariaDB", 50, "MariaDB", "SolidCP.Providers.Database.MariaDB108, SolidCP.Providers.Database.MariaDB" },
-                    { 1576, null, "MariaDB 10.9", "MariaDB", 50, "MariaDB", "SolidCP.Providers.Database.MariaDB109, SolidCP.Providers.Database.MariaDB" },
-                    { 1577, null, "MariaDB 10.10", "MariaDB", 50, "MariaDB", "SolidCP.Providers.Database.MariaDB1010, SolidCP.Providers.Database.MariaDB" },
-                    { 1578, null, "MariaDB 10.11", "MariaDB", 50, "MariaDB", "SolidCP.Providers.Database.MariaDB1011, SolidCP.Providers.Database.MariaDB" },
-                    { 1579, null, "MariaDB 11.0", "MariaDB", 50, "MariaDB", "SolidCP.Providers.Database.MariaDB110, SolidCP.Providers.Database.MariaDB" },
-                    { 1580, null, "MariaDB 11.1", "MariaDB", 50, "MariaDB", "SolidCP.Providers.Database.MariaDB111, SolidCP.Providers.Database.MariaDB" },
-                    { 1581, null, "MariaDB 11.2", "MariaDB", 50, "MariaDB", "SolidCP.Providers.Database.MariaDB112, SolidCP.Providers.Database.MariaDB" },
-                    { 1582, null, "MariaDB 11.3", "MariaDB", 50, "MariaDB", "SolidCP.Providers.Database.MariaDB113, SolidCP.Providers.Database.MariaDB" },
-                    { 1583, null, "MariaDB 11.4", "MariaDB", 50, "MariaDB", "SolidCP.Providers.Database.MariaDB114, SolidCP.Providers.Database.MariaDB" },
-                    { 1584, null, "MariaDB 11.5", "MariaDB", 50, "MariaDB", "SolidCP.Providers.Database.MariaDB115, SolidCP.Providers.Database.MariaDB" },
-                    { 1585, null, "MariaDB 11.6", "MariaDB", 50, "MariaDB", "SolidCP.Providers.Database.MariaDB116, SolidCP.Providers.Database.MariaDB" },
-                    { 1586, null, "MariaDB 11.7", "MariaDB", 50, "MariaDB", "SolidCP.Providers.Database.MariaDB117, SolidCP.Providers.Database.MariaDB" },
+                    { 1570, true, "MariaDB 10.3", "MariaDB", 50, "MariaDB", "SolidCP.Providers.Database.MariaDB103, SolidCP.Providers.Database.MariaDB" },
+                    { 1571, true, "MariaDB 10.4", "MariaDB", 50, "MariaDB", "SolidCP.Providers.Database.MariaDB104, SolidCP.Providers.Database.MariaDB" },
+                    { 1572, true, "MariaDB 10.5", "MariaDB", 50, "MariaDB", "SolidCP.Providers.Database.MariaDB105, SolidCP.Providers.Database.MariaDB" },
                     { 1601, true, "Mail Cleaner", "MailCleaner", 61, "MailCleaner", "SolidCP.Providers.Filters.MailCleaner, SolidCP.Providers.Filters.MailCleaner" },
                     { 1602, true, "SpamExperts Mail Filter", "SpamExperts", 61, "SpamExperts", "SolidCP.Providers.Filters.SpamExperts, SolidCP.Providers.Filters.SpamExperts" },
                     { 1701, null, "Microsoft SQL Server 2016", "MSSQL", 71, "MsSQL", "SolidCP.Providers.Database.MsSqlServer2016, SolidCP.Providers.Database.SqlServer" },
                     { 1702, null, "Hosted SharePoint Enterprise 2016", "HostedSharePoint30", 73, "HostedSharePoint2016Ent", "SolidCP.Providers.HostedSolution.HostedSharePointServer2016Ent, SolidCP.Providers.HostedSolution.SharePoint2016Ent" },
                     { 1703, null, "SimpleDNS Plus 6.x", "SimpleDNS", 7, "SimpleDNS", "SolidCP.Providers.DNS.SimpleDNS6, SolidCP.Providers.DNS.SimpleDNS60" },
-                    { 1704, null, "Microsoft SQL Server 2017", "MSSQL", 72, "MsSQL", "SolidCP.Providers.Database.MsSqlServer2017, SolidCP.Providers.Database.SqlServer" },
-                    { 1705, null, "Microsoft SQL Server 2019", "MSSQL", 74, "MsSQL", "SolidCP.Providers.Database.MsSqlServer2019, SolidCP.Providers.Database.SqlServer" },
+                    { 1704, true, "Microsoft SQL Server 2017", "MSSQL", 72, "MsSQL", "SolidCP.Providers.Database.MsSqlServer2017, SolidCP.Providers.Database.SqlServer" },
+                    { 1705, true, "Microsoft SQL Server 2019", "MSSQL", 74, "MsSQL", "SolidCP.Providers.Database.MsSqlServer2019, SolidCP.Providers.Database.SqlServer" },
                     { 1706, null, "Microsoft SQL Server 2022", "MSSQL", 75, "MsSQL", "SolidCP.Providers.Database.MsSqlServer2022, SolidCP.Providers.Database.SqlServer" },
-                    { 1707, null, "Microsoft SQL Server 2025", "MSSQL", 76, "MsSQL", "SolidCP.Providers.Database.MsSqlServer2025, SolidCP.Providers.Database.SqlServer" },
                     { 1711, null, "Hosted SharePoint 2019", "HostedSharePoint30", 73, "HostedSharePoint2019", "SolidCP.Providers.HostedSolution.HostedSharePointServer2019, SolidCP.Providers.HostedSolution.SharePoint2019" },
                     { 1800, null, "Windows Server 2019", "Windows2012", 1, "Windows2019", "SolidCP.Providers.OS.Windows2019, SolidCP.Providers.OS.Windows2019" },
                     { 1801, true, "Microsoft Hyper-V 2019", "HyperV2012R2", 33, "HyperV2019", "SolidCP.Providers.Virtualization.HyperV2019, SolidCP.Providers.Virtualization.HyperV2019" },
                     { 1802, null, "Windows Server 2022", "Windows2012", 1, "Windows2022", "SolidCP.Providers.OS.Windows2022, SolidCP.Providers.OS.Windows2022" },
                     { 1803, true, "Microsoft Hyper-V 2022", "HyperV2012R2", 33, "HyperV2022", "SolidCP.Providers.Virtualization.HyperV2022, SolidCP.Providers.Virtualization.HyperV2022" },
-                    { 1804, null, "Windows Server 2025", "Windows2012", 1, "Windows2025", "SolidCP.Providers.OS.Windows2025, SolidCP.Providers.OS.Windows2025" },
+                    { 1804, true, "Windows Server 2025", "Windows2012", 1, "Windows2025", "SolidCP.Providers.OS.Windows2025, SolidCP.Providers.OS.Windows2025" },
                     { 1805, true, "Microsoft Hyper-V 2025", "HyperV2012R2", 33, "HyperV2025", "SolidCP.Providers.Virtualization.HyperV2025, SolidCP.Providers.Virtualization.HyperV2025" },
                     { 1901, null, "SimpleDNS Plus 8.x", "SimpleDNS", 7, "SimpleDNS", "SolidCP.Providers.DNS.SimpleDNS8, SolidCP.Providers.DNS.SimpleDNS80" },
                     { 1902, null, "Microsoft DNS Server 2016", "MSDNS", 7, "MSDNS.2016", "SolidCP.Providers.DNS.MsDNS2016, SolidCP.Providers.DNS.MsDNS2016" },
-                    { 1903, null, "SimpleDNS Plus 9.x", "SimpleDNS", 7, "SimpleDNS", "SolidCP.Providers.DNS.SimpleDNS9, SolidCP.Providers.DNS.SimpleDNS90" },
-                    { 1910, null, "vsftpd FTP Server 3", "vsftpd", 3, "vsftpd", "SolidCP.Providers.FTP.VsFtp3, SolidCP.Providers.FTP.VsFtp" },
-                    { 1911, null, "Apache Web Server 2.4", "Apache", 2, "Apache", "SolidCP.Providers.Web.Apache24, SolidCP.Providers.Web.Apache" }
+                    { 1903, null, "SimpleDNS Plus 9.x", "SimpleDNS", 7, "SimpleDNS", "SolidCP.Providers.DNS.SimpleDNS9, SolidCP.Providers.DNS.SimpleDNS90" }
                 });
 
             migrationBuilder.InsertData(
@@ -2864,298 +2830,287 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 columns: new[] { "QuotaID", "GroupID", "HideQuota", "ItemTypeID", "PerOrganization", "QuotaDescription", "QuotaName", "QuotaOrder", "QuotaTypeID", "ServiceQuota" },
                 values: new object[,]
                 {
-                    { 25, 2, null, null, null, "ASP.NET 1.1", "Web.AspNet11", 3.0, 1, false },
-                    { 26, 2, null, null, null, "ASP.NET 2.0", "Web.AspNet20", 4.0, 1, false },
-                    { 27, 2, null, null, null, "ASP", "Web.Asp", 2.0, 1, false },
-                    { 28, 2, null, null, null, "PHP 4.x", "Web.Php4", 5.0, 1, false },
-                    { 29, 2, null, null, null, "PHP 5.x", "Web.Php5", 6.0, 1, false },
-                    { 30, 2, null, null, null, "Perl", "Web.Perl", 7.0, 1, false },
-                    { 31, 2, null, null, null, "Python", "Web.Python", 8.0, 1, false },
-                    { 32, 2, null, null, null, "Virtual Directories", "Web.VirtualDirs", 9.0, 1, false },
-                    { 33, 2, null, null, null, "FrontPage", "Web.FrontPage", 10.0, 1, false },
-                    { 34, 2, null, null, null, "Custom Security Settings", "Web.Security", 11.0, 1, false },
-                    { 35, 2, null, null, null, "Custom Default Documents", "Web.DefaultDocs", 12.0, 1, false },
-                    { 36, 2, null, null, null, "Dedicated Application Pools", "Web.AppPools", 13.0, 1, false },
-                    { 37, 2, null, null, null, "Custom Headers", "Web.Headers", 14.0, 1, false },
-                    { 38, 2, null, null, null, "Custom Errors", "Web.Errors", 15.0, 1, false },
-                    { 39, 2, null, null, null, "Custom MIME Types", "Web.Mime", 16.0, 1, false },
-                    { 40, 4, null, null, null, "Max Mailbox Size", "Mail.MaxBoxSize", 2.0, 3, false },
-                    { 41, 5, null, null, null, "Max Database Size", "MsSQL2000.MaxDatabaseSize", 3.0, 3, false },
-                    { 42, 5, null, null, null, "Database Backups", "MsSQL2000.Backup", 5.0, 1, false },
-                    { 43, 5, null, null, null, "Database Restores", "MsSQL2000.Restore", 6.0, 1, false },
-                    { 44, 5, null, null, null, "Database Truncate", "MsSQL2000.Truncate", 7.0, 1, false },
-                    { 45, 6, null, null, null, "Database Backups", "MySQL4.Backup", 4.0, 1, false },
-                    { 48, 7, null, null, null, "DNS Editor", "DNS.Editor", 1.0, 1, false },
-                    { 49, 4, null, null, null, "Max Group Recipients", "Mail.MaxGroupMembers", 5.0, 3, false },
-                    { 50, 4, null, null, null, "Max List Recipients", "Mail.MaxListMembers", 7.0, 3, false },
-                    { 51, 1, null, null, null, "Bandwidth, MB", "OS.Bandwidth", 2.0, 2, false },
-                    { 52, 1, null, null, null, "Disk space, MB", "OS.Diskspace", 1.0, 2, false },
-                    { 53, 1, null, null, null, "Domains", "OS.Domains", 3.0, 2, false },
-                    { 54, 1, null, null, null, "Sub-Domains", "OS.SubDomains", 4.0, 2, false },
-                    { 55, 1, null, null, null, "File Manager", "OS.FileManager", 6.0, 1, false },
-                    { 57, 2, null, null, null, "CGI-BIN Folder", "Web.CgiBin", 8.0, 1, false },
-                    { 58, 2, null, null, null, "Secured Folders", "Web.SecuredFolders", 8.0, 1, false },
-                    { 60, 2, null, null, null, "Web Sites Redirection", "Web.Redirections", 8.0, 1, false },
-                    { 61, 2, null, null, null, "Changing Sites Root Folders", "Web.HomeFolders", 8.0, 1, false },
-                    { 64, 10, null, null, null, "Max Database Size", "MsSQL2005.MaxDatabaseSize", 3.0, 3, false },
-                    { 65, 10, null, null, null, "Database Backups", "MsSQL2005.Backup", 5.0, 1, false },
-                    { 66, 10, null, null, null, "Database Restores", "MsSQL2005.Restore", 6.0, 1, false },
-                    { 67, 10, null, null, null, "Database Truncate", "MsSQL2005.Truncate", 7.0, 1, false },
-                    { 70, 11, null, null, null, "Database Backups", "MySQL5.Backup", 4.0, 1, false },
-                    { 71, 1, null, null, null, "Scheduled Tasks", "OS.ScheduledTasks", 9.0, 2, false },
-                    { 72, 1, null, null, null, "Interval Tasks Allowed", "OS.ScheduledIntervalTasks", 10.0, 1, false },
-                    { 73, 1, null, null, null, "Minimum Tasks Interval, minutes", "OS.MinimumTaskInterval", 11.0, 3, false },
-                    { 74, 1, null, null, null, "Applications Installer", "OS.AppInstaller", 7.0, 1, false },
-                    { 75, 1, null, null, null, "Extra Application Packs", "OS.ExtraApplications", 8.0, 1, false },
-                    { 77, 12, null, null, 1, "Organization Disk Space, MB", "Exchange2007.DiskSpace", 2.0, 2, false },
-                    { 78, 12, null, null, 1, "Mailboxes per Organization", "Exchange2007.Mailboxes", 3.0, 2, false },
-                    { 79, 12, null, null, 1, "Contacts per Organization", "Exchange2007.Contacts", 4.0, 3, false },
-                    { 80, 12, null, null, 1, "Distribution Lists per Organization", "Exchange2007.DistributionLists", 5.0, 3, false },
-                    { 81, 12, null, null, 1, "Public Folders per Organization", "Exchange2007.PublicFolders", 6.0, 3, false },
-                    { 83, 12, null, null, null, "POP3 Access", "Exchange2007.POP3Allowed", 9.0, 1, false },
-                    { 84, 12, null, null, null, "IMAP Access", "Exchange2007.IMAPAllowed", 11.0, 1, false },
-                    { 85, 12, null, null, null, "OWA/HTTP Access", "Exchange2007.OWAAllowed", 13.0, 1, false },
-                    { 86, 12, null, null, null, "MAPI Access", "Exchange2007.MAPIAllowed", 15.0, 1, false },
-                    { 87, 12, null, null, null, "ActiveSync Access", "Exchange2007.ActiveSyncAllowed", 17.0, 1, false },
-                    { 88, 12, null, null, null, "Mail Enabled Public Folders Allowed", "Exchange2007.MailEnabledPublicFolders", 8.0, 1, false },
-                    { 94, 2, null, null, null, "ColdFusion", "Web.ColdFusion", 17.0, 1, false },
-                    { 96, 2, null, null, null, "ColdFusion Virtual Directories", "Web.CFVirtualDirectories", 18.0, 1, false },
-                    { 97, 2, null, null, null, "Remote web management allowed", "Web.RemoteManagement", 20.0, 1, false },
-                    { 100, 2, null, null, null, "Dedicated IP Addresses", "Web.IPAddresses", 19.0, 2, true },
-                    { 102, 4, null, null, null, "Disable Mailbox Size Edit", "Mail.DisableSizeEdit", 8.0, 1, false },
-                    { 103, 6, null, null, null, "Max Database Size", "MySQL4.MaxDatabaseSize", 3.0, 3, false },
-                    { 104, 6, null, null, null, "Database Restores", "MySQL4.Restore", 5.0, 1, false },
-                    { 105, 6, null, null, null, "Database Truncate", "MySQL4.Truncate", 6.0, 1, false },
-                    { 106, 11, null, null, null, "Max Database Size", "MySQL5.MaxDatabaseSize", 3.0, 3, false },
-                    { 107, 11, null, null, null, "Database Restores", "MySQL5.Restore", 5.0, 1, false },
-                    { 108, 11, null, null, null, "Database Truncate", "MySQL5.Truncate", 6.0, 1, false },
-                    { 112, 90, null, null, null, "Database Backups", "MySQL8.Backup", 4.0, 1, false },
-                    { 113, 90, null, null, null, "Max Database Size", "MySQL8.MaxDatabaseSize", 3.0, 3, false },
-                    { 114, 90, null, null, null, "Database Restores", "MySQL8.Restore", 5.0, 1, false },
-                    { 115, 90, null, null, null, "Database Truncate", "MySQL8.Truncate", 6.0, 1, false },
-                    { 122, 91, null, null, null, "Database Backups", "MySQL9.Backup", 4.0, 1, false },
-                    { 123, 91, null, null, null, "Max Database Size", "MySQL9.MaxDatabaseSize", 3.0, 3, false },
-                    { 124, 91, null, null, null, "Database Restores", "MySQL9.Restore", 5.0, 1, false },
-                    { 125, 91, null, null, null, "Database Truncate", "MySQL9.Truncate", 6.0, 1, false },
-                    { 203, 10, null, null, null, "Max Log Size", "MsSQL2005.MaxLogSize", 4.0, 3, false },
-                    { 204, 5, null, null, null, "Max Log Size", "MsSQL2000.MaxLogSize", 4.0, 3, false },
-                    { 207, 13, null, null, 1, "Domains per Organizations", "HostedSolution.Domains", 3.0, 3, false },
-                    { 208, 20, null, null, null, "Max site storage, MB", "HostedSharePoint.MaxStorage", 2.0, 3, false },
-                    { 209, 21, null, null, 1, "Full licenses per organization", "HostedCRM.Users", 2.0, 3, false },
-                    { 210, 21, null, null, null, "CRM Organization", "HostedCRM.Organization", 1.0, 1, false },
-                    { 213, 22, null, null, null, "Max Database Size", "MsSQL2008.MaxDatabaseSize", 3.0, 3, false },
-                    { 214, 22, null, null, null, "Database Backups", "MsSQL2008.Backup", 5.0, 1, false },
-                    { 215, 22, null, null, null, "Database Restores", "MsSQL2008.Restore", 6.0, 1, false },
-                    { 216, 22, null, null, null, "Database Truncate", "MsSQL2008.Truncate", 7.0, 1, false },
-                    { 217, 22, null, null, null, "Max Log Size", "MsSQL2008.MaxLogSize", 4.0, 3, false },
-                    { 220, 1, true, null, null, "Domain Pointers", "OS.DomainPointers", 5.0, 2, false },
-                    { 221, 23, null, null, null, "Max Database Size", "MsSQL2012.MaxDatabaseSize", 3.0, 3, false },
-                    { 222, 23, null, null, null, "Database Backups", "MsSQL2012.Backup", 5.0, 1, false },
-                    { 223, 23, null, null, null, "Database Restores", "MsSQL2012.Restore", 6.0, 1, false },
-                    { 224, 23, null, null, null, "Database Truncate", "MsSQL2012.Truncate", 7.0, 1, false },
-                    { 225, 23, null, null, null, "Max Log Size", "MsSQL2012.MaxLogSize", 4.0, 3, false },
-                    { 230, 13, null, null, null, "Allow to Change UserPrincipalName", "HostedSolution.AllowChangeUPN", 4.0, 1, false },
-                    { 301, 30, null, null, null, "Allow user to create VPS", "VPS.ManagingAllowed", 2.0, 1, false },
-                    { 302, 30, null, null, null, "Number of CPU cores", "VPS.CpuNumber", 3.0, 2, false },
-                    { 303, 30, null, null, null, "Boot from CD allowed", "VPS.BootCdAllowed", 7.0, 1, false },
-                    { 304, 30, null, null, null, "Boot from CD", "VPS.BootCdEnabled", 8.0, 1, false },
-                    { 305, 30, null, null, null, "RAM size, MB", "VPS.Ram", 4.0, 2, false },
-                    { 306, 30, null, null, null, "Hard Drive size, GB", "VPS.Hdd", 5.0, 2, false },
-                    { 307, 30, null, null, null, "DVD drive", "VPS.DvdEnabled", 6.0, 1, false },
-                    { 308, 30, null, null, null, "External Network", "VPS.ExternalNetworkEnabled", 10.0, 1, false },
-                    { 309, 30, null, null, null, "Number of External IP addresses", "VPS.ExternalIPAddressesNumber", 11.0, 2, false },
-                    { 310, 30, null, null, null, "Private Network", "VPS.PrivateNetworkEnabled", 13.0, 1, false },
-                    { 311, 30, null, null, null, "Number of Private IP addresses per VPS", "VPS.PrivateIPAddressesNumber", 14.0, 3, false },
-                    { 312, 30, null, null, null, "Number of Snaphots", "VPS.SnapshotsNumber", 9.0, 3, false },
-                    { 313, 30, null, null, null, "Allow user to Start, Turn off and Shutdown VPS", "VPS.StartShutdownAllowed", 15.0, 1, false },
-                    { 314, 30, null, null, null, "Allow user to Pause, Resume VPS", "VPS.PauseResumeAllowed", 16.0, 1, false },
-                    { 315, 30, null, null, null, "Allow user to Reboot VPS", "VPS.RebootAllowed", 17.0, 1, false },
-                    { 316, 30, null, null, null, "Allow user to Reset VPS", "VPS.ResetAlowed", 18.0, 1, false },
-                    { 317, 30, null, null, null, "Allow user to Re-install VPS", "VPS.ReinstallAllowed", 19.0, 1, false },
-                    { 318, 30, null, null, null, "Monthly bandwidth, GB", "VPS.Bandwidth", 12.0, 2, false },
-                    { 319, 31, null, null, 1, null, "BlackBerry.Users", 1.0, 2, false },
-                    { 320, 32, null, null, 1, null, "OCS.Users", 1.0, 2, false },
-                    { 321, 32, null, null, null, null, "OCS.Federation", 2.0, 1, false },
-                    { 322, 32, null, null, null, null, "OCS.FederationByDefault", 3.0, 1, false },
-                    { 323, 32, null, null, null, null, "OCS.PublicIMConnectivity", 4.0, 1, false },
-                    { 324, 32, null, null, null, null, "OCS.PublicIMConnectivityByDefault", 5.0, 1, false },
-                    { 325, 32, null, null, null, null, "OCS.ArchiveIMConversation", 6.0, 1, false },
-                    { 326, 32, null, null, null, null, "OCS.ArchiveIMConvervationByDefault", 7.0, 1, false },
-                    { 327, 32, null, null, null, null, "OCS.ArchiveFederatedIMConversation", 8.0, 1, false },
-                    { 328, 32, null, null, null, null, "OCS.ArchiveFederatedIMConversationByDefault", 9.0, 1, false },
-                    { 329, 32, null, null, null, null, "OCS.PresenceAllowed", 10.0, 1, false },
-                    { 330, 32, null, null, null, null, "OCS.PresenceAllowedByDefault", 10.0, 1, false },
-                    { 331, 2, null, null, null, "ASP.NET 4.0", "Web.AspNet40", 4.0, 1, false },
-                    { 332, 2, null, null, null, "SSL", "Web.SSL", 21.0, 1, false },
-                    { 333, 2, null, null, null, "Allow IP Address Mode Switch", "Web.AllowIPAddressModeSwitch", 22.0, 1, false },
-                    { 334, 2, null, null, null, "Enable Hostname Support", "Web.EnableHostNameSupport", 23.0, 1, false },
-                    { 344, 2, null, null, null, "htaccess", "Web.Htaccess", 9.0, 1, false },
-                    { 346, 40, null, null, null, "Allow user to create VPS", "VPSForPC.ManagingAllowed", 2.0, 1, false },
-                    { 347, 40, null, null, null, "Number of CPU cores", "VPSForPC.CpuNumber", 3.0, 2, false },
-                    { 348, 40, null, null, null, "Boot from CD allowed", "VPSForPC.BootCdAllowed", 7.0, 1, false },
-                    { 349, 40, null, null, null, "Boot from CD", "VPSForPC.BootCdEnabled", 7.0, 1, false },
-                    { 350, 40, null, null, null, "RAM size, MB", "VPSForPC.Ram", 4.0, 2, false },
-                    { 351, 40, null, null, null, "Hard Drive size, GB", "VPSForPC.Hdd", 5.0, 2, false },
-                    { 352, 40, null, null, null, "DVD drive", "VPSForPC.DvdEnabled", 6.0, 1, false },
-                    { 353, 40, null, null, null, "External Network", "VPSForPC.ExternalNetworkEnabled", 10.0, 1, false },
-                    { 354, 40, null, null, null, "Number of External IP addresses", "VPSForPC.ExternalIPAddressesNumber", 11.0, 2, false },
-                    { 355, 40, null, null, null, "Private Network", "VPSForPC.PrivateNetworkEnabled", 13.0, 1, false },
-                    { 356, 40, null, null, null, "Number of Private IP addresses per VPS", "VPSForPC.PrivateIPAddressesNumber", 14.0, 3, false },
-                    { 357, 40, null, null, null, "Number of Snaphots", "VPSForPC.SnapshotsNumber", 9.0, 3, false },
-                    { 358, 40, null, null, null, "Allow user to Start, Turn off and Shutdown VPS", "VPSForPC.StartShutdownAllowed", 15.0, 1, false },
-                    { 359, 40, null, null, null, "Allow user to Pause, Resume VPS", "VPSForPC.PauseResumeAllowed", 16.0, 1, false },
-                    { 360, 40, null, null, null, "Allow user to Reboot VPS", "VPSForPC.RebootAllowed", 17.0, 1, false },
-                    { 361, 40, null, null, null, "Allow user to Reset VPS", "VPSForPC.ResetAlowed", 18.0, 1, false },
-                    { 362, 40, null, null, null, "Allow user to Re-install VPS", "VPSForPC.ReinstallAllowed", 19.0, 1, false },
-                    { 363, 40, null, null, null, "Monthly bandwidth, GB", "VPSForPC.Bandwidth", 12.0, 2, false },
-                    { 364, 12, null, null, null, "Keep Deleted Items (days)", "Exchange2007.KeepDeletedItemsDays", 19.0, 3, false },
-                    { 365, 12, null, null, null, "Maximum Recipients", "Exchange2007.MaxRecipients", 20.0, 3, false },
-                    { 366, 12, null, null, null, "Maximum Send Message Size (Kb)", "Exchange2007.MaxSendMessageSizeKB", 21.0, 3, false },
-                    { 367, 12, null, null, null, "Maximum Receive Message Size (Kb)", "Exchange2007.MaxReceiveMessageSizeKB", 22.0, 3, false },
-                    { 368, 12, null, null, null, "Is Consumer Organization", "Exchange2007.IsConsumer", 1.0, 1, false },
-                    { 369, 12, null, null, null, "Enable Plans Editing", "Exchange2007.EnablePlansEditing", 23.0, 1, false },
-                    { 370, 41, null, null, 1, "Users", "Lync.Users", 1.0, 2, false },
-                    { 371, 41, null, null, null, "Allow Federation", "Lync.Federation", 2.0, 1, false },
-                    { 372, 41, null, null, null, "Allow Conferencing", "Lync.Conferencing", 3.0, 1, false },
-                    { 373, 41, null, null, null, "Maximum Conference Particiapants", "Lync.MaxParticipants", 4.0, 3, false },
-                    { 374, 41, null, null, null, "Allow Video in Conference", "Lync.AllowVideo", 5.0, 1, false },
-                    { 375, 41, null, null, null, "Allow EnterpriseVoice", "Lync.EnterpriseVoice", 6.0, 1, false },
-                    { 376, 41, null, null, null, "Number of Enterprise Voice Users", "Lync.EVUsers", 7.0, 2, false },
-                    { 377, 41, null, null, null, "Allow National Calls", "Lync.EVNational", 8.0, 1, false },
-                    { 378, 41, null, null, null, "Allow Mobile Calls", "Lync.EVMobile", 9.0, 1, false },
-                    { 379, 41, null, null, null, "Allow International Calls", "Lync.EVInternational", 10.0, 1, false },
-                    { 380, 41, null, null, null, "Enable Plans Editing", "Lync.EnablePlansEditing", 11.0, 1, false },
-                    { 381, 41, null, null, null, "Phone Numbers", "Lync.PhoneNumbers", 12.0, 2, false },
-                    { 400, 20, null, null, null, "Use shared SSL Root", "HostedSharePoint.UseSharedSSL", 3.0, 1, false },
-                    { 409, 1, null, null, null, "Not allow Tenants to Delete Top Level Domains", "OS.NotAllowTenantDeleteDomains", 13.0, 1, false },
-                    { 410, 1, null, null, null, "Not allow Tenants to Create Top Level Domains", "OS.NotAllowTenantCreateDomains", 12.0, 1, false },
-                    { 411, 2, null, null, null, "Application Pools Restart", "Web.AppPoolsRestart", 13.0, 1, false },
-                    { 420, 12, null, null, null, "Allow Litigation Hold", "Exchange2007.AllowLitigationHold", 24.0, 1, false },
-                    { 421, 12, null, null, 1, "Recoverable Items Space", "Exchange2007.RecoverableItemsSpace", 25.0, 2, false },
-                    { 422, 12, null, null, null, "Disclaimers Allowed", "Exchange2007.DisclaimersAllowed", 26.0, 1, false },
-                    { 423, 13, null, null, 1, "Security Groups", "HostedSolution.SecurityGroups", 5.0, 2, false },
-                    { 424, 12, null, null, null, "Allow Retention Policy", "Exchange2013.AllowRetentionPolicy", 27.0, 1, false },
-                    { 425, 12, null, null, 1, "Archiving storage, MB", "Exchange2013.ArchivingStorage", 29.0, 2, false },
-                    { 426, 12, null, null, 1, "Archiving Mailboxes per Organization", "Exchange2013.ArchivingMailboxes", 28.0, 2, false },
-                    { 428, 12, null, null, 1, "Resource Mailboxes per Organization", "Exchange2013.ResourceMailboxes", 31.0, 2, false },
-                    { 429, 12, null, null, 1, "Shared Mailboxes per Organization", "Exchange2013.SharedMailboxes", 30.0, 2, false },
-                    { 430, 44, null, null, 1, "Disk Storage Space (Mb)", "EnterpriseStorage.DiskStorageSpace", 1.0, 2, false },
-                    { 431, 44, null, null, 1, "Number of Root Folders", "EnterpriseStorage.Folders", 1.0, 2, false },
-                    { 447, 61, null, null, null, "Enable Spam Filter", "Filters.Enable", 1.0, 1, false },
-                    { 448, 61, null, null, null, "Enable Per-Mailbox Login", "Filters.EnableEmailUsers", 2.0, 1, false },
-                    { 450, 45, null, null, 1, "Remote Desktop Users", "RDS.Users", 1.0, 2, false },
-                    { 451, 45, null, null, 1, "Remote Desktop Servers", "RDS.Servers", 2.0, 2, false },
-                    { 452, 45, null, null, null, "Disable user from adding server", "RDS.DisableUserAddServer", 3.0, 1, false },
-                    { 453, 45, null, null, null, "Disable user from removing server", "RDS.DisableUserDeleteServer", 3.0, 1, false },
-                    { 460, 21, null, null, null, "Max Database Size, MB", "HostedCRM.MaxDatabaseSize", 5.0, 3, false },
-                    { 461, 21, null, null, 1, "Limited licenses per organization", "HostedCRM.LimitedUsers", 3.0, 3, false },
-                    { 462, 21, null, null, 1, "ESS licenses per organization", "HostedCRM.ESSUsers", 4.0, 3, false },
-                    { 463, 24, null, null, null, "CRM Organization", "HostedCRM2013.Organization", 1.0, 1, false },
-                    { 464, 24, null, null, null, "Max Database Size, MB", "HostedCRM2013.MaxDatabaseSize", 5.0, 3, false },
-                    { 465, 24, null, null, 1, "Essential licenses per organization", "HostedCRM2013.EssentialUsers", 2.0, 3, false },
-                    { 466, 24, null, null, 1, "Basic licenses per organization", "HostedCRM2013.BasicUsers", 3.0, 3, false },
-                    { 467, 24, null, null, 1, "Professional licenses per organization", "HostedCRM2013.ProfessionalUsers", 4.0, 3, false },
-                    { 468, 45, null, null, null, "Use Drive Maps", "EnterpriseStorage.DriveMaps", 2.0, 1, false },
-                    { 472, 46, null, null, null, "Max Database Size", "MsSQL2014.MaxDatabaseSize", 3.0, 3, false },
-                    { 473, 46, null, null, null, "Database Backups", "MsSQL2014.Backup", 5.0, 1, false },
-                    { 474, 46, null, null, null, "Database Restores", "MsSQL2014.Restore", 6.0, 1, false },
-                    { 475, 46, null, null, null, "Database Truncate", "MsSQL2014.Truncate", 7.0, 1, false },
-                    { 476, 46, null, null, null, "Max Log Size", "MsSQL2014.MaxLogSize", 4.0, 3, false },
-                    { 491, 45, null, null, 1, "Remote Desktop Servers", "RDS.Collections", 2.0, 2, false },
-                    { 495, 13, null, null, 1, "Deleted Users", "HostedSolution.DeletedUsers", 6.0, 2, false },
-                    { 496, 13, null, null, 1, "Deleted Users Backup Storage Space, Mb", "HostedSolution.DeletedUsersBackupStorageSpace", 6.0, 2, false },
-                    { 551, 73, null, null, null, "Max site storage, MB", "HostedSharePointEnterprise.MaxStorage", 2.0, 3, false },
-                    { 552, 73, null, null, null, "Use shared SSL Root", "HostedSharePointEnterprise.UseSharedSSL", 3.0, 1, false },
-                    { 554, 33, null, null, null, "Allow user to create VPS", "VPS2012.ManagingAllowed", 2.0, 1, false },
-                    { 555, 33, null, null, null, "Number of CPU cores", "VPS2012.CpuNumber", 3.0, 2, false },
-                    { 556, 33, null, null, null, "Boot from CD allowed", "VPS2012.BootCdAllowed", 7.0, 1, false },
-                    { 557, 33, null, null, null, "Boot from CD", "VPS2012.BootCdEnabled", 8.0, 1, false },
-                    { 558, 33, null, null, null, "RAM size, MB", "VPS2012.Ram", 4.0, 2, false },
-                    { 559, 33, null, null, null, "Hard Drive size, GB", "VPS2012.Hdd", 5.0, 2, false },
-                    { 560, 33, null, null, null, "DVD drive", "VPS2012.DvdEnabled", 6.0, 1, false },
-                    { 561, 33, null, null, null, "External Network", "VPS2012.ExternalNetworkEnabled", 10.0, 1, false },
-                    { 562, 33, null, null, null, "Number of External IP addresses", "VPS2012.ExternalIPAddressesNumber", 11.0, 2, false },
-                    { 563, 33, null, null, null, "Private Network", "VPS2012.PrivateNetworkEnabled", 13.0, 1, false },
-                    { 564, 33, null, null, null, "Number of Private IP addresses per VPS", "VPS2012.PrivateIPAddressesNumber", 14.0, 3, false },
-                    { 565, 33, null, null, null, "Number of Snaphots", "VPS2012.SnapshotsNumber", 9.0, 3, false },
-                    { 566, 33, null, null, null, "Allow user to Start, Turn off and Shutdown VPS", "VPS2012.StartShutdownAllowed", 15.0, 1, false },
-                    { 567, 33, null, null, null, "Allow user to Pause, Resume VPS", "VPS2012.PauseResumeAllowed", 16.0, 1, false },
-                    { 568, 33, null, null, null, "Allow user to Reboot VPS", "VPS2012.RebootAllowed", 17.0, 1, false },
-                    { 569, 33, null, null, null, "Allow user to Reset VPS", "VPS2012.ResetAlowed", 18.0, 1, false },
-                    { 570, 33, null, null, null, "Allow user to Re-install VPS", "VPS2012.ReinstallAllowed", 19.0, 1, false },
-                    { 571, 33, null, null, null, "Monthly bandwidth, GB", "VPS2012.Bandwidth", 12.0, 2, false },
-                    { 572, 33, null, null, null, "Allow user to Replication", "VPS2012.ReplicationEnabled", 20.0, 1, false },
-                    { 575, 50, null, null, null, "Max Database Size", "MariaDB.MaxDatabaseSize", 3.0, 3, false },
-                    { 576, 50, null, null, null, "Database Backups", "MariaDB.Backup", 5.0, 1, false },
-                    { 577, 50, null, null, null, "Database Restores", "MariaDB.Restore", 6.0, 1, false },
-                    { 578, 50, null, null, null, "Database Truncate", "MariaDB.Truncate", 7.0, 1, false },
-                    { 579, 50, null, null, null, "Max Log Size", "MariaDB.MaxLogSize", 4.0, 3, false },
-                    { 581, 52, null, null, null, "Phone Numbers", "SfB.PhoneNumbers", 12.0, 2, false },
-                    { 582, 52, null, null, 1, "Users", "SfB.Users", 1.0, 2, false },
-                    { 583, 52, null, null, null, "Allow Federation", "SfB.Federation", 2.0, 1, false },
-                    { 584, 52, null, null, null, "Allow Conferencing", "SfB.Conferencing", 3.0, 1, false },
-                    { 585, 52, null, null, null, "Maximum Conference Particiapants", "SfB.MaxParticipants", 4.0, 3, false },
-                    { 586, 52, null, null, null, "Allow Video in Conference", "SfB.AllowVideo", 5.0, 1, false },
-                    { 587, 52, null, null, null, "Allow EnterpriseVoice", "SfB.EnterpriseVoice", 6.0, 1, false },
-                    { 588, 52, null, null, null, "Number of Enterprise Voice Users", "SfB.EVUsers", 7.0, 2, false },
-                    { 589, 52, null, null, null, "Allow National Calls", "SfB.EVNational", 8.0, 1, false },
-                    { 590, 52, null, null, null, "Allow Mobile Calls", "SfB.EVMobile", 9.0, 1, false },
-                    { 591, 52, null, null, null, "Allow International Calls", "SfB.EVInternational", 10.0, 1, false },
-                    { 592, 52, null, null, null, "Enable Plans Editing", "SfB.EnablePlansEditing", 11.0, 1, false },
-                    { 674, 167, null, null, null, "Allow user to create VPS", "PROXMOX.ManagingAllowed", 2.0, 1, false },
-                    { 675, 167, null, null, null, "Number of CPU cores", "PROXMOX.CpuNumber", 3.0, 3, false },
-                    { 676, 167, null, null, null, "Boot from CD allowed", "PROXMOX.BootCdAllowed", 7.0, 1, false },
-                    { 677, 167, null, null, null, "Boot from CD", "PROXMOX.BootCdEnabled", 8.0, 1, false },
-                    { 678, 167, null, null, null, "RAM size, MB", "PROXMOX.Ram", 4.0, 2, false },
-                    { 679, 167, null, null, null, "Hard Drive size, GB", "PROXMOX.Hdd", 5.0, 2, false },
-                    { 680, 167, null, null, null, "DVD drive", "PROXMOX.DvdEnabled", 6.0, 1, false },
-                    { 681, 167, null, null, null, "External Network", "PROXMOX.ExternalNetworkEnabled", 10.0, 1, false },
-                    { 682, 167, null, null, null, "Number of External IP addresses", "PROXMOX.ExternalIPAddressesNumber", 11.0, 2, false },
-                    { 683, 167, null, null, null, "Private Network", "PROXMOX.PrivateNetworkEnabled", 13.0, 1, false },
-                    { 684, 167, null, null, null, "Number of Private IP addresses per VPS", "PROXMOX.PrivateIPAddressesNumber", 14.0, 3, false },
-                    { 685, 167, null, null, null, "Number of Snaphots", "PROXMOX.SnapshotsNumber", 9.0, 3, false },
-                    { 686, 167, null, null, null, "Allow user to Start, Turn off and Shutdown VPS", "PROXMOX.StartShutdownAllowed", 15.0, 1, false },
-                    { 687, 167, null, null, null, "Allow user to Pause, Resume VPS", "PROXMOX.PauseResumeAllowed", 16.0, 1, false },
-                    { 688, 167, null, null, null, "Allow user to Reboot VPS", "PROXMOX.RebootAllowed", 17.0, 1, false },
-                    { 689, 167, null, null, null, "Allow user to Reset VPS", "PROXMOX.ResetAlowed", 18.0, 1, false },
-                    { 690, 167, null, null, null, "Allow user to Re-install VPS", "PROXMOX.ReinstallAllowed", 19.0, 1, false },
-                    { 691, 167, null, null, null, "Monthly bandwidth, GB", "PROXMOX.Bandwidth", 12.0, 2, false },
-                    { 692, 167, null, null, null, "Allow user to Replication", "PROXMOX.ReplicationEnabled", 20.0, 1, false },
-                    { 703, 71, null, null, null, "Max Database Size", "MsSQL2016.MaxDatabaseSize", 3.0, 3, false },
-                    { 704, 71, null, null, null, "Database Backups", "MsSQL2016.Backup", 5.0, 1, false },
-                    { 705, 71, null, null, null, "Database Restores", "MsSQL2016.Restore", 6.0, 1, false },
-                    { 706, 71, null, null, null, "Database Truncate", "MsSQL2016.Truncate", 7.0, 1, false },
-                    { 707, 71, null, null, null, "Max Log Size", "MsSQL2016.MaxLogSize", 4.0, 3, false },
-                    { 713, 72, null, null, null, "Max Database Size", "MsSQL2017.MaxDatabaseSize", 3.0, 3, false },
-                    { 714, 72, null, null, null, "Database Backups", "MsSQL2017.Backup", 5.0, 1, false },
-                    { 715, 72, null, null, null, "Database Restores", "MsSQL2017.Restore", 6.0, 1, false },
-                    { 716, 72, null, null, null, "Database Truncate", "MsSQL2017.Truncate", 7.0, 1, false },
-                    { 717, 72, null, null, null, "Max Log Size", "MsSQL2017.MaxLogSize", 4.0, 3, false },
-                    { 723, 74, null, null, null, "Max Database Size", "MsSQL2019.MaxDatabaseSize", 3.0, 3, false },
-                    { 724, 74, null, null, null, "Database Backups", "MsSQL2019.Backup", 5.0, 1, false },
-                    { 725, 74, null, null, null, "Database Restores", "MsSQL2019.Restore", 6.0, 1, false },
-                    { 726, 74, null, null, null, "Database Truncate", "MsSQL2019.Truncate", 7.0, 1, false },
-                    { 727, 74, null, null, null, "Max Log Size", "MsSQL2019.MaxLogSize", 4.0, 3, false },
-                    { 728, 33, null, null, null, "Number of Private Network VLANs", "VPS2012.PrivateVLANsNumber", 14.0, 2, false },
-                    { 729, 12, null, null, null, "Automatic Replies via SolidCP Allowed", "Exchange2013.AutoReply", 32.0, 1, false },
-                    { 730, 33, null, null, null, "Additional Hard Drives per VPS", "VPS2012.AdditionalVhdCount", 6.0, 3, false },
-                    { 731, 12, null, null, 1, "Journaling Mailboxes per Organization", "Exchange2013.JournalingMailboxes", 31.0, 2, false },
-                    { 734, 75, null, null, null, "Max Database Size", "MsSQL2022.MaxDatabaseSize", 3.0, 3, false },
-                    { 735, 75, null, null, null, "Database Backups", "MsSQL2022.Backup", 5.0, 1, false },
-                    { 736, 75, null, null, null, "Database Restores", "MsSQL2022.Restore", 6.0, 1, false },
-                    { 737, 75, null, null, null, "Database Truncate", "MsSQL2022.Truncate", 7.0, 1, false },
-                    { 738, 75, null, null, null, "Max Log Size", "MsSQL2022.MaxLogSize", 4.0, 3, false },
-                    { 750, 33, null, null, null, "DMZ Network", "VPS2012.DMZNetworkEnabled", 22.0, 1, false },
-                    { 751, 33, null, null, null, "Number of DMZ IP addresses per VPS", "VPS2012.DMZIPAddressesNumber", 23.0, 3, false },
-                    { 752, 33, null, null, null, "Number of DMZ Network VLANs", "VPS2012.DMZVLANsNumber", 24.0, 2, false },
-                    { 753, 7, null, null, null, "Allow editing TTL in DNS Editor", "DNS.EditTTL", 2.0, 1, false },
-                    { 754, 4, true, null, null, "Allow changes to access controls", "Mail.AllowAccessControls", 9.0, 1, false },
-                    { 762, 76, null, null, null, "Max Database Size", "MsSQL2025.MaxDatabaseSize", 3.0, 3, false },
-                    { 763, 76, null, null, null, "Database Backups", "MsSQL2025.Backup", 5.0, 1, false },
-                    { 764, 76, null, null, null, "Database Restores", "MsSQL2025.Restore", 6.0, 1, false },
-                    { 765, 76, null, null, null, "Database Truncate", "MsSQL2025.Truncate", 7.0, 1, false },
-                    { 766, 76, null, null, null, "Max Log Size", "MsSQL2025.MaxLogSize", 4.0, 3, false },
-                    { 771, 4, null, null, null, "Mail Accounts per Domain", "Mail.Accounts.per.Domain", 1.2, 2, true }
+                    { 25, 2, null, null, null, "ASP.NET 1.1", "Web.AspNet11", 3, 1, false },
+                    { 26, 2, null, null, null, "ASP.NET 2.0", "Web.AspNet20", 4, 1, false },
+                    { 27, 2, null, null, null, "ASP", "Web.Asp", 2, 1, false },
+                    { 28, 2, null, null, null, "PHP 4.x", "Web.Php4", 5, 1, false },
+                    { 29, 2, null, null, null, "PHP 5.x", "Web.Php5", 6, 1, false },
+                    { 30, 2, null, null, null, "Perl", "Web.Perl", 7, 1, false },
+                    { 31, 2, null, null, null, "Python", "Web.Python", 8, 1, false },
+                    { 32, 2, null, null, null, "Virtual Directories", "Web.VirtualDirs", 9, 1, false },
+                    { 33, 2, null, null, null, "FrontPage", "Web.FrontPage", 10, 1, false },
+                    { 34, 2, null, null, null, "Custom Security Settings", "Web.Security", 11, 1, false },
+                    { 35, 2, null, null, null, "Custom Default Documents", "Web.DefaultDocs", 12, 1, false },
+                    { 36, 2, null, null, null, "Dedicated Application Pools", "Web.AppPools", 13, 1, false },
+                    { 37, 2, null, null, null, "Custom Headers", "Web.Headers", 14, 1, false },
+                    { 38, 2, null, null, null, "Custom Errors", "Web.Errors", 15, 1, false },
+                    { 39, 2, null, null, null, "Custom MIME Types", "Web.Mime", 16, 1, false },
+                    { 40, 4, null, null, null, "Max Mailbox Size", "Mail.MaxBoxSize", 2, 3, false },
+                    { 41, 5, null, null, null, "Max Database Size", "MsSQL2000.MaxDatabaseSize", 3, 3, false },
+                    { 42, 5, null, null, null, "Database Backups", "MsSQL2000.Backup", 5, 1, false },
+                    { 43, 5, null, null, null, "Database Restores", "MsSQL2000.Restore", 6, 1, false },
+                    { 44, 5, null, null, null, "Database Truncate", "MsSQL2000.Truncate", 7, 1, false },
+                    { 45, 6, null, null, null, "Database Backups", "MySQL4.Backup", 4, 1, false },
+                    { 48, 7, null, null, null, "DNS Editor", "DNS.Editor", 1, 1, false },
+                    { 49, 4, null, null, null, "Max Group Recipients", "Mail.MaxGroupMembers", 5, 3, false },
+                    { 50, 4, null, null, null, "Max List Recipients", "Mail.MaxListMembers", 7, 3, false },
+                    { 51, 1, null, null, null, "Bandwidth, MB", "OS.Bandwidth", 2, 2, false },
+                    { 52, 1, null, null, null, "Disk space, MB", "OS.Diskspace", 1, 2, false },
+                    { 53, 1, null, null, null, "Domains", "OS.Domains", 3, 2, false },
+                    { 54, 1, null, null, null, "Sub-Domains", "OS.SubDomains", 4, 2, false },
+                    { 55, 1, null, null, null, "File Manager", "OS.FileManager", 6, 1, false },
+                    { 57, 2, null, null, null, "CGI-BIN Folder", "Web.CgiBin", 8, 1, false },
+                    { 58, 2, null, null, null, "Secured Folders", "Web.SecuredFolders", 8, 1, false },
+                    { 60, 2, null, null, null, "Web Sites Redirection", "Web.Redirections", 8, 1, false },
+                    { 61, 2, null, null, null, "Changing Sites Root Folders", "Web.HomeFolders", 8, 1, false },
+                    { 64, 10, null, null, null, "Max Database Size", "MsSQL2005.MaxDatabaseSize", 3, 3, false },
+                    { 65, 10, null, null, null, "Database Backups", "MsSQL2005.Backup", 5, 1, false },
+                    { 66, 10, null, null, null, "Database Restores", "MsSQL2005.Restore", 6, 1, false },
+                    { 67, 10, null, null, null, "Database Truncate", "MsSQL2005.Truncate", 7, 1, false },
+                    { 70, 11, null, null, null, "Database Backups", "MySQL5.Backup", 4, 1, false },
+                    { 71, 1, null, null, null, "Scheduled Tasks", "OS.ScheduledTasks", 9, 2, false },
+                    { 72, 1, null, null, null, "Interval Tasks Allowed", "OS.ScheduledIntervalTasks", 10, 1, false },
+                    { 73, 1, null, null, null, "Minimum Tasks Interval, minutes", "OS.MinimumTaskInterval", 11, 3, false },
+                    { 74, 1, null, null, null, "Applications Installer", "OS.AppInstaller", 7, 1, false },
+                    { 75, 1, null, null, null, "Extra Application Packs", "OS.ExtraApplications", 8, 1, false },
+                    { 77, 12, null, null, 1, "Organization Disk Space, MB", "Exchange2007.DiskSpace", 2, 2, false },
+                    { 78, 12, null, null, 1, "Mailboxes per Organization", "Exchange2007.Mailboxes", 3, 2, false },
+                    { 79, 12, null, null, 1, "Contacts per Organization", "Exchange2007.Contacts", 4, 3, false },
+                    { 80, 12, null, null, 1, "Distribution Lists per Organization", "Exchange2007.DistributionLists", 5, 3, false },
+                    { 81, 12, null, null, 1, "Public Folders per Organization", "Exchange2007.PublicFolders", 6, 3, false },
+                    { 83, 12, null, null, null, "POP3 Access", "Exchange2007.POP3Allowed", 9, 1, false },
+                    { 84, 12, null, null, null, "IMAP Access", "Exchange2007.IMAPAllowed", 11, 1, false },
+                    { 85, 12, null, null, null, "OWA/HTTP Access", "Exchange2007.OWAAllowed", 13, 1, false },
+                    { 86, 12, null, null, null, "MAPI Access", "Exchange2007.MAPIAllowed", 15, 1, false },
+                    { 87, 12, null, null, null, "ActiveSync Access", "Exchange2007.ActiveSyncAllowed", 17, 1, false },
+                    { 88, 12, null, null, null, "Mail Enabled Public Folders Allowed", "Exchange2007.MailEnabledPublicFolders", 8, 1, false },
+                    { 94, 2, null, null, null, "ColdFusion", "Web.ColdFusion", 17, 1, false },
+                    { 95, 2, null, null, null, "Web Application Gallery", "Web.WebAppGallery", 1, 1, false },
+                    { 96, 2, null, null, null, "ColdFusion Virtual Directories", "Web.CFVirtualDirectories", 18, 1, false },
+                    { 97, 2, null, null, null, "Remote web management allowed", "Web.RemoteManagement", 20, 1, false },
+                    { 100, 2, null, null, null, "Dedicated IP Addresses", "Web.IPAddresses", 19, 2, true },
+                    { 102, 4, null, null, null, "Disable Mailbox Size Edit", "Mail.DisableSizeEdit", 8, 1, false },
+                    { 103, 6, null, null, null, "Max Database Size", "MySQL4.MaxDatabaseSize", 3, 3, false },
+                    { 104, 6, null, null, null, "Database Restores", "MySQL4.Restore", 5, 1, false },
+                    { 105, 6, null, null, null, "Database Truncate", "MySQL4.Truncate", 6, 1, false },
+                    { 106, 11, null, null, null, "Max Database Size", "MySQL5.MaxDatabaseSize", 3, 3, false },
+                    { 107, 11, null, null, null, "Database Restores", "MySQL5.Restore", 5, 1, false },
+                    { 108, 11, null, null, null, "Database Truncate", "MySQL5.Truncate", 6, 1, false },
+                    { 112, 90, null, null, null, "Database Backups", "MySQL8.Backup", 4, 1, false },
+                    { 113, 90, null, null, null, "Max Database Size", "MySQL8.MaxDatabaseSize", 3, 3, false },
+                    { 114, 90, null, null, null, "Database Restores", "MySQL8.Restore", 5, 1, false },
+                    { 115, 90, null, null, null, "Database Truncate", "MySQL8.Truncate", 6, 1, false },
+                    { 203, 10, null, null, null, "Max Log Size", "MsSQL2005.MaxLogSize", 4, 3, false },
+                    { 204, 5, null, null, null, "Max Log Size", "MsSQL2000.MaxLogSize", 4, 3, false },
+                    { 207, 13, null, null, 1, "Domains per Organizations", "HostedSolution.Domains", 3, 3, false },
+                    { 208, 20, null, null, null, "Max site storage, MB", "HostedSharePoint.MaxStorage", 2, 3, false },
+                    { 209, 21, null, null, 1, "Full licenses per organization", "HostedCRM.Users", 2, 3, false },
+                    { 210, 21, null, null, null, "CRM Organization", "HostedCRM.Organization", 1, 1, false },
+                    { 213, 22, null, null, null, "Max Database Size", "MsSQL2008.MaxDatabaseSize", 3, 3, false },
+                    { 214, 22, null, null, null, "Database Backups", "MsSQL2008.Backup", 5, 1, false },
+                    { 215, 22, null, null, null, "Database Restores", "MsSQL2008.Restore", 6, 1, false },
+                    { 216, 22, null, null, null, "Database Truncate", "MsSQL2008.Truncate", 7, 1, false },
+                    { 217, 22, null, null, null, "Max Log Size", "MsSQL2008.MaxLogSize", 4, 3, false },
+                    { 220, 1, true, null, null, "Domain Pointers", "OS.DomainPointers", 5, 2, false },
+                    { 221, 23, null, null, null, "Max Database Size", "MsSQL2012.MaxDatabaseSize", 3, 3, false },
+                    { 222, 23, null, null, null, "Database Backups", "MsSQL2012.Backup", 5, 1, false },
+                    { 223, 23, null, null, null, "Database Restores", "MsSQL2012.Restore", 6, 1, false },
+                    { 224, 23, null, null, null, "Database Truncate", "MsSQL2012.Truncate", 7, 1, false },
+                    { 225, 23, null, null, null, "Max Log Size", "MsSQL2012.MaxLogSize", 4, 3, false },
+                    { 230, 13, null, null, null, "Allow to Change UserPrincipalName", "HostedSolution.AllowChangeUPN", 4, 1, false },
+                    { 301, 30, null, null, null, "Allow user to create VPS", "VPS.ManagingAllowed", 2, 1, false },
+                    { 302, 30, null, null, null, "Number of CPU cores", "VPS.CpuNumber", 3, 2, false },
+                    { 303, 30, null, null, null, "Boot from CD allowed", "VPS.BootCdAllowed", 7, 1, false },
+                    { 304, 30, null, null, null, "Boot from CD", "VPS.BootCdEnabled", 8, 1, false },
+                    { 305, 30, null, null, null, "RAM size, MB", "VPS.Ram", 4, 2, false },
+                    { 306, 30, null, null, null, "Hard Drive size, GB", "VPS.Hdd", 5, 2, false },
+                    { 307, 30, null, null, null, "DVD drive", "VPS.DvdEnabled", 6, 1, false },
+                    { 308, 30, null, null, null, "External Network", "VPS.ExternalNetworkEnabled", 10, 1, false },
+                    { 309, 30, null, null, null, "Number of External IP addresses", "VPS.ExternalIPAddressesNumber", 11, 2, false },
+                    { 310, 30, null, null, null, "Private Network", "VPS.PrivateNetworkEnabled", 13, 1, false },
+                    { 311, 30, null, null, null, "Number of Private IP addresses per VPS", "VPS.PrivateIPAddressesNumber", 14, 3, false },
+                    { 312, 30, null, null, null, "Number of Snaphots", "VPS.SnapshotsNumber", 9, 3, false },
+                    { 313, 30, null, null, null, "Allow user to Start, Turn off and Shutdown VPS", "VPS.StartShutdownAllowed", 15, 1, false },
+                    { 314, 30, null, null, null, "Allow user to Pause, Resume VPS", "VPS.PauseResumeAllowed", 16, 1, false },
+                    { 315, 30, null, null, null, "Allow user to Reboot VPS", "VPS.RebootAllowed", 17, 1, false },
+                    { 316, 30, null, null, null, "Allow user to Reset VPS", "VPS.ResetAlowed", 18, 1, false },
+                    { 317, 30, null, null, null, "Allow user to Re-install VPS", "VPS.ReinstallAllowed", 19, 1, false },
+                    { 318, 30, null, null, null, "Monthly bandwidth, GB", "VPS.Bandwidth", 12, 2, false },
+                    { 319, 31, null, null, 1, null, "BlackBerry.Users", 1, 2, false },
+                    { 320, 32, null, null, 1, null, "OCS.Users", 1, 2, false },
+                    { 321, 32, null, null, null, null, "OCS.Federation", 2, 1, false },
+                    { 322, 32, null, null, null, null, "OCS.FederationByDefault", 3, 1, false },
+                    { 323, 32, null, null, null, null, "OCS.PublicIMConnectivity", 4, 1, false },
+                    { 324, 32, null, null, null, null, "OCS.PublicIMConnectivityByDefault", 5, 1, false },
+                    { 325, 32, null, null, null, null, "OCS.ArchiveIMConversation", 6, 1, false },
+                    { 326, 32, null, null, null, null, "OCS.ArchiveIMConvervationByDefault", 7, 1, false },
+                    { 327, 32, null, null, null, null, "OCS.ArchiveFederatedIMConversation", 8, 1, false },
+                    { 328, 32, null, null, null, null, "OCS.ArchiveFederatedIMConversationByDefault", 9, 1, false },
+                    { 329, 32, null, null, null, null, "OCS.PresenceAllowed", 10, 1, false },
+                    { 330, 32, null, null, null, null, "OCS.PresenceAllowedByDefault", 10, 1, false },
+                    { 331, 2, null, null, null, "ASP.NET 4.0", "Web.AspNet40", 4, 1, false },
+                    { 332, 2, null, null, null, "SSL", "Web.SSL", 21, 1, false },
+                    { 333, 2, null, null, null, "Allow IP Address Mode Switch", "Web.AllowIPAddressModeSwitch", 22, 1, false },
+                    { 334, 2, null, null, null, "Enable Hostname Support", "Web.EnableHostNameSupport", 23, 1, false },
+                    { 344, 2, null, null, null, "htaccess", "Web.Htaccess", 9, 1, false },
+                    { 346, 40, null, null, null, "Allow user to create VPS", "VPSForPC.ManagingAllowed", 2, 1, false },
+                    { 347, 40, null, null, null, "Number of CPU cores", "VPSForPC.CpuNumber", 3, 2, false },
+                    { 348, 40, null, null, null, "Boot from CD allowed", "VPSForPC.BootCdAllowed", 7, 1, false },
+                    { 349, 40, null, null, null, "Boot from CD", "VPSForPC.BootCdEnabled", 7, 1, false },
+                    { 350, 40, null, null, null, "RAM size, MB", "VPSForPC.Ram", 4, 2, false },
+                    { 351, 40, null, null, null, "Hard Drive size, GB", "VPSForPC.Hdd", 5, 2, false },
+                    { 352, 40, null, null, null, "DVD drive", "VPSForPC.DvdEnabled", 6, 1, false },
+                    { 353, 40, null, null, null, "External Network", "VPSForPC.ExternalNetworkEnabled", 10, 1, false },
+                    { 354, 40, null, null, null, "Number of External IP addresses", "VPSForPC.ExternalIPAddressesNumber", 11, 2, false },
+                    { 355, 40, null, null, null, "Private Network", "VPSForPC.PrivateNetworkEnabled", 13, 1, false },
+                    { 356, 40, null, null, null, "Number of Private IP addresses per VPS", "VPSForPC.PrivateIPAddressesNumber", 14, 3, false },
+                    { 357, 40, null, null, null, "Number of Snaphots", "VPSForPC.SnapshotsNumber", 9, 3, false },
+                    { 358, 40, null, null, null, "Allow user to Start, Turn off and Shutdown VPS", "VPSForPC.StartShutdownAllowed", 15, 1, false },
+                    { 359, 40, null, null, null, "Allow user to Pause, Resume VPS", "VPSForPC.PauseResumeAllowed", 16, 1, false },
+                    { 360, 40, null, null, null, "Allow user to Reboot VPS", "VPSForPC.RebootAllowed", 17, 1, false },
+                    { 361, 40, null, null, null, "Allow user to Reset VPS", "VPSForPC.ResetAlowed", 18, 1, false },
+                    { 362, 40, null, null, null, "Allow user to Re-install VPS", "VPSForPC.ReinstallAllowed", 19, 1, false },
+                    { 363, 40, null, null, null, "Monthly bandwidth, GB", "VPSForPC.Bandwidth", 12, 2, false },
+                    { 364, 12, null, null, null, "Keep Deleted Items (days)", "Exchange2007.KeepDeletedItemsDays", 19, 3, false },
+                    { 365, 12, null, null, null, "Maximum Recipients", "Exchange2007.MaxRecipients", 20, 3, false },
+                    { 366, 12, null, null, null, "Maximum Send Message Size (Kb)", "Exchange2007.MaxSendMessageSizeKB", 21, 3, false },
+                    { 367, 12, null, null, null, "Maximum Receive Message Size (Kb)", "Exchange2007.MaxReceiveMessageSizeKB", 22, 3, false },
+                    { 368, 12, null, null, null, "Is Consumer Organization", "Exchange2007.IsConsumer", 1, 1, false },
+                    { 369, 12, null, null, null, "Enable Plans Editing", "Exchange2007.EnablePlansEditing", 23, 1, false },
+                    { 370, 41, null, null, 1, "Users", "Lync.Users", 1, 2, false },
+                    { 371, 41, null, null, null, "Allow Federation", "Lync.Federation", 2, 1, false },
+                    { 372, 41, null, null, null, "Allow Conferencing", "Lync.Conferencing", 3, 1, false },
+                    { 373, 41, null, null, null, "Maximum Conference Particiapants", "Lync.MaxParticipants", 4, 3, false },
+                    { 374, 41, null, null, null, "Allow Video in Conference", "Lync.AllowVideo", 5, 1, false },
+                    { 375, 41, null, null, null, "Allow EnterpriseVoice", "Lync.EnterpriseVoice", 6, 1, false },
+                    { 376, 41, null, null, null, "Number of Enterprise Voice Users", "Lync.EVUsers", 7, 2, false },
+                    { 377, 41, null, null, null, "Allow National Calls", "Lync.EVNational", 8, 1, false },
+                    { 378, 41, null, null, null, "Allow Mobile Calls", "Lync.EVMobile", 9, 1, false },
+                    { 379, 41, null, null, null, "Allow International Calls", "Lync.EVInternational", 10, 1, false },
+                    { 380, 41, null, null, null, "Enable Plans Editing", "Lync.EnablePlansEditing", 11, 1, false },
+                    { 400, 20, null, null, null, "Use shared SSL Root", "HostedSharePoint.UseSharedSSL", 3, 1, false },
+                    { 409, 1, null, null, null, "Not allow Tenants to Delete Top Level Domains", "OS.NotAllowTenantDeleteDomains", 13, 1, false },
+                    { 410, 1, null, null, null, "Not allow Tenants to Create Top Level Domains", "OS.NotAllowTenantCreateDomains", 12, 1, false },
+                    { 411, 2, null, null, null, "Application Pools Restart", "Web.AppPoolsRestart", 13, 1, false },
+                    { 420, 12, null, null, null, "Allow Litigation Hold", "Exchange2007.AllowLitigationHold", 24, 1, false },
+                    { 421, 12, null, null, 1, "Recoverable Items Space", "Exchange2007.RecoverableItemsSpace", 25, 2, false },
+                    { 422, 12, null, null, null, "Disclaimers Allowed", "Exchange2007.DisclaimersAllowed", 26, 1, false },
+                    { 423, 13, null, null, 1, "Security Groups", "HostedSolution.SecurityGroups", 5, 2, false },
+                    { 424, 12, null, null, null, "Allow Retention Policy", "Exchange2013.AllowRetentionPolicy", 27, 1, false },
+                    { 425, 12, null, null, 1, "Archiving storage, MB", "Exchange2013.ArchivingStorage", 29, 2, false },
+                    { 426, 12, null, null, 1, "Archiving Mailboxes per Organization", "Exchange2013.ArchivingMailboxes", 28, 2, false },
+                    { 428, 12, null, null, 1, "Resource Mailboxes per Organization", "Exchange2013.ResourceMailboxes", 31, 2, false },
+                    { 429, 12, null, null, 1, "Shared Mailboxes per Organization", "Exchange2013.SharedMailboxes", 30, 2, false },
+                    { 430, 44, null, null, 1, "Disk Storage Space (Mb)", "EnterpriseStorage.DiskStorageSpace", 1, 2, false },
+                    { 431, 44, null, null, 1, "Number of Root Folders", "EnterpriseStorage.Folders", 1, 2, false },
+                    { 447, 61, null, null, null, "Enable Spam Filter", "Filters.Enable", 1, 1, false },
+                    { 448, 61, null, null, null, "Enable Per-Mailbox Login", "Filters.EnableEmailUsers", 2, 1, false },
+                    { 450, 45, null, null, 1, "Remote Desktop Users", "RDS.Users", 1, 2, false },
+                    { 451, 45, null, null, 1, "Remote Desktop Servers", "RDS.Servers", 2, 2, false },
+                    { 452, 45, null, null, null, "Disable user from adding server", "RDS.DisableUserAddServer", 3, 1, false },
+                    { 453, 45, null, null, null, "Disable user from removing server", "RDS.DisableUserDeleteServer", 3, 1, false },
+                    { 460, 21, null, null, null, "Max Database Size, MB", "HostedCRM.MaxDatabaseSize", 5, 3, false },
+                    { 461, 21, null, null, 1, "Limited licenses per organization", "HostedCRM.LimitedUsers", 3, 3, false },
+                    { 462, 21, null, null, 1, "ESS licenses per organization", "HostedCRM.ESSUsers", 4, 3, false },
+                    { 463, 24, null, null, null, "CRM Organization", "HostedCRM2013.Organization", 1, 1, false },
+                    { 464, 24, null, null, null, "Max Database Size, MB", "HostedCRM2013.MaxDatabaseSize", 5, 3, false },
+                    { 465, 24, null, null, 1, "Essential licenses per organization", "HostedCRM2013.EssentialUsers", 2, 3, false },
+                    { 466, 24, null, null, 1, "Basic licenses per organization", "HostedCRM2013.BasicUsers", 3, 3, false },
+                    { 467, 24, null, null, 1, "Professional licenses per organization", "HostedCRM2013.ProfessionalUsers", 4, 3, false },
+                    { 468, 45, null, null, null, "Use Drive Maps", "EnterpriseStorage.DriveMaps", 2, 1, false },
+                    { 472, 46, null, null, null, "Max Database Size", "MsSQL2014.MaxDatabaseSize", 3, 3, false },
+                    { 473, 46, null, null, null, "Database Backups", "MsSQL2014.Backup", 5, 1, false },
+                    { 474, 46, null, null, null, "Database Restores", "MsSQL2014.Restore", 6, 1, false },
+                    { 475, 46, null, null, null, "Database Truncate", "MsSQL2014.Truncate", 7, 1, false },
+                    { 476, 46, null, null, null, "Max Log Size", "MsSQL2014.MaxLogSize", 4, 3, false },
+                    { 491, 45, null, null, 1, "Remote Desktop Servers", "RDS.Collections", 2, 2, false },
+                    { 495, 13, null, null, 1, "Deleted Users", "HostedSolution.DeletedUsers", 6, 2, false },
+                    { 496, 13, null, null, 1, "Deleted Users Backup Storage Space, Mb", "HostedSolution.DeletedUsersBackupStorageSpace", 6, 2, false },
+                    { 551, 73, null, null, null, "Max site storage, MB", "HostedSharePointEnterprise.MaxStorage", 2, 3, false },
+                    { 552, 73, null, null, null, "Use shared SSL Root", "HostedSharePointEnterprise.UseSharedSSL", 3, 1, false },
+                    { 554, 33, null, null, null, "Allow user to create VPS", "VPS2012.ManagingAllowed", 2, 1, false },
+                    { 555, 33, null, null, null, "Number of CPU cores", "VPS2012.CpuNumber", 3, 2, false },
+                    { 556, 33, null, null, null, "Boot from CD allowed", "VPS2012.BootCdAllowed", 7, 1, false },
+                    { 557, 33, null, null, null, "Boot from CD", "VPS2012.BootCdEnabled", 8, 1, false },
+                    { 558, 33, null, null, null, "RAM size, MB", "VPS2012.Ram", 4, 2, false },
+                    { 559, 33, null, null, null, "Hard Drive size, GB", "VPS2012.Hdd", 5, 2, false },
+                    { 560, 33, null, null, null, "DVD drive", "VPS2012.DvdEnabled", 6, 1, false },
+                    { 561, 33, null, null, null, "External Network", "VPS2012.ExternalNetworkEnabled", 10, 1, false },
+                    { 562, 33, null, null, null, "Number of External IP addresses", "VPS2012.ExternalIPAddressesNumber", 11, 2, false },
+                    { 563, 33, null, null, null, "Private Network", "VPS2012.PrivateNetworkEnabled", 13, 1, false },
+                    { 564, 33, null, null, null, "Number of Private IP addresses per VPS", "VPS2012.PrivateIPAddressesNumber", 14, 3, false },
+                    { 565, 33, null, null, null, "Number of Snaphots", "VPS2012.SnapshotsNumber", 9, 3, false },
+                    { 566, 33, null, null, null, "Allow user to Start, Turn off and Shutdown VPS", "VPS2012.StartShutdownAllowed", 15, 1, false },
+                    { 567, 33, null, null, null, "Allow user to Pause, Resume VPS", "VPS2012.PauseResumeAllowed", 16, 1, false },
+                    { 568, 33, null, null, null, "Allow user to Reboot VPS", "VPS2012.RebootAllowed", 17, 1, false },
+                    { 569, 33, null, null, null, "Allow user to Reset VPS", "VPS2012.ResetAlowed", 18, 1, false },
+                    { 570, 33, null, null, null, "Allow user to Re-install VPS", "VPS2012.ReinstallAllowed", 19, 1, false },
+                    { 571, 33, null, null, null, "Monthly bandwidth, GB", "VPS2012.Bandwidth", 12, 2, false },
+                    { 572, 33, null, null, null, "Allow user to Replication", "VPS2012.ReplicationEnabled", 20, 1, false },
+                    { 575, 50, null, null, null, "Max Database Size", "MariaDB.MaxDatabaseSize", 3, 3, false },
+                    { 576, 50, null, null, null, "Database Backups", "MariaDB.Backup", 5, 1, false },
+                    { 577, 50, null, null, null, "Database Restores", "MariaDB.Restore", 6, 1, false },
+                    { 578, 50, null, null, null, "Database Truncate", "MariaDB.Truncate", 7, 1, false },
+                    { 579, 50, null, null, null, "Max Log Size", "MariaDB.MaxLogSize", 4, 3, false },
+                    { 581, 52, null, null, null, "Phone Numbers", "SfB.PhoneNumbers", 12, 2, false },
+                    { 582, 52, null, null, 1, "Users", "SfB.Users", 1, 2, false },
+                    { 583, 52, null, null, null, "Allow Federation", "SfB.Federation", 2, 1, false },
+                    { 584, 52, null, null, null, "Allow Conferencing", "SfB.Conferencing", 3, 1, false },
+                    { 585, 52, null, null, null, "Maximum Conference Particiapants", "SfB.MaxParticipants", 4, 3, false },
+                    { 586, 52, null, null, null, "Allow Video in Conference", "SfB.AllowVideo", 5, 1, false },
+                    { 587, 52, null, null, null, "Allow EnterpriseVoice", "SfB.EnterpriseVoice", 6, 1, false },
+                    { 588, 52, null, null, null, "Number of Enterprise Voice Users", "SfB.EVUsers", 7, 2, false },
+                    { 589, 52, null, null, null, "Allow National Calls", "SfB.EVNational", 8, 1, false },
+                    { 590, 52, null, null, null, "Allow Mobile Calls", "SfB.EVMobile", 9, 1, false },
+                    { 591, 52, null, null, null, "Allow International Calls", "SfB.EVInternational", 10, 1, false },
+                    { 592, 52, null, null, null, "Enable Plans Editing", "SfB.EnablePlansEditing", 11, 1, false },
+                    { 674, 167, null, null, null, "Allow user to create VPS", "PROXMOX.ManagingAllowed", 2, 1, false },
+                    { 675, 167, null, null, null, "Number of CPU cores", "PROXMOX.CpuNumber", 3, 3, false },
+                    { 676, 167, null, null, null, "Boot from CD allowed", "PROXMOX.BootCdAllowed", 7, 1, false },
+                    { 677, 167, null, null, null, "Boot from CD", "PROXMOX.BootCdEnabled", 8, 1, false },
+                    { 678, 167, null, null, null, "RAM size, MB", "PROXMOX.Ram", 4, 2, false },
+                    { 679, 167, null, null, null, "Hard Drive size, GB", "PROXMOX.Hdd", 5, 2, false },
+                    { 680, 167, null, null, null, "DVD drive", "PROXMOX.DvdEnabled", 6, 1, false },
+                    { 681, 167, null, null, null, "External Network", "PROXMOX.ExternalNetworkEnabled", 10, 1, false },
+                    { 682, 167, null, null, null, "Number of External IP addresses", "PROXMOX.ExternalIPAddressesNumber", 11, 2, false },
+                    { 683, 167, null, null, null, "Private Network", "PROXMOX.PrivateNetworkEnabled", 13, 1, false },
+                    { 684, 167, null, null, null, "Number of Private IP addresses per VPS", "PROXMOX.PrivateIPAddressesNumber", 14, 3, false },
+                    { 685, 167, null, null, null, "Number of Snaphots", "PROXMOX.SnapshotsNumber", 9, 3, false },
+                    { 686, 167, null, null, null, "Allow user to Start, Turn off and Shutdown VPS", "PROXMOX.StartShutdownAllowed", 15, 1, false },
+                    { 687, 167, null, null, null, "Allow user to Pause, Resume VPS", "PROXMOX.PauseResumeAllowed", 16, 1, false },
+                    { 688, 167, null, null, null, "Allow user to Reboot VPS", "PROXMOX.RebootAllowed", 17, 1, false },
+                    { 689, 167, null, null, null, "Allow user to Reset VPS", "PROXMOX.ResetAlowed", 18, 1, false },
+                    { 690, 167, null, null, null, "Allow user to Re-install VPS", "PROXMOX.ReinstallAllowed", 19, 1, false },
+                    { 691, 167, null, null, null, "Monthly bandwidth, GB", "PROXMOX.Bandwidth", 12, 2, false },
+                    { 692, 167, null, null, null, "Allow user to Replication", "PROXMOX.ReplicationEnabled", 20, 1, false },
+                    { 703, 71, null, null, null, "Max Database Size", "MsSQL2016.MaxDatabaseSize", 3, 3, false },
+                    { 704, 71, null, null, null, "Database Backups", "MsSQL2016.Backup", 5, 1, false },
+                    { 705, 71, null, null, null, "Database Restores", "MsSQL2016.Restore", 6, 1, false },
+                    { 706, 71, null, null, null, "Database Truncate", "MsSQL2016.Truncate", 7, 1, false },
+                    { 707, 71, null, null, null, "Max Log Size", "MsSQL2016.MaxLogSize", 4, 3, false },
+                    { 713, 72, null, null, null, "Max Database Size", "MsSQL2017.MaxDatabaseSize", 3, 3, false },
+                    { 714, 72, null, null, null, "Database Backups", "MsSQL2017.Backup", 5, 1, false },
+                    { 715, 72, null, null, null, "Database Restores", "MsSQL2017.Restore", 6, 1, false },
+                    { 716, 72, null, null, null, "Database Truncate", "MsSQL2017.Truncate", 7, 1, false },
+                    { 717, 72, null, null, null, "Max Log Size", "MsSQL2017.MaxLogSize", 4, 3, false },
+                    { 723, 74, null, null, null, "Max Database Size", "MsSQL2019.MaxDatabaseSize", 3, 3, false },
+                    { 724, 74, null, null, null, "Database Backups", "MsSQL2019.Backup", 5, 1, false },
+                    { 725, 74, null, null, null, "Database Restores", "MsSQL2019.Restore", 6, 1, false },
+                    { 726, 74, null, null, null, "Database Truncate", "MsSQL2019.Truncate", 7, 1, false },
+                    { 727, 74, null, null, null, "Max Log Size", "MsSQL2019.MaxLogSize", 4, 3, false },
+                    { 728, 33, null, null, null, "Number of Private Network VLANs", "VPS2012.PrivateVLANsNumber", 14, 2, false },
+                    { 729, 12, null, null, null, "Automatic Replies via SolidCP Allowed", "Exchange2013.AutoReply", 32, 1, false },
+                    { 730, 33, null, null, null, "Additional Hard Drives per VPS", "VPS2012.AdditionalVhdCount", 6, 3, false },
+                    { 731, 12, null, null, 1, "Journaling Mailboxes per Organization", "Exchange2013.JournalingMailboxes", 31, 2, false },
+                    { 734, 75, null, null, null, "Max Database Size", "MsSQL2022.MaxDatabaseSize", 3, 3, false },
+                    { 735, 75, null, null, null, "Database Backups", "MsSQL2022.Backup", 5, 1, false },
+                    { 736, 75, null, null, null, "Database Restores", "MsSQL2022.Restore", 6, 1, false },
+                    { 737, 75, null, null, null, "Database Truncate", "MsSQL2022.Truncate", 7, 1, false },
+                    { 738, 75, null, null, null, "Max Log Size", "MsSQL2022.MaxLogSize", 4, 3, false },
+                    { 750, 33, null, null, null, "DMZ Network", "VPS2012.DMZNetworkEnabled", 22, 1, false },
+                    { 751, 33, null, null, null, "Number of DMZ IP addresses per VPS", "VPS2012.DMZIPAddressesNumber", 23, 3, false },
+                    { 752, 33, null, null, null, "Number of DMZ Network VLANs", "VPS2012.DMZVLANsNumber", 24, 2, false },
+                    { 753, 7, null, null, null, "Allow editing TTL in DNS Editor", "DNS.EditTTL", 2, 1, false }
                 });
 
             migrationBuilder.InsertData(
@@ -3215,17 +3170,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     { "USE_RESPONSE_DOESNT_CONTAIN", "SCHEDULE_TASK_CHECK_WEBSITE", "Boolean", "false", 1 },
                     { "USE_RESPONSE_STATUS", "SCHEDULE_TASK_CHECK_WEBSITE", "Boolean", "false", 1 },
                     { "USERNAME", "SCHEDULE_TASK_CHECK_WEBSITE", "String", null, 2 },
-                    { "BCC_MAIL", "SCHEDULE_TASK_CHECK_WEBSITES_SSL", "String", "admin@mydomain.com", 3 },
-                    { "ERROR_MAIL_BODY", "SCHEDULE_TASK_CHECK_WEBSITES_SSL", "MultiString", "Hello, <br>we cannot verify the SSL certificate for the domain [domain]. <br><br>Error message: [error] <br><br>Please check if the website is available.", 11 },
-                    { "ERROR_MAIL_SUBJECT", "SCHEDULE_TASK_CHECK_WEBSITES_SSL", "String", "Certificate error or website is unavailable", 10 },
-                    { "EXPIRATION_MAIL_BODY", "SCHEDULE_TASK_CHECK_WEBSITES_SSL", "MultiString", "Hello, <br>Your certificate for the [domain] will expire in [expires_in_days] days (on [expires_on_date]).", 5 },
-                    { "EXPIRATION_MAIL_SUBJECT", "SCHEDULE_TASK_CHECK_WEBSITES_SSL", "String", "Website certificate expiration notice", 4 },
-                    { "SEND_14_DAYS_BEFORE_EXPIRATION", "SCHEDULE_TASK_CHECK_WEBSITES_SSL", "Boolean", "true", 7 },
-                    { "SEND_30_DAYS_BEFORE_EXPIRATION", "SCHEDULE_TASK_CHECK_WEBSITES_SSL", "Boolean", "true", 6 },
-                    { "SEND_BCC", "SCHEDULE_TASK_CHECK_WEBSITES_SSL", "Boolean", "false", 2 },
-                    { "SEND_MAIL_TO_CUSTOMER", "SCHEDULE_TASK_CHECK_WEBSITES_SSL", "Boolean", "true", 1 },
-                    { "SEND_SSL_ERROR", "SCHEDULE_TASK_CHECK_WEBSITES_SSL", "Boolean", "false", 9 },
-                    { "SEND_TODAY_EXPIRED", "SCHEDULE_TASK_CHECK_WEBSITES_SSL", "Boolean", "true", 8 },
                     { "DAYS_BEFORE", "SCHEDULE_TASK_DOMAIN_EXPIRATION", "String", null, 1 },
                     { "ENABLE_NOTIFICATION", "SCHEDULE_TASK_DOMAIN_EXPIRATION", "Boolean", "false", 3 },
                     { "INCLUDE_NONEXISTEN_DOMAINS", "SCHEDULE_TASK_DOMAIN_EXPIRATION", "Boolean", "false", 4 },
@@ -3302,7 +3246,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     { "ASP_NET", "SCHEDULE_TASK_CALCULATE_PACKAGES_DISKSPACE", "~/DesktopModules/SolidCP/ScheduleTaskControls/EmptyView.ascx", "ASP.NET" },
                     { "ASP_NET", "SCHEDULE_TASK_CANCEL_OVERDUE_INVOICES", "~/DesktopModules/SolidCP/ScheduleTaskControls/EmptyView.ascx", "ASP.NET" },
                     { "ASP_NET", "SCHEDULE_TASK_CHECK_WEBSITE", "~/DesktopModules/SolidCP/ScheduleTaskControls/CheckWebsite.ascx", "ASP.NET" },
-                    { "ASP_NET", "SCHEDULE_TASK_CHECK_WEBSITES_SSL", "~/DesktopModules/SolidCP/ScheduleTaskControls/CheckWebsitesSslView.ascx", "ASP.NET" },
                     { "ASP_NET", "SCHEDULE_TASK_DOMAIN_EXPIRATION", "~/DesktopModules/SolidCP/ScheduleTaskControls/DomainExpirationView.ascx", "ASP.NET" },
                     { "ASP_NET", "SCHEDULE_TASK_DOMAIN_LOOKUP", "~/DesktopModules/SolidCP/ScheduleTaskControls/DomainLookupView.ascx", "ASP.NET" },
                     { "ASP_NET", "SCHEDULE_TASK_FTP_FILES", "~/DesktopModules/SolidCP/ScheduleTaskControls/SendFilesViaFtp.ascx", "ASP.NET" },
@@ -3448,9 +3391,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     { 77, true, false, true, "MsSQL2019Database", true, 74, true, true, false, "SolidCP.Providers.Database.SqlDatabase, SolidCP.Providers.Base", 1 },
                     { 78, true, false, false, "MsSQL2019User", true, 74, true, true, false, "SolidCP.Providers.Database.SqlUser, SolidCP.Providers.Base", 1 },
                     { 79, true, false, true, "MsSQL2022Database", true, 75, true, true, false, "SolidCP.Providers.Database.SqlDatabase, SolidCP.Providers.Base", 1 },
-                    { 80, true, false, false, "MsSQL2022User", true, 75, true, true, false, "SolidCP.Providers.Database.SqlUser, SolidCP.Providers.Base", 1 },
-                    { 90, true, false, true, "MySQL9Database", true, 91, true, true, false, "SolidCP.Providers.Database.SqlDatabase, SolidCP.Providers.Base", 20 },
-                    { 91, true, false, false, "MySQL9User", true, 91, true, true, false, "SolidCP.Providers.Database.SqlUser, SolidCP.Providers.Base", 21 }
+                    { 80, true, false, false, "MsSQL2022User", true, 75, true, true, false, "SolidCP.Providers.Database.SqlUser, SolidCP.Providers.Base", 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -3470,9 +3411,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     { 200, true, false, true, "SharePointFoundationSiteCollection", true, 20, true, true, false, "SolidCP.Providers.SharePoint.SharePointSiteCollection, SolidCP.Providers.Base", 25 },
                     { 202, true, false, true, "MariaDBDatabase", true, 50, true, true, false, "SolidCP.Providers.Database.SqlDatabase, SolidCP.Providers.Base", 1 },
                     { 203, true, false, false, "MariaDBUser", true, 50, true, true, false, "SolidCP.Providers.Database.SqlUser, SolidCP.Providers.Base", 1 },
-                    { 204, true, false, true, "SharePointEnterpriseSiteCollection", true, 73, true, true, false, "SolidCP.Providers.SharePoint.SharePointEnterpriseSiteCollection, SolidCP.Providers.Base", 100 },
-                    { 205, true, false, true, "MsSQL2025Database", true, 76, true, true, false, "SolidCP.Providers.Database.SqlDatabase, SolidCP.Providers.Base", 1 },
-                    { 206, true, false, false, "MsSQL2025User", true, 76, true, true, false, "SolidCP.Providers.Database.SqlUser, SolidCP.Providers.Base", 1 }
+                    { 204, true, false, true, "SharePointEnterpriseSiteCollection", true, 73, true, true, false, "SolidCP.Providers.SharePoint.SharePointEnterpriseSiteCollection, SolidCP.Providers.Base", 100 }
                 });
 
             migrationBuilder.InsertData(
@@ -3483,7 +3422,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     { "CC", "AccountSummaryLetter", 1, "support@HostingCompany.com" },
                     { "EnableLetter", "AccountSummaryLetter", 1, "False" },
                     { "From", "AccountSummaryLetter", 1, "support@HostingCompany.com" },
-                    { "HtmlBody", "AccountSummaryLetter", 1, "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n    <title>Account Summary Information</title>\r\n    <style type=\"text/css\">\r\n		.Summary { background-color: ##ffffff; padding: 5px; }\r\n		.Summary .Header { padding: 10px 0px 10px 10px; font-size: 16pt; background-color: ##E5F2FF; color: ##1F4978; border-bottom: solid 2px ##86B9F7; }\r\n        .Summary A { color: ##0153A4; }\r\n        .Summary { font-family: Tahoma; font-size: 9pt; }\r\n        .Summary H1 { font-size: 1.7em; color: ##1F4978; border-bottom: dotted 3px ##efefef; }\r\n        .Summary H2 { font-size: 1.3em; color: ##1F4978; }\r\n        .Summary TABLE { border: solid 1px ##e5e5e5; }\r\n        .Summary TH,\r\n        .Summary TD.Label { padding: 5px; font-size: 8pt; font-weight: bold; background-color: ##f5f5f5; }\r\n        .Summary TD { padding: 8px; font-size: 9pt; }\r\n        .Summary UL LI { font-size: 1.1em; font-weight: bold; }\r\n        .Summary UL UL LI { font-size: 0.9em; font-weight: normal; }\r\n    </style>\r\n</head>\r\n<body>\r\n<div class=\"Summary\">\r\n\r\n<a name=\"top\"></a>\r\n<div class=\"Header\">\r\n	Hosting Account Information\r\n</div>\r\n\r\n<ad:if test=\"#Signup#\">\r\n<p>\r\nHello #user.FirstName#,\r\n</p>\r\n\r\n<p>\r\nNew user account has been created and below you can find its summary information.\r\n</p>\r\n\r\n<h1>Control Panel URL</h1>\r\n<table>\r\n    <thead>\r\n        <tr>\r\n            <th>Control Panel URL</th>\r\n            <th>Username</th>\r\n            <th>Password</th>\r\n        </tr>\r\n    </thead>\r\n    <tbody>\r\n        <tr>\r\n            <td><a href=\"http://panel.HostingCompany.com\">http://panel.HostingCompany.com</a></td>\r\n            <td>#user.Username#</td>\r\n            <td>#user.Password#</td>\r\n        </tr>\r\n    </tbody>\r\n</table>\r\n</ad:if>\r\n\r\n<h1>Hosting Spaces</h1>\r\n<p>\r\n    The following hosting spaces have been created under your account:\r\n</p>\r\n<ad:foreach collection=\"#Spaces#\" var=\"Space\" index=\"i\">\r\n<h2>#Space.PackageName#</h2>\r\n<table>\r\n	<tbody>\r\n		<tr>\r\n			<td class=\"Label\">Hosting Plan:</td>\r\n			<td>\r\n				<ad:if test=\"#not(isnull(Plans[Space.PlanId]))#\">#Plans[Space.PlanId].PlanName#<ad:else>System</ad:if>\r\n			</td>\r\n		</tr>\r\n		<ad:if test=\"#not(isnull(Plans[Space.PlanId]))#\">\r\n		<tr>\r\n			<td class=\"Label\">Purchase Date:</td>\r\n			<td>\r\n# Space.PurchaseDate#\r\n			</td>\r\n		</tr>\r\n		<tr>\r\n			<td class=\"Label\">Disk Space, MB:</td>\r\n			<td><ad:NumericQuota space=\"#SpaceContexts[Space.PackageId]#\" quota=\"OS.Diskspace\" /></td>\r\n		</tr>\r\n		<tr>\r\n			<td class=\"Label\">Bandwidth, MB/Month:</td>\r\n			<td><ad:NumericQuota space=\"#SpaceContexts[Space.PackageId]#\" quota=\"OS.Bandwidth\" /></td>\r\n		</tr>\r\n		<tr>\r\n			<td class=\"Label\">Maximum Number of Domains:</td>\r\n			<td><ad:NumericQuota space=\"#SpaceContexts[Space.PackageId]#\" quota=\"OS.Domains\" /></td>\r\n		</tr>\r\n		<tr>\r\n			<td class=\"Label\">Maximum Number of Sub-Domains:</td>\r\n			<td><ad:NumericQuota space=\"#SpaceContexts[Space.PackageId]#\" quota=\"OS.SubDomains\" /></td>\r\n		</tr>\r\n		</ad:if>\r\n	</tbody>\r\n</table>\r\n</ad:foreach>\r\n\r\n<ad:if test=\"#Signup#\">\r\n<p>\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n</p>\r\n\r\n<p>\r\nBest regards,<br />\r\nSolidCP.<br />\r\nWeb Site: <a href=\"https://solidcp.com\">https://solidcp.com</a><br />\r\nE-Mail: <a href=\"mailto:support@solidcp.com\">support@solidcp.com</a>\r\n</p>\r\n</ad:if>\r\n\r\n<ad:template name=\"NumericQuota\">\r\n	<ad:if test=\"#space.Quotas.ContainsKey(quota)#\">\r\n		<ad:if test=\"#space.Quotas[quota].QuotaAllocatedValue isnot -1#\">#space.Quotas[quota].QuotaAllocatedValue#<ad:else>Unlimited</ad:if>\r\n	<ad:else>\r\n		0\r\n	</ad:if>\r\n</ad:template>\r\n\r\n</div>\r\n</body>\r\n</html>" },
+                    { "HtmlBody", "AccountSummaryLetter", 1, "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n    <title>Account Summary Information</title>\r\n    <style type=\"text/css\">\r\n		.Summary { background-color: ##ffffff; padding: 5px; }\r\n		.Summary .Header { padding: 10px 0px 10px 10px; font-size: 16pt; background-color: ##E5F2FF; color: ##1F4978; border-bottom: solid 2px ##86B9F7; }\r\n        .Summary A { color: ##0153A4; }\r\n        .Summary { font-family: Tahoma; font-size: 9pt; }\r\n        .Summary H1 { font-size: 1.7em; color: ##1F4978; border-bottom: dotted 3px ##efefef; }\r\n        .Summary H2 { font-size: 1.3em; color: ##1F4978; }\r\n        .Summary TABLE { border: solid 1px ##e5e5e5; }\r\n        .Summary TH,\r\n        .Summary TD.Label { padding: 5px; font-size: 8pt; font-weight: bold; background-color: ##f5f5f5; }\r\n        .Summary TD { padding: 8px; font-size: 9pt; }\r\n        .Summary UL LI { font-size: 1.1em; font-weight: bold; }\r\n        .Summary UL UL LI { font-size: 0.9em; font-weight: normal; }\r\n    </style>\r\n</head>\r\n<body>\r\n<div class=\"Summary\">\r\n\r\n<a name=\"top\"></a>\r\n<div class=\"Header\">\r\n	Hosting Account Information\r\n</div>\r\n\r\n<ad:if test=\"#Signup#\">\r\n<p>\r\nHello #user.FirstName#,\r\n</p>\r\n\r\n<p>\r\nNew user account has been created and below you can find its summary information.\r\n</p>\r\n\r\n<h1>Control Panel URL</h1>\r\n<table>\r\n    <thead>\r\n        <tr>\r\n            <th>Control Panel URL</th>\r\n            <th>Username</th>\r\n            <th>Password</th>\r\n        </tr>\r\n    </thead>\r\n    <tbody>\r\n        <tr>\r\n            <td><a href=\"http://panel.HostingCompany.com\">http://panel.HostingCompany.com</a></td>\r\n            <td>#user.Username#</td>\r\n            <td>#user.Password#</td>\r\n        </tr>\r\n    </tbody>\r\n</table>\r\n</ad:if>\r\n\r\n<h1>Hosting Spaces</h1>\r\n<p>\r\n    The following hosting spaces have been created under your account:\r\n</p>\r\n<ad:foreach collection=\"#Spaces#\" var=\"Space\" index=\"i\">\r\n<h2>#Space.PackageName#</h2>\r\n<table>\r\n	<tbody>\r\n		<tr>\r\n			<td class=\"Label\">Hosting Plan:</td>\r\n			<td>\r\n				<ad:if test=\"#not(isnull(Plans[Space.PlanId]))#\">#Plans[Space.PlanId].PlanName#<ad:else>System</ad:if>\r\n			</td>\r\n		</tr>\r\n		<ad:if test=\"#not(isnull(Plans[Space.PlanId]))#\">\r\n		<tr>\r\n			<td class=\"Label\">Purchase Date:</td>\r\n			<td>\r\n				#Space.PurchaseDate#\r\n			</td>\r\n		</tr>\r\n		<tr>\r\n			<td class=\"Label\">Disk Space, MB:</td>\r\n			<td><ad:NumericQuota space=\"#SpaceContexts[Space.PackageId]#\" quota=\"OS.Diskspace\" /></td>\r\n		</tr>\r\n		<tr>\r\n			<td class=\"Label\">Bandwidth, MB/Month:</td>\r\n			<td><ad:NumericQuota space=\"#SpaceContexts[Space.PackageId]#\" quota=\"OS.Bandwidth\" /></td>\r\n		</tr>\r\n		<tr>\r\n			<td class=\"Label\">Maximum Number of Domains:</td>\r\n			<td><ad:NumericQuota space=\"#SpaceContexts[Space.PackageId]#\" quota=\"OS.Domains\" /></td>\r\n		</tr>\r\n		<tr>\r\n			<td class=\"Label\">Maximum Number of Sub-Domains:</td>\r\n			<td><ad:NumericQuota space=\"#SpaceContexts[Space.PackageId]#\" quota=\"OS.SubDomains\" /></td>\r\n		</tr>\r\n		</ad:if>\r\n	</tbody>\r\n</table>\r\n</ad:foreach>\r\n\r\n<ad:if test=\"#Signup#\">\r\n<p>\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n</p>\r\n\r\n<p>\r\nBest regards,<br />\r\nSolidCP.<br />\r\nWeb Site: <a href=\"https://solidcp.com\">https://solidcp.com</a><br />\r\nE-Mail: <a href=\"mailto:support@solidcp.com\">support@solidcp.com</a>\r\n</p>\r\n</ad:if>\r\n\r\n<ad:template name=\"NumericQuota\">\r\n	<ad:if test=\"#space.Quotas.ContainsKey(quota)#\">\r\n		<ad:if test=\"#space.Quotas[quota].QuotaAllocatedValue isnot -1#\">#space.Quotas[quota].QuotaAllocatedValue#<ad:else>Unlimited</ad:if>\r\n	<ad:else>\r\n		0\r\n	</ad:if>\r\n</ad:template>\r\n\r\n</div>\r\n</body>\r\n</html>" },
                     { "Priority", "AccountSummaryLetter", 1, "Normal" },
                     { "Subject", "AccountSummaryLetter", 1, "<ad:if test=\"#Signup#\">SolidCP  account has been created for<ad:else>SolidCP  account summary for</ad:if> #user.FirstName# #user.LastName#" },
                     { "TextBody", "AccountSummaryLetter", 1, "=================================\r\n   Hosting Account Information\r\n=================================\r\n<ad:if test=\"#Signup#\">Hello #user.FirstName#,\r\n\r\nNew user account has been created and below you can find its summary information.\r\n\r\nControl Panel URL: https://panel.solidcp.com\r\nUsername: #user.Username#\r\nPassword: #user.Password#\r\n</ad:if>\r\n\r\nHosting Spaces\r\n==============\r\nThe following hosting spaces have been created under your account:\r\n\r\n<ad:foreach collection=\"#Spaces#\" var=\"Space\" index=\"i\">\r\n=== #Space.PackageName# ===\r\nHosting Plan: <ad:if test=\"#not(isnull(Plans[Space.PlanId]))#\">#Plans[Space.PlanId].PlanName#<ad:else>System</ad:if>\r\n<ad:if test=\"#not(isnull(Plans[Space.PlanId]))#\">Purchase Date: #Space.PurchaseDate#\r\nDisk Space, MB: <ad:NumericQuota space=\"#SpaceContexts[Space.PackageId]#\" quota=\"OS.Diskspace\" />\r\nBandwidth, MB/Month: <ad:NumericQuota space=\"#SpaceContexts[Space.PackageId]#\" quota=\"OS.Bandwidth\" />\r\nMaximum Number of Domains: <ad:NumericQuota space=\"#SpaceContexts[Space.PackageId]#\" quota=\"OS.Domains\" />\r\nMaximum Number of Sub-Domains: <ad:NumericQuota space=\"#SpaceContexts[Space.PackageId]#\" quota=\"OS.SubDomains\" />\r\n</ad:if>\r\n</ad:foreach>\r\n\r\n<ad:if test=\"#Signup#\">If you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n\r\nBest regards,\r\nSolidCP.\r\nWeb Site: https://solidcp.com\">\r\nE-Mail: support@solidcp.com\r\n</ad:if><ad:template name=\"NumericQuota\"><ad:if test=\"#space.Quotas.ContainsKey(quota)#\"><ad:if test=\"#space.Quotas[quota].QuotaAllocatedValue isnot -1#\">#space.Quotas[quota].QuotaAllocatedValue#<ad:else>Unlimited</ad:if><ad:else>0</ad:if></ad:template>" },
@@ -3507,7 +3446,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     { "NoChangesTextBody", "DomainLookupLetter", 1, "=================================\r\n   MX and NS Changes Information\r\n=================================\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nNo MX and NS changes have been founded.\r\n\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n\r\nBest regards\r\n" },
                     { "Priority", "DomainLookupLetter", 1, "Normal" },
                     { "Subject", "DomainLookupLetter", 1, "MX and NS changes notification" },
-                    { "TextBody", "DomainLookupLetter", 1, "=================================\r\n   MX and NS Changes Information\r\n=================================\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nPlease, find below details of MX and NS changes.\r\n\r\n\r\n<ad:foreach collection=\"#Domains#\" var=\"Domain\" index=\"i\">\r\n\r\n# Domain.DomainName# - #DomainUsers[Domain.PackageId].FirstName# #DomainUsers[Domain.PackageId].LastName#\r\n Registrar:      #iif(isnull(Domain.Registrar), \"\", Domain.Registrar)#\r\n ExpirationDate: #iif(isnull(Domain.ExpirationDate), \"\", Domain.ExpirationDate)#\r\n\r\n        <ad:foreach collection=\"#Domain.DnsChanges#\" var=\"DnsChange\" index=\"j\">\r\n            DNS:       #DnsChange.DnsServer#\r\n            Type:      #DnsChange.Type#\r\n	    Status:    #DnsChange.Status#\r\n            Old Value: #DnsChange.OldRecord.Value#\r\n            New Value: #DnsChange.NewRecord.Value#\r\n\r\n    	</ad:foreach>\r\n</ad:foreach>\r\n\r\n\r\n\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n\r\nBest regards\r\n" },
+                    { "TextBody", "DomainLookupLetter", 1, "=================================\r\n   MX and NS Changes Information\r\n=================================\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nPlease, find below details of MX and NS changes.\r\n\r\n\r\n<ad:foreach collection=\"#Domains#\" var=\"Domain\" index=\"i\">\r\n\r\n #Domain.DomainName# - #DomainUsers[Domain.PackageId].FirstName# #DomainUsers[Domain.PackageId].LastName#\r\n Registrar:      #iif(isnull(Domain.Registrar), \"\", Domain.Registrar)#\r\n ExpirationDate: #iif(isnull(Domain.ExpirationDate), \"\", Domain.ExpirationDate)#\r\n\r\n        <ad:foreach collection=\"#Domain.DnsChanges#\" var=\"DnsChange\" index=\"j\">\r\n            DNS:       #DnsChange.DnsServer#\r\n            Type:      #DnsChange.Type#\r\n	    Status:    #DnsChange.Status#\r\n            Old Value: #DnsChange.OldRecord.Value#\r\n            New Value: #DnsChange.NewRecord.Value#\r\n\r\n    	</ad:foreach>\r\n</ad:foreach>\r\n\r\n\r\n\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n\r\nBest regards\r\n" },
                     { "From", "ExchangeMailboxSetupLetter", 1, "support@HostingCompany.com" },
                     { "HtmlBody", "ExchangeMailboxSetupLetter", 1, "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n    <title>Account Summary Information</title>\r\n    <style type=\"text/css\">\r\n        body {font-family: 'Segoe UI Light','Open Sans',Arial!important;color:black;}\r\n        p {color:black;}\r\n		.Summary { background-color: ##ffffff; padding: 5px; }\r\n		.SummaryHeader { padding: 10px 0px 10px 10px; font-size: 16pt; background-color: ##E5F2FF; color: ##1F4978; border-bottom: solid 2px ##86B9F7; }\r\n        .Summary A { color: ##0153A4; }\r\n        .Summary { font-family: Tahoma; font-size: 9pt; }\r\n        .Summary H1 { font-size: 1.5em; color: ##1F4978; border-bottom: dotted 3px ##efefef; font-weight:normal; }\r\n        .Summary H2 { font-size: 1.2em; color: ##1F4978; } \r\n        .Summary TABLE { border: solid 1px ##e5e5e5; }\r\n        .Summary TH,\r\n        .Summary TD.Label { padding: 5px; font-size: 8pt; font-weight: bold; background-color: ##f5f5f5; }\r\n        .Summary TD { padding: 8px; font-size: 9pt; color:black;}\r\n        .Summary UL LI { font-size: 1.1em; font-weight: bold; }\r\n        .Summary UL UL LI { font-size: 0.9em; font-weight: normal; }\r\n        .Label { color:##1F4978; }\r\n        .menu-bar a {padding: 15px 0;display: inline-block;}\r\n    </style>\r\n</head>\r\n<body>\r\n<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><!-- was 800 -->\r\n<tbody>\r\n<tr>\r\n<td style=\"padding: 10px 20px 10px 20px; background-color: ##e1e1e1;\">\r\n<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\r\n<tbody>\r\n<tr>\r\n<td style=\"text-align: left; padding: 0px 0px 2px 0px;\"><a href=\"\"><img src=\"\" border=\"0\" alt=\"\" /></a></td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\r\n<tbody>\r\n<tr>\r\n<td style=\"padding-bottom: 10px;\">\r\n<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\r\n<tbody>\r\n<tr>\r\n<td style=\"background-color: ##2e8bcc; padding: 3px;\">\r\n<table class=\"menu-bar\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\r\n<tbody>\r\n<tr>\r\n<td style=\"text-align: center;\" width=\"20%\"><a style=\"color: ##ffffff; text-transform: uppercase; font-size: 9px; font-weight: bold; font-family: Arial, Helvetica, sans-serif; text-decoration: none;\" href=\"\"</a></td>\r\n<td style=\"text-align: center;\" width=\"20%\"><a style=\"color: ##ffffff; text-transform: uppercase; font-size: 9px; font-weight: bold; font-family: Arial, Helvetica, sans-serif; text-decoration: none;\" href=\"\"></a></td>\r\n<td style=\"text-align: center;\" width=\"20%\"><a style=\"color: ##ffffff; text-transform: uppercase; font-size: 9px; font-weight: bold; font-family: Arial, Helvetica, sans-serif; text-decoration: none;\" href=\"\"></a></td>\r\n<td style=\"text-align: center;\" width=\"20%\"><a style=\"color: ##ffffff; text-transform: uppercase; font-size: 9px; font-weight: bold; font-family: Arial, Helvetica, sans-serif; text-decoration: none;\" href=\"\"></a></td>\r\n<td style=\"text-align: center;\" width=\"20%\"><a style=\"color: ##ffffff; text-transform: uppercase; font-size: 9px; font-weight: bold; font-family: Arial, Helvetica, sans-serif; text-decoration: none;\" href=\"\"></a></td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n</td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n</td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\r\n<tbody>\r\n<tr>\r\n<td style=\"background-color: ##ffffff;\">\r\n<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><!-- was 759 -->\r\n<tbody>\r\n<tr>\r\n<td style=\"vertical-align: top; padding: 10px 10px 0px 10px;\" width=\"100%\">\r\n<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\r\n<tbody>\r\n<tr>\r\n<td style=\"font-family: 'Segoe UI Light','Open Sans',Arial; padding: 0px 10px 0px 0px;\">\r\n<!-- Begin Content -->\r\n<div class=\"Summary\">\r\n    <ad:if test=\"#Email#\">\r\n    <p>\r\n    Hello #Account.DisplayName#,\r\n    </p>\r\n    <p>\r\n    Thanks for choosing as your Exchange hosting provider.\r\n    </p>\r\n    </ad:if>\r\n    <ad:if test=\"#not(PMM)#\">\r\n    <h1>User Accounts</h1>\r\n    <p>\r\n    The following user accounts have been created for you.\r\n    </p>\r\n    <table>\r\n        <tr>\r\n            <td class=\"Label\">Username:</td>\r\n            <td>#Account.UserPrincipalName#</td>\r\n        </tr>\r\n        <tr>\r\n            <td class=\"Label\">E-mail:</td>\r\n            <td>#Account.PrimaryEmailAddress#</td>\r\n        </tr>\r\n		<ad:if test=\"#PswResetUrl#\">\r\n        <tr>\r\n            <td class=\"Label\">Password Reset Url:</td>\r\n            <td><a href=\"#PswResetUrl#\" target=\"_blank\">Click here</a></td>\r\n        </tr>\r\n		</ad:if>\r\n    </table>\r\n    </ad:if>\r\n    <h1>DNS</h1>\r\n    <p>\r\n    In order for us to accept mail for your domain, you will need to point your MX records to:\r\n    </p>\r\n    <table>\r\n        <ad:foreach collection=\"#SmtpServers#\" var=\"SmtpServer\" index=\"i\">\r\n            <tr>\r\n                <td class=\"Label\">#SmtpServer#</td>\r\n            </tr>\r\n        </ad:foreach>\r\n    </table>\r\n   <h1>\r\n    Webmail (OWA, Outlook Web Access)</h1>\r\n    <p>\r\n    <a href=\"\" target=\"_blank\"></a>\r\n    </p>\r\n    <h1>\r\n    Outlook (Windows Clients)</h1>\r\n    <p>\r\n    To configure MS Outlook to work with the servers, please reference:\r\n    </p>\r\n    <p>\r\n    <a href=\"\" target=\"_blank\"></a>\r\n    </p>\r\n    <p>\r\n    If you need to download and install the Outlook client:</p>\r\n        \r\n        <table>\r\n            <tr><td colspan=\"2\" class=\"Label\"><font size=\"3\">MS Outlook Client</font></td></tr>\r\n            <tr>\r\n                <td class=\"Label\">\r\n                    Download URL:</td>\r\n                <td><a href=\"\"></a></td>\r\n            </tr>\r\n<tr>\r\n                <td class=\"Label\"></td>\r\n                <td><a href=\"\"></a></td>\r\n            </tr>\r\n            <tr>\r\n                <td class=\"Label\">\r\n                    KEY:</td>\r\n                <td></td>\r\n            </tr>\r\n        </table>\r\n \r\n       <h1>\r\n    ActiveSync, iPhone, iPad</h1>\r\n    <table>\r\n        <tr>\r\n            <td class=\"Label\">Server:</td>\r\n            <td>#ActiveSyncServer#</td>\r\n        </tr>\r\n        <tr>\r\n            <td class=\"Label\">Domain:</td>\r\n            <td>#SamDomain#</td>\r\n        </tr>\r\n        <tr>\r\n            <td class=\"Label\">SSL:</td>\r\n            <td>must be checked</td>\r\n        </tr>\r\n        <tr>\r\n            <td class=\"Label\">Your username:</td>\r\n            <td>#SamUsername#</td>\r\n        </tr>\r\n    </table>\r\n \r\n    <h1>Password Changes</h1>\r\n    <p>\r\n    Passwords can be changed at any time using Webmail or the <a href=\"\" target=\"_blank\">Control Panel</a>.</p>\r\n    <h1>Control Panel</h1>\r\n    <p>\r\n    If you need to change the details of your account, you can easily do this using <a href=\"\" target=\"_blank\">Control Panel</a>.</p>\r\n    <h1>Support</h1>\r\n    <p>\r\n    You have 2 options, email <a href=\"mailto:\"></a> or use the web interface at <a href=\"\"></a></p>\r\n    \r\n</div>\r\n<!-- End Content -->\r\n<br></td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n</td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n</td>\r\n</tr>\r\n<tr>\r\n<td style=\"background-color: ##ffffff; border-top: 1px solid ##999999;\">\r\n<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\r\n<tbody>\r\n<tr>\r\n<td style=\"vertical-align: top; padding: 0px 20px 15px 20px;\">\r\n<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\r\n<tbody>\r\n<tr>\r\n<td style=\"font-family: Arial, Helvetica, sans-serif; text-align: left; font-size: 9px; color: ##717073; padding: 20px 0px 0px 0px;\">\r\n<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\r\n<tbody>\r\n<tr>\r\n<td style=\"font-family: Arial, Helvetica, sans-serif; font-size: 9px; text-align: left; color: ##1666af; vertical-align: top;\" width=\"33%\"><a style=\"font-weight: bold; text-transform: uppercase; text-decoration: underline; color: ##1666af;\" href=\"\"></a><br />Learn more about the services can provide to improve your business.</td>\r\n<td style=\"font-family: Arial, Helvetica, sans-serif; font-size: 9px; text-align: left; color: ##1666af; padding: 0px 10px 0px 10px; vertical-align: top;\" width=\"34%\"><a style=\"font-weight: bold; text-transform: uppercase; text-decoration: underline; color: ##1666af;\" href=\"\">Privacy Policy</a><br /> follows strict guidelines in protecting your privacy. Learn about our <a style=\"font-weight: bold; text-decoration: underline; color: ##1666af;\" href=\"\">Privacy Policy</a>.</td>\r\n<td style=\"font-family: Arial, Helvetica, sans-serif; font-size: 9px; text-align: left; color: ##1666af; vertical-align: top;\" width=\"33%\"><a style=\"font-weight: bold; text-transform: uppercase; text-decoration: underline; color: ##1666af;\" href=\"\">Contact Us</a><br />Questions? For more information, <a style=\"font-weight: bold; text-decoration: underline; color: ##1666af;\" href=\"\">contact us</a>.</td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n</td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n</td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n</td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n</td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n</body>\r\n</html>" },
                     { "Priority", "ExchangeMailboxSetupLetter", 1, "Normal" },
@@ -3532,9 +3471,9 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     { "HtmlBody", "OrganizationUserPasswordRequestLetter", 1, "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n    <title>Password request notification</title>\r\n    <style type=\"text/css\">\r\n		.Summary { background-color: ##ffffff; padding: 5px; }\r\n		.Summary .Header { padding: 10px 0px 10px 10px; font-size: 16pt; background-color: ##E5F2FF; color: ##1F4978; border-bottom: solid 2px ##86B9F7; }\r\n        .Summary A { color: ##0153A4; }\r\n        .Summary { font-family: Tahoma; font-size: 9pt; }\r\n        .Summary H1 { font-size: 1.7em; color: ##1F4978; border-bottom: dotted 3px ##efefef; }\r\n        .Summary H2 { font-size: 1.3em; color: ##1F4978; } \r\n        .Summary TABLE { border: solid 1px ##e5e5e5; }\r\n        .Summary TH,\r\n        .Summary TD.Label { padding: 5px; font-size: 8pt; font-weight: bold; background-color: ##f5f5f5; }\r\n        .Summary TD { padding: 8px; font-size: 9pt; }\r\n        .Summary UL LI { font-size: 1.1em; font-weight: bold; }\r\n        .Summary UL UL LI { font-size: 0.9em; font-weight: normal; }\r\n    </style>\r\n</head>\r\n<body>\r\n<div class=\"Summary\">\r\n<div class=\"Header\">\r\n<img src=\"#logoUrl#\">\r\n</div>\r\n<h1>Password request notification</h1>\r\n\r\n<ad:if test=\"#user#\">\r\n<p>\r\nHello #user.FirstName#,\r\n</p>\r\n</ad:if>\r\n\r\n<p>\r\nYour account have been created. In order to create a password for your account, please follow next link:\r\n</p>\r\n\r\n<a href=\"#passwordResetLink#\" target=\"_blank\">#passwordResetLink#</a>\r\n\r\n<p>\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n</p>\r\n\r\n<p>\r\nBest regards\r\n</p>\r\n</div>\r\n</body>" },
                     { "LogoUrl", "OrganizationUserPasswordRequestLetter", 1, "" },
                     { "Priority", "OrganizationUserPasswordRequestLetter", 1, "Normal" },
-                    { "SMSBody", "OrganizationUserPasswordRequestLetter", 1, "\r\nUser have been created. Password request url:\r\n# passwordResetLink#" },
+                    { "SMSBody", "OrganizationUserPasswordRequestLetter", 1, "\r\nUser have been created. Password request url:\r\n#passwordResetLink#" },
                     { "Subject", "OrganizationUserPasswordRequestLetter", 1, "Password request notification" },
-                    { "TextBody", "OrganizationUserPasswordRequestLetter", 1, "=========================================\r\n   Password request notification\r\n=========================================\r\n\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nYour account have been created. In order to create a password for your account, please follow next link:\r\n\r\n# passwordResetLink#\r\n\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n\r\nBest regards" },
+                    { "TextBody", "OrganizationUserPasswordRequestLetter", 1, "=========================================\r\n   Password request notification\r\n=========================================\r\n\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nYour account have been created. In order to create a password for your account, please follow next link:\r\n\r\n#passwordResetLink#\r\n\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n\r\nBest regards" },
                     { "DsnNamePolicy", "OsPolicy", 1, "True;-;2;40;;;" },
                     { "CC", "PackageSummaryLetter", 1, "support@HostingCompany.com" },
                     { "EnableLetter", "PackageSummaryLetter", 1, "True" },
@@ -3564,27 +3503,27 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     { "LogoUrl", "UserPasswordExpirationLetter", 1, "" },
                     { "Priority", "UserPasswordExpirationLetter", 1, "Normal" },
                     { "Subject", "UserPasswordExpirationLetter", 1, "Password expiration notification" },
-                    { "TextBody", "UserPasswordExpirationLetter", 1, "=========================================\r\n   Password expiration notification\r\n=========================================\r\n\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nYour password expiration date is #user.PasswordExpirationDateTime#. You can reset your own password by visiting the following page:\r\n\r\n# passwordResetLink#\r\n\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n\r\nBest regards" },
+                    { "TextBody", "UserPasswordExpirationLetter", 1, "=========================================\r\n   Password expiration notification\r\n=========================================\r\n\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nYour password expiration date is #user.PasswordExpirationDateTime#. You can reset your own password by visiting the following page:\r\n\r\n#passwordResetLink#\r\n\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n\r\nBest regards" },
                     { "From", "UserPasswordResetLetter", 1, "support@HostingCompany.com" },
                     { "HtmlBody", "UserPasswordResetLetter", 1, "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n    <title>Password reset notification</title>\r\n    <style type=\"text/css\">\r\n		.Summary { background-color: ##ffffff; padding: 5px; }\r\n		.Summary .Header { padding: 10px 0px 10px 10px; font-size: 16pt; background-color: ##E5F2FF; color: ##1F4978; border-bottom: solid 2px ##86B9F7; }\r\n        .Summary A { color: ##0153A4; }\r\n        .Summary { font-family: Tahoma; font-size: 9pt; }\r\n        .Summary H1 { font-size: 1.7em; color: ##1F4978; border-bottom: dotted 3px ##efefef; }\r\n        .Summary H2 { font-size: 1.3em; color: ##1F4978; } \r\n        .Summary TABLE { border: solid 1px ##e5e5e5; }\r\n        .Summary TH,\r\n        .Summary TD.Label { padding: 5px; font-size: 8pt; font-weight: bold; background-color: ##f5f5f5; }\r\n        .Summary TD { padding: 8px; font-size: 9pt; }\r\n        .Summary UL LI { font-size: 1.1em; font-weight: bold; }\r\n        .Summary UL UL LI { font-size: 0.9em; font-weight: normal; }\r\n    </style>\r\n</head>\r\n<body>\r\n<div class=\"Summary\">\r\n<div class=\"Header\">\r\n<img src=\"#logoUrl#\">\r\n</div>\r\n<h1>Password reset notification</h1>\r\n\r\n<ad:if test=\"#user#\">\r\n<p>\r\nHello #user.FirstName#,\r\n</p>\r\n</ad:if>\r\n\r\n<p>\r\nWe received a request to reset the password for your account. If you made this request, click the link below. If you did not make this request, you can ignore this email.\r\n</p>\r\n\r\n<a href=\"#passwordResetLink#\" target=\"_blank\">#passwordResetLink#</a>\r\n\r\n\r\n<p>\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n</p>\r\n\r\n<p>\r\nBest regards\r\n</p>\r\n</div>\r\n</body>" },
                     { "LogoUrl", "UserPasswordResetLetter", 1, "" },
-                    { "PasswordResetLinkSmsBody", "UserPasswordResetLetter", 1, "Password reset link:\r\n# passwordResetLink#\r\n" },
+                    { "PasswordResetLinkSmsBody", "UserPasswordResetLetter", 1, "Password reset link:\r\n#passwordResetLink#\r\n" },
                     { "Priority", "UserPasswordResetLetter", 1, "Normal" },
                     { "Subject", "UserPasswordResetLetter", 1, "Password reset notification" },
-                    { "TextBody", "UserPasswordResetLetter", 1, "=========================================\r\n   Password reset notification\r\n=========================================\r\n\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nWe received a request to reset the password for your account. If you made this request, click the link below. If you did not make this request, you can ignore this email.\r\n\r\n# passwordResetLink#\r\n\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n\r\nBest regards" },
+                    { "TextBody", "UserPasswordResetLetter", 1, "=========================================\r\n   Password reset notification\r\n=========================================\r\n\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nWe received a request to reset the password for your account. If you made this request, click the link below. If you did not make this request, you can ignore this email.\r\n\r\n#passwordResetLink#\r\n\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n\r\nBest regards" },
                     { "From", "UserPasswordResetPincodeLetter", 1, "support@HostingCompany.com" },
-                    { "HtmlBody", "UserPasswordResetPincodeLetter", 1, "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n    <title>Password reset notification</title>\r\n    <style type=\"text/css\">\r\n		.Summary { background-color: ##ffffff; padding: 5px; }\r\n		.Summary .Header { padding: 10px 0px 10px 10px; font-size: 16pt; background-color: ##E5F2FF; color: ##1F4978; border-bottom: solid 2px ##86B9F7; }\r\n        .Summary A { color: ##0153A4; }\r\n        .Summary { font-family: Tahoma; font-size: 9pt; }\r\n        .Summary H1 { font-size: 1.7em; color: ##1F4978; border-bottom: dotted 3px ##efefef; }\r\n        .Summary H2 { font-size: 1.3em; color: ##1F4978; } \r\n        .Summary TABLE { border: solid 1px ##e5e5e5; }\r\n        .Summary TH,\r\n        .Summary TD.Label { padding: 5px; font-size: 8pt; font-weight: bold; background-color: ##f5f5f5; }\r\n        .Summary TD { padding: 8px; font-size: 9pt; }\r\n        .Summary UL LI { font-size: 1.1em; font-weight: bold; }\r\n        .Summary UL UL LI { font-size: 0.9em; font-weight: normal; }\r\n    </style>\r\n</head>\r\n<body>\r\n<div class=\"Summary\">\r\n<div class=\"Header\">\r\n<img src=\"#logoUrl#\">\r\n</div>\r\n<h1>Password reset notification</h1>\r\n\r\n<ad:if test=\"#user#\">\r\n<p>\r\nHello #user.FirstName#,\r\n</p>\r\n</ad:if>\r\n\r\n<p>\r\nWe received a request to reset the password for your account. Your password reset pincode:\r\n</p>\r\n\r\n# passwordResetPincode#\r\n\r\n<p>\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n</p>\r\n\r\n<p>\r\nBest regards\r\n</p>\r\n</div>\r\n</body>" },
+                    { "HtmlBody", "UserPasswordResetPincodeLetter", 1, "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n    <title>Password reset notification</title>\r\n    <style type=\"text/css\">\r\n		.Summary { background-color: ##ffffff; padding: 5px; }\r\n		.Summary .Header { padding: 10px 0px 10px 10px; font-size: 16pt; background-color: ##E5F2FF; color: ##1F4978; border-bottom: solid 2px ##86B9F7; }\r\n        .Summary A { color: ##0153A4; }\r\n        .Summary { font-family: Tahoma; font-size: 9pt; }\r\n        .Summary H1 { font-size: 1.7em; color: ##1F4978; border-bottom: dotted 3px ##efefef; }\r\n        .Summary H2 { font-size: 1.3em; color: ##1F4978; } \r\n        .Summary TABLE { border: solid 1px ##e5e5e5; }\r\n        .Summary TH,\r\n        .Summary TD.Label { padding: 5px; font-size: 8pt; font-weight: bold; background-color: ##f5f5f5; }\r\n        .Summary TD { padding: 8px; font-size: 9pt; }\r\n        .Summary UL LI { font-size: 1.1em; font-weight: bold; }\r\n        .Summary UL UL LI { font-size: 0.9em; font-weight: normal; }\r\n    </style>\r\n</head>\r\n<body>\r\n<div class=\"Summary\">\r\n<div class=\"Header\">\r\n<img src=\"#logoUrl#\">\r\n</div>\r\n<h1>Password reset notification</h1>\r\n\r\n<ad:if test=\"#user#\">\r\n<p>\r\nHello #user.FirstName#,\r\n</p>\r\n</ad:if>\r\n\r\n<p>\r\nWe received a request to reset the password for your account. Your password reset pincode:\r\n</p>\r\n\r\n#passwordResetPincode#\r\n\r\n<p>\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n</p>\r\n\r\n<p>\r\nBest regards\r\n</p>\r\n</div>\r\n</body>" },
                     { "LogoUrl", "UserPasswordResetPincodeLetter", 1, "" },
-                    { "PasswordResetPincodeSmsBody", "UserPasswordResetPincodeLetter", 1, "\r\nYour password reset pincode:\r\n# passwordResetPincode#" },
+                    { "PasswordResetPincodeSmsBody", "UserPasswordResetPincodeLetter", 1, "\r\nYour password reset pincode:\r\n#passwordResetPincode#" },
                     { "Priority", "UserPasswordResetPincodeLetter", 1, "Normal" },
                     { "Subject", "UserPasswordResetPincodeLetter", 1, "Password reset notification" },
-                    { "TextBody", "UserPasswordResetPincodeLetter", 1, "=========================================\r\n   Password reset notification\r\n=========================================\r\n\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nWe received a request to reset the password for your account. Your password reset pincode:\r\n\r\n# passwordResetPincode#\r\n\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n\r\nBest regards" },
+                    { "TextBody", "UserPasswordResetPincodeLetter", 1, "=========================================\r\n   Password reset notification\r\n=========================================\r\n\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nWe received a request to reset the password for your account. Your password reset pincode:\r\n\r\n#passwordResetPincode#\r\n\r\nIf you have any questions regarding your hosting account, feel free to contact our support department at any time.\r\n\r\nBest regards" },
                     { "CC", "VerificationCodeLetter", 1, "support@HostingCompany.com" },
                     { "From", "VerificationCodeLetter", 1, "support@HostingCompany.com" },
                     { "HtmlBody", "VerificationCodeLetter", 1, "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n    <title>Verification code</title>\r\n    <style type=\"text/css\">\r\n		.Summary { background-color: ##ffffff; padding: 5px; }\r\n		.Summary .Header { padding: 10px 0px 10px 10px; font-size: 16pt; background-color: ##E5F2FF; color: ##1F4978; border-bottom: solid 2px ##86B9F7; }\r\n        .Summary A { color: ##0153A4; }\r\n        .Summary { font-family: Tahoma; font-size: 9pt; }\r\n        .Summary H1 { font-size: 1.7em; color: ##1F4978; border-bottom: dotted 3px ##efefef; }\r\n        .Summary H2 { font-size: 1.3em; color: ##1F4978; }\r\n        .Summary TABLE { border: solid 1px ##e5e5e5; }\r\n        .Summary TH,\r\n        .Summary TD.Label { padding: 5px; font-size: 8pt; font-weight: bold; background-color: ##f5f5f5; }\r\n        .Summary TD { padding: 8px; font-size: 9pt; }\r\n        .Summary UL LI { font-size: 1.1em; font-weight: bold; }\r\n        .Summary UL UL LI { font-size: 0.9em; font-weight: normal; }\r\n    </style>\r\n</head>\r\n<body>\r\n<div class=\"Summary\">\r\n\r\n<a name=\"top\"></a>\r\n<div class=\"Header\">\r\n	Verification code\r\n</div>\r\n\r\n<p>\r\nHello #user.FirstName#,\r\n</p>\r\n\r\n<p>\r\nto complete the sign in, enter the verification code on the device. \r\n</p>\r\n\r\n<table>\r\n    <thead>\r\n        <tr>\r\n            <th>Verification code</th>\r\n        </tr>\r\n    </thead>\r\n    <tbody>\r\n        <tr>\r\n            <td>#verificationCode#</td>\r\n        </tr>\r\n    </tbody>\r\n</table>\r\n\r\n<p>\r\nBest regards,<br />\r\n\r\n</p>\r\n\r\n</div>\r\n</body>\r\n</html>" },
                     { "Priority", "VerificationCodeLetter", 1, "Normal" },
                     { "Subject", "VerificationCodeLetter", 1, "Verification code" },
-                    { "TextBody", "VerificationCodeLetter", 1, "=================================\r\n   Verification code\r\n=================================\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nto complete the sign in, enter the verification code on the device.\r\n\r\nVerification code\r\n# verificationCode#\r\n\r\nBest regards,\r\n" },
+                    { "TextBody", "VerificationCodeLetter", 1, "=================================\r\n   Verification code\r\n=================================\r\n<ad:if test=\"#user#\">\r\nHello #user.FirstName#,\r\n</ad:if>\r\n\r\nto complete the sign in, enter the verification code on the device.\r\n\r\nVerification code\r\n#verificationCode#\r\n\r\nBest regards,\r\n" },
                     { "AddParkingPage", "WebPolicy", 1, "True" },
                     { "AddRandomDomainString", "WebPolicy", 1, "False" },
                     { "AnonymousAccountPolicy", "WebPolicy", 1, "True;;5;20;;_web;" },
@@ -3606,7 +3545,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     { "ParkingPageName", "WebPolicy", 1, "default.aspx" },
                     { "PerlInstalled", "WebPolicy", 1, "False" },
                     { "PhpInstalled", "WebPolicy", 1, "" },
-                    { "PublishingProfile", "WebPolicy", 1, "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<publishData>\r\n<ad:if test=\"#WebSite.WebDeploySitePublishingEnabled#\">\r\n	<publishProfile\r\n		profileName=\"#WebSite.Name# - Web Deploy\"\r\n		publishMethod=\"MSDeploy\"\r\n		publishUrl=\"#WebSite[\"WmSvcServiceUrl\"]#:#WebSite[\"WmSvcServicePort\"]#\"\r\n		msdeploySite=\"#WebSite.Name#\"\r\n		userName=\"#WebSite.WebDeployPublishingAccount#\"\r\n		userPWD=\"#WebSite.WebDeployPublishingPassword#\"\r\n		destinationAppUrl=\"http://#WebSite.Name#/\"\r\n		<ad:if test=\"#Not(IsNull(MsSqlDatabase)) and Not(IsNull(MsSqlUser))#\">SQLServerDBConnectionString=\"server=#MsSqlServerExternalAddress#;Initial Catalog=#MsSqlDatabase.Name#;uid=#MsSqlUser.Name#;pwd=#MsSqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MySqlDatabase)) and Not(IsNull(MySqlUser))#\">mySQLDBConnectionString=\"server=#MySqlAddress#;database=#MySqlDatabase.Name#;uid=#MySqlUser.Name#;pwd=#MySqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MariaDBDatabase)) and Not(IsNull(MariaDBUser))#\">MariaDBDBConnectionString=\"server=#MariaDBAddress#;database=#MariaDBDatabase.Name#;uid=#MariaDBUser.Name#;pwd=#MariaDBUser.Password#\"</ad:if>\r\n		hostingProviderForumLink=\"https://solidcp.com/support\"\r\n		controlPanelLink=\"https://panel.solidcp.com/\"\r\n	/>\r\n</ad:if>\r\n<ad:if test=\"#IsDefined(\"FtpAccount\")#\">\r\n	<publishProfile\r\n		profileName=\"#WebSite.Name# - FTP\"\r\n		publishMethod=\"FTP\"\r\n		publishUrl=\"ftp://#FtpServiceAddress#\"\r\n		ftpPassiveMode=\"True\"\r\n		userName=\"#FtpAccount.Name#\"\r\n		userPWD=\"#FtpAccount.Password#\"\r\n		destinationAppUrl=\"http://#WebSite.Name#/\"\r\n		<ad:if test=\"#Not(IsNull(MsSqlDatabase)) and Not(IsNull(MsSqlUser))#\">SQLServerDBConnectionString=\"server=#MsSqlServerExternalAddress#;Initial Catalog=#MsSqlDatabase.Name#;uid=#MsSqlUser.Name#;pwd=#MsSqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MySqlDatabase)) and Not(IsNull(MySqlUser))#\">mySQLDBConnectionString=\"server=#MySqlAddress#;database=#MySqlDatabase.Name#;uid=#MySqlUser.Name#;pwd=#MySqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MariaDBDatabase)) and Not(IsNull(MariaDBUser))#\">MariaDBDBConnectionString=\"server=#MariaDBAddress#;database=#MariaDBDatabase.Name#;uid=#MariaDBUser.Name#;pwd=#MariaDBUser.Password#\"</ad:if>\r\n		hostingProviderForumLink=\"https://solidcp.com/support\"\r\n		controlPanelLink=\"https://panel.solidcp.com/\"\r\n    />\r\n</ad:if>\r\n</publishData>\r\n\r\n<!--\r\nControl Panel:\r\nUsername: #User.Username#\r\nPassword: #User.Password#\r\n\r\nTechnical Contact:\r\nsupport@solidcp.com\r\n-->" },
+                    { "PublishingProfile", "WebPolicy", 1, "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<publishData>\r\n<ad:if test=\"#WebSite.WebDeploySitePublishingEnabled#\">\r\n	<publishProfile\r\n		profileName=\"#WebSite.Name# - Web Deploy\"\r\n		publishMethod=\"MSDeploy\"\r\n		publishUrl=\"#WebSite[\"WmSvcServiceUrl\"]#:#WebSite[\"WmSvcServicePort\"]#\"\r\n		msdeploySite=\"#WebSite.Name#\"\r\n		userName=\"#WebSite.WebDeployPublishingAccount#\"\r\n		userPWD=\"#WebSite.WebDeployPublishingPassword#\"\r\n		destinationAppUrl=\"http://#WebSite.Name#/\"\r\n		<ad:if test=\"#Not(IsNull(MsSqlDatabase)) and Not(IsNull(MsSqlUser))#\">SQLServerDBConnectionString=\"server=#MsSqlServerExternalAddress#;database=#MsSqlDatabase.Name#;uid=#MsSqlUser.Name#;pwd=#MsSqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MySqlDatabase)) and Not(IsNull(MySqlUser))#\">mySQLDBConnectionString=\"server=#MySqlAddress#;database=#MySqlDatabase.Name#;uid=#MySqlUser.Name#;pwd=#MySqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MariaDBDatabase)) and Not(IsNull(MariaDBUser))#\">MariaDBDBConnectionString=\"server=#MariaDBAddress#;database=#MariaDBDatabase.Name#;uid=#MariaDBUser.Name#;pwd=#MariaDBUser.Password#\"</ad:if>\r\n		hostingProviderForumLink=\"https://solidcp.com/support\"\r\n		controlPanelLink=\"https://panel.solidcp.com/\"\r\n	/>\r\n</ad:if>\r\n<ad:if test=\"#IsDefined(\"FtpAccount\")#\">\r\n	<publishProfile\r\n		profileName=\"#WebSite.Name# - FTP\"\r\n		publishMethod=\"FTP\"\r\n		publishUrl=\"ftp://#FtpServiceAddress#\"\r\n		ftpPassiveMode=\"True\"\r\n		userName=\"#FtpAccount.Name#\"\r\n		userPWD=\"#FtpAccount.Password#\"\r\n		destinationAppUrl=\"http://#WebSite.Name#/\"\r\n		<ad:if test=\"#Not(IsNull(MsSqlDatabase)) and Not(IsNull(MsSqlUser))#\">SQLServerDBConnectionString=\"server=#MsSqlServerExternalAddress#;database=#MsSqlDatabase.Name#;uid=#MsSqlUser.Name#;pwd=#MsSqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MySqlDatabase)) and Not(IsNull(MySqlUser))#\">mySQLDBConnectionString=\"server=#MySqlAddress#;database=#MySqlDatabase.Name#;uid=#MySqlUser.Name#;pwd=#MySqlUser.Password#\"</ad:if>\r\n		<ad:if test=\"#Not(IsNull(MariaDBDatabase)) and Not(IsNull(MariaDBUser))#\">MariaDBDBConnectionString=\"server=#MariaDBAddress#;database=#MariaDBDatabase.Name#;uid=#MariaDBUser.Name#;pwd=#MariaDBUser.Password#\"</ad:if>\r\n		hostingProviderForumLink=\"https://solidcp.com/support\"\r\n		controlPanelLink=\"https://panel.solidcp.com/\"\r\n    />\r\n</ad:if>\r\n</publishData>\r\n\r\n<!--\r\nControl Panel:\r\nUsername: #User.Username#\r\nPassword: #User.Password#\r\n\r\nTechnical Contact:\r\nsupport@solidcp.com\r\n-->" },
                     { "PythonInstalled", "WebPolicy", 1, "False" },
                     { "SecuredGroupNamePolicy", "WebPolicy", 1, "True;;1;20;;;" },
                     { "SecuredUserNamePolicy", "WebPolicy", 1, "True;;1;20;;;" },
@@ -3627,54 +3566,49 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 columns: new[] { "QuotaID", "GroupID", "HideQuota", "ItemTypeID", "PerOrganization", "QuotaDescription", "QuotaName", "QuotaOrder", "QuotaTypeID", "ServiceQuota" },
                 values: new object[,]
                 {
-                    { 2, 6, null, 7, null, "Databases", "MySQL4.Databases", 1.0, 2, true },
-                    { 3, 5, null, 5, null, "Databases", "MsSQL2000.Databases", 1.0, 2, true },
-                    { 4, 3, null, 9, null, "FTP Accounts", "FTP.Accounts", 1.0, 2, true },
-                    { 12, 8, null, 14, null, "Statistics Sites", "Stats.Sites", 1.0, 2, true },
-                    { 13, 2, null, 10, null, "Web Sites", "Web.Sites", 1.0, 2, true },
-                    { 14, 4, null, 15, null, "Mail Accounts", "Mail.Accounts", 1.0, 2, true },
-                    { 15, 5, null, 6, null, "Users", "MsSQL2000.Users", 2.0, 2, false },
-                    { 18, 4, null, 16, null, "Mail Forwardings", "Mail.Forwardings", 3.0, 2, false },
-                    { 19, 6, null, 8, null, "Users", "MySQL4.Users", 2.0, 2, false },
-                    { 20, 4, null, 17, null, "Mail Lists", "Mail.Lists", 6.0, 2, false },
-                    { 24, 4, null, 18, null, "Mail Groups", "Mail.Groups", 4.0, 2, false },
-                    { 47, 1, null, 20, null, "ODBC DSNs", "OS.ODBC", 6.0, 2, false },
-                    { 59, 2, null, 25, null, "Shared SSL Folders", "Web.SharedSSL", 8.0, 2, false },
-                    { 62, 10, null, 21, null, "Databases", "MsSQL2005.Databases", 1.0, 2, false },
-                    { 63, 10, null, 22, null, "Users", "MsSQL2005.Users", 2.0, 2, false },
-                    { 68, 11, null, 23, null, "Databases", "MySQL5.Databases", 1.0, 2, false },
-                    { 69, 11, null, 24, null, "Users", "MySQL5.Users", 2.0, 2, false },
-                    { 110, 90, null, 75, null, "Databases", "MySQL8.Databases", 1.0, 2, false },
-                    { 111, 90, null, 76, null, "Users", "MySQL8.Users", 2.0, 2, false },
-                    { 120, 91, null, 75, null, "Databases", "MySQL9.Databases", 1.0, 2, false },
-                    { 121, 91, null, 76, null, "Users", "MySQL9.Users", 2.0, 2, false },
-                    { 200, 20, null, 200, 1, "SharePoint Site Collections", "HostedSharePoint.Sites", 1.0, 2, false },
-                    { 205, 13, null, 29, null, "Organizations", "HostedSolution.Organizations", 1.0, 2, false },
-                    { 206, 13, null, 30, 1, "Users", "HostedSolution.Users", 2.0, 2, false },
-                    { 211, 22, null, 31, null, "Databases", "MsSQL2008.Databases", 1.0, 2, false },
-                    { 212, 22, null, 32, null, "Users", "MsSQL2008.Users", 2.0, 2, false },
-                    { 218, 23, null, 37, null, "Databases", "MsSQL2012.Databases", 1.0, 2, false },
-                    { 219, 23, null, 38, null, "Users", "MsSQL2012.Users", 2.0, 2, false },
-                    { 300, 30, null, 33, null, "Number of VPS", "VPS.ServersNumber", 1.0, 2, false },
-                    { 345, 40, null, 35, null, "Number of VPS", "VPSForPC.ServersNumber", 1.0, 2, false },
-                    { 470, 46, null, 39, null, "Databases", "MsSQL2014.Databases", 1.0, 2, false },
-                    { 471, 46, null, 40, null, "Users", "MsSQL2014.Users", 2.0, 2, false },
-                    { 550, 73, null, 204, 1, "SharePoint Site Collections", "HostedSharePointEnterprise.Sites", 1.0, 2, false },
-                    { 553, 33, null, 41, null, "Number of VPS", "VPS2012.ServersNumber", 1.0, 2, false },
-                    { 573, 50, null, 202, null, "Databases", "MariaDB.Databases", 1.0, 2, false },
-                    { 574, 50, null, 203, null, "Users", "MariaDB.Users", 2.0, 2, false },
-                    { 673, 167, null, 41, null, "Number of VPS", "PROXMOX.ServersNumber", 1.0, 2, false },
-                    { 701, 71, null, 71, null, "Databases", "MsSQL2016.Databases", 1.0, 2, false },
-                    { 702, 71, null, 72, null, "Users", "MsSQL2016.Users", 2.0, 2, false },
-                    { 711, 72, null, 73, null, "Databases", "MsSQL2017.Databases", 1.0, 2, false },
-                    { 712, 72, null, 74, null, "Users", "MsSQL2017.Users", 2.0, 2, false },
-                    { 721, 74, null, 77, null, "Databases", "MsSQL2019.Databases", 1.0, 2, false },
-                    { 722, 74, null, 78, null, "Users", "MsSQL2019.Users", 2.0, 2, false },
-                    { 732, 75, null, 79, null, "Databases", "MsSQL2022.Databases", 1.0, 2, false },
-                    { 733, 75, null, 80, null, "Users", "MsSQL2022.Users", 2.0, 2, false },
-                    { 760, 76, null, 79, null, "Databases", "MsSQL2025.Databases", 1.0, 2, false },
-                    { 761, 76, null, 80, null, "Users", "MsSQL2025.Users", 2.0, 2, false },
-                    { 770, 4, null, 11, null, "Mail Domains", "Mail.Domains", 1.1000000000000001, 2, true }
+                    { 2, 6, null, 7, null, "Databases", "MySQL4.Databases", 1, 2, true },
+                    { 3, 5, null, 5, null, "Databases", "MsSQL2000.Databases", 1, 2, true },
+                    { 4, 3, null, 9, null, "FTP Accounts", "FTP.Accounts", 1, 2, true },
+                    { 12, 8, null, 14, null, "Statistics Sites", "Stats.Sites", 1, 2, true },
+                    { 13, 2, null, 10, null, "Web Sites", "Web.Sites", 1, 2, true },
+                    { 14, 4, null, 15, null, "Mail Accounts", "Mail.Accounts", 1, 2, true },
+                    { 15, 5, null, 6, null, "Users", "MsSQL2000.Users", 2, 2, false },
+                    { 18, 4, null, 16, null, "Mail Forwardings", "Mail.Forwardings", 3, 2, false },
+                    { 19, 6, null, 8, null, "Users", "MySQL4.Users", 2, 2, false },
+                    { 20, 4, null, 17, null, "Mail Lists", "Mail.Lists", 6, 2, false },
+                    { 24, 4, null, 18, null, "Mail Groups", "Mail.Groups", 4, 2, false },
+                    { 47, 1, null, 20, null, "ODBC DSNs", "OS.ODBC", 6, 2, false },
+                    { 59, 2, null, 25, null, "Shared SSL Folders", "Web.SharedSSL", 8, 2, false },
+                    { 62, 10, null, 21, null, "Databases", "MsSQL2005.Databases", 1, 2, false },
+                    { 63, 10, null, 22, null, "Users", "MsSQL2005.Users", 2, 2, false },
+                    { 68, 11, null, 23, null, "Databases", "MySQL5.Databases", 1, 2, false },
+                    { 69, 11, null, 24, null, "Users", "MySQL5.Users", 2, 2, false },
+                    { 110, 90, null, 75, null, "Databases", "MySQL8.Databases", 1, 2, false },
+                    { 111, 90, null, 76, null, "Users", "MySQL8.Users", 2, 2, false },
+                    { 200, 20, null, 200, 1, "SharePoint Site Collections", "HostedSharePoint.Sites", 1, 2, false },
+                    { 205, 13, null, 29, null, "Organizations", "HostedSolution.Organizations", 1, 2, false },
+                    { 206, 13, null, 30, 1, "Users", "HostedSolution.Users", 2, 2, false },
+                    { 211, 22, null, 31, null, "Databases", "MsSQL2008.Databases", 1, 2, false },
+                    { 212, 22, null, 32, null, "Users", "MsSQL2008.Users", 2, 2, false },
+                    { 218, 23, null, 37, null, "Databases", "MsSQL2012.Databases", 1, 2, false },
+                    { 219, 23, null, 38, null, "Users", "MsSQL2012.Users", 2, 2, false },
+                    { 300, 30, null, 33, null, "Number of VPS", "VPS.ServersNumber", 1, 2, false },
+                    { 345, 40, null, 35, null, "Number of VPS", "VPSForPC.ServersNumber", 1, 2, false },
+                    { 470, 46, null, 39, null, "Databases", "MsSQL2014.Databases", 1, 2, false },
+                    { 471, 46, null, 40, null, "Users", "MsSQL2014.Users", 2, 2, false },
+                    { 550, 73, null, 204, 1, "SharePoint Site Collections", "HostedSharePointEnterprise.Sites", 1, 2, false },
+                    { 553, 33, null, 41, null, "Number of VPS", "VPS2012.ServersNumber", 1, 2, false },
+                    { 573, 50, null, 202, null, "Databases", "MariaDB.Databases", 1, 2, false },
+                    { 574, 50, null, 203, null, "Users", "MariaDB.Users", 2, 2, false },
+                    { 673, 167, null, 41, null, "Number of VPS", "PROXMOX.ServersNumber", 1, 2, false },
+                    { 701, 71, null, 39, null, "Databases", "MsSQL2016.Databases", 1, 2, false },
+                    { 702, 71, null, 40, null, "Users", "MsSQL2016.Users", 2, 2, false },
+                    { 711, 72, null, 73, null, "Databases", "MsSQL2017.Databases", 1, 2, false },
+                    { 712, 72, null, 74, null, "Users", "MsSQL2017.Users", 2, 2, false },
+                    { 721, 74, null, 77, null, "Databases", "MsSQL2019.Databases", 1, 2, false },
+                    { 722, 74, null, 78, null, "Users", "MsSQL2019.Users", 2, 2, false },
+                    { 732, 75, null, 79, null, "Databases", "MsSQL2022.Databases", 1, 2, false },
+                    { 733, 75, null, 80, null, "Users", "MsSQL2022.Users", 2, 2, false }
                 });
 
             migrationBuilder.InsertData(
@@ -3682,8 +3616,8 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 columns: new[] { "ScheduleID", "Enabled", "FromTime", "HistoriesNumber", "Interval", "LastRun", "MaxExecutionTime", "NextRun", "PackageID", "PriorityID", "ScheduleName", "ScheduleTypeID", "StartTime", "TaskID", "ToTime", "WeekMonthDay" },
                 values: new object[,]
                 {
-                    { 1, true, new DateTime(2000, 1, 1, 12, 0, 0, 0, DateTimeKind.Utc), 7, 0, null, 3600, new DateTime(2010, 7, 16, 14, 53, 2, 470, DateTimeKind.Utc), 1, "Normal", "Calculate Disk Space", "Daily", new DateTime(2000, 1, 1, 12, 30, 0, 0, DateTimeKind.Utc), "SCHEDULE_TASK_CALCULATE_PACKAGES_DISKSPACE", new DateTime(2000, 1, 1, 12, 0, 0, 0, DateTimeKind.Utc), 1 },
-                    { 2, true, new DateTime(2000, 1, 1, 12, 0, 0, 0, DateTimeKind.Utc), 7, 0, null, 3600, new DateTime(2010, 7, 16, 14, 53, 2, 477, DateTimeKind.Utc), 1, "Normal", "Calculate Bandwidth", "Daily", new DateTime(2000, 1, 1, 12, 0, 0, 0, DateTimeKind.Utc), "SCHEDULE_TASK_CALCULATE_PACKAGES_BANDWIDTH", new DateTime(2000, 1, 1, 12, 0, 0, 0, DateTimeKind.Utc), 1 }
+                    { 1, true, new DateTime(2000, 1, 1, 11, 0, 0, 0, DateTimeKind.Utc), 7, 0, null, 3600, new DateTime(2010, 7, 16, 12, 53, 2, 470, DateTimeKind.Utc), 1, "Normal", "Calculate Disk Space", "Daily", new DateTime(2000, 1, 1, 11, 30, 0, 0, DateTimeKind.Utc), "SCHEDULE_TASK_CALCULATE_PACKAGES_DISKSPACE", new DateTime(2000, 1, 1, 11, 0, 0, 0, DateTimeKind.Utc), 1 },
+                    { 2, true, new DateTime(2000, 1, 1, 11, 0, 0, 0, DateTimeKind.Utc), 7, 0, null, 3600, new DateTime(2010, 7, 16, 12, 53, 2, 477, DateTimeKind.Utc), 1, "Normal", "Calculate Bandwidth", "Daily", new DateTime(2000, 1, 1, 11, 0, 0, 0, DateTimeKind.Utc), "SCHEDULE_TASK_CALCULATE_PACKAGES_BANDWIDTH", new DateTime(2000, 1, 1, 11, 0, 0, 0, DateTimeKind.Utc), 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -3793,6 +3727,18 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     { "RootPassword", 17, "" },
                     { "AdminPassword", 22, "" },
                     { "AdminUsername", 22, "Administrator" },
+                    { "BindConfigPath", 24, "c:\\BIND\\dns\\etc\\named.conf" },
+                    { "BindReloadBatch", 24, "c:\\BIND\\dns\\reload.bat" },
+                    { "ExpireLimit", 24, "1209600" },
+                    { "MinimumTTL", 24, "86400" },
+                    { "NameServers", 24, "ns1.yourdomain.com;ns2.yourdomain.com" },
+                    { "RecordDefaultTTL", 24, "86400" },
+                    { "RecordMinimumTTL", 24, "3600" },
+                    { "RefreshInterval", 24, "3600" },
+                    { "ResponsiblePerson", 24, "hostmaster.[DOMAIN_NAME]" },
+                    { "RetryDelay", 24, "600" },
+                    { "ZoneFileNameTemplate", 24, "db.[domain_name].txt" },
+                    { "ZonesFolderPath", 24, "c:\\BIND\\dns\\zones" },
                     { "DomainId", 25, "1" },
                     { "KeepDeletedItemsDays", 27, "14" },
                     { "KeepDeletedMailboxesDays", 27, "30" },
@@ -4000,36 +3946,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     { "RootLogin", 304, "root" },
                     { "RootPassword", 304, "" },
                     { "sslmode", 304, "True" },
-                    { "ExternalAddress", 305, "localhost" },
-                    { "InstallFolder", 305, "%PROGRAMFILES%\\MySQL\\MySQL Server 8.0" },
-                    { "InternalAddress", 305, "localhost,3306" },
-                    { "RootLogin", 305, "root" },
-                    { "RootPassword", 305, "" },
-                    { "sslmode", 305, "True" },
-                    { "ExternalAddress", 306, "localhost" },
-                    { "InstallFolder", 306, "%PROGRAMFILES%\\MySQL\\MySQL Server 8.0" },
-                    { "InternalAddress", 306, "localhost,3306" },
-                    { "RootLogin", 306, "root" },
-                    { "RootPassword", 306, "" },
-                    { "sslmode", 306, "True" },
-                    { "ExternalAddress", 307, "localhost" },
-                    { "InstallFolder", 307, "%PROGRAMFILES%\\MySQL\\MySQL Server 8.0" },
-                    { "InternalAddress", 307, "localhost,3306" },
-                    { "RootLogin", 307, "root" },
-                    { "RootPassword", 307, "" },
-                    { "sslmode", 307, "True" },
-                    { "ExternalAddress", 308, "localhost" },
-                    { "InstallFolder", 308, "%PROGRAMFILES%\\MySQL\\MySQL Server 8.0" },
-                    { "InternalAddress", 308, "localhost,3306" },
-                    { "RootLogin", 308, "root" },
-                    { "RootPassword", 308, "" },
-                    { "sslmode", 308, "True" },
-                    { "ExternalAddress", 320, "localhost" },
-                    { "InstallFolder", 320, "%PROGRAMFILES%\\MySQL\\MySQL Server 9.0" },
-                    { "InternalAddress", 320, "localhost,3306" },
-                    { "RootLogin", 320, "root" },
-                    { "RootPassword", 320, "" },
-                    { "sslmode", 320, "True" },
                     { "admode", 410, "False" },
                     { "expirelimit", 410, "1209600" },
                     { "minimumttl", 410, "86400" },
@@ -4039,8 +3955,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     { "refreshinterval", 410, "3600" },
                     { "responsibleperson", 410, "hostmaster.[DOMAIN_NAME]" },
                     { "retrydelay", 410, "600" },
-                    { "LogDir", 500, "/var/log" },
-                    { "UsersHome", 500, "/var/www/HostingSpaces" },
                     { "ExternalAddress", 1550, "localhost" },
                     { "InstallFolder", 1550, "%PROGRAMFILES%\\MariaDB 10.1" },
                     { "InternalAddress", 1550, "localhost" },
@@ -4061,76 +3975,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     { "InternalAddress", 1572, "localhost" },
                     { "RootLogin", 1572, "root" },
                     { "RootPassword", 1572, "" },
-                    { "ExternalAddress", 1573, "localhost" },
-                    { "InstallFolder", 1573, "%PROGRAMFILES%\\MariaDB 10.6" },
-                    { "InternalAddress", 1573, "localhost" },
-                    { "RootLogin", 1573, "root" },
-                    { "RootPassword", 1573, "" },
-                    { "ExternalAddress", 1574, "localhost" },
-                    { "InstallFolder", 1574, "%PROGRAMFILES%\\MariaDB 10.7" },
-                    { "InternalAddress", 1574, "localhost" },
-                    { "RootLogin", 1574, "root" },
-                    { "RootPassword", 1574, "" },
-                    { "ExternalAddress", 1575, "localhost" },
-                    { "InstallFolder", 1575, "%PROGRAMFILES%\\MariaDB 10.8" },
-                    { "InternalAddress", 1575, "localhost" },
-                    { "RootLogin", 1575, "root" },
-                    { "RootPassword", 1575, "" },
-                    { "ExternalAddress", 1576, "localhost" },
-                    { "InstallFolder", 1576, "%PROGRAMFILES%\\MariaDB 10.9" },
-                    { "InternalAddress", 1576, "localhost" },
-                    { "RootLogin", 1576, "root" },
-                    { "RootPassword", 1576, "" },
-                    { "ExternalAddress", 1577, "localhost" },
-                    { "InstallFolder", 1577, "%PROGRAMFILES%\\MariaDB 10.10" },
-                    { "InternalAddress", 1577, "localhost" },
-                    { "RootLogin", 1577, "root" },
-                    { "RootPassword", 1577, "" },
-                    { "ExternalAddress", 1578, "localhost" },
-                    { "InstallFolder", 1578, "%PROGRAMFILES%\\MariaDB 10.11" },
-                    { "InternalAddress", 1578, "localhost" },
-                    { "RootLogin", 1578, "root" },
-                    { "RootPassword", 1578, "" },
-                    { "ExternalAddress", 1579, "localhost" },
-                    { "InstallFolder", 1579, "%PROGRAMFILES%\\MariaDB 11.0" },
-                    { "InternalAddress", 1579, "localhost" },
-                    { "RootLogin", 1579, "root" },
-                    { "RootPassword", 1579, "" },
-                    { "ExternalAddress", 1580, "localhost" },
-                    { "InstallFolder", 1580, "%PROGRAMFILES%\\MariaDB 11.1" },
-                    { "InternalAddress", 1580, "localhost" },
-                    { "RootLogin", 1580, "root" },
-                    { "RootPassword", 1580, "" },
-                    { "ExternalAddress", 1581, "localhost" },
-                    { "InstallFolder", 1581, "%PROGRAMFILES%\\MariaDB 11.2" },
-                    { "InternalAddress", 1581, "localhost" },
-                    { "RootLogin", 1581, "root" },
-                    { "RootPassword", 1581, "" },
-                    { "ExternalAddress", 1582, "localhost" },
-                    { "InstallFolder", 1582, "%PROGRAMFILES%\\MariaDB 11.3" },
-                    { "InternalAddress", 1582, "localhost" },
-                    { "RootLogin", 1582, "root" },
-                    { "RootPassword", 1582, "" },
-                    { "ExternalAddress", 1583, "localhost" },
-                    { "InstallFolder", 1583, "%PROGRAMFILES%\\MariaDB 11.4" },
-                    { "InternalAddress", 1583, "localhost" },
-                    { "RootLogin", 1583, "root" },
-                    { "RootPassword", 1583, "" },
-                    { "ExternalAddress", 1584, "localhost" },
-                    { "InstallFolder", 1584, "%PROGRAMFILES%\\MariaDB 11.5" },
-                    { "InternalAddress", 1584, "localhost" },
-                    { "RootLogin", 1584, "root" },
-                    { "RootPassword", 1584, "" },
-                    { "ExternalAddress", 1585, "localhost" },
-                    { "InstallFolder", 1585, "%PROGRAMFILES%\\MariaDB 11.6" },
-                    { "InternalAddress", 1585, "localhost" },
-                    { "RootLogin", 1585, "root" },
-                    { "RootPassword", 1585, "" },
-                    { "ExternalAddress", 1586, "localhost" },
-                    { "InstallFolder", 1586, "%PROGRAMFILES%\\MariaDB 11.7" },
-                    { "InternalAddress", 1586, "localhost" },
-                    { "RootLogin", 1586, "root" },
-                    { "RootPassword", 1586, "" },
                     { "RecordDefaultTTL", 1703, "86400" },
                     { "RecordMinimumTTL", 1703, "3600" },
                     { "UsersHome", 1800, "%SYSTEMDRIVE%\\HostingSpaces" },
@@ -4163,10 +4007,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     { "RefreshInterval", 1903, "3600" },
                     { "ResponsiblePerson", 1903, "hostmaster.[DOMAIN_NAME]" },
                     { "RetryDelay", 1903, "600" },
-                    { "SimpleDnsUrl", 1903, "http://127.0.0.1:8053" },
-                    { "ConfigFile", 1910, "/etc/vsftpd.conf" },
-                    { "ConfigFile", 1911, "/etc/apache2/apache2.conf" },
-                    { "ConfigPath", 1911, "/etc/apache2" }
+                    { "SimpleDnsUrl", 1903, "http://127.0.0.1:8053" }
                 });
 
             migrationBuilder.InsertData(
@@ -4616,11 +4457,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 column: "ServiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TempIds_Created_Scope_Level",
-                table: "TempIds",
-                columns: new[] { "Created", "Scope", "Level" });
-
-            migrationBuilder.CreateIndex(
                 name: "ThemeSettingsIdx_ThemeID",
                 table: "ThemeSettings",
                 column: "ThemeID");
@@ -4666,15 +4502,11 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 name: "WebDavPortalUsersSettingsIdx_AccountId",
                 table: "WebDavPortalUsersSettings",
                 column: "AccountId");
-
-            StoredProceduresUp(migrationBuilder);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            StoredProceduresDown(migrationBuilder);
-
             migrationBuilder.DropTable(
                 name: "AccessTokens");
 
@@ -4845,9 +4677,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
 
             migrationBuilder.DropTable(
                 name: "SystemSettings");
-
-            migrationBuilder.DropTable(
-                name: "TempIds");
 
             migrationBuilder.DropTable(
                 name: "Themes");
