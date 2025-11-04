@@ -89,8 +89,6 @@ order by rg.groupOrder
         public const string WEB_ENABLEHOSTNAMESUPPORT = "Web.EnableHostNameSupport"; //Enable to specify hostnames upon site creation
 		public const string FTP_ACCOUNTS = "FTP.Accounts";  // FTP Accounts
 		public const string MAIL_ACCOUNTS = "Mail.Accounts";  // Mail Accounts
-		public const string MAIL_ACCOUNTS_PER_DOMAIN = "Mail.Accounts.per.Domain";  // Mail Accounts per Domain
-		public const string MAIL_DOMAINS = "Mail.Domains";  // Mail Domains
 		public const string MAIL_FORWARDINGS = "Mail.Forwardings";  // Mail Forwardings
 		public const string MAIL_LISTS = "Mail.Lists";  // Mail Lists
 		public const string MAIL_GROUPS = "Mail.Groups";  // Mail Groups
