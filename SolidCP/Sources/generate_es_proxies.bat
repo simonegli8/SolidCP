@@ -7,7 +7,7 @@
 : I recommend generating one file at a time (or group of files), to prevent conflicts. (delete "REM" before the files you want to generate) <--- delete this comment after generating all the files.
 SET WSDL="%ProgramFiles(x86)%\Microsoft WSE\v3.0\Tools\WseWsdl3.exe"
 SET WSE_CLEAN=..\Tools\WseClean.exe
-SET SERVER_URL=http://127.0.0.1:9002
+SET SERVER_URL=http://127.0.0.1:9082
 
 REM %WSDL% %SERVER_URL%/esApplicationsInstaller.asmx /out:.\SolidCP.EnterpriseServer.Client\ApplicationsInstallerProxy.cs /namespace:SolidCP.EnterpriseServer.ApplicationsInstaller /type:webClient
 REM %WSE_CLEAN% .\SolidCP.EnterpriseServer.Client\ApplicationsInstallerProxy.cs
@@ -60,8 +60,8 @@ REM %WSE_CLEAN% .\SolidCP.EnterpriseServer.Client\ImportProxy.cs
 REM %WSDL% %SERVER_URL%/esLync.asmx /out:.\SolidCP.EnterpriseServer.Client\LyncProxy.cs /namespace:SolidCP.EnterpriseServer.Lync /type:webClient
 REM %WSE_CLEAN% .\SolidCP.EnterpriseServer.Client\LyncProxy.cs
 
-REM %WSDL% %SERVER_URL%/esMailServers.asmx /out:.\SolidCP.EnterpriseServer.Client\MailServersProxy.cs /namespace:SolidCP.EnterpriseServer.MailServers /type:webClient
-REM %WSE_CLEAN% .\SolidCP.EnterpriseServer.Client\MailServersProxy.cs
+%WSDL% %SERVER_URL%/esMailServers.asmx /out:.\SolidCP.EnterpriseServer.Client\MailServersProxy.cs /namespace:SolidCP.EnterpriseServer.MailServers /type:webClient
+%WSE_CLEAN% .\SolidCP.EnterpriseServer.Client\MailServersProxy.cs
 
 REM %WSDL% %SERVER_URL%/esOCS.asmx /out:.\SolidCP.EnterpriseServer.Client\OCSProxy.cs /namespace:SolidCP.EnterpriseServer.OCS /type:webClient
 REM %WSE_CLEAN% .\SolidCP.EnterpriseServer.Client\OCSProxy.cs

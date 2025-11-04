@@ -2093,10 +2093,89 @@ namespace SolidCP.EnterpriseServer
                 new SqlParameter("@PackageID", packageId),
                 new SqlParameter("@QuotaName", quotaName));
         }
-        #endregion
 
-        #region Log
-        public static void AddAuditLogRecord(string recordId, int severityId,
+        public const int DefaultMailAccountsPerDomain = 5;
+        public static bool CheckMaxEmailAccountsPerDomainQuota(int PackageId, string domainName)
+        {
+            /*domain = "@" + domain;
+			var n = ServiceItems
+				.Where(si => si.ItemTypeId == 15 && si.ItemName.EndsWith(domain)) // Mail Account
+				.Join(PackagesTreeCaches, si => si.PackageId, t => t.PackageId, (si, t) => t)
+				.Where(t => t.ParentPackageId == packageId)
+				.Count();
+            var max = MailAccountsPerDomain
+                .Join(ServiceItems, m => m.ItemId, si => si.ItemId, (m, si) => new {
+                    Domain = si.ItemName,
+                    MaxAccounts = m.MaxAccounts
+                })
+                .Where(d => d.Domain == domainName)
+                .FirstOrDefault(d => d.MaxAccounts); */
+            var n = (int)SqlHelper.ExecuteScalar(ConnectionString, CommandType.Text,
+@"SELECT COUNT(*) FROM ServiceItems AS SI
+JOIN PackagesTreeCache AS PTC ON SI.PackageID = PTC.PackageID
+WHERE PTC.ParentPackageID = @PackageID AND SI.ItemName LIKE @domain",
+                new SqlParameter("@PackageID", PackageId),
+                new SqlParameter("@domain", $"%@{domainName}"));
+
+            var max = ((int?)SqlHelper.ExecuteScalar(ConnectionString, CommandType.Text,
+@"SELECT MaxAccounts FROM MailAccountsPerDomain AS A
+JOIN Domains AS D ON A.DomainID = D.DomainID
+WHERE D.DomainName = @domain",
+                new SqlParameter("@domain", domainName))) ?? DefaultMailAccountsPerDomain;
+
+            return max < 0 || max > n;
+        }
+
+		public static void SetMaxEmailAccountsForDomain(int? max, string domain)
+        {
+            var domainId = ((int?)SqlHelper.ExecuteScalar(ConnectionString, CommandType.Text,
+@"SELECT DomainID FROM Domains
+WHERE DomainName = @domain",
+                new SqlParameter("@domain", domain))) ?? -1;
+			if (max.HasValue && domainId >= 0)
+            {
+                var maxAccountsId = ((int?)SqlHelper.ExecuteScalar(ConnectionString, CommandType.Text,
+@"SELECT MailAccountPerDomainID FROM MailAccountsPerDomain
+WHERE DomainID = @domainId",
+                    new SqlParameter("@domainId", domainId))) ?? -1;
+                if (maxAccountsId < 0)
+                {
+                    SqlHelper.ExecuteNonQuery(ConnectionString, CommandType.Text,
+@"INSERT INTO MailAccountsPerDomain (DomainID, MaxAccounts) VALUES (@domainId, @max)",
+    new SqlParameter("@domainId", domainId),
+    new SqlParameter("@max", max.Value));
+                }
+                else
+                {
+                    SqlHelper.ExecuteNonQuery(ConnectionString, CommandType.Text,
+@"UPDATE MailAccountsPerDomain SET MaxAccounts = @max WHERE MailAccountPerDomainID = @id",
+                        new SqlParameter("@id", maxAccountsId),
+					    new SqlParameter("@max", max.Value));
+                }
+            } else
+            {
+                SqlHelper.ExecuteNonQuery(ConnectionString, CommandType.Text,
+@"DELETE FROM MailAccountsPerDomain WHERE DomainID = @domainId",
+                new SqlParameter("@domainId", domainId));
+			}
+        }
+
+        public static DataSet GetMaxMailAccountsPerDomain(int PackageId)
+        {
+            return SqlHelper.ExecuteDataset(ConnectionString, CommandType.Text,
+$@"SELECT M.MailAccountPerDomainID AS ID,
+        D.DomainName AS DomainName,
+		ISNULL(M.MaxAccounts, {DefaultMailAccountsPerDomain}) AS MaxAccounts
+FROM MailAccountsPerDomain AS M
+RIGHT JOIN Domains AS D ON M.DomainID = D.DomainID
+JOIN PackagesTreeCache AS PTC ON D.PackageID = PTC.PackageID
+WHERE PTC.ParentPackageID = @PackageID",
+                new SqlParameter("@PackageID", PackageId));
+        }
+		#endregion
+
+			#region Log
+		public static void AddAuditLogRecord(string recordId, int severityId,
             int userId, string username, int packageId, int itemId, string itemName, DateTime startDate, DateTime finishDate, string sourceName,
             string taskName, string executionLog)
         {

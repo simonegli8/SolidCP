@@ -96,6 +96,14 @@
     <br />
 </asp:Panel>
 
+<scp:CollapsiblePanel id="MailQuotasCollapsiblePanel" runat="server"
+    TargetControlID="MailQuotasPanel" meta:resourcekey="secMailQuotas" Text="Space Mail Quotas">
+</scp:CollapsiblePanel>
+<asp:Panel ID="MailQuotasPanel" runat="server" Height="0" style="overflow:hidden;">
+    <div class="FormButtonsBar">
+        <asp:Button ID="btnEditMailQuotas" runat="server" meta:resourcekey="btnEditMailQuotas" Text="Edit Mail Quotas" CssClass="Button2" OnClick="btnMailQuotas_Click" />
+    </div>
+</asp:Panel>
 
 <scp:CollapsiblePanel id="secQuotas" runat="server"
     TargetControlID="QuotasPanel" meta:resourcekey="secQuotas" Text="Space Quotas">

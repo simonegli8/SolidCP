@@ -93,10 +93,14 @@ namespace SolidCP.EnterpriseServer
         {
             return MailServerController.DeleteMailAccount(itemId);
         }
-        #endregion
-
-        #region Mail Forwardings
         [WebMethod]
+		public DataSet GetMaxMailAccountsPerDomain(int PackageId) => MailServerController.GetMaxMailAccountsPerDomain(PackageId);
+		[WebMethod]
+		public void SetMaxEmailAccountsForDomain(int? max, string domain) => MailServerController.SetMaxEmailAccountsForDomain(max, domain);
+		#endregion
+
+		#region Mail Forwardings
+		[WebMethod]
         public DataSet GetRawMailForwardingsPaged(int packageId,
             string filterColumn, string filterValue, string sortColumn, int startRow, int maximumRows)
         {

@@ -966,4 +966,7 @@
   <data name="ModuleTitle.PrivateNetworkVLANs" xml:space="preserve">
     <value>Private Network VLANs</value>
   </data>
+  <data name="ModuleTitle.SpaceEditMailQuotas" xml:space="preserve">
+    <value>Edit Mail Quotas</value>
+  </data>
 </root>

@@ -113,6 +113,10 @@ namespace SolidCP.EnterpriseServer
 			if (quota.QuotaExhausted)
 				return BusinessErrorCodes.ERROR_MAIL_ACCOUNTS_RESOURCE_QUOTA_LIMIT;
 
+			string domainName = item.Name.Substring(item.Name.IndexOf("@") + 1);
+			if (!DataProvider.CheckMaxEmailAccountsPerDomainQuota(item.PackageId, domainName))
+				return BusinessErrorCodes.ERROR_MAIL_ACCOUNTS_RESOURCE_QUOTA_LIMIT;
+
 			// check if mail resource is available
 			int serviceId = PackageController.GetPackageServiceId(item.PackageId, ResourceGroups.Mail);
 			if (serviceId == 0)
@@ -139,7 +143,6 @@ namespace SolidCP.EnterpriseServer
 					return BusinessErrorCodes.ERROR_MAIL_ACCOUNTS_SERVICE_ITEM_EXISTS;
 
 				// add domain if not exists
-				string domainName = item.Name.Substring(item.Name.IndexOf("@") + 1);
 				int domainResult = AddMailDomain(item.PackageId, serviceId, domainName);
 				if (domainResult < 0)
 					return domainResult;
@@ -189,6 +192,9 @@ namespace SolidCP.EnterpriseServer
 			}
 			return itemId;
 		}
+
+		public static DataSet GetMaxMailAccountsPerDomain(int PackageId) => DataProvider.GetMaxMailAccountsPerDomain(PackageId);
+		public static void SetMaxEmailAccountsForDomain(int? max, string domain) => DataProvider.SetMaxEmailAccountsForDomain(max, domain);
 
 		public static int UpdateMailAccount(MailAccount item)
 		{

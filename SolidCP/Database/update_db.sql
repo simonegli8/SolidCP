@@ -1,9 +1,9 @@
-USE [${install.database}]
+USE [SolidCPMac]
 GO
 -- update database version
 DECLARE @build_version nvarchar(10), @build_date datetime
-SET @build_version = N'${release.version}'
-SET @build_date = '${release.date}T00:00:00' -- ISO 8601 Format (YYYY-MM-DDTHH:MM:SS)
+SET @build_version = N'1.5.1'
+SET @build_date = '1-1-2025T00:00:00' -- ISO 8601 Format (YYYY-MM-DDTHH:MM:SS)
 
 IF NOT EXISTS (SELECT * FROM [dbo].[Versions] WHERE [DatabaseVersion] = @build_version)
 BEGIN
@@ -20408,3 +20408,22 @@ CLOSE service_cursor
 DEALLOCATE service_cursor
 END
 GO
+
+-- Add MailAccountsPerDomain table
+IF NOT EXISTS (
+    SELECT 1 
+    FROM sys.tables 
+    WHERE name = 'MailAccountsPerDomain' 
+      AND schema_id = SCHEMA_ID('dbo')
+)
+BEGIN
+	CREATE TABLE [dbo].[MailAccountsPerDomain](
+		[MailAccountPerDomainID] [int] IDENTITY(1,1) NOT NULL,
+		[DomainID] [int] NOT NULL,
+		[MaxAccounts] [int] NOT NULL,
+		CONSTRAINT [PK_MailAccountsPerDomain] PRIMARY KEY CLUSTERED
+		(
+			[MailAccountPerDomainID] ASC
+		)
+	);
+END;

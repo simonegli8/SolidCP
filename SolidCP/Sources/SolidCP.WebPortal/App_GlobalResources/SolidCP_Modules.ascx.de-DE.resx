@@ -168,9 +168,6 @@
   <data name="ModuleTitle.AddSharedSSLFolder" xml:space="preserve">
     <value>Geteilten SSL-Ordner hinzufügen</value>
   </data>
-  <data name="ModuleTitle.AddVirtualDirectory" xml:space="preserve">
-    <value>Virtuelles Verzeichnis hinzufügen</value>
-  </data>
   <data name="ModuleTitle.AddVirtualServerServices" xml:space="preserve">
     <value>Virtuelle Serverdienste hinzufügen</value>
   </data>
@@ -591,9 +588,6 @@
   <data name="ModuleTitle.UsersWizard" xml:space="preserve">
     <value>"Benutzer erstellen"-Assistent</value>
   </data>
-  <data name="ModuleTitle.VirtualDirectoryProperties" xml:space="preserve">
-    <value>Einstellungen des virtuelle Verzeichnisses</value>
-  </data>
   <data name="ModuleTitle.VirtualServers" xml:space="preserve">
     <value>Virtuelle Server</value>
   </data>
@@ -962,5 +956,14 @@
   </data>
   <data name="ModuleTitle.PrivateNetworkVLANs" xml:space="preserve">
     <value>Privates Netzwerk VLANs</value>
+  </data>
+  <data name="ModuleTitle.AddVirtualDirectory" xml:space="preserve">
+    <value>Virtuelles Verzeichnis hinzufügen</value>
+  </data>
+  <data name="ModuleTitle.VirtualDirectoryProperties" xml:space="preserve">
+    <value>Einstellungen des virtuelle Verzeichnisses</value>
+  </data>
+  <data name="ModuleTitle.SpaceEditMailQuotas" xml:space="preserve">
+    <value>Bereich-Mail Kontingente ändern </value>
   </data>
 </root>

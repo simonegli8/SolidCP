@@ -211,5 +211,11 @@ namespace SolidCP.Portal
         {
             Response.Redirect(EditUrl(PortalUtils.SPACE_ID_PARAM, PanelSecurity.PackageId.ToString(), "edit_addon"));
         }
-    }
+
+		protected void btnMailQuotas_Click(object sender, EventArgs e)
+		{
+			Response.Redirect(EditUrl(PortalUtils.SPACE_ID_PARAM, PanelSecurity.PackageId.ToString(), "edit_mailquotas"));
+		}
+
+	}
 }
