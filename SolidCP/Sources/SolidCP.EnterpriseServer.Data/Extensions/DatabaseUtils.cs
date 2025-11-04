@@ -1675,8 +1675,9 @@ SELECT DatabaseVersion FROM Version");
 					{
 						if (oldVersionUpdate)
 						{
-							RunSqlScript(masterConnectionString, updateSqlScript, updateCount, OnProgressChange,
-								ProcessInstallVariables, databaseName);
+							// installSqlScript does update itself
+							//RunSqlScript(masterConnectionString, updateSqlScript, updateCount, OnProgressChange,
+							//	ProcessInstallVariables, databaseName);
 						}
 						RunSqlScript(masterConnectionString, installSqlScript, installCount, OnProgressChange,
 						ProcessInstallVariables, databaseName);
