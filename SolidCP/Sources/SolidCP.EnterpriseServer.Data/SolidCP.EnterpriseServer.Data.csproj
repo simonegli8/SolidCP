@@ -178,12 +178,11 @@
         <None Include="CodeTemplates\EFCore\Aliases.cs" />
         <Compile Remove="CodeTemplates\EFCore\Aliases.cs" />
         <Compile Remove="Migrations\SqlServer\InitialCreate.StoredProcedures.cs" />
-        <Compile Remove="Migrations\SqlServer\v1.5.1\SqlServerDbContextModelSnapshot_v1.5.1.Backup.cs" />
+        <Compile Remove="Migrations\SqlServer\v1.5.1\SqlServerDbContextModelSnapshot_v1.5.1.cs" />
         <!--<Compile Remove="Configuration\**\*.cs" />
 		<None Include="Configuration\**\*.cs" />-->
         <None Include="DbContextBase.Source.cs" />
-        <None Include="Migrations\SqlServer\InitialCreate.StoredProcedures.cs" />
-        <None Include="Migrations\SqlServer\v1.5.1\SqlServerDbContextModelSnapshot_v1.5.1.Backup.cs" />
+        <None Include="Migrations\SqlServer\v1.5.1\SqlServerDbContextModelSnapshot_v1.5.1.cs" />
         <Compile Remove="DbContextBase.Source.cs" />
         <None Include="Migrations\Backup\**\*.*" />
         <Compile Remove="Migrations\Backup\**\*.cs" />

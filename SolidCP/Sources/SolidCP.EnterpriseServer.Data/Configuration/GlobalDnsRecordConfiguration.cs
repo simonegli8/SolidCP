@@ -18,6 +18,8 @@ public partial class GlobalDnsRecordConfiguration : EntityTypeConfiguration<Glob
 {
 	public override void Configure()
 	{
+        HasKey(e => e.RecordId).HasName("PK_GlobalDnsRecord");
+
 		Property(e => e.RecordType).IsUnicode(false);
 
 		if (IsCore && IsSqlite) Property(e => e.RecordType).HasColumnType("TEXT COLLATE NOCASE");

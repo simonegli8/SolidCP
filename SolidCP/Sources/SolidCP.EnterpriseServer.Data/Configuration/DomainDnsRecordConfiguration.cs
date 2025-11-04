@@ -15,7 +15,7 @@ namespace SolidCP.EnterpriseServer.Data.Configuration;
 public partial class DomainDnsRecordConfiguration: EntityTypeConfiguration<DomainDnsRecord>
 {
     public override void Configure() {
-		HasKey(e => e.Id).HasName("PK__DomainDn__3214EC27A6FC0498");
+		HasKey(e => e.Id).HasName("PK_DomainDnsRecord");
 
 		if (IsSqlServer) Property(e => e.Date).HasColumnType("datetime");
 

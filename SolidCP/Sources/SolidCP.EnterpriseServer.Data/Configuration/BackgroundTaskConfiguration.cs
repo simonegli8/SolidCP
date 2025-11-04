@@ -17,7 +17,7 @@ using BackgroundTask = SolidCP.EnterpriseServer.Data.Entities.BackgroundTask;
 public partial class BackgroundTaskConfiguration: EntityTypeConfiguration<BackgroundTask>
 {
     public override void Configure() {
-		HasKey(e => e.Id).HasName("PK__Backgrou__3214EC273A1145AC");
+		HasKey(e => e.Id).HasName("PK_BackgroundTask");
 		if (IsSqlServer)
         {
             Property(e => e.StartDate).HasColumnType("datetime");

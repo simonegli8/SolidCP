@@ -14,10 +14,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql(@"
-IF NOT EXISTS (
-    SELECT * FROM [__EFMigrationsHistory]
-    WHERE [MigrationId] = N'20251104195729_v1.5.1'
-) AND OBJECT_ID(N'[Versions]') IS NOT NULL
+IF OBJECT_ID(N'[Versions]') IS NOT NULL
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
     VALUES (N'20251104195729_v1.5.1', N'9.0.9');
@@ -2183,7 +2180,7 @@ END;
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__WebDavPo__3214EC278AF5195E", x => x.ID);
+                    table.PrimaryKey("PK_WebDavPortalUsersSetting", x => x.ID);
                     table.ForeignKey(
                         name: "FK_WebDavPortalUsersSettings_UserId",
                         column: x => x.AccountId,

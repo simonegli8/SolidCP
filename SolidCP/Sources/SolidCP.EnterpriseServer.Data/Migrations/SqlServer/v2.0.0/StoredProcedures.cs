@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
 {
 	/// <inheritdoc />
-	public partial class InitialCreate : Migration
+	public partial class v200 : Migration
 	{
 		#region Stored Procedures
 		protected void StoredProceduresUp(MigrationBuilder migrationBuilder)
@@ -12,7 +12,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
 			StoredProceduresDown(migrationBuilder);
 
 			if (migrationBuilder.IsSqlServer())
-				migrationBuilder.SqlScript(@"!\.SqlServer\.StoredProcedures\.2\.0\.0\..*\.sql$");
+				migrationBuilder.SqlScript(@"!\.SqlServer\.v2\.0\.0\.StoredProcedures\..*\.sql$");
 		}
 
 		protected void StoredProceduresDown(MigrationBuilder migrationBuilder)

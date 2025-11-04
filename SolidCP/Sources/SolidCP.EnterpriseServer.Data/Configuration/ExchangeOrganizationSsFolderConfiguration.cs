@@ -16,7 +16,7 @@ public partial class ExchangeOrganizationSsFolderConfiguration : EntityTypeConfi
 {
 	public override void Configure()
 	{
-		HasKey(e => e.Id).HasName("PK__Exchange__3214EC072DDBA072");
+		HasKey(e => e.Id).HasName("PK_ExchangeOrganizationSsFolder");
 
 		Property(e => e.Type).IsUnicode(false);
 

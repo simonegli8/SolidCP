@@ -17,7 +17,7 @@ using BackgroundTaskParameter = SolidCP.EnterpriseServer.Data.Entities.Backgroun
 public partial class BackgroundTaskParameterConfiguration: EntityTypeConfiguration<BackgroundTaskParameter>
 {
     public override void Configure() {
-		HasKey(e => e.ParameterId).HasName("PK__Backgrou__F80C629777BF580B");
+		HasKey(e => e.ParameterId).HasName("PK_BackgroundTaskParameter");
 		if (IsSqlServer)
 		{
 			Property(e => e.SerializerValue).HasColumnType("ntext");
@@ -31,7 +31,7 @@ public partial class BackgroundTaskParameterConfiguration: EntityTypeConfigurati
 #if NetCore
 		HasOne(d => d.Task).WithMany(p => p.BackgroundTaskParameters)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Backgroun__TaskI__7AA72534");
+                .HasConstraintName("FK_BackgrounTaskParameter_Task");
 #else
 		HasRequired(d => d.Task).WithMany(p => p.BackgroundTaskParameters);
 #endif
