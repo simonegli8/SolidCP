@@ -92,10 +92,6 @@
 
         <ZipLevel Condition="$(HighCompression) == 'true'"> -mx9 -mmt=on</ZipLevel>
         <ZipLevel Condition="$(HighCompression) != 'true'"> -mx3 -mmt=on</ZipLevel>
-
-        <ftphost></ftphost>
-		<ftpUsername></ftpUsername>
-		<ftpPassword></ftpPassword>
 	</PropertyGroup>
 
 	<PropertyGroup Label="WebPlatformFeed">
@@ -1054,7 +1050,7 @@
 			<InstallerBuildMsiFile Include="$(InstallerBuild)\*.msi" />
 		</ItemGroup>
 		
-		<Copy SourceFiles="@(InstallerBuildMsiFile)" DestinationFiles="$(DeployFolder)\SolidCP.Installer--$(Version).msi" />
+		<Copy SourceFiles="@(InstallerBuildMsiFile)" DestinationFiles="$(DeployFolder)\SolidCP.Installer-$(Version).msi" />
 
 		<!-- zip updates
 		<ItemGroup>
