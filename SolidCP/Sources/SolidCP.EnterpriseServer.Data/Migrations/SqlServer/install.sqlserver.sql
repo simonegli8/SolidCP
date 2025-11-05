@@ -15,7 +15,8 @@ IF NOT EXISTS (
 )
 BEGIN
 
-    IF OBJECT_ID(N'[Versions]') IS NOT NULL
+    IF OBJECT_ID(N'[Versions]') IS NOT NULL AND
+        EXISTS (SELECT * FROM [Versions] WHERE DatabaseVersion = '1.5.1')
     BEGIN
         INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
         VALUES (N'20251104195729_v1.5.1', N'9.0.9');
