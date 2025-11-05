@@ -38,6 +38,18 @@ public class WindowsInstaller : Installer
 	public override string WebsiteLogsPath => InstallExeRootPath ?? "";
 	WinGet WinGet => (WinGet)((IWindowsOperatingSystem)OSInfo.Current).WinGet;
 
+	public virtual void InstallWinGet()
+	{
+		if (!WinGet.IsInstallerInstalled)
+		{
+			const string Version = "v1.12.350";
+			var tmpFile = Path.GetTempFileName() + ".msixbundle";
+			PowerShell.Standard.ExecScript($@"
+Invoke-WebRequest -Uri ""https://github.com/microsoft/winget-cli/releases/download/{Version}/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"" -OutFile ""{tmpFile}""
+Add-AppxPackage ""{tmpFile}""");
+			File.Delete(tmpFile);
+		}
+	}
 	public override void InstallNet8Runtime()
 	{
 		if (Net8RuntimeNeededOnWindows)
@@ -50,6 +62,8 @@ public class WindowsInstaller : Installer
 				throw new PlatformNotSupportedException("NET 8 is not supported on this OS.");
 
 			Info("Installing .NET 8 Runtime...");
+
+			InstallWinGet();
 
 			WinGet.Install("Microsoft.DotNet.AspNetCore.8;Microsoft.DotNet.Runtime.8");
 
