@@ -15578,6 +15578,43 @@ IF NOT EXISTS (
     WHERE [MigrationId] = N'20251104212751_v2.0.0'
 )
 BEGIN
+    PRINT 'CREATE TRIGGER [dbo].[Update_StatusIDchangeDate]'
+    EXECUTE sp_executesql N'CREATE TRIGGER [dbo].[Update_StatusIDchangeDate]
+       ON [dbo].[Packages]
+       AFTER UPDATE
+    AS BEGIN
+        UPDATE Packages 
+    		SET StatusIDchangeDate = GETDATE()
+
+        FROM Packages P 
+        INNER JOIN Inserted I ON P.PackageID = I.PackageID
+        INNER JOIN Deleted D ON P.PackageID = D.PackageID                  
+        WHERE  D.StatusID <> I.StatusID AND I.StatusID > 1 --dont update if nothing change and keep ChangeDate if server back to active  
+        --AND P.StatusID <> I.StatusID
+    END'
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251104212751_v2.0.0'
+)
+BEGIN
+    SET ANSI_NULLS ON
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251104212751_v2.0.0'
+)
+BEGIN
+    SET QUOTED_IDENTIFIER ON
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251104212751_v2.0.0'
+)
+BEGIN
     PRINT 'CREATE PROCEDURE [dbo].[UpdateHostingPlanQuotas]'
     EXECUTE sp_executesql N'CREATE PROCEDURE [dbo].[UpdateHostingPlanQuotas]
         (
