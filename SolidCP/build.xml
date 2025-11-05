@@ -113,6 +113,7 @@
 		<Message Text="BuildLegacyDatabaseScript: $(BuildLegacyDatabaseScript)" Importance="High" />
 		<Message Text="HighCompression: $(HighCompression)" Importance="High" />
 		<Message Text="MsBuildSwitches: $(MsBuildSwitches)" Importance="High" />
+		<Message Text="UseDebugService: $(UseDebugService)" Importance="High" />
 	</Target>
 
 	<Target Name="RestorePackages" DependsOnTargets="ShowParameters">
