@@ -62,29 +62,34 @@ namespace SolidCP.UniversalInstaller.WinForms
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InstallerForm));
 			this.wizard = new SolidCP.UniversalInstaller.WinForms.Wizard();
 			this.SuspendLayout();
 			// 
 			// wizard
 			// 
 			this.wizard.BannerImage = global::SolidCP.UniversalInstaller.Properties.Resources.BannerImage;
+			this.wizard.CancelText = "&Cancel";
 			this.wizard.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.wizard.FinishText = "&Finish";
 			this.wizard.Location = new System.Drawing.Point(0, 0);
+			this.wizard.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.wizard.MarginImage = global::SolidCP.UniversalInstaller.Properties.Resources.MarginImage;
 			this.wizard.Name = "wizard";
-			this.wizard.SelectedPage = null;
-			this.wizard.Size = new System.Drawing.Size(495, 358);
+			this.wizard.Size = new System.Drawing.Size(660, 441);
 			this.wizard.TabIndex = 0;
-			this.wizard.Finish += new System.EventHandler(this.OnWizardFinish);
 			this.wizard.Cancel += new System.EventHandler(this.OnWizardCancel);
+			this.wizard.Finish += new System.EventHandler(this.OnWizardFinish);
 			// 
 			// InstallerForm
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(495, 358);
+			this.ClientSize = new System.Drawing.Size(660, 441);
 			this.Controls.Add(this.wizard);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "InstallerForm";

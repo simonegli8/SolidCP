@@ -15,7 +15,7 @@ namespace SolidCP.EnterpriseServer.Data.Configuration;
 public partial class ProviderConfiguration: EntityTypeConfiguration<Provider>
 {
     public override void Configure() {
-        HasKey(e => e.ProviderId).HasName("PK_ServiceTypes");
+        HasKey(e => e.ProviderId).HasName("PK_Provider");
 
 #if NetCore
         Property(e => e.ProviderId).ValueGeneratedNever();

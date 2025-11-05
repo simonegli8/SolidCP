@@ -16,7 +16,7 @@ namespace SolidCP.EnterpriseServer.Data.Configuration;
 public partial class HostingPlanQuotaConfiguration: EntityTypeConfiguration<HostingPlanQuota>
 {
     public override void Configure() {
-        HasKey(e => new { e.PlanId, e.QuotaId }).HasName("PK_HostingPlanQuotas_1");
+        HasKey(e => new { e.PlanId, e.QuotaId }).HasName("PK_HostingPlanQuota");
 
 #if NetCore
         HasOne(d => d.Plan).WithMany(p => p.HostingPlanQuota).HasConstraintName("FK_HostingPlanQuotas_HostingPlans");

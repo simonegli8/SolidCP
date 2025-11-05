@@ -15,7 +15,7 @@ namespace SolidCP.EnterpriseServer.Data.Configuration;
 public partial class StorageSpaceLevelResourceGroupConfiguration: EntityTypeConfiguration<StorageSpaceLevelResourceGroup>
 {
     public override void Configure() {
-        HasKey(e => e.Id).HasName("PK__StorageS__3214EC07EBEBED98");
+        HasKey(e => e.Id).HasName("PK_StorageSpaceLevelResourceGroup");
 
 #if NetCore
         HasOne(d => d.Group).WithMany(p => p.StorageSpaceLevelResourceGroups).HasConstraintName("FK_StorageSpaceLevelResourceGroups_GroupId");

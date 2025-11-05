@@ -16,6 +16,6 @@ public partial class ExchangeMailboxPlanRetentionPolicyTagConfiguration : Entity
 {
 	public override void Configure()
 	{
-		HasKey(e => e.PlanTagId).HasName("PK__Exchange__E467073C50CD805B");
+		HasKey(e => e.PlanTagId).HasName("PK_ExchangeMailboxPlanRetentionPolicyTag");
     }
 }

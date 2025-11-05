@@ -71,6 +71,7 @@ jobs:
       HighCompression: "true"
       MsBuildSwitches: "/v:n /m:1"
       GitHubAction: true
+      UseDebugService: "true"
 
     steps:
       

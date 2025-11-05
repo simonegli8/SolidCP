@@ -22,7 +22,7 @@ public partial class Quota
     [Column("GroupID")]
     public int GroupId { get; set; }
 
-    public int QuotaOrder { get; set; }
+    public double QuotaOrder { get; set; }
 
     [Required]
     [StringLength(50)]

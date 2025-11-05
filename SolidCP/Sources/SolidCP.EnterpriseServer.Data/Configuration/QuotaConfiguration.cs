@@ -699,7 +699,7 @@ public partial class QuotaConfiguration: EntityTypeConfiguration<Quota>
 			new Quota() { QuotaId = 765, GroupId = 76, QuotaDescription = "Database Truncate", QuotaName = "MsSQL2025.Truncate", QuotaOrder = 7, QuotaTypeId = 1,
 				ServiceQuota = false },
 			new Quota() { QuotaId = 766, GroupId = 76, QuotaDescription = "Max Log Size", QuotaName = "MsSQL2025.MaxLogSize", QuotaOrder = 4, QuotaTypeId = 3,
-				ServiceQuota = false }
+				ServiceQuota = false },
 		});
 		#endregion
 	}

@@ -38,6 +38,21 @@ public class WindowsInstaller : Installer
 	public override string WebsiteLogsPath => InstallExeRootPath ?? "";
 	WinGet WinGet => (WinGet)((IWindowsOperatingSystem)OSInfo.Current).WinGet;
 
+	public virtual void InstallWinGet()
+	{
+		var ver = OSInfo.WindowsVersion;
+		if (!WinGet.IsInstallerInstalled &&
+			(OSInfo.IsWindowsServer && ver >= WindowsVersion.WindowsServer2022 ||
+			!OSInfo.IsWindowsServer && ver >= WindowsVersion.Windows10))
+		{
+			const string Version = "v1.12.350";
+			var tmpFile = Path.GetTempFileName() + ".msixbundle";
+			PowerShell.Standard.ExecScript($@"
+Invoke-WebRequest -Uri ""https://github.com/microsoft/winget-cli/releases/download/{Version}/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"" -OutFile ""{tmpFile}""
+Add-AppxPackage ""{tmpFile}""");
+			File.Delete(tmpFile);
+		}
+	}
 	public override void InstallNet8Runtime()
 	{
 		if (Net8RuntimeNeededOnWindows)
@@ -51,7 +66,27 @@ public class WindowsInstaller : Installer
 
 			Info("Installing .NET 8 Runtime...");
 
-			WinGet.Install("Microsoft.DotNet.AspNetCore.8;Microsoft.DotNet.Runtime.8");
+			InstallWinGet();
+
+			if (WinGet.IsInstallerInstalled) WinGet.Install("Microsoft.DotNet.AspNetCore.8;Microsoft.DotNet.Runtime.8");
+			else
+			{
+				if (OSInfo.Architecture == Architecture.X64)
+				{
+					var exe = DownloadFile("https://builds.dotnet.microsoft.com/dotnet/aspnetcore/Runtime/8.0.21/aspnetcore-runtime-8.0.21-win-x64.exe");
+					Shell.Exec($"\"{exe}\" /install /quiet /norestart");
+					exe = DownloadFile("https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/8.0.21/windowsdesktop-runtime-8.0.21-win-x64.exe");
+					Shell.Exec($"\"{exe}\" /install /quiet /norestart");
+				}
+				else if (OSInfo.Architecture == Architecture.Arm64)
+				{
+					var exe = DownloadFile("https://builds.dotnet.microsoft.com/dotnet/aspnetcore/Runtime/8.0.21/aspnetcore-runtime-8.0.21-win-arm64.exe");
+					Shell.Exec($"\"{exe}\" /install /quiet /norestart");
+					exe = DownloadFile("https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/8.0.21/windowsdesktop-runtime-8.0.21-win-arm64.exe");
+					Shell.Exec($"\"{exe}\" /install /quiet /norestart");
+				}
+				else throw new NotSupportedException($"CPU architecture {OSInfo.Architecture} not supported.");
+			}
 
 			InstallLog("Installed .NET 8 Runtime.");
 

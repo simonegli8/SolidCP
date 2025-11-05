@@ -16,7 +16,7 @@ public partial class PrivateNetworkVlanConfiguration : EntityTypeConfiguration<P
 {
 	public override void Configure()
 	{
-		HasKey(e => e.VlanId).HasName("PK__PrivateN__8348135581B53618");
+		HasKey(e => e.VlanId).HasName("PK_PrivateNetworkVlan");
 		if (IsSqlServer) Property(e => e.Comments).HasColumnType("ntext");
 		else if (IsCore && (IsMySql || IsMariaDb || IsSqlite || IsPostgreSql))
 		{

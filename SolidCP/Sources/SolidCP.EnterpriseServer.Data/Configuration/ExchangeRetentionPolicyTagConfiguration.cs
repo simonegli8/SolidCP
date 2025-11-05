@@ -18,6 +18,6 @@ public partial class ExchangeRetentionPolicyTagConfiguration : EntityTypeConfigu
 	{
 		if (IsCore && IsSqlite) Property(e => e.TagName).HasColumnType("TEXT COLLATE NOCASE");
 	
-		HasKey(e => e.TagId).HasName("PK__Exchange__657CFA4C02667D37");
+		HasKey(e => e.TagId).HasName("PK_ExchangeRetentionPolicyTag");
     }
 }

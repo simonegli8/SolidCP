@@ -89,3 +89,4 @@ packages/
 /SolidCP/CleanRelease2.ps1
 /SolidCP/CleanDebug.ps1
 /SolidCP.Installer/Sources/VersionInfo.cs
+/SolidCP/buildandupload.bat

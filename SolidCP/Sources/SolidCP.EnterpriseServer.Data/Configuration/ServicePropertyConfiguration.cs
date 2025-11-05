@@ -18,7 +18,7 @@ public partial class ServicePropertyConfiguration: EntityTypeConfiguration<Servi
             Property(e => e.PropertyValue).HasColumnType("TEXT COLLATE NOCASE");
         }
 
-        HasKey(e => new { e.ServiceId, e.PropertyName }).HasName("PK_ServiceProperties_1");
+        HasKey(e => new { e.ServiceId, e.PropertyName }).HasName("PK_ServiceProperties");
 
 #if NetCore
         HasOne(d => d.Service).WithMany(p => p.ServiceProperties).HasConstraintName("FK_ServiceProperties_Services");

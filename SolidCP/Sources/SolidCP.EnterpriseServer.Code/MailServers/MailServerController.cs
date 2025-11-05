@@ -30,6 +30,13 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE)  ARISING  IN  ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using MySqlX.XDevAPI.Common;
+using SolidCP.EnterpriseServer;
+using SolidCP.EnterpriseServer.Base;
+using SolidCP.EnterpriseServer.Code.MailServers;
+using SolidCP.Providers;
+using SolidCP.Providers.Mail;
+using SolidCP.Server.Client;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -39,12 +46,7 @@ using System.IO;
 //using System.Web.Script.Serialization;
 using System.Xml;
 using System.Xml.Serialization;
-using SolidCP.EnterpriseServer;
-using SolidCP.EnterpriseServer.Base;
-using SolidCP.EnterpriseServer.Code.MailServers;
-using SolidCP.Providers;
-using SolidCP.Providers.Mail;
-using SolidCP.Server.Client;
+using System.Linq;
 
 namespace SolidCP.EnterpriseServer
 {
@@ -1095,14 +1097,16 @@ namespace SolidCP.EnterpriseServer
 			if (PackageController.GetPackageItemByName(item.PackageId, item.Name, typeof(MailDomain)) != null)
 				return 0; // OK, domain already exists
 
-            //Get mailPolicy settings
-            UserInfo user = PackageController.GetPackageOwner(item.PackageId);
+			//Get mailPolicy settings
+			UserInfo user = PackageController.GetPackageOwner(item.PackageId);
 			UserSettings mailPolicy = UserController.GetUserSettings(user.UserId, UserSettings.MAIL_POLICY);
 
             PackageContext cntx = PackageController.GetPackageContext(item.PackageId);
 			bool mailaccesscontrols = false;
-            mailaccesscontrols = (cntx.Quotas[Quotas.MAIL_ALLOWACCESSCONTROLS].QuotaAllocatedValue == 1);
-
+			QuotaValueInfo quotaValue = default;
+			cntx.Quotas.TryGetValue(Quotas.MAIL_ALLOWACCESSCONTROLS, out quotaValue);
+			mailaccesscontrols = quotaValue?.QuotaAllocatedValue == 1;
+			
 			if (mailaccesscontrols == false)
 			{
                 mailPolicy["AcessAuthTypePolicy"] = "1";

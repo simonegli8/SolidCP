@@ -20,7 +20,12 @@
         <EntityFramework6>6.5</EntityFramework6>
         <PackageId>SolidCP.EnterpriseServer.Data</PackageId>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <DebugType>embedded</DebugType>
         <!-- Use EntityFramework 6.4 or 6.5 -->
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <Optimize>false</Optimize>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
@@ -172,9 +177,12 @@
     <ItemGroup>
         <None Include="CodeTemplates\EFCore\Aliases.cs" />
         <Compile Remove="CodeTemplates\EFCore\Aliases.cs" />
+        <Compile Remove="Migrations\SqlServer\InitialCreate.StoredProcedures.cs" />
+        <Compile Remove="Migrations\SqlServer\v1.5.1\SqlServerDbContextModelSnapshot_v1.5.1.cs" />
         <!--<Compile Remove="Configuration\**\*.cs" />
 		<None Include="Configuration\**\*.cs" />-->
         <None Include="DbContextBase.Source.cs" />
+        <None Include="Migrations\SqlServer\v1.5.1\SqlServerDbContextModelSnapshot_v1.5.1.cs" />
         <Compile Remove="DbContextBase.Source.cs" />
         <None Include="Migrations\Backup\**\*.*" />
         <Compile Remove="Migrations\Backup\**\*.cs" />
@@ -182,6 +190,10 @@
         <Compile Remove="Configuration\Sources\**\*.*" />
         <None Include="Entities\Sources\**\*.*" />
         <Compile Remove="Entities\Sources\**\*.*" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Migrations\SqlServer\v1.5.1\install_db.sql" />
     </ItemGroup>
 
     <ItemGroup>
@@ -203,12 +215,7 @@
         </Compile>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Migrations\PostgreSql\" />
-      <Folder Include="Migrations\Sqlite\" />
-    </ItemGroup>
-
-    <Target Name="CopySQLite" BeforeTargets="CopyFilesToOutputDirectory"  Condition="'$(TargetFramework)' == 'net8.0' OR '$(TargetFramework)' == 'net9.0'">
+    <Target Name="CopySQLite" BeforeTargets="CopyFilesToOutputDirectory" Condition="'$(TargetFramework)' == 'net8.0' OR '$(TargetFramework)' == 'net9.0'">
         <ItemGroup>
             <x64SQLiteFiles Include="$(PkgSQLitePCLRaw_lib_e_sqlite3)\runtimes\win-x64\native\*.dll" />
             <x86SQLiteFiles Include="$(PkgSQLitePCLRaw_lib_e_sqlite3)\runtimes\win-x86\native\*.dll" />

@@ -1455,7 +1455,8 @@ LOG ON(
 			command.Delimiter = ";";
 			int i = 0;
 			float n = commandCount;
-			command.Query = ProcessInstallVariables?.Invoke(script.Reader.ReadToEnd());
+			var sql = script.Reader.ReadToEnd();
+			command.Query = ProcessInstallVariables != null ? ProcessInstallVariables?.Invoke(sql) : sql;
 			command.StatementExecuted += (sender, args) =>
 				OnProgressChange?.Invoke((float)++i / n);
 			command.Error += (sender, args) =>
@@ -1670,14 +1671,29 @@ SELECT DatabaseVersion FROM Version");
 				ReportCommandCount?.Invoke(updateCount + installCount);
 				if (!countOnly)
 				{
-					if (oldVersionUpdate)
+					if (dbType != DbType.Sqlite && dbType != DbType.SqliteFX)
 					{
-						RunSqlScript(masterConnectionString, updateSqlScript, updateCount, OnProgressChange,
-							ProcessInstallVariables, databaseName);
-					}
-
-					RunSqlScript(masterConnectionString, installSqlScript, installCount, OnProgressChange,
+						if (oldVersionUpdate)
+						{
+							// installSqlScript does update itself
+							//RunSqlScript(masterConnectionString, updateSqlScript, updateCount, OnProgressChange,
+							//	ProcessInstallVariables, databaseName);
+						}
+						RunSqlScript(masterConnectionString, installSqlScript, installCount, OnProgressChange,
 						ProcessInstallVariables, databaseName);
+					} else
+					{
+						if (Providers.OS.OSInfo.IsCore)
+						{
+							var contextType = Type.GetType("SolidCP.EnterpriseServer.Data.SqliteDbContext, SolidCP.EnterpriseServer.Data.NetCore");
+							//using (var context = new SqliteDbContext(masterConnectionString, false))
+							using (var context = Activator.CreateInstance(contextType, new object[] { masterConnectionString, false }) as IMigratableDbContext)
+							{
+								context.Migrate();
+							}
+						}
+						else throw new NotSupportedException("Upgrade SQLIte database must run on .NET Core.");
+					}
 				}
 			}
 		}

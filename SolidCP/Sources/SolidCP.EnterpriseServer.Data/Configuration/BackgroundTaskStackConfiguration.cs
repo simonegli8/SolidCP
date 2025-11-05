@@ -15,12 +15,12 @@ namespace SolidCP.EnterpriseServer.Data.Configuration;
 public partial class BackgroundTaskStackConfiguration: EntityTypeConfiguration<BackgroundTaskStack>
 {
     public override void Configure() {
-		HasKey(e => e.TaskStackId).HasName("PK__Backgrou__5E44466FB8A5F217");
+		HasKey(e => e.TaskStackId).HasName("PK_BackgroundTaskStack");
 
 #if NetCore
         HasOne(d => d.Task).WithMany(p => p.BackgroundTaskStacks)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Backgroun__TaskI__005FFE8A");
+                .HasConstraintName("FK_BackgroundTaskStack_Task");
 #else
 		HasRequired(d => d.Task).WithMany(p => p.BackgroundTaskStacks);
 #endif

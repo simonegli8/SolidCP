@@ -80,6 +80,13 @@ public abstract partial class Installer
 		set => hasDotnet = value;
 	}
 	public void ResetHasDotnet() => hasDotnet = null;
+	public virtual bool IsRemoteConsole =>
+		!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PSRemotingProtocolVersion")) ||
+		!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PSSenderInfo")) ||
+		!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WSManStackVersion")) ||
+		!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SSH_CLIENT")) ||
+		!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SSH_TTY"));
+
 	public bool NeedRemoveNet8Runtime = false;
 	public bool NeedRemoveNet8AspRuntime = false;
 	public virtual string InstallWebRootPath { get; set; } = null;

@@ -159,10 +159,10 @@ namespace SolidCP.EnterpriseServer
 
 		public const int ERROR_MAIL_ACCOUNT_MAX_MAILBOX_SIZE_LIMIT = -725;
 		public const int ERROR_MAIL_ACCOUNT_PASSWORD_NOT_COMPLEXITY = -726;
-        #endregion
+		#endregion
 
-        #region FTP
-        public const int ERROR_FTP_RESOURCE_UNAVAILABLE = -801;
+		#region FTP
+		public const int ERROR_FTP_RESOURCE_UNAVAILABLE = -801;
         public const int ERROR_FTP_RESOURCE_QUOTA_LIMIT = -802;
         public const int ERROR_FTP_PACKAGE_ITEM_EXISTS = -803;
         public const int ERROR_FTP_SERVICE_ITEM_EXISTS = -804;

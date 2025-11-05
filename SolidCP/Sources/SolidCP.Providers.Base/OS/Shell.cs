@@ -100,10 +100,11 @@ namespace SolidCP.Providers.OS
 				{
 					machine = System.Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Machine);
 					user = System.Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User);
+					var process = System.Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Process);
 					sources = new string[] {
 						System.Environment.GetFolderPath(System.Environment.SpecialFolder.System),
 						System.Environment.GetFolderPath(System.Environment.SpecialFolder.SystemX86),
-						proc, machine, user };
+						process, machine, user };
 				}
 				else sources = new string[] { proc };
 
@@ -523,7 +524,7 @@ namespace SolidCP.Providers.OS
 
 #if wpkg
 		public readonly static Shell Default = new StandardShell(); // OSInfo.Current.DefaultShell;
-		public static bool IsWindows => RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows);
+		public static bool IsWindows => System.Environment.OSVersion.Platform == PlatformID.Win32NT;
 #else
 		public static Shell Default => OSInfo.Current.DefaultShell;
 		public static bool IsWindows => OSInfo.IsWindows;

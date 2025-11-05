@@ -10,10 +10,15 @@
         <OutputPath>bin\$(Configuration)</OutputPath>
         <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
         <StartupObject>SolidCP.UniversalInstaller.Core.Program</StartupObject>
+        <DebugType>embedded</DebugType>
+        <UseDebugService Condition="$(UseDebugService) == ''">true</UseDebugService>
+        <DefineConstants Condition="$(UseDebugService) == 'true'">$(DefineConstants);UseDebugService</DefineConstants>
     </PropertyGroup>
+    
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <Optimize>false</Optimize>
     </PropertyGroup>
+    
     <ItemGroup>
       <Compile Remove="Common\Utils.Old.cs" />
     </ItemGroup>

@@ -15,7 +15,7 @@ namespace SolidCP.EnterpriseServer.Data.Configuration;
 public partial class WebDavPortalUsersSettingConfiguration: EntityTypeConfiguration<WebDavPortalUsersSetting>
 {
     public override void Configure() {
-        HasKey(e => e.Id).HasName("PK__WebDavPo__3214EC278AF5195E");
+        HasKey(e => e.Id).HasName("PK_WebDavPortalUsersSetting");
 
 #if NetCore
         HasOne(d => d.Account).WithMany(p => p.WebDavPortalUsersSettings).HasConstraintName("FK_WebDavPortalUsersSettings_UserId");

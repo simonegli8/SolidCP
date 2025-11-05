@@ -69,6 +69,7 @@ using SolidCP.EnterpriseServer.Data;
 using SolidCP.EnterpriseServer.Code;
 using SolidCP.EnterpriseServer.Base.HostedSolution;
 using SolidCP.Providers.HostedSolution;
+using MySqlX.XDevAPI.Common;
 //using Humanizer.Localisation;
 
 namespace SolidCP.EnterpriseServer
@@ -10281,6 +10282,15 @@ namespace SolidCP.EnterpriseServer
 			return result;
 		}
 
+		public int GetMailAccountsCountForDomain(int packageId, string domain)
+		{
+			domain = "@" + domain;
+			return ServiceItems
+				.Where(si => si.ItemTypeId == 15 && si.ItemName.EndsWith(domain)) // Mail Account
+				.Join(PackagesTreeCaches, si => si.PackageId, t => t.PackageId, (si, t) => t)
+				.Where(t => t.ParentPackageId == packageId)
+				.Count();
+		}
 		public DataSet GetPackageQuotas(int actorId, int packageId)
 		{
 			if (UseEntityFramework)

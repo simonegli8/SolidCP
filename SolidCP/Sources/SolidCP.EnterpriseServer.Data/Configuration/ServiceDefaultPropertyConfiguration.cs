@@ -18,7 +18,7 @@ public partial class ServiceDefaultPropertyConfiguration: EntityTypeConfiguratio
 
         if (IsCore && IsSqlite) Property(e => e.PropertyName).HasColumnType("TEXT COLLATE NOCASE");
 
-        HasKey(e => new { e.ProviderId, e.PropertyName }).HasName("PK_ServiceDefaultProperties_1");
+        HasKey(e => new { e.ProviderId, e.PropertyName }).HasName("PK_ServiceDefaultProperties");
 
 #if NetCore
         HasOne(d => d.Provider).WithMany(p => p.ServiceDefaultProperties)

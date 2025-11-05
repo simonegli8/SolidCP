@@ -16,7 +16,7 @@ public partial class WebDavAccessTokenConfiguration: EntityTypeConfiguration<Web
 {
     public override void Configure() {
 
-		HasKey(e => e.Id).HasName("PK__WebDavAc__3214EC2708781F08");
+		HasKey(e => e.Id).HasName("PK_WebDavAccessToken");
 		if (IsSqlServer) Property(e => e.ExpirationDate).HasColumnType("datetime");
         else if (IsCore && IsSqliteFX) Property(e => e.AccessToken).HasColumnType("BLOB");
 
