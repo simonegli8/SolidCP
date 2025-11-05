@@ -165,7 +165,7 @@
 			ReplacementText="$(ReplacementText)" />
 	</Target>
 
-	<Target Name="CompileSources" DependsOnTargets="BackupModelSnapshots">
+	<Target Name="CompileSources" DependsOnTargets="GenerateBuildVersionFiles">
 		<!-- SolidCP -->
 		<MSBuild Projects="$(TrunkFolder)\Sources\SolidCP.Server.sln" Properties="Configuration=$(BuildConfiguration);Platform=$(Platform)" />
 		<MSBuild Projects="$(TrunkFolder)\Sources\SolidCP.WebPortalAndEnterpriseServer.sln" Properties="Configuration=$(BuildConfiguration);Platform=$(Platform)" />
