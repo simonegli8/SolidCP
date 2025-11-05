@@ -211,11 +211,6 @@
         </Compile>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Migrations\PostgreSql\" />
-      <Folder Include="Migrations\Sqlite\" />
-    </ItemGroup>
-
     <Target Name="CopySQLite" BeforeTargets="CopyFilesToOutputDirectory" Condition="'$(TargetFramework)' == 'net8.0' OR '$(TargetFramework)' == 'net9.0'">
         <ItemGroup>
             <x64SQLiteFiles Include="$(PkgSQLitePCLRaw_lib_e_sqlite3)\runtimes\win-x64\native\*.dll" />

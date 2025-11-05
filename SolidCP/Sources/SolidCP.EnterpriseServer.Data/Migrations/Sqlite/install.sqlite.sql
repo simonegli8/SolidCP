@@ -5,7 +5,7 @@
 
 BEGIN TRANSACTION;
 CREATE TABLE "AdditionalGroups" (
-    "ID" INTEGER NOT NULL CONSTRAINT "PK__Addition__3214EC27E665DDE2" PRIMARY KEY AUTOINCREMENT,
+    "ID" INTEGER NOT NULL CONSTRAINT "PK_AdditionalGroup" PRIMARY KEY AUTOINCREMENT,
     "UserID" INTEGER NOT NULL,
     "GroupName" TEXT COLLATE NOCASE NULL
 );
@@ -37,7 +37,7 @@ CREATE TABLE "AuditLogTasks" (
 );
 
 CREATE TABLE "BackgroundTasks" (
-    "ID" INTEGER NOT NULL CONSTRAINT "PK__Backgrou__3214EC273A1145AC" PRIMARY KEY AUTOINCREMENT,
+    "ID" INTEGER NOT NULL CONSTRAINT "PK_BackgroundTask" PRIMARY KEY AUTOINCREMENT,
     "Guid" TEXT NOT NULL,
     "TaskID" TEXT NULL,
     "ScheduleID" INTEGER NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE "Clusters" (
 );
 
 CREATE TABLE "ExchangeDeletedAccounts" (
-    "ID" INTEGER NOT NULL CONSTRAINT "PK__Exchange__3214EC27EF1C22C1" PRIMARY KEY AUTOINCREMENT,
+    "ID" INTEGER NOT NULL CONSTRAINT "PK_ExchangeDeletedAccount" PRIMARY KEY AUTOINCREMENT,
     "AccountID" INTEGER NOT NULL,
     "OriginAT" INTEGER NOT NULL,
     "StoragePath" TEXT NULL,
@@ -82,13 +82,13 @@ CREATE TABLE "ExchangeDisclaimers" (
 );
 
 CREATE TABLE "ExchangeMailboxPlanRetentionPolicyTags" (
-    "PlanTagID" INTEGER NOT NULL CONSTRAINT "PK__Exchange__E467073C50CD805B" PRIMARY KEY AUTOINCREMENT,
+    "PlanTagID" INTEGER NOT NULL CONSTRAINT "PK_ExchangeMailboxPlanRetentionPolicyTag" PRIMARY KEY AUTOINCREMENT,
     "TagID" INTEGER NOT NULL,
     "MailboxPlanId" INTEGER NOT NULL
 );
 
 CREATE TABLE "ExchangeRetentionPolicyTags" (
-    "TagID" INTEGER NOT NULL CONSTRAINT "PK__Exchange__657CFA4C02667D37" PRIMARY KEY AUTOINCREMENT,
+    "TagID" INTEGER NOT NULL CONSTRAINT "PK_ExchangeRetentionPolicyTag" PRIMARY KEY AUTOINCREMENT,
     "ItemID" INTEGER NOT NULL,
     "TagName" TEXT COLLATE NOCASE NULL,
     "TagType" INTEGER NOT NULL,
@@ -123,7 +123,7 @@ CREATE TABLE "RDSCertificates" (
 );
 
 CREATE TABLE "RDSCollections" (
-    "ID" INTEGER NOT NULL CONSTRAINT "PK__RDSColle__3214EC27346D361D" PRIMARY KEY AUTOINCREMENT,
+    "ID" INTEGER NOT NULL CONSTRAINT "PK_RdsCollection" PRIMARY KEY AUTOINCREMENT,
     "ItemID" INTEGER NOT NULL,
     "Name" TEXT COLLATE NOCASE NULL,
     "Description" TEXT NULL,
@@ -207,13 +207,13 @@ CREATE TABLE "SSLCertificates" (
 );
 
 CREATE TABLE "StorageSpaceLevels" (
-    "Id" INTEGER NOT NULL CONSTRAINT "PK__StorageS__3214EC07B8D82363" PRIMARY KEY AUTOINCREMENT,
+    "Id" INTEGER NOT NULL CONSTRAINT "PK_StorageSpaceLevel" PRIMARY KEY AUTOINCREMENT,
     "Name" TEXT NOT NULL,
     "Description" TEXT NOT NULL
 );
 
 CREATE TABLE "SupportServiceLevels" (
-    "LevelID" INTEGER NOT NULL CONSTRAINT "PK__SupportS__09F03C065BA08AFB" PRIMARY KEY AUTOINCREMENT,
+    "LevelID" INTEGER NOT NULL CONSTRAINT "PK_SupportServiceLevel" PRIMARY KEY AUTOINCREMENT,
     "LevelName" TEXT NOT NULL,
     "LevelDescription" TEXT NULL
 );
@@ -295,7 +295,7 @@ CREATE TABLE "Versions" (
 );
 
 CREATE TABLE "BackgroundTaskLogs" (
-    "LogID" INTEGER NOT NULL CONSTRAINT "PK__Backgrou__5E5499A86067A6E5" PRIMARY KEY AUTOINCREMENT,
+    "LogID" INTEGER NOT NULL CONSTRAINT "PK_BackgroundTaskLog" PRIMARY KEY AUTOINCREMENT,
     "TaskID" INTEGER NOT NULL,
     "Date" TEXT NULL,
     "ExceptionStackTrace" TEXT NULL,
@@ -304,22 +304,22 @@ CREATE TABLE "BackgroundTaskLogs" (
     "Text" TEXT NULL,
     "TextIdent" INTEGER NULL,
     "XmlParameters" TEXT NULL,
-    CONSTRAINT "FK__Backgroun__TaskI__7D8391DF" FOREIGN KEY ("TaskID") REFERENCES "BackgroundTasks" ("ID")
+    CONSTRAINT "FK_BackgroundTaskLog_Task" FOREIGN KEY ("TaskID") REFERENCES "BackgroundTasks" ("ID")
 );
 
 CREATE TABLE "BackgroundTaskParameters" (
-    "ParameterID" INTEGER NOT NULL CONSTRAINT "PK__Backgrou__F80C629777BF580B" PRIMARY KEY AUTOINCREMENT,
+    "ParameterID" INTEGER NOT NULL CONSTRAINT "PK_BackgroundTaskParameter" PRIMARY KEY AUTOINCREMENT,
     "TaskID" INTEGER NOT NULL,
     "Name" TEXT COLLATE NOCASE NULL,
     "SerializerValue" TEXT NULL,
     "TypeName" TEXT NULL,
-    CONSTRAINT "FK__Backgroun__TaskI__7AA72534" FOREIGN KEY ("TaskID") REFERENCES "BackgroundTasks" ("ID")
+    CONSTRAINT "FK_BackgrounTaskParameter_Task" FOREIGN KEY ("TaskID") REFERENCES "BackgroundTasks" ("ID")
 );
 
 CREATE TABLE "BackgroundTaskStack" (
-    "TaskStackID" INTEGER NOT NULL CONSTRAINT "PK__Backgrou__5E44466FB8A5F217" PRIMARY KEY AUTOINCREMENT,
+    "TaskStackID" INTEGER NOT NULL CONSTRAINT "PK_BackgroundTaskStack" PRIMARY KEY AUTOINCREMENT,
     "TaskID" INTEGER NOT NULL,
-    CONSTRAINT "FK__Backgroun__TaskI__005FFE8A" FOREIGN KEY ("TaskID") REFERENCES "BackgroundTasks" ("ID")
+    CONSTRAINT "FK_BackgroundTaskStack_Task" FOREIGN KEY ("TaskID") REFERENCES "BackgroundTasks" ("ID")
 );
 
 CREATE TABLE "RDSCollectionSettings" (
@@ -353,7 +353,7 @@ CREATE TABLE "RDSMessages" (
 );
 
 CREATE TABLE "RDSServers" (
-    "ID" INTEGER NOT NULL CONSTRAINT "PK__RDSServe__3214EC27DBEBD4B5" PRIMARY KEY AUTOINCREMENT,
+    "ID" INTEGER NOT NULL CONSTRAINT "PK_RdsServer" PRIMARY KEY AUTOINCREMENT,
     "ItemID" INTEGER NULL,
     "Name" TEXT NULL,
     "FqdName" TEXT NULL,
@@ -365,7 +365,7 @@ CREATE TABLE "RDSServers" (
 );
 
 CREATE TABLE "Providers" (
-    "ProviderID" INTEGER NOT NULL CONSTRAINT "PK_ServiceTypes" PRIMARY KEY,
+    "ProviderID" INTEGER NOT NULL CONSTRAINT "PK_Provider" PRIMARY KEY,
     "GroupID" INTEGER NOT NULL,
     "ProviderName" TEXT NULL,
     "DisplayName" TEXT NOT NULL,
@@ -444,7 +444,7 @@ CREATE TABLE "ScheduleTaskViewConfiguration" (
 );
 
 CREATE TABLE "StorageSpaceLevelResourceGroups" (
-    "Id" INTEGER NOT NULL CONSTRAINT "PK__StorageS__3214EC07EBEBED98" PRIMARY KEY AUTOINCREMENT,
+    "Id" INTEGER NOT NULL CONSTRAINT "PK_StorageSpaceLevelResourceGroup" PRIMARY KEY AUTOINCREMENT,
     "LevelId" INTEGER NOT NULL,
     "GroupId" INTEGER NOT NULL,
     CONSTRAINT "FK_StorageSpaceLevelResourceGroups_GroupId" FOREIGN KEY ("GroupId") REFERENCES "ResourceGroups" ("GroupID") ON DELETE CASCADE,
@@ -475,7 +475,7 @@ CREATE TABLE "ServiceDefaultProperties" (
     "ProviderID" INTEGER NOT NULL,
     "PropertyName" TEXT COLLATE NOCASE NOT NULL,
     "PropertyValue" TEXT NULL,
-    CONSTRAINT "PK_ServiceDefaultProperties_1" PRIMARY KEY ("ProviderID", "PropertyName"),
+    CONSTRAINT "PK_ServiceDefaultProperties" PRIMARY KEY ("ProviderID", "PropertyName"),
     CONSTRAINT "FK_ServiceDefaultProperties_Providers" FOREIGN KEY ("ProviderID") REFERENCES "Providers" ("ProviderID")
 );
 
@@ -510,7 +510,7 @@ CREATE TABLE "IPAddresses" (
 );
 
 CREATE TABLE "PrivateNetworkVLANs" (
-    "VlanID" INTEGER NOT NULL CONSTRAINT "PK__PrivateN__8348135581B53618" PRIMARY KEY AUTOINCREMENT,
+    "VlanID" INTEGER NOT NULL CONSTRAINT "PK_PrivateNetworkVlan" PRIMARY KEY AUTOINCREMENT,
     "Vlan" INTEGER NOT NULL,
     "ServerID" INTEGER NULL,
     "Comments" TEXT NULL,
@@ -589,12 +589,12 @@ CREATE TABLE "ServiceProperties" (
     "ServiceID" INTEGER NOT NULL,
     "PropertyName" TEXT COLLATE NOCASE NOT NULL,
     "PropertyValue" TEXT COLLATE NOCASE NULL,
-    CONSTRAINT "PK_ServiceProperties_1" PRIMARY KEY ("ServiceID", "PropertyName"),
+    CONSTRAINT "PK_ServiceProperties" PRIMARY KEY ("ServiceID", "PropertyName"),
     CONSTRAINT "FK_ServiceProperties_Services" FOREIGN KEY ("ServiceID") REFERENCES "Services" ("ServiceID") ON DELETE CASCADE
 );
 
 CREATE TABLE "StorageSpaces" (
-    "Id" INTEGER NOT NULL CONSTRAINT "PK__StorageS__3214EC07B8B9A6D1" PRIMARY KEY AUTOINCREMENT,
+    "Id" INTEGER NOT NULL CONSTRAINT "PK_StorageSpace" PRIMARY KEY AUTOINCREMENT,
     "Name" TEXT NOT NULL,
     "ServiceId" INTEGER NOT NULL,
     "ServerId" INTEGER NOT NULL,
@@ -621,13 +621,13 @@ CREATE TABLE "HostingPlanQuotas" (
     "PlanID" INTEGER NOT NULL,
     "QuotaID" INTEGER NOT NULL,
     "QuotaValue" INTEGER NOT NULL,
-    CONSTRAINT "PK_HostingPlanQuotas_1" PRIMARY KEY ("PlanID", "QuotaID"),
+    CONSTRAINT "PK_HostingPlanQuota" PRIMARY KEY ("PlanID", "QuotaID"),
     CONSTRAINT "FK_HostingPlanQuotas_HostingPlans" FOREIGN KEY ("PlanID") REFERENCES "HostingPlans" ("PlanID") ON DELETE CASCADE,
     CONSTRAINT "FK_HostingPlanQuotas_Quotas" FOREIGN KEY ("QuotaID") REFERENCES "Quotas" ("QuotaID")
 );
 
 CREATE TABLE "GlobalDnsRecords" (
-    "RecordID" INTEGER NOT NULL CONSTRAINT "PK_GlobalDnsRecords" PRIMARY KEY AUTOINCREMENT,
+    "RecordID" INTEGER NOT NULL CONSTRAINT "PK_GlobalDnsRecord" PRIMARY KEY AUTOINCREMENT,
     "RecordType" TEXT COLLATE NOCASE NOT NULL,
     "RecordName" TEXT NOT NULL,
     "RecordData" TEXT NOT NULL,
@@ -671,7 +671,7 @@ CREATE TABLE "PackageResources" (
     "GroupID" INTEGER NOT NULL,
     "CalculateDiskspace" INTEGER NOT NULL,
     "CalculateBandwidth" INTEGER NOT NULL,
-    CONSTRAINT "PK_PackageResources_1" PRIMARY KEY ("PackageID", "GroupID"),
+    CONSTRAINT "PK_PackageResources" PRIMARY KEY ("PackageID", "GroupID"),
     CONSTRAINT "FK_PackageResources_Packages" FOREIGN KEY ("PackageID") REFERENCES "Packages" ("PackageID"),
     CONSTRAINT "FK_PackageResources_ResourceGroups" FOREIGN KEY ("GroupID") REFERENCES "ResourceGroups" ("GroupID")
 );
@@ -713,7 +713,7 @@ CREATE TABLE "PackagesTreeCache" (
 );
 
 CREATE TABLE "PackageVLANs" (
-    "PackageVlanID" INTEGER NOT NULL CONSTRAINT "PK__PackageV__A9AABBF9C0C25CB3" PRIMARY KEY AUTOINCREMENT,
+    "PackageVlanID" INTEGER NOT NULL CONSTRAINT "PK_PackageVlan" PRIMARY KEY AUTOINCREMENT,
     "VlanID" INTEGER NOT NULL,
     "PackageID" INTEGER NOT NULL,
     "IsDmz" INTEGER NOT NULL DEFAULT 0,
@@ -755,7 +755,7 @@ CREATE TABLE "ServiceItems" (
 );
 
 CREATE TABLE "StorageSpaceFolders" (
-    "Id" INTEGER NOT NULL CONSTRAINT "PK__StorageS__3214EC07AC0C9EB6" PRIMARY KEY AUTOINCREMENT,
+    "Id" INTEGER NOT NULL CONSTRAINT "PK_StorageSpaceFolder" PRIMARY KEY AUTOINCREMENT,
     "Name" TEXT NOT NULL,
     "StorageSpaceId" INTEGER NOT NULL,
     "Path" TEXT NOT NULL,
@@ -863,7 +863,7 @@ CREATE TABLE "EnterpriseFolders" (
 );
 
 CREATE TABLE "DomainDnsRecords" (
-    "ID" INTEGER NOT NULL CONSTRAINT "PK__DomainDn__3214EC27A6FC0498" PRIMARY KEY AUTOINCREMENT,
+    "ID" INTEGER NOT NULL CONSTRAINT "PK_DomainDnsRecord" PRIMARY KEY AUTOINCREMENT,
     "DomainId" INTEGER NOT NULL,
     "RecordType" INTEGER NOT NULL,
     "DnsServer" TEXT NULL,
@@ -916,7 +916,7 @@ CREATE TABLE "ExchangeOrganizationSettings" (
 );
 
 CREATE TABLE "ExchangeOrganizationSsFolders" (
-    "Id" INTEGER NOT NULL CONSTRAINT "PK__Exchange__3214EC072DDBA072" PRIMARY KEY AUTOINCREMENT,
+    "Id" INTEGER NOT NULL CONSTRAINT "PK_ExchangeOrganizationSsFolder" PRIMARY KEY AUTOINCREMENT,
     "ItemId" INTEGER NOT NULL,
     "Type" TEXT COLLATE NOCASE NOT NULL,
     "StorageSpaceFolderId" INTEGER NOT NULL,
@@ -982,7 +982,7 @@ CREATE TABLE "LyncUsers" (
 );
 
 CREATE TABLE "AccessTokens" (
-    "ID" INTEGER NOT NULL CONSTRAINT "PK__AccessTo__3214EC27DEAEF66E" PRIMARY KEY AUTOINCREMENT,
+    "ID" INTEGER NOT NULL CONSTRAINT "PK_AccessToken" PRIMARY KEY AUTOINCREMENT,
     "AccessTokenGuid" TEXT NOT NULL,
     "ExpirationDate" TEXT NOT NULL,
     "AccountID" INTEGER NOT NULL,
@@ -1012,7 +1012,7 @@ CREATE TABLE "CRMUsers" (
 );
 
 CREATE TABLE "EnterpriseFoldersOwaPermissions" (
-    "ID" INTEGER NOT NULL CONSTRAINT "PK__Enterpri__3214EC27D1B48691" PRIMARY KEY AUTOINCREMENT,
+    "ID" INTEGER NOT NULL CONSTRAINT "PK_EnterpriseFoldersOwaPermission" PRIMARY KEY AUTOINCREMENT,
     "ItemID" INTEGER NOT NULL,
     "FolderID" INTEGER NOT NULL,
     "AccountID" INTEGER NOT NULL,
@@ -1028,7 +1028,7 @@ CREATE TABLE "ExchangeAccountEmailAddresses" (
 );
 
 CREATE TABLE "RDSCollectionUsers" (
-    "ID" INTEGER NOT NULL CONSTRAINT "PK__RDSColle__3214EC2780141EF7" PRIMARY KEY AUTOINCREMENT,
+    "ID" INTEGER NOT NULL CONSTRAINT "PK_RdsCollectionUser" PRIMARY KEY AUTOINCREMENT,
     "RDSCollectionId" INTEGER NOT NULL,
     "AccountID" INTEGER NOT NULL,
     CONSTRAINT "FK_RDSCollectionUsers_RDSCollectionId" FOREIGN KEY ("RDSCollectionId") REFERENCES "RDSCollections" ("ID") ON DELETE CASCADE,
@@ -1036,7 +1036,7 @@ CREATE TABLE "RDSCollectionUsers" (
 );
 
 CREATE TABLE "WebDavAccessTokens" (
-    "ID" INTEGER NOT NULL CONSTRAINT "PK__WebDavAc__3214EC2708781F08" PRIMARY KEY AUTOINCREMENT,
+    "ID" INTEGER NOT NULL CONSTRAINT "PK_WebDavAccessToken" PRIMARY KEY AUTOINCREMENT,
     "FilePath" TEXT NOT NULL,
     "AuthData" TEXT NOT NULL,
     "AccessToken" TEXT NOT NULL,
@@ -1047,7 +1047,7 @@ CREATE TABLE "WebDavAccessTokens" (
 );
 
 CREATE TABLE "WebDavPortalUsersSettings" (
-    "ID" INTEGER NOT NULL CONSTRAINT "PK__WebDavPo__3214EC278AF5195E" PRIMARY KEY AUTOINCREMENT,
+    "ID" INTEGER NOT NULL CONSTRAINT "PK_WebDavPortalUsersSetting" PRIMARY KEY AUTOINCREMENT,
     "AccountId" INTEGER NOT NULL,
     "Settings" TEXT NULL,
     CONSTRAINT "FK_WebDavPortalUsersSettings_UserId" FOREIGN KEY ("AccountId") REFERENCES "ExchangeAccounts" ("AccountID") ON DELETE CASCADE
@@ -2841,6 +2841,14 @@ INSERT INTO "Versions" ("DatabaseVersion", "BuildDate")
 VALUES ('1.4.9', '2024-04-20 00:00:00');
 SELECT changes();
 
+INSERT INTO "Versions" ("DatabaseVersion", "BuildDate")
+VALUES ('1.5.1', '2024-12-17 00:00:00');
+SELECT changes();
+
+INSERT INTO "Versions" ("DatabaseVersion", "BuildDate")
+VALUES ('2.0.0', '2025-11-04 00:00:00');
+SELECT changes();
+
 
 INSERT INTO "Packages" ("PackageID", "BandwidthUpdated", "PackageComments", "PackageName", "ParentPackageID", "PlanID", "PurchaseDate", "ServerID", "StatusID", "StatusIDchangeDate", "UserID")
 VALUES (1, NULL, '', 'System', NULL, NULL, NULL, NULL, 1, '2024-10-12 19:29:19.927', 1);
@@ -4585,7 +4593,7 @@ VALUES (766, 76, NULL, NULL, NULL, 'Max Log Size', 'MsSQL2025.MaxLogSize', 4.0, 
 SELECT changes();
 
 INSERT INTO "Quotas" ("QuotaID", "GroupID", "HideQuota", "ItemTypeID", "PerOrganization", "QuotaDescription", "QuotaName", "QuotaOrder", "QuotaTypeID", "ServiceQuota")
-VALUES (771, 4, NULL, NULL, NULL, 'Mail Accounts per Domain', 'Mail.Accounts.per.Domain', 1.2000000000000002, 2, 1);
+VALUES (771, 4, NULL, NULL, NULL, 'Mail Accounts per Domain', 'Mail.Accounts.per.Domain', 1.2, 2, 1);
 SELECT changes();
 
 
@@ -8244,7 +8252,7 @@ CREATE INDEX "WebDavAccessTokensIdx_AccountID" ON "WebDavAccessTokens" ("Account
 CREATE INDEX "WebDavPortalUsersSettingsIdx_AccountId" ON "WebDavPortalUsersSettings" ("AccountId");
 
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
-VALUES ('20251027161257_InitialCreate', '9.0.9');
+VALUES ('20251105040648_v2.0.0', '9.0.9');
 
 COMMIT;
 

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SolidCP.EnterpriseServer.Data;
 
@@ -10,9 +11,11 @@ using SolidCP.EnterpriseServer.Data;
 namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
 {
     [DbContext(typeof(SqliteDbContext))]
-    partial class SqliteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251105040648_v2.0.0")]
+    partial class v200
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
@@ -46,7 +49,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id")
-                        .HasName("PK__AccessTo__3214EC27DEAEF66E");
+                        .HasName("PK_AccessToken");
 
                     b.HasIndex(new[] { "AccountId" }, "AccessTokensIdx_AccountID");
 
@@ -69,7 +72,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnName("UserID");
 
                     b.HasKey("Id")
-                        .HasName("PK__Addition__3214EC27E665DDE2");
+                        .HasName("PK_AdditionalGroup");
 
                     b.ToTable("AdditionalGroups");
                 });
@@ -2227,7 +2230,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnName("UserID");
 
                     b.HasKey("Id")
-                        .HasName("PK__Backgrou__3214EC273A1145AC");
+                        .HasName("PK_BackgroundTask");
 
                     b.ToTable("BackgroundTasks");
                 });
@@ -2265,7 +2268,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnType("TEXT");
 
                     b.HasKey("LogId")
-                        .HasName("PK__Backgrou__5E5499A86067A6E5");
+                        .HasName("PK_BackgroundTaskLog");
 
                     b.HasIndex(new[] { "TaskId" }, "BackgroundTaskLogsIdx_TaskID");
 
@@ -2295,7 +2298,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnType("TEXT");
 
                     b.HasKey("ParameterId")
-                        .HasName("PK__Backgrou__F80C629777BF580B");
+                        .HasName("PK_BackgroundTaskParameter");
 
                     b.HasIndex(new[] { "TaskId" }, "BackgroundTaskParametersIdx_TaskID");
 
@@ -2314,7 +2317,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnName("TaskID");
 
                     b.HasKey("TaskStackId")
-                        .HasName("PK__Backgrou__5E44466FB8A5F217");
+                        .HasName("PK_BackgroundTaskStack");
 
                     b.HasIndex(new[] { "TaskId" }, "BackgroundTaskStackIdx_TaskID");
 
@@ -2563,7 +2566,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id")
-                        .HasName("PK__DomainDn__3214EC27A6FC0498");
+                        .HasName("PK_DomainDnsRecord");
 
                     b.HasIndex(new[] { "DomainId" }, "DomainDnsRecordsIdx_DomainId");
 
@@ -2633,7 +2636,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnName("ItemID");
 
                     b.HasKey("Id")
-                        .HasName("PK__Enterpri__3214EC27D1B48691");
+                        .HasName("PK_EnterpriseFoldersOwaPermission");
 
                     b.HasIndex(new[] { "AccountId" }, "EnterpriseFoldersOwaPermissionsIdx_AccountID");
 
@@ -2784,7 +2787,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id")
-                        .HasName("PK__Exchange__3214EC27EF1C22C1");
+                        .HasName("PK_ExchangeDeletedAccount");
 
                     b.ToTable("ExchangeDeletedAccounts");
                 });
@@ -2946,7 +2949,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnName("TagID");
 
                     b.HasKey("PlanTagId")
-                        .HasName("PK__Exchange__E467073C50CD805B");
+                        .HasName("PK_ExchangeMailboxPlanRetentionPolicyTag");
 
                     b.ToTable("ExchangeMailboxPlanRetentionPolicyTags");
                 });
@@ -3060,7 +3063,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.HasKey("Id")
-                        .HasName("PK__Exchange__3214EC072DDBA072");
+                        .HasName("PK_ExchangeOrganizationSsFolder");
 
                     b.HasIndex(new[] { "ItemId" }, "ExchangeOrganizationSsFoldersIdx_ItemId");
 
@@ -3094,7 +3097,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnType("INTEGER");
 
                     b.HasKey("TagId")
-                        .HasName("PK__Exchange__657CFA4C02667D37");
+                        .HasName("PK_ExchangeRetentionPolicyTag");
 
                     b.ToTable("ExchangeRetentionPolicyTags");
                 });
@@ -3151,7 +3154,8 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                     b.Property<int?>("SrvWeight")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("RecordId");
+                    b.HasKey("RecordId")
+                        .HasName("PK_GlobalDnsRecord");
 
                     b.HasIndex(new[] { "IpAddressId" }, "GlobalDnsRecordsIdx_IPAddressID");
 
@@ -3236,7 +3240,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnType("INTEGER");
 
                     b.HasKey("PlanId", "QuotaId")
-                        .HasName("PK_HostingPlanQuotas_1");
+                        .HasName("PK_HostingPlanQuota");
 
                     b.HasIndex("QuotaId");
 
@@ -3664,7 +3668,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnType("INTEGER");
 
                     b.HasKey("PackageId", "GroupId")
-                        .HasName("PK_PackageResources_1");
+                        .HasName("PK_PackageResources");
 
                     b.HasIndex("GroupId");
 
@@ -3736,7 +3740,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnName("VlanID");
 
                     b.HasKey("PackageVlanId")
-                        .HasName("PK__PackageV__A9AABBF9C0C25CB3");
+                        .HasName("PK_PackageVlan");
 
                     b.HasIndex(new[] { "PackageId" }, "PackageVLANsIdx_PackageID");
 
@@ -3868,7 +3872,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnType("INTEGER");
 
                     b.HasKey("VlanId")
-                        .HasName("PK__PrivateN__8348135581B53618");
+                        .HasName("PK_PrivateNetworkVlan");
 
                     b.HasIndex(new[] { "ServerId" }, "PrivateNetworkVLANsIdx_ServerID");
 
@@ -3906,7 +3910,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnType("TEXT");
 
                     b.HasKey("ProviderId")
-                        .HasName("PK_ServiceTypes");
+                        .HasName("PK_Provider");
 
                     b.HasIndex(new[] { "GroupId" }, "ProvidersIdx_GroupID");
 
@@ -8747,7 +8751,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                             GroupId = 4,
                             QuotaDescription = "Mail Accounts per Domain",
                             QuotaName = "Mail.Accounts.per.Domain",
-                            QuotaOrder = 1.2000000000000002,
+                            QuotaOrder = 1.2,
                             QuotaTypeId = 2,
                             ServiceQuota = true
                         });
@@ -8812,7 +8816,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.HasKey("Id")
-                        .HasName("PK__RDSColle__3214EC27346D361D");
+                        .HasName("PK_RdsCollection");
 
                     b.ToTable("RDSCollections");
                 });
@@ -8902,7 +8906,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnName("RDSCollectionId");
 
                     b.HasKey("Id")
-                        .HasName("PK__RDSColle__3214EC2780141EF7");
+                        .HasName("PK_RdsCollectionUser");
 
                     b.HasIndex(new[] { "AccountId" }, "RDSCollectionUsersIdx_AccountID");
 
@@ -8977,7 +8981,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnName("RDSCollectionId");
 
                     b.HasKey("Id")
-                        .HasName("PK__RDSServe__3214EC27DBEBD4B5");
+                        .HasName("PK_RdsServer");
 
                     b.HasIndex(new[] { "RdsCollectionId" }, "RDSServersIdx_RDSCollectionId");
 
@@ -11019,7 +11023,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnType("TEXT");
 
                     b.HasKey("ProviderId", "PropertyName")
-                        .HasName("PK_ServiceDefaultProperties_1");
+                        .HasName("PK_ServiceDefaultProperties");
 
                     b.ToTable("ServiceDefaultProperties");
 
@@ -14847,7 +14851,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.HasKey("ServiceId", "PropertyName")
-                        .HasName("PK_ServiceProperties_1");
+                        .HasName("PK_ServiceProperties");
 
                     b.ToTable("ServiceProperties");
                 });
@@ -15082,7 +15086,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id")
-                        .HasName("PK__StorageS__3214EC07B8B9A6D1");
+                        .HasName("PK_StorageSpace");
 
                     b.HasIndex(new[] { "ServerId" }, "StorageSpacesIdx_ServerId");
 
@@ -15125,7 +15129,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id")
-                        .HasName("PK__StorageS__3214EC07AC0C9EB6");
+                        .HasName("PK_StorageSpaceFolder");
 
                     b.HasIndex(new[] { "StorageSpaceId" }, "StorageSpaceFoldersIdx_StorageSpaceId");
 
@@ -15148,7 +15152,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id")
-                        .HasName("PK__StorageS__3214EC07B8D82363");
+                        .HasName("PK_StorageSpaceLevel");
 
                     b.ToTable("StorageSpaceLevels");
                 });
@@ -15166,7 +15170,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id")
-                        .HasName("PK__StorageS__3214EC07EBEBED98");
+                        .HasName("PK_StorageSpaceLevelResourceGroup");
 
                     b.HasIndex(new[] { "GroupId" }, "StorageSpaceLevelResourceGroupsIdx_GroupId");
 
@@ -15192,7 +15196,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnType("TEXT");
 
                     b.HasKey("LevelId")
-                        .HasName("PK__SupportS__09F03C065BA08AFB");
+                        .HasName("PK_SupportServiceLevel");
 
                     b.ToTable("SupportServiceLevels");
                 });
@@ -16740,6 +16744,16 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         {
                             DatabaseVersion = "1.4.9",
                             BuildDate = new DateTime(2024, 4, 20, 0, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            DatabaseVersion = "1.5.1",
+                            BuildDate = new DateTime(2024, 12, 17, 0, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            DatabaseVersion = "2.0.0",
+                            BuildDate = new DateTime(2025, 11, 4, 0, 0, 0, 0, DateTimeKind.Utc)
                         });
                 });
 
@@ -16826,7 +16840,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id")
-                        .HasName("PK__WebDavAc__3214EC2708781F08");
+                        .HasName("PK_WebDavAccessToken");
 
                     b.HasIndex(new[] { "AccountId" }, "WebDavAccessTokensIdx_AccountID");
 
@@ -16847,7 +16861,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id")
-                        .HasName("PK__WebDavPo__3214EC278AF5195E");
+                        .HasName("PK_WebDavPortalUsersSetting");
 
                     b.HasIndex(new[] { "AccountId" }, "WebDavPortalUsersSettingsIdx_AccountId");
 
@@ -16872,7 +16886,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .WithMany("BackgroundTaskLogs")
                         .HasForeignKey("TaskId")
                         .IsRequired()
-                        .HasConstraintName("FK__Backgroun__TaskI__7D8391DF");
+                        .HasConstraintName("FK_BackgroundTaskLog_Task");
 
                     b.Navigation("Task");
                 });
@@ -16883,7 +16897,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .WithMany("BackgroundTaskParameters")
                         .HasForeignKey("TaskId")
                         .IsRequired()
-                        .HasConstraintName("FK__Backgroun__TaskI__7AA72534");
+                        .HasConstraintName("FK_BackgrounTaskParameter_Task");
 
                     b.Navigation("Task");
                 });
@@ -16894,7 +16908,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.Sqlite
                         .WithMany("BackgroundTaskStacks")
                         .HasForeignKey("TaskId")
                         .IsRequired()
-                        .HasConstraintName("FK__Backgroun__TaskI__005FFE8A");
+                        .HasConstraintName("FK_BackgroundTaskStack_Task");
 
                     b.Navigation("Task");
                 });

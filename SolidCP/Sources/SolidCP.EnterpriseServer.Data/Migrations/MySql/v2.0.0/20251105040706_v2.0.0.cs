@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class v200 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -29,7 +29,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Addition__3214EC27E665DDE2", x => x.ID);
+                    table.PrimaryKey("PK_AdditionalGroup", x => x.ID);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -124,7 +124,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Backgrou__3214EC273A1145AC", x => x.ID);
+                    table.PrimaryKey("PK_BackgroundTask", x => x.ID);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -161,7 +161,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Exchange__3214EC27EF1C22C1", x => x.ID);
+                    table.PrimaryKey("PK_ExchangeDeletedAccount", x => x.ID);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -194,7 +194,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Exchange__E467073C50CD805B", x => x.PlanTagID);
+                    table.PrimaryKey("PK_ExchangeMailboxPlanRetentionPolicyTag", x => x.PlanTagID);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -213,7 +213,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Exchange__657CFA4C02667D37", x => x.TagID);
+                    table.PrimaryKey("PK_ExchangeRetentionPolicyTag", x => x.TagID);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -291,7 +291,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__RDSColle__3214EC27346D361D", x => x.ID);
+                    table.PrimaryKey("PK_RdsCollection", x => x.ID);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -455,7 +455,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__StorageS__3214EC07B8D82363", x => x.Id);
+                    table.PrimaryKey("PK_StorageSpaceLevel", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -472,7 +472,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__SupportS__09F03C065BA08AFB", x => x.LevelID);
+                    table.PrimaryKey("PK_SupportServiceLevel", x => x.LevelID);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -657,9 +657,9 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Backgrou__5E5499A86067A6E5", x => x.LogID);
+                    table.PrimaryKey("PK_BackgroundTaskLog", x => x.LogID);
                     table.ForeignKey(
-                        name: "FK__Backgroun__TaskI__7D8391DF",
+                        name: "FK_BackgroundTaskLog_Task",
                         column: x => x.TaskID,
                         principalTable: "BackgroundTasks",
                         principalColumn: "ID");
@@ -682,9 +682,9 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Backgrou__F80C629777BF580B", x => x.ParameterID);
+                    table.PrimaryKey("PK_BackgroundTaskParameter", x => x.ParameterID);
                     table.ForeignKey(
-                        name: "FK__Backgroun__TaskI__7AA72534",
+                        name: "FK_BackgrounTaskParameter_Task",
                         column: x => x.TaskID,
                         principalTable: "BackgroundTasks",
                         principalColumn: "ID");
@@ -701,9 +701,9 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Backgrou__5E44466FB8A5F217", x => x.TaskStackID);
+                    table.PrimaryKey("PK_BackgroundTaskStack", x => x.TaskStackID);
                     table.ForeignKey(
-                        name: "FK__Backgroun__TaskI__005FFE8A",
+                        name: "FK_BackgroundTaskStack_Task",
                         column: x => x.TaskID,
                         principalTable: "BackgroundTasks",
                         principalColumn: "ID");
@@ -793,7 +793,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__RDSServe__3214EC27DBEBD4B5", x => x.ID);
+                    table.PrimaryKey("PK_RdsServer", x => x.ID);
                     table.ForeignKey(
                         name: "FK_RDSServers_RDSCollectionId",
                         column: x => x.RDSCollectionId,
@@ -820,7 +820,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ServiceTypes", x => x.ProviderID);
+                    table.PrimaryKey("PK_Provider", x => x.ProviderID);
                     table.ForeignKey(
                         name: "FK_Providers_ResourceGroups",
                         column: x => x.GroupID,
@@ -993,7 +993,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__StorageS__3214EC07EBEBED98", x => x.Id);
+                    table.PrimaryKey("PK_StorageSpaceLevelResourceGroup", x => x.Id);
                     table.ForeignKey(
                         name: "FK_StorageSpaceLevelResourceGroups_GroupId",
                         column: x => x.GroupId,
@@ -1072,7 +1072,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ServiceDefaultProperties_1", x => new { x.ProviderID, x.PropertyName });
+                    table.PrimaryKey("PK_ServiceDefaultProperties", x => new { x.ProviderID, x.PropertyName });
                     table.ForeignKey(
                         name: "FK_ServiceDefaultProperties_Providers",
                         column: x => x.ProviderID,
@@ -1162,7 +1162,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__PrivateN__8348135581B53618", x => x.VlanID);
+                    table.PrimaryKey("PK_PrivateNetworkVlan", x => x.VlanID);
                     table.ForeignKey(
                         name: "FK_ServerID",
                         column: x => x.ServerID,
@@ -1356,7 +1356,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ServiceProperties_1", x => new { x.ServiceID, x.PropertyName });
+                    table.PrimaryKey("PK_ServiceProperties", x => new { x.ServiceID, x.PropertyName });
                     table.ForeignKey(
                         name: "FK_ServiceProperties_Services",
                         column: x => x.ServiceID,
@@ -1388,7 +1388,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__StorageS__3214EC07B8B9A6D1", x => x.Id);
+                    table.PrimaryKey("PK_StorageSpace", x => x.Id);
                     table.ForeignKey(
                         name: "FK_StorageSpaces_ServerId",
                         column: x => x.ServerId,
@@ -1440,7 +1440,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_HostingPlanQuotas_1", x => new { x.PlanID, x.QuotaID });
+                    table.PrimaryKey("PK_HostingPlanQuota", x => new { x.PlanID, x.QuotaID });
                     table.ForeignKey(
                         name: "FK_HostingPlanQuotas_HostingPlans",
                         column: x => x.PlanID,
@@ -1478,7 +1478,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GlobalDnsRecords", x => x.RecordID);
+                    table.PrimaryKey("PK_GlobalDnsRecord", x => x.RecordID);
                     table.ForeignKey(
                         name: "FK_GlobalDnsRecords_IPAddresses",
                         column: x => x.IPAddressID,
@@ -1570,7 +1570,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PackageResources_1", x => new { x.PackageID, x.GroupID });
+                    table.PrimaryKey("PK_PackageResources", x => new { x.PackageID, x.GroupID });
                     table.ForeignKey(
                         name: "FK_PackageResources_Packages",
                         column: x => x.PackageID,
@@ -1692,7 +1692,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__PackageV__A9AABBF9C0C25CB3", x => x.PackageVlanID);
+                    table.PrimaryKey("PK_PackageVlan", x => x.PackageVlanID);
                     table.ForeignKey(
                         name: "FK_PackageID",
                         column: x => x.PackageID,
@@ -1804,7 +1804,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__StorageS__3214EC07AC0C9EB6", x => x.Id);
+                    table.PrimaryKey("PK_StorageSpaceFolder", x => x.Id);
                     table.ForeignKey(
                         name: "FK_StorageSpaceFolders_StorageSpaceId",
                         column: x => x.StorageSpaceId,
@@ -2080,7 +2080,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__DomainDn__3214EC27A6FC0498", x => x.ID);
+                    table.PrimaryKey("PK_DomainDnsRecord", x => x.ID);
                     table.ForeignKey(
                         name: "FK_DomainDnsRecords_DomainId",
                         column: x => x.DomainId,
@@ -2177,7 +2177,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Exchange__3214EC072DDBA072", x => x.Id);
+                    table.PrimaryKey("PK_ExchangeOrganizationSsFolder", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ExchangeOrganizationSsFolders_ItemId",
                         column: x => x.ItemId,
@@ -2324,7 +2324,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__AccessTo__3214EC27DEAEF66E", x => x.ID);
+                    table.PrimaryKey("PK_AccessToken", x => x.ID);
                     table.ForeignKey(
                         name: "FK_AccessTokens_UserId",
                         column: x => x.AccountID,
@@ -2391,7 +2391,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Enterpri__3214EC27D1B48691", x => x.ID);
+                    table.PrimaryKey("PK_EnterpriseFoldersOwaPermission", x => x.ID);
                     table.ForeignKey(
                         name: "FK_EnterpriseFoldersOwaPermissions_AccountId",
                         column: x => x.AccountID,
@@ -2440,7 +2440,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__RDSColle__3214EC2780141EF7", x => x.ID);
+                    table.PrimaryKey("PK_RdsCollectionUser", x => x.ID);
                     table.ForeignKey(
                         name: "FK_RDSCollectionUsers_RDSCollectionId",
                         column: x => x.RDSCollectionId,
@@ -2473,7 +2473,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__WebDavAc__3214EC2708781F08", x => x.ID);
+                    table.PrimaryKey("PK_WebDavAccessToken", x => x.ID);
                     table.ForeignKey(
                         name: "FK_WebDavAccessTokens_UserId",
                         column: x => x.AccountID,
@@ -2495,7 +2495,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__WebDavPo__3214EC278AF5195E", x => x.ID);
+                    table.PrimaryKey("PK_WebDavPortalUsersSetting", x => x.ID);
                     table.ForeignKey(
                         name: "FK_WebDavPortalUsersSettings_UserId",
                         column: x => x.AccountId,
@@ -3004,7 +3004,9 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                     { "1.1.2.13", new DateTime(2011, 4, 15, 0, 0, 0, 0, DateTimeKind.Utc) },
                     { "1.2.0.38", new DateTime(2011, 7, 13, 0, 0, 0, 0, DateTimeKind.Utc) },
                     { "1.2.1.6", new DateTime(2012, 3, 29, 0, 0, 0, 0, DateTimeKind.Utc) },
-                    { "1.4.9", new DateTime(2024, 4, 20, 0, 0, 0, 0, DateTimeKind.Utc) }
+                    { "1.4.9", new DateTime(2024, 4, 20, 0, 0, 0, 0, DateTimeKind.Utc) },
+                    { "1.5.1", new DateTime(2024, 12, 17, 0, 0, 0, 0, DateTimeKind.Utc) },
+                    { "2.0.0", new DateTime(2025, 11, 4, 0, 0, 0, 0, DateTimeKind.Utc) }
                 });
 
             migrationBuilder.InsertData(
@@ -3458,7 +3460,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.MySql
                     { 764, 76, null, null, null, "Database Restores", "MsSQL2025.Restore", 6.0, 1, false },
                     { 765, 76, null, null, null, "Database Truncate", "MsSQL2025.Truncate", 7.0, 1, false },
                     { 766, 76, null, null, null, "Max Log Size", "MsSQL2025.MaxLogSize", 4.0, 3, false },
-                    { 771, 4, null, null, null, "Mail Accounts per Domain", "Mail.Accounts.per.Domain", 1.2000000000000002, 2, true }
+                    { 771, 4, null, null, null, "Mail Accounts per Domain", "Mail.Accounts.per.Domain", 1.2, 2, true }
                 });
 
             migrationBuilder.InsertData(
