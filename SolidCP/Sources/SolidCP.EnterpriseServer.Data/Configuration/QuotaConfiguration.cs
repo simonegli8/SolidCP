@@ -700,11 +700,6 @@ public partial class QuotaConfiguration: EntityTypeConfiguration<Quota>
 				ServiceQuota = false },
 			new Quota() { QuotaId = 766, GroupId = 76, QuotaDescription = "Max Log Size", QuotaName = "MsSQL2025.MaxLogSize", QuotaOrder = 4, QuotaTypeId = 3,
 				ServiceQuota = false },
-			new Quota() { QuotaId = 770, GroupId = 4, ItemTypeId = 11, QuotaDescription = "Mail Domains", QuotaName="Mail.Domains", QuotaOrder = 1.1,
-				QuotaTypeId = 2, ServiceQuota = true },
-			new Quota() { QuotaId = 771, GroupId = 4, QuotaDescription = "Mail Accounts per Domain", QuotaName="Mail.Accounts.per.Domain", QuotaOrder = 1.2,
-				QuotaTypeId = 2, ServiceQuota = true },
-
 		});
 		#endregion
 	}

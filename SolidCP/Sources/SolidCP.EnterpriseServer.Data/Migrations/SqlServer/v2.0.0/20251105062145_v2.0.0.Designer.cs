@@ -12,7 +12,7 @@ using SolidCP.EnterpriseServer.Data;
 namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
 {
     [DbContext(typeof(SqlServerDbContext))]
-    [Migration("20251104212751_v2.0.0")]
+    [Migration("20251105062145_v2.0.0")]
     partial class v200
     {
         /// <inheritdoc />
@@ -8836,27 +8836,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             QuotaOrder = 4.0,
                             QuotaTypeId = 3,
                             ServiceQuota = false
-                        },
-                        new
-                        {
-                            QuotaId = 770,
-                            GroupId = 4,
-                            ItemTypeId = 11,
-                            QuotaDescription = "Mail Domains",
-                            QuotaName = "Mail.Domains",
-                            QuotaOrder = 1.1000000000000001,
-                            QuotaTypeId = 2,
-                            ServiceQuota = true
-                        },
-                        new
-                        {
-                            QuotaId = 771,
-                            GroupId = 4,
-                            QuotaDescription = "Mail Accounts per Domain",
-                            QuotaName = "Mail.Accounts.per.Domain",
-                            QuotaOrder = 1.2,
-                            QuotaTypeId = 2,
-                            ServiceQuota = true
                         });
                 });
 
@@ -17003,6 +16982,11 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         {
                             DatabaseVersion = "1.5.1",
                             BuildDate = new DateTime(2024, 12, 17, 0, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            DatabaseVersion = "2.0.0",
+                            BuildDate = new DateTime(2025, 11, 4, 0, 0, 0, 0, DateTimeKind.Utc)
                         });
                 });
 

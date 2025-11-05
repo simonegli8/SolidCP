@@ -2586,9 +2586,7 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 values: new object[,]
                 {
                     { 381, 41, null, null, null, "Phone Numbers", "Lync.PhoneNumbers", 12.0, 2, false },
-                    { 754, 4, true, null, null, "Allow changes to access controls", "Mail.AllowAccessControls", 9.0, 1, false },
-                    { 770, 4, null, 11, null, "Mail Domains", "Mail.Domains", 1.1000000000000001, 2, true },
-                    { 771, 4, null, null, null, "Mail Accounts per Domain", "Mail.Accounts.per.Domain", 1.2, 2, true }
+                    { 754, 4, true, null, null, "Allow changes to access controls", "Mail.AllowAccessControls", 9.0, 1, false }
                 });
 
             migrationBuilder.InsertData(
@@ -2762,7 +2760,11 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
             migrationBuilder.InsertData(
                 table: "Versions",
                 columns: new[] { "DatabaseVersion", "BuildDate" },
-                values: new object[] { "1.4.9", new DateTime(2024, 4, 20, 0, 0, 0, 0, DateTimeKind.Utc) });
+                values: new object[,]
+                {
+                    { "1.4.9", new DateTime(2024, 4, 20, 0, 0, 0, 0, DateTimeKind.Utc) },
+                    { "2.0.0", new DateTime(2025, 11, 4, 0, 0, 0, 0, DateTimeKind.Utc) }
+                });
 
             migrationBuilder.InsertData(
                 table: "Providers",
@@ -3035,16 +3037,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 table: "Quotas",
                 keyColumn: "QuotaID",
                 keyValue: 766);
-
-            migrationBuilder.DeleteData(
-                table: "Quotas",
-                keyColumn: "QuotaID",
-                keyValue: 770);
-
-            migrationBuilder.DeleteData(
-                table: "Quotas",
-                keyColumn: "QuotaID",
-                keyValue: 771);
 
             migrationBuilder.DeleteData(
                 table: "ScheduleTaskParameters",
@@ -3655,6 +3647,11 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 table: "Versions",
                 keyColumn: "DatabaseVersion",
                 keyValue: "1.4.9");
+
+            migrationBuilder.DeleteData(
+                table: "Versions",
+                keyColumn: "DatabaseVersion",
+                keyValue: "2.0.0");
 
             migrationBuilder.DeleteData(
                 table: "Providers",
