@@ -61,7 +61,11 @@ namespace SolidCP.UniversalInstaller
 
 	public partial class Installer
 	{
+#if UseDebugService
 		public const bool UseDebugService = true;
+#else
+		public const bool UseDebugService = false;
+#endif
 		public virtual IInstallerWebService InstallerWebService
 		{
 			get
