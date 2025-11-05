@@ -17,6 +17,15 @@
       <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
+  <ItemGroup>
+      <ProjectReference Include="..\SolidCP.UniversalInstaller\SolidCP.UniversalInstaller.csproj">
+          <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+          <Private>false</Private>
+          <CopyLocal>false</CopyLocal>
+          <OutputItemType>None</OutputItemType>
+      </ProjectReference>
+  </ItemGroup>
+
     <ItemGroup>
         <Reference Include="System.Net.Http" />
         <Reference Include="System.Windows.Forms" />

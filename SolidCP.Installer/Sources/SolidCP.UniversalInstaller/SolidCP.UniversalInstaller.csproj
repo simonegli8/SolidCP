@@ -17,7 +17,7 @@
         <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
         <RestoreSources>$(RestoreSources);../../Lib;https://api.nuget.org/v3/index.json</RestoreSources>
         <ApplicationManifest>SolidCP.Installer.manifest</ApplicationManifest>
-        <UseAppHost>true</UseAppHost>
+        <UseAppHost>false</UseAppHost>
         <AppHostRuntimeIdentifier>win-x64</AppHostRuntimeIdentifier>
     </PropertyGroup>
 
