@@ -193,6 +193,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <EmbeddedResource Remove="Migrations\SqlServer\v1.5.1\install_db.sql" />
+    </ItemGroup>
+
+    <ItemGroup>
         <None Update="CodeTemplates\EFCore\EntityType.t4">
             <Generator></Generator>
         </None>
