@@ -428,6 +428,7 @@ namespace SolidCP.EnterpriseServer.Context
 			ApplyConfiguration(model, new StorageSpaceLevelResourceGroupConfiguration());
 			ApplyConfiguration(model, new SupportServiceLevelConfiguration());
 			ApplyConfiguration(model, new SystemSettingConfiguration());
+			ApplyConfiguration(model, new TempIdConfiguration());
 			ApplyConfiguration(model, new ThemeConfiguration());
 			ApplyConfiguration(model, new ThemeSettingConfiguration());
 			ApplyConfiguration(model, new UserConfiguration());
