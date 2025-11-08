@@ -171,7 +171,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="Migrations\**\*.sql" Exclude="Migrations\Backup\**\*.sql" />
+        <EmbeddedResource Include="Migrations\**\*.sql" />
     </ItemGroup>
 
     <ItemGroup>
@@ -184,8 +184,6 @@
         <None Include="DbContextBase.Source.cs" />
         <None Include="Migrations\SqlServer\v1.5.1\SqlServerDbContextModelSnapshot_v1.5.1.cs" />
         <Compile Remove="DbContextBase.Source.cs" />
-        <None Include="Migrations\Backup\**\*.*" />
-        <Compile Remove="Migrations\Backup\**\*.cs" />
         <None Include="Configuration\Sources\**\*.*" />
         <Compile Remove="Configuration\Sources\**\*.*" />
         <None Include="Entities\Sources\**\*.*" />
