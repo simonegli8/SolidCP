@@ -7,6 +7,9 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using SolidCP.EnterpriseServer.Data.Configuration;
 using SolidCP.EnterpriseServer.Data.Entities;
+using SolidCP.EnterpriseServer.Data.Extensions;
+using System.Reflection.Emit;
+
 
 
 #if NetCore
@@ -27,10 +30,10 @@ using System.Data.Entity.Validation;
 namespace SolidCP.EnterpriseServer.Context
 {
 
-	using Version = SolidCP.EnterpriseServer.Data.Entities.Version;
-	using GlobalDnsRecord = SolidCP.EnterpriseServer.Data.Entities.GlobalDnsRecord;
 	using BackgroundTask = SolidCP.EnterpriseServer.Data.Entities.BackgroundTask;
 	using BackgroundTaskParameter = SolidCP.EnterpriseServer.Data.Entities.BackgroundTaskParameter;
+	using GlobalDnsRecord = SolidCP.EnterpriseServer.Data.Entities.GlobalDnsRecord;
+	using Version = SolidCP.EnterpriseServer.Data.Entities.Version;
 
 	public partial class DbContextBase : DbContext, Data.IGenericDbContext
 	{
@@ -440,6 +443,25 @@ namespace SolidCP.EnterpriseServer.Context
 			ApplyConfiguration(model, new WebDavAccessTokenConfiguration());
 			ApplyConfiguration(model, new WebDavPortalUsersSettingConfiguration());
 
+			// Store DateTime in UTC for PostgreSQL
+#if NetCore
+			if (IsPostgreSql)
+			{
+				var dateTimeUtcConverter = new DateTimeUtcValueConverter();
+
+				foreach (var entityType in model.Model.GetEntityTypes())
+				{
+					foreach (var property in entityType.GetProperties())
+					{
+						if (property.ClrType == typeof(DateTime))
+						{
+							property.SetValueConverter(dateTimeUtcConverter);
+						}
+					}
+				}
+			}
+#endif
+
 			OnModelCreatingPartial(model);
 		}
 #if NetCore
@@ -456,10 +478,10 @@ namespace SolidCP.EnterpriseServer.Context
 namespace SolidCP.EnterpriseServer.Data
 {
 
-	using Version = SolidCP.EnterpriseServer.Data.Entities.Version;
-	using GlobalDnsRecord = SolidCP.EnterpriseServer.Data.Entities.GlobalDnsRecord;
 	using BackgroundTask = SolidCP.EnterpriseServer.Data.Entities.BackgroundTask;
 	using BackgroundTaskParameter = SolidCP.EnterpriseServer.Data.Entities.BackgroundTaskParameter;
+	using GlobalDnsRecord = SolidCP.EnterpriseServer.Data.Entities.GlobalDnsRecord;
+	using Version = SolidCP.EnterpriseServer.Data.Entities.Version;
 
 #if ScaffoldDbContextEntities
     public partial class DbContext {

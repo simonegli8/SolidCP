@@ -4502,12 +4502,24 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                 name: "WebDavPortalUsersSettingsIdx_AccountId",
                 table: "WebDavPortalUsersSettings",
                 column: "AccountId");
+
+            if (migrationBuilder.IsSqlServer())
+            {
+                migrationBuilder.SqlScript(@"!\.SqlServer\.v1\.5\.1\.ViewsAndTriggers\.sql$");
+                migrationBuilder.SqlScript(@"!\.SqlServer\.v1\.5\.1\.StoredProcedures\.sql$");
+            }
         }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
+		/// <inheritdoc />
+		protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
+            if (migrationBuilder.IsSqlServer())
+            {
+                migrationBuilder.SqlScript(@"!\.SqlServer\.v1\.5\.1\.DropStoredProcedures\.sql$");
+                migrationBuilder.SqlScript(@"!\.SqlServer\.v1\.5\.1\.DropViewsAndTriggers\.sql$");
+            }
+
+			migrationBuilder.DropTable(
                 name: "AccessTokens");
 
             migrationBuilder.DropTable(
@@ -4779,6 +4791,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
 
             migrationBuilder.DropTable(
                 name: "ResourceGroups");
-        }
-    }
+		}
+	}
 }

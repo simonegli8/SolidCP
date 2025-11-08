@@ -61,17 +61,17 @@ namespace SolidCP.UniversalInstaller
 
 	public partial class Installer
 	{
-#if UseDebugService
-		public const bool UseDebugService = true;
+#if UseDebugWebService
+		public const bool UseDebugWebService = true;
 #else
-		public const bool UseDebugService = false;
+		public const bool UseDebugWebService = false;
 #endif
 		public virtual IInstallerWebService InstallerWebService
 		{
 			get
 			{
 				string url = Settings.Installer.WebServiceUrl;
-				if (string.IsNullOrEmpty(url)) url = UseDebugService ?
+				if (string.IsNullOrEmpty(url)) url = UseDebugWebService ?
                         "http://solidcp.mooo.com/Services/InstallerService-Beta.asmx" :
                         "http://installer.solidcp.com/Services/InstallerService-1.0.asmx";
 
