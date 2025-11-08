@@ -60,8 +60,8 @@ REM %WSE_CLEAN% .\SolidCP.EnterpriseServer.Client\ImportProxy.cs
 REM %WSDL% %SERVER_URL%/esLync.asmx /out:.\SolidCP.EnterpriseServer.Client\LyncProxy.cs /namespace:SolidCP.EnterpriseServer.Lync /type:webClient
 REM %WSE_CLEAN% .\SolidCP.EnterpriseServer.Client\LyncProxy.cs
 
-%WSDL% %SERVER_URL%/esMailServers.asmx /out:.\SolidCP.EnterpriseServer.Client\MailServersProxy.cs /namespace:SolidCP.EnterpriseServer.MailServers /type:webClient
-%WSE_CLEAN% .\SolidCP.EnterpriseServer.Client\MailServersProxy.cs
+REM %WSDL% %SERVER_URL%/esMailServers.asmx /out:.\SolidCP.EnterpriseServer.Client\MailServersProxy.cs /namespace:SolidCP.EnterpriseServer.MailServers /type:webClient
+REM %WSE_CLEAN% .\SolidCP.EnterpriseServer.Client\MailServersProxy.cs
 
 REM %WSDL% %SERVER_URL%/esOCS.asmx /out:.\SolidCP.EnterpriseServer.Client\OCSProxy.cs /namespace:SolidCP.EnterpriseServer.OCS /type:webClient
 REM %WSE_CLEAN% .\SolidCP.EnterpriseServer.Client\OCSProxy.cs
@@ -96,8 +96,8 @@ REM %WSE_CLEAN% .\SolidCP.EnterpriseServer.Client\StatisticsServersProxy.cs
 REM %WSDL% %SERVER_URL%/esStorageSpaces.asmx /out:.\SolidCP.EnterpriseServer.Client\StorageSpacesProxy.cs /namespace:SolidCP.EnterpriseServer.StorageSpaces /type:webClient
 REM %WSE_CLEAN% .\SolidCP.EnterpriseServer.Client\StorageSpacesProxy.cs
 
-REM %WSDL% %SERVER_URL%/esSystem.asmx /out:.\SolidCP.EnterpriseServer.Client\SystemProxy.cs /namespace:SolidCP.EnterpriseServer.System /type:webClient
-REM %WSE_CLEAN% .\SolidCP.EnterpriseServer.Client\SystemProxy.cs
+%WSDL% %SERVER_URL%/esSystem.asmx /out:.\SolidCP.EnterpriseServer.Client\SystemProxy.cs /namespace:SolidCP.EnterpriseServer.System /type:webClient
+%WSE_CLEAN% .\SolidCP.EnterpriseServer.Client\SystemProxy.cs
 
 REM %WSDL% %SERVER_URL%/esTasks.asmx /out:.\SolidCP.EnterpriseServer.Client\TasksProxy.cs /namespace:SolidCP.EnterpriseServer.Tasks /type:webClient
 REM %WSE_CLEAN% .\SolidCP.EnterpriseServer.Client\TasksProxy.cs

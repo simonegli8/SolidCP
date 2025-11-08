@@ -81,7 +81,9 @@ namespace SolidCP.EnterpriseServer
         public const string BANDWIDTH_TRANSFORM = "BandwidthXLST";
         public const string DISKSPACE_TRANSFORM = "DiskspaceXLST";
 
-        public static readonly SystemSettings Empty = new SystemSettings { SettingsArray = new string[][] {} };
+		public const string HOSTBILL_INTEGRATION = "HostBillIntegration";
+
+		public static readonly SystemSettings Empty = new SystemSettings { SettingsArray = new string[][] {} };
 
 		private NameValueCollection settingsHash = null;
 		public string[][] SettingsArray;

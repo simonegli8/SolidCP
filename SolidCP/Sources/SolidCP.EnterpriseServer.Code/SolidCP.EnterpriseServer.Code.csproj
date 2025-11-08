@@ -15,6 +15,7 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <TargetFrameworkProfile />
+    <LangVersion>13.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -226,6 +227,7 @@
     <Compile Include="StorageSpaces\StorageSpaceSelectors\EnterpriseStorageSpaceSelector.cs" />
     <Compile Include="StorageSpaces\StorageSpaceSelectors\IStorageSpaceSelector.cs" />
     <Compile Include="StorageSpaces\StorageSpacesController.cs" />
+    <Compile Include="System\HostBillServer.cs" />
     <Compile Include="System\SystemController.cs" />
     <Compile Include="Tasks\SendEmailNotification.cs" />
     <Compile Include="Tasks\TaskController.cs" />

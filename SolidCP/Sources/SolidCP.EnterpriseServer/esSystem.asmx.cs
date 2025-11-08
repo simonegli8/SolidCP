@@ -95,5 +95,11 @@ namespace SolidCP.EnterpriseServer
 		{
 			return SystemController.GetThemeSetting(ThemeID, SettingsName);
 		}
+		[WebMethod]
+		public void SetHostBillIntegration(HostBillServerInfo hostbill) => SystemController.SetHostBillIntegration(hostbill);
+
+		[WebMethod]
+		public HostBillServerInfo GetHostBillIntegration() => SystemController.GetHostBillIntegration();
+
 	}
 }

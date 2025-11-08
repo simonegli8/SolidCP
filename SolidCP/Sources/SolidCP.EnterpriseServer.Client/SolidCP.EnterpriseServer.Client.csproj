@@ -82,17 +82,13 @@
     <Compile Include="ApplicationsInstallerProxy.cs" />
     <Compile Include="AuditLogProxy.cs" />
     <Compile Include="AuthenticationProxy.cs" />
-    <Compile Include="BackupProxy.cs">
-      <SubType>code</SubType>
-    </Compile>
+    <Compile Include="BackupProxy.cs" />
     <Compile Include="BlackBerryProxy.cs" />
     <Compile Include="CommentsProxy.cs" />
     <Compile Include="Common\EnterpriseServerProxyConfigurator.cs" />
     <Compile Include="Common\UsernameAssertion.cs" />
     <Compile Include="EnterpriseStorageProxy.cs" />
-    <Compile Include="ExchangeServerProxy.cs">
-      <SubType>code</SubType>
-    </Compile>
+    <Compile Include="ExchangeServerProxy.cs" />
     <Compile Include="HeliconZooProxy.cs" />
     <Compile Include="HostedSharePointServersEntProxy.cs" />
     <Compile Include="SfBProxy.cs" />
@@ -108,9 +104,7 @@
     <Compile Include="FilesProxy.cs" />
     <Compile Include="FtpServersProxy.cs" />
     <Compile Include="HostedSharePointServersProxy.cs" />
-    <Compile Include="ImportProxy.cs">
-      <SubType>code</SubType>
-    </Compile>
+    <Compile Include="ImportProxy.cs" />
     <Compile Include="MailServersProxy.cs" />
     <Compile Include="OCSProxy.cs" />
     <Compile Include="OperatingSystemsProxy.cs" />
@@ -124,9 +118,7 @@
     <Compile Include="SystemProxy.cs" />
     <Compile Include="TasksProxy.cs" />
     <Compile Include="UsersProxy.cs" />
-    <Compile Include="VirtualizationServerProxy.cs">
-      <SubType>code</SubType>
-    </Compile>
+    <Compile Include="VirtualizationServerProxy.cs" />
     <Compile Include="WebApplicationGalleryProxy.cs" />
     <Compile Include="WebServersProxy.cs" />
   </ItemGroup>
