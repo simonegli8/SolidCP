@@ -185,7 +185,8 @@ public class SetupLoader
 			CancellationToken token = cts.Token;
 
 			var fileToDownload = Path.GetFileName(remoteFile.File);
-			var exeFolder = Path.GetDirectoryName(Installer.Current.GetEntryAssembly().Location);
+			var exeFile = Installer.Current.GetEntryAssembly().Location;
+			var exeFolder = Path.GetDirectoryName(exeFile);
 			var installerPath = remoteFile.Release.InstallerPath.Replace('/', Path.DirectorySeparatorChar);
 			var setupFileName = Path.Combine(exeFolder,
 				Path.GetFileName(installerPath));
@@ -194,7 +195,7 @@ public class SetupLoader
 
 			var progressFile = Path.Combine(Path.GetDirectoryName(tmpFolder), DownloadProgressFile);
 
-			if (File.Exists(setupFileName))
+			if (File.Exists(setupFileName) && File.GetLastWriteTimeUtc(exeFile) <= File.GetLastWriteTimeUtc(setupFileName))
 			{
 				var assembly = Mono.Cecil.AssemblyDefinition.ReadAssembly(setupFileName);
 				var version = assembly.Name.Version;
