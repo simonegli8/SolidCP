@@ -11,8 +11,8 @@
         <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
         <StartupObject>SolidCP.UniversalInstaller.Core.Program</StartupObject>
         <DebugType>embedded</DebugType>
-        <UseDebugService Condition="$(UseDebugService) == ''">true</UseDebugService>
-        <DefineConstants Condition="$(UseDebugService) == 'true'">$(DefineConstants);UseDebugService</DefineConstants>
+        <UseDebugWebService Condition="$(UseDebugWebService) == ''">true</UseDebugWebService>
+        <DefineConstants Condition="$(UseDebugWebService) == 'true'">$(DefineConstants);UseDebugWebService</DefineConstants>
     </PropertyGroup>
     
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
