@@ -6834,41 +6834,6 @@ IF NOT EXISTS (
     WHERE [MigrationId] = N'20251104195729_v1.5.1'
 )
 BEGIN
-    /****** Object:  View [dbo].[UsersDetailed]    Script Date: 11/8/2025 10:49:54 AM ******/
-    SET ANSI_NULLS ON
-END;
-
-IF NOT EXISTS (
-    SELECT * FROM [__EFMigrationsHistory]
-    WHERE [MigrationId] = N'20251104195729_v1.5.1'
-)
-BEGIN
-    SET QUOTED_IDENTIFIER ON
-END;
-
-IF NOT EXISTS (
-    SELECT * FROM [__EFMigrationsHistory]
-    WHERE [MigrationId] = N'20251104195729_v1.5.1'
-)
-BEGIN
-    PRINT 'CREATE VIEW [dbo].[UsersDetailed]'
-    EXECUTE sp_executesql N'CREATE VIEW [dbo].[UsersDetailed]
-    AS
-    SELECT     U.UserID, U.RoleID, U.StatusID, U.LoginStatusId, U.SubscriberNumber, U.FailedLogins, U.OwnerID, U.Created, U.Changed, U.IsDemo, U.Comments, U.IsPeer, U.Username, U.FirstName, U.LastName, U.Email,
-                          U.CompanyName, U.FirstName + '' '' + U.LastName AS FullName, UP.Username AS OwnerUsername, UP.FirstName AS OwnerFirstName,
-                          UP.LastName AS OwnerLastName, UP.RoleID AS OwnerRoleID, UP.FirstName + '' '' + UP.LastName AS OwnerFullName, UP.Email AS OwnerEmail, UP.RoleID AS Expr1,
-                              (SELECT     COUNT(PackageID) AS Expr1
-                                FROM          dbo.Packages AS P
-                                WHERE      (UserID = U.UserID)) AS PackagesNumber, U.EcommerceEnabled
-    FROM         dbo.Users AS U LEFT OUTER JOIN
-                          dbo.Users AS UP ON U.OwnerID = UP.UserID'
-END;
-
-IF NOT EXISTS (
-    SELECT * FROM [__EFMigrationsHistory]
-    WHERE [MigrationId] = N'20251104195729_v1.5.1'
-)
-BEGIN
     /****** Object:  StoredProcedure [dbo].[AddAccessToken]    Script Date: 11/8/2025 10:49:54 AM ******/
     SET ANSI_NULLS ON
 END;
@@ -47314,41 +47279,6 @@ BEGIN
 
     RETURN
     END'
-END;
-
-IF NOT EXISTS (
-    SELECT * FROM [__EFMigrationsHistory]
-    WHERE [MigrationId] = N'20251105062145_v2.0.0'
-)
-BEGIN
-    /****** Object:  View [dbo].[UsersDetailed]    Script Date: 11/8/2025 10:49:54 AM ******/
-    SET ANSI_NULLS ON
-END;
-
-IF NOT EXISTS (
-    SELECT * FROM [__EFMigrationsHistory]
-    WHERE [MigrationId] = N'20251105062145_v2.0.0'
-)
-BEGIN
-    SET QUOTED_IDENTIFIER ON
-END;
-
-IF NOT EXISTS (
-    SELECT * FROM [__EFMigrationsHistory]
-    WHERE [MigrationId] = N'20251105062145_v2.0.0'
-)
-BEGIN
-    PRINT 'CREATE VIEW [dbo].[UsersDetailed]'
-    EXECUTE sp_executesql N'CREATE VIEW [dbo].[UsersDetailed]
-    AS
-    SELECT     U.UserID, U.RoleID, U.StatusID, U.LoginStatusId, U.SubscriberNumber, U.FailedLogins, U.OwnerID, U.Created, U.Changed, U.IsDemo, U.Comments, U.IsPeer, U.Username, U.FirstName, U.LastName, U.Email,
-                          U.CompanyName, U.FirstName + '' '' + U.LastName AS FullName, UP.Username AS OwnerUsername, UP.FirstName AS OwnerFirstName,
-                          UP.LastName AS OwnerLastName, UP.RoleID AS OwnerRoleID, UP.FirstName + '' '' + UP.LastName AS OwnerFullName, UP.Email AS OwnerEmail, UP.RoleID AS Expr1,
-                              (SELECT     COUNT(PackageID) AS Expr1
-                                FROM          dbo.Packages AS P
-                                WHERE      (UserID = U.UserID)) AS PackagesNumber, U.EcommerceEnabled
-    FROM         dbo.Users AS U LEFT OUTER JOIN
-                          dbo.Users AS UP ON U.OwnerID = UP.UserID'
 END;
 
 IF NOT EXISTS (
