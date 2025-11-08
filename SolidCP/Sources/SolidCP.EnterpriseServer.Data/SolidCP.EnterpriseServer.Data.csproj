@@ -226,4 +226,13 @@
         <Copy SourceFiles="@(x86SQLiteFiles)" DestinationFolder="bin\$(Configuration)\net48\x86" SkipUnchangedFiles="true" />
     </Target>
 
+    <Target Name="CopyDatabaseSql" AfterTargets="Build">
+        <ItemGroup>
+            <InstallSqlFiles Include="Migrations\SqlServer\install.sqlserver.sql" />
+            <InstallSqlFiles Include="Migrations\Sqlite\install.sqlite.sql" />
+            <InstallSqlFiles Include="Migrations\MySql\install.mysql.sql" />
+            <InstallSqlFiles Include="Migrations\PostgreSql\install.postgresql.sql" />
+        </ItemGroup>
+        <Copy SourceFiles="@(InstallSqlFiles)" DestinationFolder="..\..\Database" SkipUnchangedFiles="true" />
+    </Target>
 </Project>
