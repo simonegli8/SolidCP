@@ -86,7 +86,7 @@ public static class MigrationBuilderExtension
 					hasSpecialCommand = false;
 				}
 				else if ((preIdent.Equals("CREATE", StringComparison.OrdinalIgnoreCase) ||
-					preIdent.Equals("AlTER", StringComparison.OrdinalIgnoreCase)) &&
+					preIdent.Equals("ALTER", StringComparison.OrdinalIgnoreCase)) &&
 					(ident.Equals("FUNCTION", StringComparison.OrdinalIgnoreCase) ||
 					ident.Equals("VIEW", StringComparison.OrdinalIgnoreCase) ||
 					ident.Equals("PROCEDURE", StringComparison.OrdinalIgnoreCase) ||
