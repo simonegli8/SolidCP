@@ -58,11 +58,13 @@ namespace SolidCP.Providers.Database
 
         public override long CalculateDatabaseSize(string database)
         {
-            DataTable dt = ExecuteQuery(string.Format("SELECT SUM(data_length + index_length) / 1024 AS 'Size' FROM information_schema.TABLES WHERE TABLE_SCHEMA = '{0}'", database));
-            List<string> dbsize = new List<string>();
-            foreach (DataRow dr in dt.Rows)
-                dbsize.Add(dr["Size"].ToString());
-            return Convert.ToInt64(dbsize.ToString());
+            DataTable dt = ExecuteQuery(string.Format("SELECT SUM(data_length + index_length) AS 'Size' FROM information_schema.TABLES WHERE TABLE_SCHEMA = '{0}'", database));
+            string dbsize = dt.Rows[0]["Size"].ToString();
+            if (String.IsNullOrEmpty(dbsize)) // empty database
+            {
+                dbsize = "0";
+            }
+            return Convert.ToInt64(dbsize);
         }
 
         #region private helper methods
