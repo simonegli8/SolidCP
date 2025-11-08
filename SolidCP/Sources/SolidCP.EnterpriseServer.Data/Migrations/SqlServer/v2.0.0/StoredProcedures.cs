@@ -17,7 +17,9 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
 
 		protected void StoredProceduresDown(MigrationBuilder migrationBuilder)
 		{
-			if (migrationBuilder.IsSqlServer()) migrationBuilder.SafeSql(@"
+			if (migrationBuilder.IsSqlServer())
+			{
+				migrationBuilder.SafeSql(@"
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UpdateWhoisDomainInfo]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[UpdateWhoisDomainInfo]
 GO
@@ -1554,7 +1556,10 @@ GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CalculatePackageBandwidth]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
 DROP FUNCTION [dbo].[CalculatePackageBandwidth]
 GO
-			");
+				");
+
+				migrationBuilder.SqlScript(@"!\.SqlServer\.v1\.5\.1\.StoredProcedures\.sql$");
+			}
 		}
 		#endregion
 

@@ -194,6 +194,7 @@
 
     <ItemGroup>
       <EmbeddedResource Remove="Migrations\SqlServer\v1.5.1\install_db.sql" />
+      <EmbeddedResource Remove="Migrations\SqlServer\v1.5.1\Tables.sql" />
     </ItemGroup>
 
     <ItemGroup>
