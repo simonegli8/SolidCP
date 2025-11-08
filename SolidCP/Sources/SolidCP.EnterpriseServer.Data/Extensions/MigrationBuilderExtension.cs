@@ -68,7 +68,11 @@ public static class MigrationBuilderExtension
 				if (ident.Equals("GO", StringComparison.OrdinalIgnoreCase) || i >= query.Length)
 				{
 					int end;
-					if (i >= query.Length) end = query.Length - 1;
+					if (i >= query.Length)
+					{
+						if (ident.Equals("GO", StringComparison.OrdinalIgnoreCase)) end = query.Length - 3;
+						else end = query.Length - 1;
+					}
 					else end = query.LastIndexOf('\n', i - 3);
 
 					if (end == -1) end = 0;

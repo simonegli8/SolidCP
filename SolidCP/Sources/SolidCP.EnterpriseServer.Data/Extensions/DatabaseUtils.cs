@@ -89,6 +89,7 @@ namespace SolidCP.EnterpriseServer.Data
 						case "View": sortExpression = $"00000{order:x8}{name}"; break;
 						case "StoredProcedure": sortExpression = $"30000{order:x8}{name}"; break;
 						case "UserDefinedFunction": sortExpression = $"10000{order:x8}{name}"; break;
+						case "Trigger": sortExpression = $"01000{order:x8}{name}"; break;
 						default: sortExpression = $"2{typecode}.{order:x8}{string.Join(".", tokens.Take(tokens.Length - 2))}"; break;
 					}
 
