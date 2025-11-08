@@ -9,13 +9,13 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
 		#region Stored Procedures
 		protected void StoredProceduresUp(MigrationBuilder migrationBuilder)
 		{
-			StoredProceduresDown(migrationBuilder);
+			StoredProceduresDown(migrationBuilder, true);
 
 			if (migrationBuilder.IsSqlServer())
 				migrationBuilder.SqlScript(@"!\.SqlServer\.v2\.0\.0\.StoredProcedures\..*\.sql$");
 		}
 
-		protected void StoredProceduresDown(MigrationBuilder migrationBuilder)
+		protected void StoredProceduresDown(MigrationBuilder migrationBuilder, bool dropOnly = false)
 		{
 			if (migrationBuilder.IsSqlServer())
 			{
@@ -1556,9 +1556,19 @@ GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CalculatePackageBandwidth]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
 DROP FUNCTION [dbo].[CalculatePackageBandwidth]
 GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CalculatePackageBandwidth]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+DROP FUNCTION [dbo].[CalculatePackageBandwidth]
+GO
+IF OBJECT_ID('[dbo].[Update_StatusIDchangeDate]', 'TR') IS NOT NULL
+DROP TRIGGER [dbo].[Update_StatusIDchangeDate];
+GO
 				");
 
-				migrationBuilder.SqlScript(@"!\.SqlServer\.v1\.5\.1\.StoredProcedures\.sql$");
+				if (!dropOnly)
+				{
+					migrationBuilder.SqlScript(@"!\.SqlServer\.v1\.5\.1\.ViewsAndTriggers\.sql$");
+					migrationBuilder.SqlScript(@"!\.SqlServer\.v1\.5\.1\.StoredProcedures\.sql$");
+				}
 			}
 		}
 		#endregion
