@@ -950,11 +950,15 @@ public abstract partial class Installer
 
 				if (clearDestination && Directory.Exists(destination)) DeleteRootDirectory(destination);
 				CopyFiles(source, destination, clearDestination, filter, source, destination);
+				// delete source temporary directory after successful copying
+				Directory.Delete(source, true);
 				InstallLog("Unzipped & installed distribution files");
 			})
 				.WithRollback(() =>
 				{
 					DeleteRootDirectory(destination);
+					// delete source temporary directory
+					Directory.Delete(source, true);
 					if (IsUpdateAction)
 					{
 						// Restore backup
