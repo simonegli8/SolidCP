@@ -14,24 +14,6 @@ IF NOT EXISTS (
     WHERE [MigrationId] = N'20251104195729_v1.5.1'
 )
 BEGIN
-
-        IF OBJECT_ID(N'[Versions]') IS NOT NULL
-        BEGIN
-            IF EXISTS (SELECT * FROM [Versions] WHERE DatabaseVersion = '1.5.1')
-            BEGIN
-                INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-                VALUES (N'20251104195729_v1.5.1', N'9.0.9');
-            END
-            ELSE RAISERROR('You must first upgrade the SolidCP Database to version 1.5.1 before upgrading to 2.0.0', 16, 1)
-        END
-
-END;
-
-IF NOT EXISTS (
-    SELECT * FROM [__EFMigrationsHistory]
-    WHERE [MigrationId] = N'20251104195729_v1.5.1'
-)
-BEGIN
     CREATE TABLE [AdditionalGroups] (
         [ID] int NOT NULL IDENTITY,
         [UserID] int NOT NULL,

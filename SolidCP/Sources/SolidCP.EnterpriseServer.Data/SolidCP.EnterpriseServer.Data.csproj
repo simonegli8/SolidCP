@@ -205,10 +205,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="LegacyScripts\update_db.sql" />
-    </ItemGroup>
-
-    <ItemGroup>
         <Compile Update="Extensions\EntityDataTable.cs">
             <SubType>Component</SubType>
         </Compile>

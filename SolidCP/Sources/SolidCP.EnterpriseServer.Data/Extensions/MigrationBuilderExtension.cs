@@ -94,7 +94,9 @@ public static class MigrationBuilderExtension
 					(ident.Equals("FUNCTION", StringComparison.OrdinalIgnoreCase) ||
 					ident.Equals("VIEW", StringComparison.OrdinalIgnoreCase) ||
 					ident.Equals("PROCEDURE", StringComparison.OrdinalIgnoreCase) ||
-					ident.Equals("TRIGGER", StringComparison.OrdinalIgnoreCase)))
+					ident.Equals("TRIGGER", StringComparison.OrdinalIgnoreCase)) ||
+					preIdent.Equals("DECLARE", StringComparison.OrdinalIgnoreCase) ||
+					ident.Equals("DECLARE", StringComparison.OrdinalIgnoreCase))
 				{
 					hasSpecialCommand = true;
 				}
