@@ -45047,6 +45047,24 @@ IF NOT EXISTS (
     WHERE [MigrationId] = N'20251105062145_v2.0.0'
 )
 BEGIN
+    IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CalculatePackageBandwidth]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+    DROP FUNCTION [dbo].[CalculatePackageBandwidth]
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251105062145_v2.0.0'
+)
+BEGIN
+    IF OBJECT_ID('[dbo].[Update_StatusIDchangeDate]', 'TR') IS NOT NULL
+    DROP TRIGGER [dbo].[Update_StatusIDchangeDate];
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251105062145_v2.0.0'
+)
+BEGIN
     SET ANSI_NULLS ON
 END;
 

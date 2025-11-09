@@ -65,28 +65,28 @@ public static class MigrationBuilderExtension
 			if (identifier.Count > 0 || i >= query.Length)
 			{
 				var ident = new string(identifier.ToArray());
-				if (ident.Equals("GO", StringComparison.OrdinalIgnoreCase) || i >= query.Length)
+				bool isgo;
+				if (isgo = ident.Equals("GO", StringComparison.OrdinalIgnoreCase) || i >= query.Length)
 				{
 					int end;
-					if (i >= query.Length)
-					{
-						if (ident.Equals("GO", StringComparison.OrdinalIgnoreCase)) end = query.Length - 3;
-						else end = query.Length - 1;
-					}
+					if (i >= query.Length && !isgo) end = query.Length - 1;
 					else end = query.LastIndexOf('\n', i - 3);
 
-					if (end == -1) end = 0;
+					if (end <= -1) end = 0;
 					length = end - start + 1;
 
-					segments.Add(new Segment()
+					if (length > 0)
 					{
-						Start = start,
-						Length = length,
-						HasSpecialCommand = hasSpecialCommand
-					});
+						segments.Add(new Segment()
+						{
+							Start = start,
+							Length = length,
+							HasSpecialCommand = hasSpecialCommand
+						});
+					}
 
 					if (i < query.Length) start = query.IndexOf('\n', i);
-					if (start == -1) start = query.Length;
+					if (start <= -1) start = query.Length;
 					hasSpecialCommand = false;
 				}
 				else if ((preIdent.Equals("CREATE", StringComparison.OrdinalIgnoreCase) ||
