@@ -21,8 +21,9 @@ BEGIN
             BEGIN
                 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
                 VALUES (N'20251104195729_v1.5.1', N'9.0.9');
-            END;
-        END;
+            END
+            ELSE RAISERROR('You must first upgrade the SolidCP Database to version 1.5.1 before upgrading to 2.0.0', 16, 1)
+        END
 
 END;
 
