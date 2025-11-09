@@ -14,23 +14,6 @@ IF NOT EXISTS (
     WHERE [MigrationId] = N'20251104195729_v1.5.1'
 )
 BEGIN
-
-        IF OBJECT_ID(N'[Versions]') IS NOT NULL
-        BEGIN
-            IF EXISTS (SELECT * FROM [Versions] WHERE DatabaseVersion = '1.5.1')
-            BEGIN
-                INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-                VALUES (N'20251104195729_v1.5.1', N'9.0.9');
-            END;
-        END;
-
-END;
-
-IF NOT EXISTS (
-    SELECT * FROM [__EFMigrationsHistory]
-    WHERE [MigrationId] = N'20251104195729_v1.5.1'
-)
-BEGIN
     CREATE TABLE [AdditionalGroups] (
         [ID] int NOT NULL IDENTITY,
         [UserID] int NOT NULL,
@@ -45040,6 +45023,24 @@ IF NOT EXISTS (
 BEGIN
     IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CalculatePackageBandwidth]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
     DROP FUNCTION [dbo].[CalculatePackageBandwidth]
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251105062145_v2.0.0'
+)
+BEGIN
+    IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CalculatePackageBandwidth]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+    DROP FUNCTION [dbo].[CalculatePackageBandwidth]
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20251105062145_v2.0.0'
+)
+BEGIN
+    IF OBJECT_ID('[dbo].[Update_StatusIDchangeDate]', 'TR') IS NOT NULL
+    DROP TRIGGER [dbo].[Update_StatusIDchangeDate];
 END;
 
 IF NOT EXISTS (

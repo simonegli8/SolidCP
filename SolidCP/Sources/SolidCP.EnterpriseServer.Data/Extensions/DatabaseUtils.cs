@@ -440,6 +440,26 @@ namespace SolidCP.EnterpriseServer.Data
 			}
 		}
 
+		private static object ExecuteScalarSqlServer(string connectionString, string commandText)
+		{
+			SqlConnection conn = null;
+			try
+			{
+				conn = new SqlConnection(connectionString);
+				SqlCommand cmd = new SqlCommand(commandText, conn);
+				cmd.CommandTimeout = 300;
+				conn.Open();
+				object ret = cmd.ExecuteScalar();
+				return ret;
+			}
+			finally
+			{
+				// close connection if required
+				if (conn != null && conn.State == ConnectionState.Open)
+					conn.Close();
+			}
+		}
+
 		private static int ExecuteNonQueryMySql(string connectionString, string commandText)
 		{
 			MySqlConnection conn = null;
@@ -1674,11 +1694,15 @@ SELECT DatabaseVersion FROM Version");
 				{
 					if (dbType != DbType.Sqlite && dbType != DbType.SqliteFX)
 					{
-						if (oldVersionUpdate)
+						if (dbType == DbType.SqlServer)
 						{
-							// installSqlScript does update itself
-							//RunSqlScript(masterConnectionString, updateSqlScript, updateCount, OnProgressChange,
-							//	ProcessInstallVariables, databaseName);
+							var efMigrationHistory = ExecuteScalarSqlServer(masterConnectionString, "SELECT OBJECT_ID(N'[dbo].[__EFMigrationsHistory]')");
+							var versions = ExecuteScalarSqlServer(masterConnectionString, "SELECT OBJECT_ID(N'[dbo].[Versions]')");
+							if (versions != null && versions != DBNull.Value && (efMigrationHistory == null || efMigrationHistory == DBNull.Value))
+							{
+								RunSqlScript(masterConnectionString, updateSqlScript, updateCount, OnProgressChange,
+									ProcessInstallVariables, databaseName);
+							}
 						}
 						RunSqlScript(masterConnectionString, installSqlScript, installCount, OnProgressChange,
 						ProcessInstallVariables, databaseName);

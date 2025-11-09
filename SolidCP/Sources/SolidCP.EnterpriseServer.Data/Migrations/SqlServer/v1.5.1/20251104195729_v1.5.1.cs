@@ -13,16 +13,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(@"
-    IF OBJECT_ID(N'[Versions]') IS NOT NULL
-    BEGIN
-        IF EXISTS (SELECT * FROM [Versions] WHERE DatabaseVersion = '1.5.1')
-        BEGIN
-            INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-            VALUES (N'20251104195729_v1.5.1', N'9.0.9');
-        END;
-    END;
-");
             migrationBuilder.CreateTable(
                 name: "AdditionalGroups",
                 columns: table => new

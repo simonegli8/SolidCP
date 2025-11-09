@@ -72,9 +72,9 @@ public abstract partial class Installer
 		RemoveSchedulerService();
 		DisableEnterpriseServerWebsite();
 		CopyEnterpriseServer(true, StandardUpdateFilter);
+		UpdateDatabase();
 		UpdateEnterpriseServerConfig();
 		ConfigureEnterpriseServer();
-		UpdateDatabase();
 		InstallSchedulerService();
 		SetEnterpriseServerFilePermissions();
 		SetEnterpriseServerFileOwner();
