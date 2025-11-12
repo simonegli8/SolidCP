@@ -481,7 +481,7 @@
 
 		<PropertyGroup>
 			<InstallerProjectRoot>$(RootFolder)\SolidCP.Installer\Sources\</InstallerProjectRoot>
-			<InstallerProjectBin>$(InstallerProjectRoot)SolidCP.UniversalInstaller\bin\$(BuildConfiguration)\net8.0</InstallerProjectBin>
+			<InstallerProjectBin>$(InstallerProjectRoot)SolidCP.UniversalInstaller\bin\$(BuildConfiguration)\net10.0</InstallerProjectBin>
 		</PropertyGroup>
 
 		<Exec Command="dotnet restore /p:BuildWithNetFrameworkHostedCompiler=true $(InstallerProjectRoot)SolidCP.Installer.sln" />

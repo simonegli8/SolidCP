@@ -396,9 +396,9 @@ public abstract class UnixInstaller : Installer
 	//public override void ConfigureServerNetFX() { }
 	public override void InstallServerPrerequisites()
 	{
-		InstallNet8Runtime();
+		InstallNet10Runtime();
 	}
-	public override Func<string, string> UnzipFilter => Net8Filter;
+	public override Func<string, string> UnzipFilter => Net10Filter;
 	public override bool IsRunningAsAdmin
 	{
 		get

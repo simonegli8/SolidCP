@@ -1,6 +1,6 @@
 ﻿# SolidCP.EnterpriseServer.Data
 This project contains the EntityFramework database layer of SolidCP.EnterpriseServer. It uses EntityFramework Core 8
-when running in .NET 8 or EntityFramework 6 when running in .NET Framework.
+when running in .NET 10 or EntityFramework 6 when running in .NET Framework.
 
 # Programmer's Introduction Video
 Here's a [programmer's introduction video of the SolidCP EntityFramework port](https://youtu.be/fRJz-iDz4_s).
@@ -13,9 +13,9 @@ This implementation supports the following database flavors:
 - MariaDB
 - SQLite
 
-PostgreSQL support is implemented, but is limited to .NET 8, because the EntityFramework 6 PostgreSQL driver for
+PostgreSQL support is implemented, but is limited to .NET 10, because the EntityFramework 6 PostgreSQL driver for
 .NET Framework is buggy and not maintained anymore. But PostgreSQL should work when running EnterpriseServer
-on .NET 8 using EntityFramework Core.
+on .NET 10 using EntityFramework Core.
 Probably one could also support Oracle, adding support for it should be rather trivial, but we have chosen not to
 support it at the moment.
 Even we support SQLite, we do not recommend using SQLite on a production server.
@@ -59,12 +59,12 @@ and comment out the Column attribute like so:
 public string ExecutionLog { get; set; }
 ```
 
-In the above code, the `HasColumnType("TEXT")` command is only run when running on .NET 8, by using `if (IsCore && ...)`
+In the above code, the `HasColumnType("TEXT")` command is only run when running on .NET 10, by using `if (IsCore && ...)`
 because some EntityFramework 6 drivers cannot handle custom column types, so `HasColumnType` is only called when using
 EF Core. As migrations are always handled by EF Core, the migration creates the correct column type also for EntityFramework 6.
 
 # Migrations
-Migrations are only managed with EF Core, not with EF 6. They are always executed with .NET 8 or with SQL scripts by the
+Migrations are only managed with EF Core, not with EF 6. They are always executed with .NET 10 or with SQL scripts by the
 installer, not with .NET Framework.
 
 To create a new migration, you can run MigrationAdd.bat, or if you just want a migration for the database flavor
@@ -83,7 +83,7 @@ SolidCP.EnterpriseServer.Data provides a class DbContext, that can be used as EF
 It has properties to access the DbSet's of the Entities, and the usual SaveChanges etc. commands. In order to
 consume SoldiCP.EnterpriseServer.Data, you don't have to import the assemblies for EF Core 8 or EF 6, just use the
 SolidCP.EnterpriseServer.Data.DbContext class. It will use either EF Core 8 or EF 6 for accessing the database
-depending on wether you run on NET 8 or on NET Framework.
+depending on wether you run on NET 10 or on NET Framework.
 
 # Connection Strings
 SolidCP.EnterpriseServer.Data uses an additional setting in the connection strings, `DbType`. You can set the

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net48;netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>net10.0;net48;netstandard2.0</TargetFrameworks>
         <LangVersion>13</LangVersion>
         <ImplicitUsings>disable</ImplicitUsings>
         <ScaffoldConnectionString>Server=(local);Initial Catalog=SolidCPFresh;uid=sa;pwd=Password12;TrustServerCertificate=true;Connection Timeout=300;command timeout=300</ScaffoldConnectionString>
@@ -33,23 +33,18 @@
         <OutputType>Library</OutputType>
         <StartupObject></StartupObject>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0'">
         <AssemblyName>SolidCP.EnterpriseServer.Data.NetCore</AssemblyName>
         <OutputType>Exe</OutputType>
         <StartupObject>SolidCP.EnterpriseServer.Data.Program</StartupObject>
     </PropertyGroup>
-	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0'">
-		<AssemblyName>SolidCP.EnterpriseServer.Data.NetCore</AssemblyName>
-		<OutputType>Exe</OutputType>
-		<StartupObject>SolidCP.EnterpriseServer.Data.Program</StartupObject>
-	</PropertyGroup>
 	<PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
         <AssemblyName>SolidCP.EnterpriseServer.Data.NetStandard</AssemblyName>
         <OutputType>Library</OutputType>
         <StartupObject></StartupObject>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)' == 'net8.0' OR '$(TargetFramework)' == 'net9.0'">
+    <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.9" />
@@ -128,7 +123,7 @@
         <ProjectReference Include="..\SolidCP.Web.Services\SolidCP.Web.Services.csproj" />
     </ItemGroup>
 
-    <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0' OR '$(TargetFramework)' == 'net9.0'">
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0'">
         <DefineConstants>$(DefineConstants);NetCore</DefineConstants>
         <!--<AssemblyName>$(MSBuildProjectName).Core</AssemblyName>-->
         <PackageId>$(MSBuildProjectName)</PackageId>
@@ -210,7 +205,7 @@
         </Compile>
     </ItemGroup>
 
-    <Target Name="CopySQLite" BeforeTargets="CopyFilesToOutputDirectory" Condition="'$(TargetFramework)' == 'net8.0' OR '$(TargetFramework)' == 'net9.0'">
+    <Target Name="CopySQLite" BeforeTargets="CopyFilesToOutputDirectory" Condition="'$(TargetFramework)' == 'net10.0'">
         <ItemGroup>
             <x64SQLiteFiles Include="$(PkgSQLitePCLRaw_lib_e_sqlite3)\runtimes\win-x64\native\*.dll" />
             <x86SQLiteFiles Include="$(PkgSQLitePCLRaw_lib_e_sqlite3)\runtimes\win-x86\native\*.dll" />
