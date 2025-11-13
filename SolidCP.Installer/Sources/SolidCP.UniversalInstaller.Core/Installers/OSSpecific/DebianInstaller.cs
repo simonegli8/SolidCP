@@ -58,12 +58,12 @@ Pin-Priority: -10
 
 		public override void RemoveNet10NetRuntime()
 		{
-			Apt.Remove("netcore-runtime-8.0");
+			Apt.Remove("netcore-runtime-10.0");
 			ResetHasDotnet();
 		}
 		public override void RemoveNet10AspRuntime()
 		{
-			Apt.Remove("aspnetcore-runtime-8.0");
+			Apt.Remove("aspnetcore-runtime-10.0");
 			ResetHasDotnet();
 		}
 	}
