@@ -15,11 +15,7 @@ namespace SolidCP.EnterpriseServer;
 public class HostBillServer : HostBillServerInfo
 {
 	//SystemController SystemController;
-
-	public HostBillServerInfo GetHostBillIntegration() => SystemController.GetHostBillIntegration();
-	public void SyncHostBillUsers()
-	{
-	}
+	public static HostBillServerInfo GetHostBillIntegration() => SystemController.GetHostBillIntegration();
 	#region --- Typed Models ---
 	public class HostBillDateConverter : JsonConverter<DateTime>
 	{
@@ -54,8 +50,16 @@ public class HostBillServer : HostBillServerInfo
 		[JsonPropertyName("client")]
 		public HostBillClient Client { get; set; }
 	}
-
-	public class HostBillClient
+    public class HostBillCreateClientResponse
+    {
+        [JsonPropertyName("success")]
+        public bool Success { get; set; }
+        [JsonPropertyName("message")]
+        public string Message { get; set; }
+        [JsonPropertyName("client_id")]
+        public int ClientId { get; set; }
+    }
+    public class HostBillClient
 	{
 		[JsonPropertyName("id")]
 		public int Id { get; set; }
@@ -140,7 +144,7 @@ public class HostBillServer : HostBillServerInfo
 	}
 	#endregion
 
-	public T CallApi<T>(string cmd, string parameters, Method method = Method.Post) where T : class
+	public static T CallApi<T>(string cmd, string parameters, Method method = Method.Post) where T : class
 	{
 		var server = GetHostBillIntegration();
 		if (!server.Enabled) return null;
@@ -169,10 +173,38 @@ public class HostBillServer : HostBillServerInfo
 		return response.Data;
 	}
 
-	public void CreateHostBillUser() { }
+    public static void CreateHostBillUser(UserInfo user, string password) {
+        var server = GetHostBillIntegration();
+        if (!server.Enabled) return;
+
+		var client = new HostBillClient()
+		{
+			Address1 = user.Address,
+			City = user.City,
+			CompanyName = user.CompanyName,
+			Country = user.Country,
+			Email = user.Email,
+			FirstName = user.FirstName,
+			LastName = user.LastName,
+			PhoneNumber = user.PrimaryPhone,
+			Postcode = user.Zip,
+			Username = user.Username,
+			CurrencyId = "1", // default currency
+			Language = "en", // default language
+            AdditionalData = new Dictionary<string, object>()
+			{
+				{ "password", password }
+			}
+		};
+
+		var response = CallApi<HostBillCreateClientResponse>("client.create",
+			$"username={Uri.EscapeDataString(client.Username)}&firstname={Uri.EscapeDataString(client.FirstName)}&lastname={Uri.EscapeDataString(client.LastName)}&companyname={Uri.EscapeDataString(client.CompanyName)}&email={Uri.EscapeDataString(client.Email)}&phonenumber={Uri.EscapeDataString(client.PhoneNumber)}&address1={Uri.EscapeDataString(client.Address1)}&city={Uri.EscapeDataString(client.City)}&state={Uri.EscapeDataString(client.State)}&postcode={Uri.EscapeDataString(client.Postcode)}&country={Uri.EscapeDataString(client.Country)}&currency_id={Uri.EscapeDataString(client.CurrencyId)}&language={Uri.EscapeDataString(client.Language)}&password={Uri.EscapeDataString(password)}");
+
+		if (!response.Success) throw new InvalidOperationException($"HostBill user creation failed: {response.Message}");
+    }
 
 	// returns null on success or error message otherwise
-	public string AuthenticateAndAddHostBillUser(string username, string password)
+	public static string AuthenticateAndAddHostBillUser(string username, string password)
 	{
 		var server = GetHostBillIntegration();
 		if (!server.Enabled) return null;
@@ -199,7 +231,7 @@ public class HostBillServer : HostBillServerInfo
 					Role = UserRole.User,
 					Zip = user.Postcode,
 					Username = username,
-				}, false, password);
+				}, false, password, false);
 				return null;
 			}
 			else return authResponse.Status;
@@ -207,5 +239,4 @@ public class HostBillServer : HostBillServerInfo
 			return ex.Message;
 		}
 	}
-
 }

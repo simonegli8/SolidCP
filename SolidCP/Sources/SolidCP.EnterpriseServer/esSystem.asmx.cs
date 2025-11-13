@@ -57,17 +57,17 @@ namespace SolidCP.EnterpriseServer
 			return SystemController.GetSystemSettings(settingsName);
 		}
 
-        [WebMethod]
-        public SystemSettings GetSystemSettingsActive(string settingsName, bool decrypt)
-        {
-            return SystemController.GetSystemSettingsActive(settingsName, decrypt);
-        }
+		[WebMethod]
+		public SystemSettings GetSystemSettingsActive(string settingsName, bool decrypt)
+		{
+			return SystemController.GetSystemSettingsActive(settingsName, decrypt);
+		}
 
-        [WebMethod]
-        public bool CheckIsTwilioEnabled()
-        {
-            return SystemController.CheckIsTwilioEnabled();
-        }
+		[WebMethod]
+		public bool CheckIsTwilioEnabled()
+		{
+			return SystemController.CheckIsTwilioEnabled();
+		}
 
 		[WebMethod]
 		public int SetSystemSettings(string settingsName, SystemSettings settings)
@@ -101,5 +101,10 @@ namespace SolidCP.EnterpriseServer
 		[WebMethod]
 		public HostBillServerInfo GetHostBillIntegration() => SystemController.GetHostBillIntegration();
 
-	}
+		[WebMethod]
+		public void CreateHostBillUser(UserInfo user, string password) => SystemController.CreateHostBillUser(user, password);
+
+		[WebMethod]
+		public string AuthenticateAndAddHostBillUser(string username, string password) => SystemController.AuthenticateAndAddHostBillUser(username, password);
+    }
 }

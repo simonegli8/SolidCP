@@ -42,6 +42,14 @@ namespace SolidCP.EnterpriseServer {
         
         private System.Threading.SendOrPostCallback GetThemeSettingOperationCompleted;
         
+        private System.Threading.SendOrPostCallback SetHostBillIntegrationOperationCompleted;
+        
+        private System.Threading.SendOrPostCallback GetHostBillIntegrationOperationCompleted;
+        
+        private System.Threading.SendOrPostCallback CreateHostBillUserOperationCompleted;
+        
+        private System.Threading.SendOrPostCallback AuthenticateAndAddHostBillUserOperationCompleted;
+        
         /// <remarks/>
         public esSystem() {
             this.Url = "http://127.0.0.1:9082/esSystem.asmx";
@@ -67,6 +75,18 @@ namespace SolidCP.EnterpriseServer {
         
         /// <remarks/>
         public event GetThemeSettingCompletedEventHandler GetThemeSettingCompleted;
+        
+        /// <remarks/>
+        public event SetHostBillIntegrationCompletedEventHandler SetHostBillIntegrationCompleted;
+        
+        /// <remarks/>
+        public event GetHostBillIntegrationCompletedEventHandler GetHostBillIntegrationCompleted;
+        
+        /// <remarks/>
+        public event CreateHostBillUserCompletedEventHandler CreateHostBillUserCompleted;
+        
+        /// <remarks/>
+        public event AuthenticateAndAddHostBillUserCompletedEventHandler AuthenticateAndAddHostBillUserCompleted;
         
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetSystemSettings", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
@@ -359,6 +379,169 @@ namespace SolidCP.EnterpriseServer {
         }
         
         /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/SetHostBillIntegration", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public void SetHostBillIntegration(HostBillServerInfo hostbill) {
+            this.Invoke("SetHostBillIntegration", new object[] {
+                        hostbill});
+        }
+        
+        /// <remarks/>
+        public System.IAsyncResult BeginSetHostBillIntegration(HostBillServerInfo hostbill, System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("SetHostBillIntegration", new object[] {
+                        hostbill}, callback, asyncState);
+        }
+        
+        /// <remarks/>
+        public void EndSetHostBillIntegration(System.IAsyncResult asyncResult) {
+            this.EndInvoke(asyncResult);
+        }
+        
+        /// <remarks/>
+        public void SetHostBillIntegrationAsync(HostBillServerInfo hostbill) {
+            this.SetHostBillIntegrationAsync(hostbill, null);
+        }
+        
+        /// <remarks/>
+        public void SetHostBillIntegrationAsync(HostBillServerInfo hostbill, object userState) {
+            if ((this.SetHostBillIntegrationOperationCompleted == null)) {
+                this.SetHostBillIntegrationOperationCompleted = new System.Threading.SendOrPostCallback(this.OnSetHostBillIntegrationOperationCompleted);
+            }
+            this.InvokeAsync("SetHostBillIntegration", new object[] {
+                        hostbill}, this.SetHostBillIntegrationOperationCompleted, userState);
+        }
+        
+        private void OnSetHostBillIntegrationOperationCompleted(object arg) {
+            if ((this.SetHostBillIntegrationCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.SetHostBillIntegrationCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetHostBillIntegration", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public HostBillServerInfo GetHostBillIntegration() {
+            object[] results = this.Invoke("GetHostBillIntegration", new object[0]);
+            return ((HostBillServerInfo)(results[0]));
+        }
+        
+        /// <remarks/>
+        public System.IAsyncResult BeginGetHostBillIntegration(System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("GetHostBillIntegration", new object[0], callback, asyncState);
+        }
+        
+        /// <remarks/>
+        public HostBillServerInfo EndGetHostBillIntegration(System.IAsyncResult asyncResult) {
+            object[] results = this.EndInvoke(asyncResult);
+            return ((HostBillServerInfo)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void GetHostBillIntegrationAsync() {
+            this.GetHostBillIntegrationAsync(null);
+        }
+        
+        /// <remarks/>
+        public void GetHostBillIntegrationAsync(object userState) {
+            if ((this.GetHostBillIntegrationOperationCompleted == null)) {
+                this.GetHostBillIntegrationOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetHostBillIntegrationOperationCompleted);
+            }
+            this.InvokeAsync("GetHostBillIntegration", new object[0], this.GetHostBillIntegrationOperationCompleted, userState);
+        }
+        
+        private void OnGetHostBillIntegrationOperationCompleted(object arg) {
+            if ((this.GetHostBillIntegrationCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.GetHostBillIntegrationCompleted(this, new GetHostBillIntegrationCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/CreateHostBillUser", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public void CreateHostBillUser(UserInfo user, string password) {
+            this.Invoke("CreateHostBillUser", new object[] {
+                        user,
+                        password});
+        }
+        
+        /// <remarks/>
+        public System.IAsyncResult BeginCreateHostBillUser(UserInfo user, string password, System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("CreateHostBillUser", new object[] {
+                        user,
+                        password}, callback, asyncState);
+        }
+        
+        /// <remarks/>
+        public void EndCreateHostBillUser(System.IAsyncResult asyncResult) {
+            this.EndInvoke(asyncResult);
+        }
+        
+        /// <remarks/>
+        public void CreateHostBillUserAsync(UserInfo user, string password) {
+            this.CreateHostBillUserAsync(user, password, null);
+        }
+        
+        /// <remarks/>
+        public void CreateHostBillUserAsync(UserInfo user, string password, object userState) {
+            if ((this.CreateHostBillUserOperationCompleted == null)) {
+                this.CreateHostBillUserOperationCompleted = new System.Threading.SendOrPostCallback(this.OnCreateHostBillUserOperationCompleted);
+            }
+            this.InvokeAsync("CreateHostBillUser", new object[] {
+                        user,
+                        password}, this.CreateHostBillUserOperationCompleted, userState);
+        }
+        
+        private void OnCreateHostBillUserOperationCompleted(object arg) {
+            if ((this.CreateHostBillUserCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.CreateHostBillUserCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/AuthenticateAndAddHostBillUser", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public string AuthenticateAndAddHostBillUser(string username, string password) {
+            object[] results = this.Invoke("AuthenticateAndAddHostBillUser", new object[] {
+                        username,
+                        password});
+            return ((string)(results[0]));
+        }
+        
+        /// <remarks/>
+        public System.IAsyncResult BeginAuthenticateAndAddHostBillUser(string username, string password, System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("AuthenticateAndAddHostBillUser", new object[] {
+                        username,
+                        password}, callback, asyncState);
+        }
+        
+        /// <remarks/>
+        public string EndAuthenticateAndAddHostBillUser(System.IAsyncResult asyncResult) {
+            object[] results = this.EndInvoke(asyncResult);
+            return ((string)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void AuthenticateAndAddHostBillUserAsync(string username, string password) {
+            this.AuthenticateAndAddHostBillUserAsync(username, password, null);
+        }
+        
+        /// <remarks/>
+        public void AuthenticateAndAddHostBillUserAsync(string username, string password, object userState) {
+            if ((this.AuthenticateAndAddHostBillUserOperationCompleted == null)) {
+                this.AuthenticateAndAddHostBillUserOperationCompleted = new System.Threading.SendOrPostCallback(this.OnAuthenticateAndAddHostBillUserOperationCompleted);
+            }
+            this.InvokeAsync("AuthenticateAndAddHostBillUser", new object[] {
+                        username,
+                        password}, this.AuthenticateAndAddHostBillUserOperationCompleted, userState);
+        }
+        
+        private void OnAuthenticateAndAddHostBillUserOperationCompleted(object arg) {
+            if ((this.AuthenticateAndAddHostBillUserCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.AuthenticateAndAddHostBillUserCompleted(this, new AuthenticateAndAddHostBillUserCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
         public new void CancelAsync(object userState) {
             base.CancelAsync(userState);
         }
@@ -542,6 +725,66 @@ namespace SolidCP.EnterpriseServer {
             get {
                 this.RaiseExceptionIfNecessary();
                 return ((System.Data.DataSet)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "2.0.50727.42")]
+    public delegate void SetHostBillIntegrationCompletedEventHandler(object sender, System.ComponentModel.AsyncCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "2.0.50727.42")]
+    public delegate void GetHostBillIntegrationCompletedEventHandler(object sender, GetHostBillIntegrationCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "2.0.50727.42")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class GetHostBillIntegrationCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal GetHostBillIntegrationCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public HostBillServerInfo Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((HostBillServerInfo)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "2.0.50727.42")]
+    public delegate void CreateHostBillUserCompletedEventHandler(object sender, System.ComponentModel.AsyncCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "2.0.50727.42")]
+    public delegate void AuthenticateAndAddHostBillUserCompletedEventHandler(object sender, AuthenticateAndAddHostBillUserCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "2.0.50727.42")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class AuthenticateAndAddHostBillUserCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal AuthenticateAndAddHostBillUserCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public string Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((string)(this.results[0]));
             }
         }
     }

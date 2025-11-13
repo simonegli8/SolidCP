@@ -55,7 +55,7 @@ namespace SolidCP.EnterpriseServer
 			return (user != null);
 		}
 
-        public static int AuthenticateUser(string username, string password, string ip)
+        public static int AuthenticateUser(string username, string password, string ip, bool searchHostBill = true)
         {
             // start task
             TaskManager.StartTask("USER", "AUTHENTICATE", username);
@@ -69,11 +69,27 @@ namespace SolidCP.EnterpriseServer
                 UserInfoInternal user = GetUserInternally(username);
 
                 // check if the user exists
-                if (user == null)
+                if (user == null && searchHostBill)
                 {
-                    TaskManager.WriteWarning("Wrong username");
-                    return BusinessErrorCodes.ERROR_USER_WRONG_USERNAME;
+					var msg = SystemController.AuthenticateAndAddHostBillUser(username, password);
+					if (msg == null) // success
+					{
+						user = GetUserInternally(username);
+					}
+					else
+					{
+                        TaskManager.WriteWarning($"Error authenticating HostBill user {username}: {msg}");
+                        return BusinessErrorCodes.ERROR_USER_WRONG_USERNAME;
+                    }
                 }
+                
+				if (user == null)
+				{
+					TaskManager.WriteWarning("Wrong username");
+					return BusinessErrorCodes.ERROR_USER_WRONG_USERNAME;
+                }
+
+				// TODO sync with HostBill
 
                 // check if the user is disabled
                 if (user.LoginStatus == UserLoginStatus.Disabled)
@@ -590,7 +606,7 @@ namespace SolidCP.EnterpriseServer
 			return userId;
 		}
 
-		public static int AddUser(UserInfo user, bool sendLetter, string password)
+		public static int AddUser(UserInfo user, bool sendLetter, string password, bool addToHostBill = true)
 		{
 			// check account
 			int accountCheck = SecurityContext.CheckAccount(DemandAccount.NotDemo);
@@ -655,6 +671,20 @@ namespace SolidCP.EnterpriseServer
 				{
 					TaskManager.WriteWarning("Account with such username already exists");
 					return BusinessErrorCodes.ERROR_USER_ALREADY_EXISTS;
+				}
+
+				// add to HostBill
+				if (addToHostBill)
+				{
+					try
+					{
+						HostBillServer.CreateHostBillUser(user, password);
+					}
+					catch (Exception ex)
+					{
+						TaskManager.WriteError(ex, "Could not create user in HostBill");
+						return BusinessErrorCodes.ERROR_USER_ALREADY_EXISTS;
+					}
 				}
 
                 BackgroundTask topTask = TaskManager.TopTask;

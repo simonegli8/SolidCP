@@ -235,7 +235,7 @@ public class SystemController
 	}
 
 	static readonly object HostBillServerCacheLock = new object();
-	static HostBillServer HostBillServerCache = null;
+	internal static HostBillServer HostBillServerCache = null;
 	public static void SetHostBillIntegration(HostBillServerInfo hostbill)
 	{
 		lock (HostBillServerCacheLock)
@@ -281,16 +281,7 @@ public class SystemController
 		}
 	}
 
-	public void SyncHostBillUsers()
-	{
-	}
+	public static void CreateHostBillUser(UserInfo user, string password) => HostBillServer.CreateHostBillUser(user, password);
 
-	public void CreateHostBillUser(HostBillServerInfo user) { }
-
-	public int LoginHostBillUser(string username, string password)
-	{
-		var server = GetHostBillIntegration();
-		if (!server.Enabled) return BusinessErrorCodes.ERROR_USER_NOT_FOUND;
-		var user = GetHostBillUser(username);
-	}
+    public static string AuthenticateAndAddHostBillUser(string username, string password) => HostBillServer.AuthenticateAndAddHostBillUser(username, password);
 }
