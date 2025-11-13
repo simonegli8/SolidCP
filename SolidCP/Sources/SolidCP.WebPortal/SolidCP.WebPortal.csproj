@@ -2,7 +2,7 @@
     <PropertyGroup>
         <RootNamespace>SolidCP.WebPortal</RootNamespace>
         <AssemblyName>SolidCP.WebPortal</AssemblyName>
-        <TargetFrameworks>net8.0;net48</TargetFrameworks>
+        <TargetFrameworks>net10.0;net48</TargetFrameworks>
         <LangVersion>13</LangVersion>
         <Nullable>disable</Nullable>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -96,7 +96,7 @@
         <Reference Include="System.Web.Optimization" />
         <Reference Include="System.Xml" />
     </ItemGroup>
-    <ItemGroup Condition="$(TargetFramework) == 'net8.0'">
+    <ItemGroup Condition="$(TargetFramework) == 'net10.0'">
         <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Web" Version="1.4.2" />
         <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Drawing" Version="1.4.2" />
         <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.Configuration" Version="1.4.2" />
@@ -110,7 +110,7 @@
         <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.WebGrease" Version="1.4.2" />
         <PackageReference Include="EstrellasDeEsperanza.WebFormsForCore.AjaxControlToolkit" Version="1.4.2" />
         
-        <!-- .NET 8 for SolidCP.EnterpriseServer.Data -->
+        <!-- .NET 10 for SolidCP.EnterpriseServer.Data -->
         <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.0" />
         <PackageReference Include="Microsoft.Extensions.Primitives" Version="10.0.0" />
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.0" />
@@ -274,7 +274,7 @@
 
     <!--<Target Name="CopyProjectDlls" AfterTargets="Build">
         <ItemGroup>
-            <DllsToCopy Include="..\..\Lib\WebFormsForCore\src\WebFormsForCore.Drawing\bin\Debug\net8.0\**\*.*" />
+            <DllsToCopy Include="..\..\Lib\WebFormsForCore\src\WebFormsForCore.Drawing\bin\Debug\net10.0\**\*.*" />
         </ItemGroup>
         <Copy SourceFiles="@(DllsToCopy)" DestinationFolder="bin_dotnet" />
     </Target>-->
