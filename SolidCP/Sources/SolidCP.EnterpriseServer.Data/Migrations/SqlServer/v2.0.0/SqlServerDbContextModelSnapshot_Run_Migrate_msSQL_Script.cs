@@ -4019,15 +4019,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     b.HasData(
                         new
                         {
-                            ProviderId = 1,
-                            DisplayName = "Windows Server 2003",
-                            EditorControl = "Windows2003",
-                            GroupId = 1,
-                            ProviderName = "Windows2003",
-                            ProviderType = "SolidCP.Providers.OS.Windows2003, SolidCP.Providers.OS.Windows2003"
-                        },
-                        new
-                        {
                             ProviderId = 2,
                             DisplayName = "Internet Information Services 6.0",
                             EditorControl = "IIS60",
@@ -4418,15 +4409,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         },
                         new
                         {
-                            ProviderId = 100,
-                            DisplayName = "Windows Server 2008",
-                            EditorControl = "Windows2008",
-                            GroupId = 1,
-                            ProviderName = "Windows2008",
-                            ProviderType = "SolidCP.Providers.OS.Windows2008, SolidCP.Providers.OS.Windows2008"
-                        },
-                        new
-                        {
                             ProviderId = 101,
                             DisplayName = "Internet Information Services 7.0",
                             EditorControl = "IIS70",
@@ -4451,15 +4433,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             GroupId = 13,
                             ProviderName = "Organizations",
                             ProviderType = "SolidCP.Providers.HostedSolution.OrganizationProvider, SolidCP.Providers.HostedSolution"
-                        },
-                        new
-                        {
-                            ProviderId = 104,
-                            DisplayName = "Windows Server 2012",
-                            EditorControl = "Windows2012",
-                            GroupId = 1,
-                            ProviderName = "Windows2012",
-                            ProviderType = "SolidCP.Providers.OS.Windows2012, SolidCP.Providers.OS.Windows2012"
                         },
                         new
                         {
@@ -11129,12 +11102,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                     b.HasData(
                         new
                         {
-                            ProviderId = 1,
-                            PropertyName = "UsersHome",
-                            PropertyValue = "%SYSTEMDRIVE%\\HostingSpaces"
-                        },
-                        new
-                        {
                             ProviderId = 2,
                             PropertyName = "AspNet11Path",
                             PropertyValue = "%SYSTEMROOT%\\Microsoft.NET\\Framework\\v1.1.4322\\aspnet_isapi.dll"
@@ -12347,12 +12314,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                         },
                         new
                         {
-                            ProviderId = 100,
-                            PropertyName = "UsersHome",
-                            PropertyValue = "%SYSTEMDRIVE%\\HostingSpaces"
-                        },
-                        new
-                        {
                             ProviderId = 101,
                             PropertyName = "AspNet11Pool",
                             PropertyValue = "ASP.NET 1.1"
@@ -12494,12 +12455,6 @@ namespace SolidCP.EnterpriseServer.Data.Migrations.SqlServer
                             ProviderId = 102,
                             PropertyName = "SiteId",
                             PropertyValue = "Default FTP Site"
-                        },
-                        new
-                        {
-                            ProviderId = 104,
-                            PropertyName = "UsersHome",
-                            PropertyValue = "%SYSTEMDRIVE%\\HostingSpaces"
                         },
                         new
                         {
